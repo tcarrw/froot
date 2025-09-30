@@ -33,8 +33,12 @@
   .btn:hover{border-color:#2b3750}
   .btn.primary{border-color:transparent;background:linear-gradient(180deg,#2a4666,#1d2f49)}
   .note{color:var(--muted);font-size:13px;margin-top:10px}
-  .split{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:860px){.split{grid-template-columns:1fr 1fr}}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:600px){
+    .grid,
+    .split{grid-template-columns:1fr}
+    header{flex-direction:column;align-items:flex-start;gap:8px}
+  }
   .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:12px}
   .status{display:flex;align-items:center;gap:8px}
   .dot{width:10px;height:10px;border-radius:50%}
@@ -178,7 +182,7 @@
       const len = parseInt(daysEl.value,10) || 42;
       if(!startVal){ alert('Pick a start date.'); return; }
       const start = new Date(startVal+'T00:00:00');
-      const end = addDays(start, len); // exclusive
+      const end = addDays(start, len);
 
       const uid = 'froot-'+start.getTime()+'@plnt.earth';
       const now = new Date();
@@ -226,10 +230,6 @@
 
     setTodayDefault();
     updateFollowNote();
-
-    // Fallback RSS path hint if you haven’t added a feed yet.
-    // If /feed.xml 404s, the link still opens; you can add it later without changing the page.
-    rssLink.addEventListener('click', function(e){ /* no-op */ });
   })();
 </script>
 </body>
