@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FROOT — Illumina Index</title>
+<meta name="description" content="FROOT of the Month — a privacy-first Illumina index. Subscribe via RSS or calendar without sharing your email.">
+<meta name="theme-color" content="#0B0F19">
+<style>
+  :root{
+    --bg:#0B0F19; --ink:#E6EAF2; --muted:#9AA4B2; --card:#0F1524; --line:#1B2333;
+    --hi:#A4E8FF; --accent:#7CD4FF; --gold:#F8D34A; --ok:#34D399; --warn:#FBBF24;
+    --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial;}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:980px;margin:0 auto;padding:24px}
+  header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 20px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .fruit{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #FFD76A 0%, #FF9C40 40%, #E85D3A 70%, #8E2C2C 100%);box-shadow:var(--shadow)}
+  h1{margin:0;font-size:28px;letter-spacing:.2px}
+  .tag{display:inline-block;border:1px solid var(--line);color:var(--muted);padding:4px 10px;border-radius:999px;font-size:12px}
+  .hero{background:linear-gradient(180deg, rgba(164,232,255,.06), rgba(164,232,255,0));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+  .hero h2{margin:0 0 8px 0;font-size:22px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 8px 0;font-size:18px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{appearance:none;border:1px solid var(--line);background:#0b1224;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn:hover{border-color:#2b3750}
+  .btn.primary{border-color:transparent;background:linear-gradient(180deg,#2a4666,#1d2f49)}
+  .note{color:var(--muted);font-size:13px;margin-top:10px}
+  .split{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:860px){.split{grid-template-columns:1fr 1fr}}
+  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:12px}
+  .status{display:flex;align-items:center;gap:8px}
+  .dot{width:10px;height:10px;border-radius:50%}
+  .dot.ok{background:var(--ok)}
+  .dot.warn{background:var(--warn)}
+  .muted{color:var(--muted)}
+  footer{margin:26px 0 10px;color:var(--muted);font-size:12px}
+  input,select{background:#0b1224;border:1px solid var(--line);color:var(--ink);padding:10px;border-radius:10px;width:100%}
+  label{font-size:13px;color:var(--muted)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="fruit" aria-hidden="true"></div>
+        <div>
+          <h1>FROOT</h1>
+          <div class="tag">Illumina — FROOT of the Month</div>
+        </div>
+      </div>
+      <div class="status"><span class="dot ok"></span><span class="muted">Privacy on — No trackers</span></div>
+    </header>
+
+    <section class="hero">
+      <h2>Pick this Illumina’s FROOT</h2>
+      <p class="muted">Each Illumina (42 days) gets a flavor, a colorway, and a tiny ritual kit. Subscribe without email below.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>Private Subscribe</h3>
+          <div class="row">
+            <a class="btn" id="rssLink" href="/feed.xml">Open RSS / Atom</a>
+            <button class="btn primary" id="icsBtn">Download Calendar (.ics)</button>
+          </div>
+          <p class="note">RSS works with any feed reader. The .ics file adds this Illumina window to your calendar (no email, local only).</p>
+          <div class="split" style="margin-top:10px">
+            <div>
+              <label for="title">Calendar title</label>
+              <input id="title" value="FROOT of the Month — Illumina">
+            </div>
+            <div class="cols">
+              <div>
+                <label for="start">Start date</label>
+                <input id="start" type="date">
+              </div>
+              <div>
+                <label for="days">Length (days)</label>
+                <select id="days">
+                  <option value="42" selected>42</option>
+                  <option value="28">28</option>
+                  <option value="35">35</option>
+                  <option value="49">49</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Anonymous Follow (local)</h3>
+          <div class="row">
+            <button class="btn" id="followBtn">Follow</button>
+            <button class="btn" id="unfollowBtn">Unfollow</button>
+          </div>
+          <p class="note" id="followNote">Status: not following (saved only on this device).</p>
+          <div class="pill" style="margin-top:8px">
+            <span class="mono">localStorage:froot_follow=true</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:16px" class="grid">
+      <div class="card">
+        <h3>Current Flavor</h3>
+        <p id="flavorText">Citrus • launch energy • bright focus</p>
+        <div class="row">
+          <button class="btn" id="cyclePrev">◀︎ Prev</button>
+          <button class="btn" id="cycleNext">Next ▶︎</button>
+        </div>
+        <p class="note">Cycle palette + notes rotate; this won’t track you. It’s just for the vibe preview.</p>
+      </div>
+      <div class="card">
+        <h3>Why no email?</h3>
+        <p class="muted">We’re keeping it simple and private. Use RSS for updates or add a 42-day calendar to your device. No inbox, no forms, no third-party scripts.</p>
+        <p class="muted">Later, if we add push or Telegram, they’ll be opt-in and anonymous.</p>
+      </div>
+    </section>
+
+    <footer>
+      <div>© FROOT / Illumina — built with love, no trackers.</div>
+    </footer>
+  </div>
+
+<script>
+  (function(){
+    const titleEl = document.getElementById('title');
+    const startEl = document.getElementById('start');
+    const daysEl  = document.getElementById('days');
+    const icsBtn  = document.getElementById('icsBtn');
+    const rssLink = document.getElementById('rssLink');
+    const followBtn = document.getElementById('followBtn');
+    const unfollowBtn = document.getElementById('unfollowBtn');
+    const followNote = document.getElementById('followNote');
+    const cyclePrev = document.getElementById('cyclePrev');
+    const cycleNext = document.getElementById('cycleNext');
+    const flavorText = document.getElementById('flavorText');
+
+    const flavors = [
+      "Citrus • launch energy • bright focus",
+      "Pomegranate • devotion • seeds of intention",
+      "Green Apple • growth • spring logic",
+      "Blueberry • cool nights • clarity",
+      "Peach • high-summer joy • sweetness",
+      "Grape • harvest • reflection",
+      "Fig • year-end wisdom • dusk"
+    ];
+    let idx = 0;
+
+    function setTodayDefault(){
+      const today = new Date();
+      const iso = today.toISOString().slice(0,10);
+      startEl.value = iso;
+    }
+
+    function pad(n){ return (n<10?'0':'')+n; }
+    function dtstampUTC(d){
+      return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';
+    }
+    function addDays(date, n){
+      const d = new Date(date.getTime());
+      d.setDate(d.getDate()+n);
+      return d;
+    }
+
+    function downloadICS(){
+      const title = titleEl.value.trim() || 'FROOT of the Month — Illumina';
+      const startVal = startEl.value;
+      const len = parseInt(daysEl.value,10) || 42;
+      if(!startVal){ alert('Pick a start date.'); return; }
+      const start = new Date(startVal+'T00:00:00');
+      const end = addDays(start, len); // exclusive
+
+      const uid = 'froot-'+start.getTime()+'@plnt.earth';
+      const now = new Date();
+
+      const dtStart = start.getUTCFullYear()+pad(start.getUTCMonth()+1)+pad(start.getUTCDate());
+      const dtEnd   = end.getUTCFullYear()+pad(end.getUTCMonth()+1)+pad(end.getUTCDate());
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//FROOT//Illumina//EN',
+        'CALSCALE:GREGORIAN',
+        'BEGIN:VEVENT',
+        'UID:'+uid,
+        'DTSTAMP:'+dtstampUTC(now),
+        'SUMMARY:'+title.replace(/([,;])/g,'\\$1'),
+        'DTSTART;VALUE=DATE:'+dtStart,
+        'DTEND;VALUE=DATE:'+dtEnd,
+        'DESCRIPTION:FROOT cycle window — privacy-first calendar entry.',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([ics],{type:'text/calendar;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'froot-illumina.ics';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function updateFollowNote(){
+      const on = localStorage.getItem('froot_follow') === 'true';
+      followNote.textContent = on ? 'Status: following (saved only on this device).' : 'Status: not following (saved only on this device).';
+    }
+
+    followBtn.addEventListener('click', function(){ localStorage.setItem('froot_follow','true'); updateFollowNote(); });
+    unfollowBtn.addEventListener('click', function(){ localStorage.removeItem('froot_follow'); updateFollowNote(); });
+    icsBtn.addEventListener('click', downloadICS);
+
+    cyclePrev.addEventListener('click', function(){ idx=(idx-1+flavors.length)%flavors.length; flavorText.textContent=flavors[idx]; });
+    cycleNext.addEventListener('click', function(){ idx=(idx+1)%flavors.length; flavorText.textContent=flavors[idx]; });
+
+    setTodayDefault();
+    updateFollowNote();
+
+    // Fallback RSS path hint if you haven’t added a feed yet.
+    // If /feed.xml 404s, the link still opens; you can add it later without changing the page.
+    rssLink.addEventListener('click', function(e){ /* no-op */ });
+  })();
+</script>
+</body>
+</html>
