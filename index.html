@@ -14,30 +14,32 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial;}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial;transition:background .25s ease,color .25s ease}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
   .wrap{max-width:980px;margin:0 auto;padding:24px}
   header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 20px}
   .brand{display:flex;gap:12px;align-items:center}
-  .fruit{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #FFD76A 0%, #FF9C40 40%, #E85D3A 70%, #8E2C2C 100%);box-shadow:var(--shadow)}
+  .fruit{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #FFD76A 0%, #FF9C40 40%, #E85D3A 70%, #8E2C2C 100%);box-shadow:var(--shadow);transition:background .25s ease, transform .2s ease}
   h1{margin:0;font-size:28px;letter-spacing:.2px}
   .tag{display:inline-block;border:1px solid var(--line);color:var(--muted);padding:4px 10px;border-radius:999px;font-size:12px}
-  .hero{background:linear-gradient(180deg, rgba(164,232,255,.06), rgba(164,232,255,0));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+  .hero{background:linear-gradient(180deg, rgba(164,232,255,.06), rgba(164,232,255,0));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:border-color .25s ease, background .25s ease}
   .hero h2{margin:0 0 8px 0;font-size:22px}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:background .25s ease,border-color .25s ease}
   .card h3{margin:0 0 8px 0;font-size:18px}
   .row{display:flex;gap:10px;flex-wrap:wrap}
-  .btn{appearance:none;border:1px solid var(--line);background:#0b1224;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn{appearance:none;border:1px solid var(--line);background:#0b1224;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer;transition:border-color .2s ease,transform .06s ease}
   .btn:hover{border-color:#2b3750}
+  .btn:active{transform:scale(.98)}
   .btn.primary{border-color:transparent;background:linear-gradient(180deg,#2a4666,#1d2f49)}
   .note{color:var(--muted);font-size:13px;margin-top:10px}
   .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   @media(max-width:600px){
-    .grid,
-    .split{grid-template-columns:1fr}
+    .grid,.split{grid-template-columns:1fr}
     header{flex-direction:column;align-items:flex-start;gap:8px}
+    .row{gap:8px}
+    .btn{width:100%}
   }
   .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:12px}
   .status{display:flex;align-items:center;gap:8px}
@@ -56,7 +58,7 @@
   <div class="wrap">
     <header>
       <div class="brand">
-        <div class="fruit" aria-hidden="true"></div>
+        <div class="fruit" id="fruitOrb" aria-hidden="true"></div>
         <div>
           <h1>FROOT</h1>
           <div class="tag">Illumina — FROOT of the Month</div>
@@ -121,7 +123,7 @@
           <button class="btn" id="cyclePrev">◀︎ Prev</button>
           <button class="btn" id="cycleNext">Next ▶︎</button>
         </div>
-        <p class="note">Cycle palette + notes rotate; this won’t track you. It’s just for the vibe preview.</p>
+        <p class="note">Theme + palette change locally only. No tracking.</p>
       </div>
       <div class="card">
         <h3>Why no email?</h3>
@@ -148,17 +150,85 @@
     const cyclePrev = document.getElementById('cyclePrev');
     const cycleNext = document.getElementById('cycleNext');
     const flavorText = document.getElementById('flavorText');
+    const fruitOrb = document.getElementById('fruitOrb');
 
-    const flavors = [
-      "Citrus • launch energy • bright focus",
-      "Pomegranate • devotion • seeds of intention",
-      "Green Apple • growth • spring logic",
-      "Blueberry • cool nights • clarity",
-      "Peach • high-summer joy • sweetness",
-      "Grape • harvest • reflection",
-      "Fig • year-end wisdom • dusk"
+    // Theme definitions per fruit
+    const themes = [
+      {
+        label: "Citrus • launch energy • bright focus",
+        vars: {
+          "--bg":"#0B0F19","--ink":"#EDEFF6","--muted":"#A6B0BF","--card":"#0F1524","--line":"#1B2333",
+          "--hi":"#FFE38A","--accent":"#FFC568","--gold":"#F8D34A"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #FFF1A6 0%, #FFC35A 35%, #FF8A3D 65%, #B43A2E 100%)"
+      },
+      {
+        label: "Pomegranate • devotion • seeds of intention",
+        vars: {
+          "--bg":"#110B12","--ink":"#F3E9ED","--muted":"#C7A9B5","--card":"#1A101C","--line":"#2A1730",
+          "--hi":"#FF8FB1","--accent":"#D14A6A","--gold":"#E66A8E"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #FFD1E0 0%, #FF7AA1 40%, #C53A5F 70%, #5E1430 100%)"
+      },
+      {
+        label: "Green Apple • growth • spring logic",
+        vars: {
+          "--bg":"#0B1310","--ink":"#E9F5EF","--muted":"#A8C7B9","--card":"#0F1B17","--line":"#15251F",
+          "--hi":"#B9F772","--accent":"#6BE38F","--gold":"#A3E653"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #E5FFD1 0%, #B7FF8A 40%, #6FD66A 70%, #2A7B3C 100%)"
+      },
+      {
+        label: "Blueberry • cool nights • clarity",
+        vars: {
+          "--bg":"#070B16","--ink":"#E6EAF6","--muted":"#9CA9D1","--card":"#0B1224","--line":"#16213A",
+          "--hi":"#A4C8FF","--accent":"#7DA7FF","--gold":"#6BD3FF"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #D9E6FF 0%, #9DB9FF 40%, #5A7DDD 70%, #2B3E7A 100%)"
+      },
+      {
+        label: "Peach • high-summer joy • sweetness",
+        vars: {
+          "--bg":"#120C09","--ink":"#FFF2ED","--muted":"#E0B7A6","--card":"#1C1411","--line":"#2A201C",
+          "--hi":"#FFD3B3","--accent":"#FF9E7A","--gold":"#FFC285"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #FFE7D6 0%, #FFC19E 40%, #FF8E6B 70%, #B4553D 100%)"
+      },
+      {
+        label: "Grape • harvest • reflection",
+        vars: {
+          "--bg":"#0E0A16","--ink":"#EFE8FF","--muted":"#C0B0E0","--card":"#171026","--line":"#241A37",
+          "--hi":"#CEB5FF","--accent":"#9D7CFF","--gold":"#A98BFF"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #EFE3FF 0%, #CDB5FF 40%, #8D69E6 70%, #3B2970 100%)"
+      },
+      {
+        label: "Fig • year-end wisdom • dusk",
+        vars: {
+          "--bg":"#0E0B0F","--ink":"#F4EEF7","--muted":"#C7B6CC","--card":"#18121C","--line":"#241A2A",
+          "--hi":"#E8C3F1","--accent":"#B787D7","--gold":"#E0A7F0"
+        },
+        orb:"radial-gradient(circle at 30% 30%, #F7E8FF 0%, #D7A9F0 40%, #A56BC8 70%, #5A336D 100%)"
+      }
     ];
-    let idx = 0;
+
+    let idx = parseInt(localStorage.getItem('froot_theme_idx') || '0', 10) % themes.length;
+
+    function applyTheme(i){
+      const t = themes[i];
+      // Update descriptive text
+      flavorText.textContent = t.label;
+      // Swap CSS variables
+      const root = document.documentElement;
+      Object.entries(t.vars).forEach(([k,v]) => root.style.setProperty(k, v));
+      // Update orb gradient
+      fruitOrb.style.background = t.orb;
+      // Persist choice locally (anonymous)
+      localStorage.setItem('froot_theme_idx', String(i));
+      // Nice tiny bop
+      fruitOrb.style.transform = 'scale(1.06)';
+      setTimeout(()=>{ fruitOrb.style.transform = 'scale(1)'; }, 120);
+    }
 
     function setTodayDefault(){
       const today = new Date();
@@ -190,10 +260,7 @@
       const dtStart = start.getUTCFullYear()+pad(start.getUTCMonth()+1)+pad(start.getUTCDate());
       const dtEnd   = end.getUTCFullYear()+pad(end.getUTCMonth()+1)+pad(end.getUTCDate());
       const ics = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//FROOT//Illumina//EN',
-        'CALSCALE:GREGORIAN',
+        'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FROOT//Illumina//EN','CALSCALE:GREGORIAN',
         'BEGIN:VEVENT',
         'UID:'+uid,
         'DTSTAMP:'+dtstampUTC(now),
@@ -201,8 +268,7 @@
         'DTSTART;VALUE=DATE:'+dtStart,
         'DTEND;VALUE=DATE:'+dtEnd,
         'DESCRIPTION:FROOT cycle window — privacy-first calendar entry.',
-        'END:VEVENT',
-        'END:VCALENDAR'
+        'END:VEVENT','END:VCALENDAR'
       ].join('\r\n');
 
       const blob = new Blob([ics],{type:'text/calendar;charset=utf-8'});
@@ -221,15 +287,18 @@
       followNote.textContent = on ? 'Status: following (saved only on this device).' : 'Status: not following (saved only on this device).';
     }
 
+    // Events
     followBtn.addEventListener('click', function(){ localStorage.setItem('froot_follow','true'); updateFollowNote(); });
     unfollowBtn.addEventListener('click', function(){ localStorage.removeItem('froot_follow'); updateFollowNote(); });
     icsBtn.addEventListener('click', downloadICS);
 
-    cyclePrev.addEventListener('click', function(){ idx=(idx-1+flavors.length)%flavors.length; flavorText.textContent=flavors[idx]; });
-    cycleNext.addEventListener('click', function(){ idx=(idx+1)%flavors.length; flavorText.textContent=flavors[idx]; });
+    cyclePrev.addEventListener('click', function(){ idx=(idx-1+themes.length)%themes.length; applyTheme(idx); });
+    cycleNext.addEventListener('click', function(){ idx=(idx+1)%themes.length; applyTheme(idx); });
 
+    // Init
     setTodayDefault();
     updateFollowNote();
+    applyTheme(idx);
   })();
 </script>
 </body>
