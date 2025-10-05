@@ -4,17 +4,40 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Emma Flame — Froot Spread</title>
-<meta name="description" content="Identity Flare · Emma Stone Spread.">
-<style>:root{--bg:#0B0F19;--ink:#E6EAF2;--accent:#FAD02C;--muted:#94A3B8}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui;
-     max-width:720px;padding:24px;margin:auto}
-section{margin-top:1.5rem;border-top:1px solid rgba(255,255,255,.2);padding-top:1rem}</style>
+<meta name="description" content="Identity / spotlight / masks.">
+<style>
+  :root{--bg:#0B0F19;--ink:#E6EAF2;--muted:#94A3B8;--line:rgba(255,255,255,.12);--accent:#FAD02C;--accent2:#A4E8FF}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui}
+  .wrap{max-width:720px;margin:0 auto;padding:24px}
+  h1{margin:0 0 .25rem;letter-spacing:.03em}
+  a{color:var(--accent2);text-decoration:none} a:hover{text-decoration:underline}
+  .tag{display:inline-block;background:var(--accent);color:#111;padding:.2rem .6rem;border-radius:999px;font-weight:800;font-size:12px}
+  section{margin-top:1.25rem;border-top:1px solid var(--line);padding-top:1rem}
+  footer{margin-top:2rem;color:var(--muted);font-size:.9rem}
+</style>
 </head>
 <body>
-<h1>☀️ Emma Flame</h1>
-<p>Spotlight · masks and roles · the art of being seen.</p>
-<section><h2>Prompt</h2>
-<p>What truth emerges when you drop the character and stand in your own light?</p></section>
+<div class="wrap">
+  <span class="tag" id="seedTag">APPLE</span>
+  <h1>☀️ Emma Flame</h1>
+  <p>Spotlight, masks, and the art of being seen.</p>
+
+  <section>
+    <h2>Prompt</h2>
+    <p>What truth emerges when you drop the character and stand in your own light?</p>
+  </section>
+
+  <footer>
+    <a href="/spreads/">← All spreads</a> · <a href="/">Froot</a>
+  </footer>
+</div>
+<script>
+(function(){
+  var seeds=[{n:"APPLE",c:"#FAD02C"},{n:"PUMPKIN",c:"#FF8A3D"},{n:"CUMIN",c:"#D0A15F"},{n:"CINNAMON",c:"#D66A4E"},{n:"CLOVE",c:"#B55B3A"},{n:"FENNEL",c:"#7DE2A7"},{n:"CARDAMOM",c:"#C7B3FF"}];
+  function load(){try{var r=localStorage.getItem("froot_prefs");if(!r)return{seedIndex:0};var p=JSON.parse(r);if(typeof p.seedIndex!=="number")p.seedIndex=0; if(p.seedIndex<0||p.seedIndex>=seeds.length)p.seedIndex=0; return p;}catch(_){return{seedIndex:0}}}
+  var s=seeds[load().seedIndex]; document.documentElement.style.setProperty("--accent", s.c);
+  var tag=document.getElementById("seedTag"); if(tag){tag.textContent=s.n;}
+})();
+</script>
 </body>
 </html>
-
