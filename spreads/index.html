@@ -6,26 +6,129 @@
 <title>Froot Spreads</title>
 <meta name="description" content="Directory of Illumina spreads within Froot.">
 <style>
-  :root{--bg:#0B0F19;--ink:#E6EAF2;--accent:#FAD02C;--muted:#94A3B8}
-  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui;
-       max-width:720px;padding:24px;margin:auto}
-  a{color:var(--accent);text-decoration:none}
+  :root{
+    --bg:#0B0F19; --ink:#E6EAF2; --muted:#94A3B8; --line:rgba(255,255,255,.12);
+    /* Will be overridden from seed prefs */
+    --accent:#FAD02C; /* Apple (fallback) */
+    --accent2:#A4E8FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui}
+  .wrap{max-width:960px;margin:0 auto;padding:20px}
+
+  header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  h1{margin:0;font-size:28px;letter-spacing:.03em}
+  .pill{padding:.25rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:13px}
+  a{color:var(--accent2);text-decoration:none}
   a:hover{text-decoration:underline}
-  ul{list-style:none;padding:0;margin:1rem 0}
-  li{margin:.5rem 0}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:14px}
+  .card{border:1px solid var(--line);border-radius:12px;background:#0F1524;padding:14px}
+  .card h2{margin:.25rem 0 6px;font-size:18px;letter-spacing:.02em}
+  .tag{display:inline-block;background:var(--accent);color:#111;padding:.15rem .5rem;border-radius:999px;font-weight:700;font-size:12px}
+  .meta{color:var(--muted);font-size:13px;margin:.25rem 0 .5rem}
+  footer{margin:26px 0 40px;color:var(--muted);font-size:.95em}
+  .links{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+  .seedchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);padding:.2rem .55rem;border-radius:999px;margin-left:auto}
 </style>
 </head>
 <body>
-<h1>🍯 Froot Spreads</h1>
-<ul>
-  <li><a href="/spreads/nokings/">☀️ No Kings Day</a></li>
-  <li><a href="/spreads/honeydont/">🍯 Honey Don't</a></li>
-  <li><a href="/spreads/victorysong/">⚡ Victory Song</a></li>
-  <li><a href="/spreads/janetplanet/">🌙 Janet Planet</a></li>
-  <li><a href="/spreads/emmaflame/">☀️ Emma Flame</a></li>
-  <li><a href="/spreads/doechii/">🔥 Doechii</a></li>
-</ul>
-<p><a href="/">← Back to Froot</a></p>
+<div class="wrap">
+  <header>
+    <h1>🍋 Froot Spreads</h1>
+    <span class="pill">Tinted by active seed</span>
+    <span id="seedChip" class="seedchip" aria-label="Active seed">Apple 🍎</span>
+  </header>
+
+  <div class="grid" id="grid">
+    <!-- No Kings Day -->
+    <article class="card">
+      <span class="tag">FEATURED</span>
+      <h2><a href="/spreads/nokings/">☀️ No Kings Day</a></h2>
+      <div class="meta">Oct 18, 2025 · Mirror / Honey / Bridge</div>
+      <p>A playful roast of false crowns — humor dissolves ego; light returns.</p>
+      <div class="links">
+        <a href="/spreads/nokings/">Open spread</a>
+      </div>
+    </article>
+
+    <!-- Honey Don't -->
+    <article class="card">
+      <h2><a href="/spreads/honeydont/">🍯 Honey Don’t</a></h2>
+      <div class="meta">Sabrina Carpenter · Honey archetype</div>
+      <p>Sweetness with boundaries — playful, confident, golden.</p>
+      <div class="links"><a href="/spreads/honeydont/">Open spread</a></div>
+    </article>
+
+    <!-- Victory Song -->
+    <article class="card">
+      <h2><a href="/spreads/victorysong/">⚡ Victory Song</a></h2>
+      <div class="meta">Cycle flare · identity declared</div>
+      <p>An end-of-cycle anthem: bright, unapologetic, clear.</p>
+      <div class="links"><a href="/spreads/victorysong/">Open spread</a></div>
+    </article>
+
+    <!-- Janet Planet -->
+    <article class="card">
+      <h2><a href="/spreads/janetplanet/">🌙 Janet Planet</a></h2>
+      <div class="meta">Cosmic Teacher · curiosity as love</div>
+      <p>Learning as gravity — telescope mind, warm heart.</p>
+      <div class="links"><a href="/spreads/janetplanet/">Open spread</a></div>
+    </article>
+
+    <!-- Emma Flame -->
+    <article class="card">
+      <h2><a href="/spreads/emmaflame/">☀️ Emma Flame</a></h2>
+      <div class="meta">Identity / spotlight / masks</div>
+      <p>Drop the role; stand in your own light.</p>
+      <div class="links"><a href="/spreads/emmaflame/">Open spread</a></div>
+    </article>
+
+    <!-- Doechii -->
+    <article class="card">
+      <h2><a href="/spreads/doechii/">🔥 Doechii</a></h2>
+      <div class="meta">Trickster · Bridge · neon play</div>
+      <p>Let mischief and joy break a pattern today.</p>
+      <div class="links"><a href="/spreads/doechii/">Open spread</a></div>
+    </article>
+  </div>
+
+  <footer>
+    <a href="/">← Back to Froot</a> · Connected: <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://tunes.plnt.earth/">Tunes</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var seeds = [
+    {name:"Apple",    emoji:"🍎", accent:"#FAD02C"},
+    {name:"Pumpkin",  emoji:"🎃", accent:"#FF8A3D"},
+    {name:"Cumin",    emoji:"🌰", accent:"#D0A15F"},
+    {name:"Cinnamon", emoji:"🌿", accent:"#D66A4E"},
+    {name:"Clove",    emoji:"🧭", accent:"#B55B3A"},
+    {name:"Fennel",   emoji:"🌱", accent:"#7DE2A7"},
+    {name:"Cardamom", emoji:"✨", accent:"#C7B3FF"}
+  ];
+  var defIndex = 0; /* Apple fallback */
+
+  function loadPrefs(){
+    try{
+      var raw = localStorage.getItem("froot_prefs");
+      if(!raw) return {seedIndex:defIndex};
+      var p = JSON.parse(raw);
+      if(typeof p.seedIndex!=="number") p.seedIndex = defIndex;
+      if(p.seedIndex < 0 || p.seedIndex >= seeds.length) p.seedIndex = defIndex;
+      return p;
+    }catch(_){ return {seedIndex:defIndex}; }
+  }
+
+  var prefs = loadPrefs();
+  var seed  = seeds[prefs.seedIndex || 0];
+  document.documentElement.style.setProperty("--accent", seed.accent);
+
+  var chip = document.getElementById("seedChip");
+  if(chip){ chip.textContent = seed.name + " " + seed.emoji; }
+})();
+</script>
 </body>
 </html>
-
