@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://froot.plnt.earth/sitemap.xml
