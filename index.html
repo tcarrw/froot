@@ -3,303 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FROOT — Illumina Index</title>
-<meta name="description" content="FROOT of the Month — a privacy-first Illumina index. Subscribe via RSS or calendar without sharing your email.">
+<title>Froot — Perception School</title>
+<meta name="description" content="Froot teaches perception skills (color, sound, breath). New: Voice & Resonance 3-day skill with hum layers.">
+<link rel="canonical" href="https://froot.plnt.earth/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+<meta property="og:title" content="Froot — Perception School">
+<meta property="og:description" content="Learn to see color like music, feel breath like tone, and train Voice & Resonance.">
+<meta property="og:url" content="https://froot.plnt.earth/">
+<meta property="og:type" content="website">
 <meta name="theme-color" content="#0B0F19">
 <style>
-  :root{
-    --bg:#0B0F19; --ink:#E6EAF2; --muted:#9AA4B2; --card:#0F1524; --line:#1B2333;
-    --hi:#A4E8FF; --accent:#7CD4FF; --gold:#F8D34A; --ok:#34D399; --warn:#FBBF24;
-    --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.45);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial;transition:background .25s ease,color .25s ease}
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
-  .wrap{max-width:980px;margin:0 auto;padding:24px}
-  header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 20px}
-  .brand{display:flex;gap:12px;align-items:center}
-  .fruit{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #FFD76A 0%, #FF9C40 40%, #E85D3A 70%, #8E2C2C 100%);box-shadow:var(--shadow);transition:background .25s ease, transform .2s ease}
-  h1{margin:0;font-size:28px;letter-spacing:.2px}
-  .tag{display:inline-block;border:1px solid var(--line);color:var(--muted);padding:4px 10px;border-radius:999px;font-size:12px}
-  .hero{background:linear-gradient(180deg, rgba(164,232,255,.06), rgba(164,232,255,0));border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:border-color .25s ease, background .25s ease}
-  .hero h2{margin:0 0 8px 0;font-size:22px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:background .25s ease,border-color .25s ease}
-  .card h3{margin:0 0 8px 0;font-size:18px}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .btn{appearance:none;border:1px solid var(--line);background:#0b1224;color:var(--ink);padding:10px 14px;border-radius:10px;cursor:pointer;transition:border-color .2s ease,transform .06s ease}
-  .btn:hover{border-color:#2b3750}
-  .btn:active{transform:scale(.98)}
-  .btn.primary{border-color:transparent;background:linear-gradient(180deg,#2a4666,#1d2f49)}
-  .note{color:var(--muted);font-size:13px;margin-top:10px}
-  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:600px){
-    .grid,.split{grid-template-columns:1fr}
-    header{flex-direction:column;align-items:flex-start;gap:8px}
-    .row{gap:8px}
-    .btn{width:100%}
-  }
-  .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:12px}
-  .status{display:flex;align-items:center;gap:8px}
-  .dot{width:10px;height:10px;border-radius:50%}
-  .dot.ok{background:var(--ok)}
-  .dot.warn{background:var(--warn)}
-  .muted{color:var(--muted)}
-  footer{margin:26px 0 10px;color:var(--muted);font-size:12px}
-  input,select{background:#0b1224;border:1px solid var(--line);color:var(--ink);padding:10px;border-radius:10px;width:100%}
-  label{font-size:13px;color:var(--muted)}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px}
+  :root{--bg:#0B0F19;--ink:#E6EAF2;--muted:#A7B0C2;--card:#101728;--line:rgba(230,234,242,.14);--hi:#A4E8FF}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto}
+  a{color:var(--hi);text-decoration:none} .wrap{max-width:900px;margin:0 auto;padding:24px}
+  header h1{margin:0 0 6px;font-size:22px} .sub{color:var(--muted)}
+  .grid{display:grid;gap:12px} @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .cta{display:inline-flex;gap:8px;align-items:center;background:#0E1423;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+  footer{margin-top:24px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:12px}
 </style>
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="fruit" id="fruitOrb" aria-hidden="true"></div>
-        <div>
-          <h1>FROOT</h1>
-          <div class="tag">Illumina — FROOT of the Month</div>
-        </div>
-      </div>
-      <div class="status"><span class="dot ok"></span><span class="muted">Privacy on — No trackers</span></div>
-    </header>
+<div class="wrap">
+  <header>
+    <h1>Froot — Perception School</h1>
+    <div class="sub">Train cross-sensory skills in 3-day sprints. Pair with Jar (map) and Tunes (sound).</div>
+  </header>
 
-    <section class="hero">
-      <h2>Pick this Illumina’s FROOT</h2>
-      <p class="muted">Each Illumina (42 days) gets a flavor, a colorway, and a tiny ritual kit. Subscribe without email below.</p>
-      <div class="grid">
-        <div class="card">
-          <h3>Private Subscribe</h3>
-          <div class="row">
-            <a class="btn" id="rssLink" href="/feed.xml">Open RSS / Atom</a>
-            <button class="btn primary" id="icsBtn">Download Calendar (.ics)</button>
-          </div>
-          <p class="note">RSS works with any feed reader. The .ics file adds this Illumina window to your calendar (no email, local only).</p>
-          <div class="split" style="margin-top:10px">
-            <div>
-              <label for="title">Calendar title</label>
-              <input id="title" value="FROOT of the Month — Illumina">
-            </div>
-            <div class="cols">
-              <div>
-                <label for="start">Start date</label>
-                <input id="start" type="date">
-              </div>
-              <div>
-                <label for="days">Length (days)</label>
-                <select id="days">
-                  <option value="42" selected>42</option>
-                  <option value="28">28</option>
-                  <option value="35">35</option>
-                  <option value="49">49</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Anonymous Follow (local)</h3>
-          <div class="row">
-            <button class="btn" id="followBtn">Follow</button>
-            <button class="btn" id="unfollowBtn">Unfollow</button>
-          </div>
-          <p class="note" id="followNote">Status: not following (saved only on this device).</p>
-          <div class="pill" style="margin-top:8px">
-            <span class="mono">localStorage:froot_follow=true</span>
-          </div>
-        </div>
-      </div>
+  <main class="grid">
+    <section class="card">
+      <h2>New: Voice &amp; Resonance</h2>
+      <p>Three-day micro-course for calm expression under pressure. Mix <em>hums</em> (A2→A3→E3) with your favorite pop tracks.</p>
+      <p><a class="cta" href="/voice/">Start Voice &amp; Resonance →</a></p>
     </section>
 
-    <section style="margin-top:16px" class="grid">
-      <div class="card">
-        <h3>Current Flavor</h3>
-        <p id="flavorText">Citrus • launch energy • bright focus</p>
-        <div class="row">
-          <button class="btn" id="cyclePrev">◀︎ Prev</button>
-          <button class="btn" id="cycleNext">Next ▶︎</button>
-        </div>
-        <p class="note">Theme + palette change locally only. No tracking.</p>
-      </div>
-      <div class="card">
-        <h3>Why no email?</h3>
-        <p class="muted">We’re keeping it simple and private. Use RSS for updates or add a 42-day calendar to your device. No inbox, no forms, no third-party scripts.</p>
-        <p class="muted">Later, if we add push or Telegram, they’ll be opt-in and anonymous.</p>
-      </div>
+    <section class="card">
+      <h2>Perception Realms</h2>
+      <ul>
+        <li>Color ↔ Sound ↔ Word (Synesthetic literacy)</li>
+        <li>Breath &amp; Rhythm</li>
+        <li>Temperature &amp; Circulation</li>
+        <li>Focus &amp; Gaze</li>
+      </ul>
     </section>
+  </main>
 
-    <footer>
-      <div>© FROOT / Illumina — built with love, no trackers.</div>
-    </footer>
-  </div>
-
-<script>
-  (function(){
-    const titleEl = document.getElementById('title');
-    const startEl = document.getElementById('start');
-    const daysEl  = document.getElementById('days');
-    const icsBtn  = document.getElementById('icsBtn');
-    const rssLink = document.getElementById('rssLink');
-    const followBtn = document.getElementById('followBtn');
-    const unfollowBtn = document.getElementById('unfollowBtn');
-    const followNote = document.getElementById('followNote');
-    const cyclePrev = document.getElementById('cyclePrev');
-    const cycleNext = document.getElementById('cycleNext');
-    const flavorText = document.getElementById('flavorText');
-    const fruitOrb = document.getElementById('fruitOrb');
-
-    // Theme definitions per fruit
-    const themes = [
-      {
-        label: "Citrus • launch energy • bright focus",
-        vars: {
-          "--bg":"#0B0F19","--ink":"#EDEFF6","--muted":"#A6B0BF","--card":"#0F1524","--line":"#1B2333",
-          "--hi":"#FFE38A","--accent":"#FFC568","--gold":"#F8D34A"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #FFF1A6 0%, #FFC35A 35%, #FF8A3D 65%, #B43A2E 100%)"
-      },
-      {
-        label: "Pomegranate • devotion • seeds of intention",
-        vars: {
-          "--bg":"#110B12","--ink":"#F3E9ED","--muted":"#C7A9B5","--card":"#1A101C","--line":"#2A1730",
-          "--hi":"#FF8FB1","--accent":"#D14A6A","--gold":"#E66A8E"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #FFD1E0 0%, #FF7AA1 40%, #C53A5F 70%, #5E1430 100%)"
-      },
-      {
-        label: "Green Apple • growth • spring logic",
-        vars: {
-          "--bg":"#0B1310","--ink":"#E9F5EF","--muted":"#A8C7B9","--card":"#0F1B17","--line":"#15251F",
-          "--hi":"#B9F772","--accent":"#6BE38F","--gold":"#A3E653"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #E5FFD1 0%, #B7FF8A 40%, #6FD66A 70%, #2A7B3C 100%)"
-      },
-      {
-        label: "Blueberry • cool nights • clarity",
-        vars: {
-          "--bg":"#070B16","--ink":"#E6EAF6","--muted":"#9CA9D1","--card":"#0B1224","--line":"#16213A",
-          "--hi":"#A4C8FF","--accent":"#7DA7FF","--gold":"#6BD3FF"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #D9E6FF 0%, #9DB9FF 40%, #5A7DDD 70%, #2B3E7A 100%)"
-      },
-      {
-        label: "Peach • high-summer joy • sweetness",
-        vars: {
-          "--bg":"#120C09","--ink":"#FFF2ED","--muted":"#E0B7A6","--card":"#1C1411","--line":"#2A201C",
-          "--hi":"#FFD3B3","--accent":"#FF9E7A","--gold":"#FFC285"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #FFE7D6 0%, #FFC19E 40%, #FF8E6B 70%, #B4553D 100%)"
-      },
-      {
-        label: "Grape • harvest • reflection",
-        vars: {
-          "--bg":"#0E0A16","--ink":"#EFE8FF","--muted":"#C0B0E0","--card":"#171026","--line":"#241A37",
-          "--hi":"#CEB5FF","--accent":"#9D7CFF","--gold":"#A98BFF"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #EFE3FF 0%, #CDB5FF 40%, #8D69E6 70%, #3B2970 100%)"
-      },
-      {
-        label: "Fig • year-end wisdom • dusk",
-        vars: {
-          "--bg":"#0E0B0F","--ink":"#F4EEF7","--muted":"#C7B6CC","--card":"#18121C","--line":"#241A2A",
-          "--hi":"#E8C3F1","--accent":"#B787D7","--gold":"#E0A7F0"
-        },
-        orb:"radial-gradient(circle at 30% 30%, #F7E8FF 0%, #D7A9F0 40%, #A56BC8 70%, #5A336D 100%)"
-      }
-    ];
-
-    let idx = parseInt(localStorage.getItem('froot_theme_idx') || '0', 10) % themes.length;
-
-    function applyTheme(i){
-      const t = themes[i];
-      // Update descriptive text
-      flavorText.textContent = t.label;
-      // Swap CSS variables
-      const root = document.documentElement;
-      Object.entries(t.vars).forEach(([k,v]) => root.style.setProperty(k, v));
-      // Update orb gradient
-      fruitOrb.style.background = t.orb;
-      // Persist choice locally (anonymous)
-      localStorage.setItem('froot_theme_idx', String(i));
-      // Nice tiny bop
-      fruitOrb.style.transform = 'scale(1.06)';
-      setTimeout(()=>{ fruitOrb.style.transform = 'scale(1)'; }, 120);
-    }
-
-    function setTodayDefault(){
-      const today = new Date();
-      const iso = today.toISOString().slice(0,10);
-      startEl.value = iso;
-    }
-
-    function pad(n){ return (n<10?'0':'')+n; }
-    function dtstampUTC(d){
-      return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';
-    }
-    function addDays(date, n){
-      const d = new Date(date.getTime());
-      d.setDate(d.getDate()+n);
-      return d;
-    }
-
-    function downloadICS(){
-      const title = titleEl.value.trim() || 'FROOT of the Month — Illumina';
-      const startVal = startEl.value;
-      const len = parseInt(daysEl.value,10) || 42;
-      if(!startVal){ alert('Pick a start date.'); return; }
-      const start = new Date(startVal+'T00:00:00');
-      const end = addDays(start, len);
-
-      const uid = 'froot-'+start.getTime()+'@plnt.earth';
-      const now = new Date();
-
-      const dtStart = start.getUTCFullYear()+pad(start.getUTCMonth()+1)+pad(start.getUTCDate());
-      const dtEnd   = end.getUTCFullYear()+pad(end.getUTCMonth()+1)+pad(end.getUTCDate());
-      const ics = [
-        'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//FROOT//Illumina//EN','CALSCALE:GREGORIAN',
-        'BEGIN:VEVENT',
-        'UID:'+uid,
-        'DTSTAMP:'+dtstampUTC(now),
-        'SUMMARY:'+title.replace(/([,;])/g,'\\$1'),
-        'DTSTART;VALUE=DATE:'+dtStart,
-        'DTEND;VALUE=DATE:'+dtEnd,
-        'DESCRIPTION:FROOT cycle window — privacy-first calendar entry.',
-        'END:VEVENT','END:VCALENDAR'
-      ].join('\r\n');
-
-      const blob = new Blob([ics],{type:'text/calendar;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'froot-illumina.ics';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function updateFollowNote(){
-      const on = localStorage.getItem('froot_follow') === 'true';
-      followNote.textContent = on ? 'Status: following (saved only on this device).' : 'Status: not following (saved only on this device).';
-    }
-
-    // Events
-    followBtn.addEventListener('click', function(){ localStorage.setItem('froot_follow','true'); updateFollowNote(); });
-    unfollowBtn.addEventListener('click', function(){ localStorage.removeItem('froot_follow'); updateFollowNote(); });
-    icsBtn.addEventListener('click', downloadICS);
-
-    cyclePrev.addEventListener('click', function(){ idx=(idx-1+themes.length)%themes.length; applyTheme(idx); });
-    cycleNext.addEventListener('click', function(){ idx=(idx+1)%themes.length; applyTheme(idx); });
-
-    // Init
-    setTodayDefault();
-    updateFollowNote();
-    applyTheme(idx);
-  })();
-</script>
+  <footer>
+    Network: <a href="https://jar.plnt.earth/">Jar</a> • <a href="https://tunes.plnt.earth/">Tunes</a> • <a href="https://quietmoon.plnt.earth/">Quiet Moon</a> • <a href="https://froot.plnt.earth/voice/">Voice Skill</a>
+  </footer>
+</div>
 </body>
 </html>
