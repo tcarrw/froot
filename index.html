@@ -5,40 +5,26 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Froot — Illumina Garden</title>
 <meta name="description" content="Froot — seasonal Illumina garden of reflection and sound.">
-
 <style>
   :root{
     --bg:#0B0F19; --ink:#E6EAF2; --muted:#94A3B8; --line:rgba(255,255,255,.12);
-    --accent:#FAD02C; /* will be overridden per seed */
-    --accent2:#A4E8FF;
+    --accent:#FAD02C; --accent2:#A4E8FF;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
+  *{box-sizing:border-box} html,body{height:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui}
-
   .wrap{max-width:960px;margin:0 auto;padding:20px}
-
   header{display:flex;align-items:center;gap:12px}
   h1{margin:0;font-size:28px;letter-spacing:.03em}
   .pill{padding:.25rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:13px}
-
-  /* Sticky player */
-  .player-bar{
-    position:sticky;top:0;z-index:10;background:linear-gradient(0deg, rgba(11,15,25,.7), rgba(11,15,25,.9));
-    backdrop-filter: blur(6px); border-bottom:1px solid var(--line);
-  }
+  .player-bar{position:sticky;top:0;z-index:10;background:linear-gradient(0deg, rgba(11,15,25,.7), rgba(11,15,25,.9));backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
   .player-inner{max-width:960px;margin:0 auto;padding:14px 20px;display:grid;grid-template-columns:1fr 320px;gap:16px}
   .player-video{aspect-ratio:16/9;background:#111;border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .player-meta{display:flex;flex-direction:column;gap:8px}
-  .meta-title{font-weight:700}
-  .meta-artist{color:var(--muted);font-size:14px}
+  .meta-title{font-weight:700}.meta-artist{color:var(--muted);font-size:14px}
   .controls{display:flex;gap:8px;flex-wrap:wrap}
   .btn{padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer;font-weight:600}
-  .btn:hover{border-color:var(--accent)}
-  .btn.primary{background:var(--accent);color:#111;border-color:transparent}
+  .btn:hover{border-color:var(--accent)} .btn.primary{background:var(--accent);color:#111;border-color:transparent}
   .tag{font-size:12px;color:#111;background:var(--accent);padding:.25rem .5rem;border-radius:999px;font-weight:700}
-
-  /* Seed + playlist switchers */
   .switchers{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}
   .group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -47,29 +33,18 @@
   .seedchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);padding:.25rem .6rem;border-radius:999px}
   .arrow{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer}
   .arrow:hover{border-color:var(--accent)}
-
-  /* Grid + queue */
   .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
   .card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#0F1524}
   .card h2{margin:.25rem 0 8px;font-size:18px;letter-spacing:.02em}
   .queue{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px}
   .row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
-  .row:hover{background:rgba(255,255,255,.04)}
-  .row.active{background:rgba(250,208,44,.18)}
-  .row small{color:var(--muted)}
-  .num{width:28px;text-align:right;color:var(--muted)}
-  .title{font-weight:600}
-  .source{font-size:12px;color:var(--muted)}
-  .empty{color:var(--muted)}
-
-  /* Links + footer */
-  a{color:var(--accent2);text-decoration:none}
-  a:hover{text-decoration:underline}
+  .row:hover{background:rgba(255,255,255,.04)} .row.active{background:rgba(250,208,44,.18)}
+  .num{width:28px;text-align:right;color:var(--muted)} .title{font-weight:600} .source{font-size:12px;color:var(--muted)}
+  .empty{color:var(--muted)} a{color:var(--accent2);text-decoration:none} a:hover{text-decoration:underline}
   footer{margin:26px 0 40px;color:var(--muted);font-size:.95em}
   .links{display:flex;gap:14px;flex-wrap:wrap}
-
-  /* Accent theming via CSS var */
-  .accent{color:#111;background:var(--accent)}
+  .btnlink{display:inline-block;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;text-decoration:none}
+  .btnlink:hover{border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -103,7 +78,6 @@
       <div class="seedchip"><strong id="seedName">Apple</strong> <span id="seedEmoji">🍎</span></div>
       <button class="arrow" id="seedNext" aria-label="Next seed">⟶</button>
     </div>
-
     <div class="group" aria-label="Playlist switcher">
       <div class="seg" id="plist">
         <button data-pl="explainer" class="active">Explainer</button>
@@ -118,9 +92,9 @@
       <h2>About this Seed</h2>
       <p id="seedText">Apple is the gentle start: clear sweetness, bright focus, and beginner’s luck.</p>
       <div class="links">
-        <a href="/spreads/">Browse spreads</a>
-        <a href="/reflect/">Reflect</a>
-        <a href="/about/">About Froot</a>
+        <a class="btnlink" href="/spreads/">Browse spreads</a>
+        <a class="btnlink" href="/reflect/">Reflect</a>
+        <a class="btnlink" href="/about/">About Froot</a>
       </div>
     </section>
 
@@ -129,8 +103,20 @@
     </aside>
   </div>
 
+  <!-- NEW: Playlists card linking to Tunes with seed param -->
+  <section class="card" style="margin-top:18px">
+    <h2>Playlists (open in Tunes)</h2>
+    <p>Your active seed tint will carry into Tunes.</p>
+    <div class="links">
+      <a id="toExplainer" class="btnlink" href="https://tunes.plnt.earth/mixes/explainer/">Explainer Mix</a>
+      <a id="toAnchorPublic" class="btnlink" href="https://tunes.plnt.earth/mixes/anchorpublic/">Anchor Public</a>
+      <a id="toAnchorBuilt" class="btnlink" href="https://tunes.plnt.earth/mixes/anchorbuilt/">Anchor Built</a>
+      <a id="toNoKings" class="btnlink" href="https://tunes.plnt.earth/mixes/nokings/">No Kings Day</a>
+    </div>
+  </section>
+
   <footer>
-    Connected sites · <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://tunes.plnt.earth/">Tunes</a>
+    Connected · <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://tunes.plnt.earth/">Tunes</a>
   </footer>
 </div>
 
@@ -145,177 +131,110 @@
     {key:"fennel",   name:"Fennel",   emoji:"🌱", accent:"#7DE2A7", text:"Fennel lifts: lightness, breath, and green attention."},
     {key:"cardamom", name:"Cardamom", emoji:"✨", accent:"#C7B3FF", text:"Cardamom opens: bright perfume and welcome."}
   ];
-
   var playlists = {
     "explainer":      { label:"Explainer",      file:"/data/illumina/1/tracks/explainer.json" },
     "anchor-public":  { label:"Anchor Public",  file:"/data/illumina/1/tracks/anchor-public.json" },
     "anchor-built":   { label:"Anchor Built",   file:"/data/illumina/1/tracks/anchor-built.json" }
   };
-
-  var state = {
-    seedIndex: 0,
-    plKey: "explainer",
-    tracks: [],
-    current: 0,
-    playing: false
-  };
+  var state = { seedIndex:0, plKey:"explainer", tracks:[], current:0 };
 
   var els = {
-    seedTag:    document.getElementById("seedTag"),
-    seedName:   document.getElementById("seedName"),
-    seedEmoji:  document.getElementById("seedEmoji"),
-    seedText:   document.getElementById("seedText"),
-    videoSlot:  document.getElementById("videoSlot"),
-    trackTitle: document.getElementById("trackTitle"),
-    trackArtist:document.getElementById("trackArtist"),
-    countPill:  document.getElementById("countPill"),
-    queue:      document.getElementById("queue"),
-    seedPrev:   document.getElementById("seedPrev"),
-    seedNext:   document.getElementById("seedNext"),
-    prevBtn:    document.getElementById("prevBtn"),
-    nextBtn:    document.getElementById("nextBtn"),
-    playBtn:    document.getElementById("playBtn"),
-    plist:      document.getElementById("plist")
+    seedTag:document.getElementById("seedTag"), seedName:document.getElementById("seedName"),
+    seedEmoji:document.getElementById("seedEmoji"), seedText:document.getElementById("seedText"),
+    videoSlot:document.getElementById("videoSlot"), trackTitle:document.getElementById("trackTitle"),
+    trackArtist:document.getElementById("trackArtist"), countPill:document.getElementById("countPill"),
+    queue:document.getElementById("queue"), seedPrev:document.getElementById("seedPrev"),
+    seedNext:document.getElementById("seedNext"), prevBtn:document.getElementById("prevBtn"),
+    nextBtn:document.getElementById("nextBtn"), playBtn:document.getElementById("playBtn"),
+    plist:document.getElementById("plist"),
+    toExplainer:document.getElementById("toExplainer"),
+    toAnchorPublic:document.getElementById("toAnchorPublic"),
+    toAnchorBuilt:document.getElementById("toAnchorBuilt"),
+    toNoKings:document.getElementById("toNoKings")
   };
 
   function loadPrefs(){
-    try{
-      var s = localStorage.getItem("froot_prefs");
-      if(!s) return;
-      var p = JSON.parse(s);
-      if(typeof p.seedIndex==="number") state.seedIndex = Math.max(0, Math.min(seeds.length-1, p.seedIndex));
-      if(p.plKey && playlists[p.plKey]) state.plKey = p.plKey;
+    try{ var s=localStorage.getItem("froot_prefs"); if(!s) return; var p=JSON.parse(s);
+      if(typeof p.seedIndex==="number") state.seedIndex=Math.max(0,Math.min(seeds.length-1,p.seedIndex));
+      if(p.plKey && playlists[p.plKey]) state.plKey=p.plKey;
     }catch(_){}
   }
   function savePrefs(){
     try{ localStorage.setItem("froot_prefs", JSON.stringify({seedIndex:state.seedIndex, plKey:state.plKey})); }catch(_){}
   }
+  function youTubeId(url){ if(!url) return ""; var m=String(url).match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/i); return m?m[1]:""; }
 
   function applySeed(){
-    var s = seeds[state.seedIndex];
+    var s=seeds[state.seedIndex];
     document.documentElement.style.setProperty("--accent", s.accent);
-    els.seedTag.textContent = s.name.toUpperCase();
-    els.seedName.textContent = s.name;
-    els.seedEmoji.textContent = s.emoji;
-    els.seedText.textContent  = s.text;
+    els.seedTag.textContent=s.name.toUpperCase();
+    els.seedName.textContent=s.name;
+    els.seedEmoji.textContent=s.emoji;
+    els.seedText.textContent=s.text;
+    // update Tunes links to carry seed
+    var q="?seed="+encodeURIComponent(s.key);
+    if(els.toExplainer) els.toExplainer.href="https://tunes.plnt.earth/mixes/explainer/"+q;
+    if(els.toAnchorPublic) els.toAnchorPublic.href="https://tunes.plnt.earth/mixes/anchorpublic/"+q;
+    if(els.toAnchorBuilt) els.toAnchorBuilt.href="https://tunes.plnt.earth/mixes/anchorbuilt/"+q;
+    if(els.toNoKings) els.toNoKings.href="https://tunes.plnt.earth/mixes/nokings/"+q;
   }
-
   function setPlaylistButtonActive(){
-    var btns = els.plist.querySelectorAll("button");
-    for(var i=0;i<btns.length;i++){
-      var b = btns[i];
-      if(b.getAttribute("data-pl")===state.plKey){ b.classList.add("active"); } else { b.classList.remove("active"); }
-    }
+    var btns=els.plist.querySelectorAll("button");
+    for(var i=0;i<btns.length;i++){ var b=btns[i]; if(b.getAttribute("data-pl")===state.plKey) b.classList.add("active"); else b.classList.remove("active"); }
   }
-
-  function youTubeId(url){
-    if(!url) return "";
-    var m = String(url).match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
-    return m ? m[1] : "";
-  }
-
   function renderPlayer(){
-    var t = state.tracks[state.current];
-    if(!t){ els.videoSlot.innerHTML = ""; els.trackTitle.textContent="—"; els.trackArtist.textContent="—"; els.countPill.textContent="0 / 0"; return; }
-    els.trackTitle.textContent = t.title ? t.title : "Untitled";
-    els.trackArtist.textContent = t.artist ? t.artist : (t.channel ? t.channel : "");
+    var t=state.tracks[state.current];
+    if(!t){ els.videoSlot.innerHTML=""; els.trackTitle.textContent="—"; els.trackArtist.textContent="—"; els.countPill.textContent="0 / 0"; return; }
+    els.trackTitle.textContent = t.title||"Untitled";
+    els.trackArtist.textContent = t.artist || t.channel || "";
     els.countPill.textContent = String(state.current+1)+" / "+String(state.tracks.length);
-
-    var id = youTubeId(t.url || t.link || t.youtube || "");
+    var id=youTubeId(t.url||t.link||t.youtube||"");
     if(id){
-      els.videoSlot.innerHTML = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/'+id+'?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+      els.videoSlot.innerHTML='<iframe width="100%" height="100%" src="https://www.youtube.com/embed/'+id+'?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
     }else{
-      var safe = (t.url || t.link || "#");
-      els.videoSlot.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:10px;text-align:center"><a class="btn primary" href="'+safe+'" target="_blank" rel="noopener">Open Track</a></div>';
+      var safe=(t.url||t.link||"#");
+      els.videoSlot.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:10px;text-align:center"><a class="btn primary" href="'+safe+'" target="_blank" rel="noopener">Open Track</a></div>';
     }
   }
-
   function renderQueue(){
-    if(!state.tracks || !state.tracks.length){
-      els.queue.innerHTML = '<div class="empty">No tracks found for this playlist.</div>';
-      return;
+    if(!state.tracks.length){ els.queue.innerHTML='<div class="empty">No tracks found for this playlist.</div>'; return; }
+    var out=[]; for(var i=0;i<state.tracks.length;i++){ var t=state.tracks[i];
+      out.push('<div class="row'+(i===state.current?' active':'')+'" data-idx="'+i+'">'+
+        '<div class="num">'+(i+1)+'</div><div class="col">'+
+        '<div class="title">'+(t.title||"Untitled")+'</div>'+
+        '<div><small>'+(t.artist || t.channel || "")+'</small></div>'+
+        '<div class="source"><small>'+(t.platform || (youTubeId(t.url||t.link||t.youtube)?"YouTube":""))+'</small></div>'+
+      '</div></div>');
     }
-    var out = [];
-    for(var i=0;i<state.tracks.length;i++){
-      var t = state.tracks[i];
-      out.push(
-        '<div class="row'+(i===state.current?' active':'')+'" data-idx="'+i+'">'+
-          '<div class="num">'+(i+1)+'</div>'+
-          '<div class="col">'+
-            '<div class="title">'+(t.title?t.title:"Untitled")+'</div>'+
-            '<div><small>'+(t.artist?(t.artist):(t.channel?t.channel:""))+'</small></div>'+
-            '<div class="source"><small>'+(t.platform?t.platform:(youTubeId(t.url||t.link||t.youtube)?"YouTube":""))+'</small></div>'+
-          '</div>'+
-        '</div>'
-      );
-    }
-    els.queue.innerHTML = out.join("");
-    var rows = els.queue.querySelectorAll(".row");
-    for(var j=0;j<rows.length;j++){
-      rows[j].onclick = function(){
-        var k = parseInt(this.getAttribute("data-idx")||"0",10);
-        if(!isNaN(k)){ state.current = k; renderPlayer(); renderQueue(); }
-      };
-    }
+    els.queue.innerHTML=out.join("");
+    var rows=els.queue.querySelectorAll(".row");
+    for(var j=0;j<rows.length;j++){ rows[j].onclick=function(){ var k=parseInt(this.getAttribute("data-idx")||"0",10); if(!isNaN(k)){ state.current=k; renderPlayer(); renderQueue(); }};}
   }
-
   function fetchList(){
-    var def = playlists[state.plKey];
-    if(!def){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); return; }
-    var url = def.file;
-    var controller = new AbortController();
-    var signal = controller.signal;
-    setTimeout(function(){ try{controller.abort()}catch(_){} }, 9000);
-
-    fetch(url, {signal:signal, headers:{"Accept":"application/json"}})
-    .then(function(r){ if(!r.ok) return Promise.reject(); return r.json(); })
-    .then(function(j){
-      var arr = Array.isArray(j)? j : (Array.isArray(j.tracks)? j.tracks : []);
-      state.tracks = arr.map(function(x){
-        return {
-          title:  x.title || x.name || "",
-          artist: x.artist || x.by || x.channel || "",
-          url:    x.url || x.link || x.youtube || "",
-          platform: x.platform || ""
-        };
-      });
-      state.current = 0;
-      renderPlayer(); renderQueue();
-    })
-    .catch(function(){
-      state.tracks = [];
-      state.current = 0;
-      renderPlayer(); renderQueue();
-    });
+    var def=playlists[state.plKey]; if(!def){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); return; }
+    var controller=new AbortController(); var signal=controller.signal; setTimeout(function(){ try{controller.abort()}catch(_){} },9000);
+    fetch(def.file,{signal,headers:{"Accept":"application/json"}})
+      .then(function(r){ if(!r.ok) return Promise.reject(); return r.json(); })
+      .then(function(j){ var arr=Array.isArray(j)?j:(Array.isArray(j.tracks)?j.tracks:[]);
+        state.tracks=arr.map(function(x){return {title:x.title||x.name||"",artist:x.artist||x.by||x.channel||"",url:x.url||x.link||x.youtube||"",platform:x.platform||""};});
+        state.current=0; renderPlayer(); renderQueue();
+      })
+      .catch(function(){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); });
   }
+  function prev(){ if(state.tracks.length){ state.current=(state.current-1+state.tracks.length)%state.tracks.length; renderPlayer(); renderQueue(); } }
+  function next(){ if(state.tracks.length){ state.current=(state.current+1)%state.tracks.length; renderPlayer(); renderQueue(); } }
 
-  function prev(){ if(state.tracks.length){ state.current = (state.current-1+state.tracks.length)%state.tracks.length; renderPlayer(); renderQueue(); } }
-  function next(){ if(state.tracks.length){ state.current = (state.current+1)%state.tracks.length; renderPlayer(); renderQueue(); } }
+  // controls
+  document.getElementById("prevBtn").onclick=prev;
+  document.getElementById("nextBtn").onclick=next;
+  document.getElementById("playBtn").onclick=function(){ var iframe=document.getElementById("videoSlot").querySelector("iframe"); if(iframe&&iframe.src.indexOf("autoplay=1")<0){ iframe.src=iframe.src+(iframe.src.indexOf("?")>-1?"&":"?")+"autoplay=1"; } };
+  document.getElementById("seedPrev").onclick=function(){ state.seedIndex=(state.seedIndex-1+seeds.length)%seeds.length; applySeed(); savePrefs(); };
+  document.getElementById("seedNext").onclick=function(){ state.seedIndex=(state.seedIndex+1)%seeds.length; applySeed(); savePrefs(); };
+  document.getElementById("plist").addEventListener("click", function(e){ var t=e.target; var key=t&&t.getAttribute?t.getAttribute("data-pl"):""; if(key&&playlists[key]){ state.plKey=key; setPlaylistButtonActive(); savePrefs(); fetchList(); } });
 
-  els.prevBtn.onclick = prev;
-  els.nextBtn.onclick = next;
-  els.playBtn.onclick = function(){
-    var iframe = els.videoSlot.querySelector("iframe");
-    if(iframe && iframe.src.indexOf("autoplay=1")<0){
-      iframe.src = iframe.src + (iframe.src.indexOf("?")>-1 ? "&" : "?") + "autoplay=1";
-    }
-  };
-
-  els.seedPrev.onclick = function(){ state.seedIndex = (state.seedIndex-1+seeds.length)%seeds.length; applySeed(); savePrefs(); };
-  els.seedNext.onclick = function(){ state.seedIndex = (state.seedIndex+1)%seeds.length; applySeed(); savePrefs(); };
-
-  els.plist.addEventListener("click", function(e){
-    var t = e.target;
-    var key = t && t.getAttribute ? t.getAttribute("data-pl") : "";
-    if(key && playlists[key]){
-      state.plKey = key; setPlaylistButtonActive(); savePrefs(); fetchList();
-    }
-  });
-
-  loadPrefs();
-  applySeed();
-  setPlaylistButtonActive();
-  fetchList();
+  // init
+  try{ var s=localStorage.getItem("froot_prefs"); if(s){ var p=JSON.parse(s); if(typeof p.seedIndex==="number") state.seedIndex=Math.max(0,Math.min(seeds.length-1,p.seedIndex)); if(p.plKey&&playlists[p.plKey]) state.plKey=p.plKey; }}catch(_){}
+  applySeed(); setPlaylistButtonActive(); fetchList();
 })();
 </script>
 </body>
