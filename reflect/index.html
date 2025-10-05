@@ -4,24 +4,182 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Reflect — Froot</title>
-<meta name="description" content="Reflection prompt for visitors to the Froot garden.">
+<meta name="description" content="Reflection prompt for the Froot garden, saved locally per Illumina seed.">
 <style>
-  :root{--bg:#0B0F19;--ink:#E6EAF2;--accent:#FAD02C;--muted:#94A3B8}
-  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui;
-       max-width:720px;padding:24px;margin:auto;text-align:center}
-  textarea{width:100%;min-height:120px;padding:8px;font:inherit;background:#111;color:var(--ink);
-           border:1px solid rgba(255,255,255,.2);border-radius:8px}
-  button{margin-top:1rem;padding:.5rem 1rem;border:0;border-radius:6px;
-         background:var(--accent);color:#000;font-weight:600;cursor:pointer}
+  :root{
+    --bg:#0B0F19; --ink:#E6EAF2; --muted:#94A3B8; --line:rgba(255,255,255,.12);
+    --accent:#FAD02C; /* fallback; overridden by active seed */
+    --accent2:#A4E8FF;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui}
+  .wrap{max-width:820px;margin:0 auto;padding:24px}
+  header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h1{margin:0;letter-spacing:.03em}
+  .pill{padding:.25rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:13px}
+  .seedchip{margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);padding:.2rem .55rem;border-radius:999px}
+  textarea{width:100%;min-height:140px;padding:10px;font:inherit;background:#111;color:var(--ink);
+           border:1px solid var(--line);border-radius:10px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .btn{padding:.55rem .9rem;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer;font-weight:600}
+  .btn.primary{background:var(--accent);color:#111;border-color:transparent}
+  .btn:hover{border-color:var(--accent)}
+  .note{color:var(--muted);font-size:.95em;margin-top:6px}
+  .list{margin-top:18px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .row{padding:12px 14px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:10px}
+  .row:last-child{border-bottom:0}
+  .when{color:var(--muted);font-size:13px}
+  .text{white-space:pre-wrap}
+  .link{color:var(--accent2);text-decoration:none}
+  .link:hover{text-decoration:underline}
+  .danger{border-color:#ff6161}
+  .empty{color:var(--muted);padding:16px}
+  footer{margin:24px 0 8px;color:var(--muted);font-size:.95em}
 </style>
 </head>
 <body>
-<h1>🌕 Reflect</h1>
-<p>What’s ripening in you today?</p>
-<form>
-  <textarea placeholder="Write your reflection here…"></textarea><br>
-  <button type="button">Save locally</button>
-</form>
+<div class="wrap">
+  <header>
+    <h1>🌕 Reflect</h1>
+    <span class="pill">Saved locally per seed</span>
+    <span id="seedChip" class="seedchip" aria-label="Active seed">Apple 🍎</span>
+  </header>
+
+  <p class="note">What’s ripening in you today? Your notes stay in your browser (no upload).</p>
+
+  <form id="form" autocomplete="off">
+    <textarea id="input" placeholder="Write your reflection here…"></textarea>
+    <div class="actions">
+      <button class="btn primary" id="saveBtn" type="button">Save for this seed</button>
+      <button class="btn" id="newBtn" type="button">New note</button>
+      <button class="btn danger" id="clearBtn" type="button" title="Clears all reflections for this seed">Clear all (this seed)</button>
+    </div>
+  </form>
+
+  <div id="list" class="list">
+    <div class="empty">No reflections yet for this seed.</div>
+  </div>
+
+  <footer>
+    <a class="link" href="/">← Back to Froot</a> · Connected: <a class="link" href="https://jar.plnt.earth/">Jar</a> · <a class="link" href="https://tunes.plnt.earth/">Tunes</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  /* --- seed tinting ------------------------------------------------------ */
+  var seeds = [
+    {key:"apple",    name:"Apple",    emoji:"🍎", accent:"#FAD02C"},
+    {key:"pumpkin",  name:"Pumpkin",  emoji:"🎃", accent:"#FF8A3D"},
+    {key:"cumin",    name:"Cumin",    emoji:"🌰", accent:"#D0A15F"},
+    {key:"cinnamon", name:"Cinnamon", emoji:"🌿", accent:"#D66A4E"},
+    {key:"clove",    name:"Clove",    emoji:"🧭", accent:"#B55B3A"},
+    {key:"fennel",   name:"Fennel",   emoji:"🌱", accent:"#7DE2A7"},
+    {key:"cardamom", name:"Cardamom", emoji:"✨", accent:"#C7B3FF"}
+  ];
+  function loadPrefs(){
+    try{
+      var raw = localStorage.getItem("froot_prefs");
+      if(!raw) return {seedIndex:0};
+      var p = JSON.parse(raw);
+      if(typeof p.seedIndex !== "number") p.seedIndex = 0;
+      if(p.seedIndex < 0 || p.seedIndex >= seeds.length) p.seedIndex = 0;
+      return p;
+    }catch(_){ return {seedIndex:0}; }
+  }
+  var prefs = loadPrefs();
+  var seed  = seeds[prefs.seedIndex||0];
+  document.documentElement.style.setProperty("--accent", seed.accent);
+  var chip = document.getElementById("seedChip");
+  if(chip){ chip.textContent = seed.name + " " + seed.emoji; }
+
+  /* --- storage model (per seed) ----------------------------------------- */
+  function storageKey(){ return "froot_reflections_" + seed.key; }
+
+  function loadEntries(){
+    try{
+      var raw = localStorage.getItem(storageKey());
+      var arr = raw ? JSON.parse(raw) : [];
+      if(!Array.isArray(arr)) arr = [];
+      return arr;
+    }catch(_){ return []; }
+  }
+  function saveEntries(arr){
+    try{ localStorage.setItem(storageKey(), JSON.stringify(arr)); }catch(_){}
+  }
+
+  /* --- UI elements ------------------------------------------------------- */
+  var input   = document.getElementById("input");
+  var list    = document.getElementById("list");
+  var saveBtn = document.getElementById("saveBtn");
+  var newBtn  = document.getElementById("newBtn");
+  var clearBtn= document.getElementById("clearBtn");
+
+  /* --- render list ------------------------------------------------------- */
+  function fmt(ts){
+    try{
+      var d = new Date(ts);
+      var y = d.getFullYear();
+      var m = String(d.getMonth()+1).padStart(2,"0");
+      var day = String(d.getDate()).padStart(2,"0");
+      var hh = String(d.getHours()).padStart(2,"0");
+      var mm = String(d.getMinutes()).padStart(2,"0");
+      return y+"-"+m+"-"+day+" "+hh+":"+mm;
+    }catch(_){ return ""; }
+  }
+  function render(){
+    var arr = loadEntries().slice().sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+    if(!arr.length){
+      list.innerHTML = '<div class="empty">No reflections yet for this seed.</div>';
+      return;
+    }
+    var out = [];
+    for(var i=0;i<arr.length;i++){
+      var it = arr[i];
+      var id = String(it.ts||i);
+      var safe = (it.text||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      out.push(
+        '<div class="row" data-id="'+id+'">'+
+          '<div>'+
+            '<div class="when">'+fmt(it.ts)+'</div>'+
+            '<div class="text">'+safe+'</div>'+
+          '</div>'+
+          '<div><button class="btn danger" data-del="'+id+'">Delete</button></div>'+
+        '</div>'
+      );
+    }
+    list.innerHTML = out.join("");
+    var dels = list.querySelectorAll("[data-del]");
+    for(var j=0;j<dels.length;j++){
+      dels[j].onclick = function(){
+        var id = this.getAttribute("data-del");
+        var arr = loadEntries();
+        var idx = arr.findIndex(function(x){ return String(x.ts||"") === id; });
+        if(idx>-1){ arr.splice(idx,1); saveEntries(arr); render(); }
+      };
+    }
+  }
+
+  /* --- actions ----------------------------------------------------------- */
+  saveBtn.onclick = function(){
+    var t = (input.value||"").trim();
+    if(!t) return;
+    var arr = loadEntries();
+    arr.push({ ts: Date.now(), text: t });
+    saveEntries(arr);
+    input.value = "";
+    render();
+  };
+  newBtn.onclick = function(){ input.value = ""; input.focus(); };
+  clearBtn.onclick = function(){
+    var arr = loadEntries();
+    if(!arr.length) return;
+    saveEntries([]); render();
+  };
+
+  /* init */
+  render();
+})();
+</script>
 </body>
 </html>
-
