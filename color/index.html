@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Color ↔ Sound ↔ Word — Froot Skill</title>
+<meta name="description" content="Train cross-sensory literacy in 3 days: map color to tone to word. Includes palette tones and a 'palette melody' sequencer.">
+<link rel="canonical" href="https://froot.plnt.earth/color/">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+<meta property="og:title" content="Color ↔ Sound ↔ Word — Froot Skill">
+<meta property="og:description" content="Learn to see colors like sound and words. Play tones by hue, log one line per day.">
+<meta property="og:url" content="https://froot.plnt.earth/color/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B0F19">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/color/sitemap.xml">
+<style>
+  :root{
+    --bg:#0B0F19;--ink:#E6EAF2;--muted:#A7B0C2;--card:#101728;--line:rgba(230,234,242,.14);
+    --hi:#A4E8FF;--ok:#34D399;--warn:#FBBF24;--err:#F87171;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Inter,Roboto}
+  a{color:var(--hi);text-decoration:none}
+  .wrap{max-width:920px;margin:0 auto;padding:24px}
+  header{margin-bottom:12px}
+  h1{margin:0 0 6px;font-size:22px}
+  .sub{color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+  .grid{display:grid;gap:12px}
+  @media(min-width:860px){.grid{grid-template-columns:1.1fr .9fr}}
+  .stack{display:grid;gap:10px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  button{appearance:none;border:1px solid var(--line);background:#0E1423;color:var(--ink);padding:8px 10px;border-radius:10px;cursor:pointer}
+  button:hover{border-color:#2A3550}
+  .small{font-size:12px;color:var(--muted)}
+  .swatch{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px}
+  .chip{width:28px;height:28px;border-radius:8px;border:1px solid rgba(0,0,0,.25)}
+  input[type="range"]{width:100%}
+  textarea{width:100%;min-height:72px;background:#0E1423;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;resize:vertical}
+  .tag{font-size:11px;color:#C1C9D8;border:1px solid var(--line);padding:3px 8px;border-radius:999px}
+  .sep{height:1px;background:var(--line);margin:8px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Color ↔ Sound ↔ Word <span class="tag">3-Day Skill</span></h1>
+    <div class="sub">Perception training: match hue to tone to language. Play tones by color, then write one clear line per day.</div>
+  </header>
+
+  <!-- Today / Drills -->
+  <section class="card" id="today">
+    <h2 id="todayTitle">Today</h2>
+    <div class="small" id="windowInfo"></div>
+    <div id="drills" class="stack" aria-live="polite"></div>
+    <div id="checkpoint" class="stack"></div>
+  </section>
+
+  <section class="grid">
+    <!-- Palette & Tones -->
+    <section class="card">
+      <h2>Palette Tones</h2>
+      <div class="small">Tap a color to play its tone (sine). Use Level to set loudness. Sequence plays them in order for a “palette melody.”</div>
+      <div id="swatches" class="stack" aria-live="polite"></div>
+      <div class="sep"></div>
+      <div class="stack">
+        <div class="row">
+          <button id="seqPlay">Play Palette Melody</button>
+          <button id="seqStop">Stop</button>
+        </div>
+        <div class="row">
+          <label class="small">Level</label>
+          <input type="range" id="level" min="0" max="100" value="40" aria-label="Output level">
+          <span id="lvl" class="small">40</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notes & Explanations -->
+    <section class="card">
+      <h2>One-Line Note</h2>
+      <textarea id="note" placeholder="One clear line (color → tone → word)"></textarea>
+      <div class="row">
+        <button id="saveNote">Save Note</button>
+        <span id="noteStatus" class="small"></span>
+      </div>
+      <div class="sep"></div>
+      <div class="small">
+        Hues map to nearby pitches for practice (example set):<br>
+        Red=C4 (261.63 Hz), Orange=D4 (293.66), Yellow=E4 (329.63), Green=G4 (392.00), Blue=A4 (440.00), Violet=B4 (493.88).
+      </div>
+    </section>
+  </section>
+
+  <section class="card">
+    <h2>About</h2>
+    <ul>
+      <li>Loads drills from <code>/color/data/plan.json</code> and palette from <code>/color/data/palette.json</code>.</li>
+      <li><strong>Ask GPT</strong> buttons copy coaching prompts for each drill.</li>
+      <li>Audio uses a simple sine oscillator in your browser (no trackers, no network).</li>
+      <li>Notes save locally in your browser (<code>localStorage</code>), keyed by date.</li>
+    </ul>
+  </section>
+
+  <footer class="small" style="margin-top:12px;color:#A7B0C2;border-top:1px solid var(--line);padding-top:10px">
+    Network: <a href="https://jar.plnt.earth/">Jar</a> • <a href="https://tunes.plnt.earth/">Tunes</a> • <a href="https://quietmoon.plnt.earth/">Quiet Moon</a> • <a href="https://froot.plnt.earth/voice/">Voice Skill</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var state = {
+    plan:null, palette:null, dayIndex:0,
+    ctx:null, gain:null, osc:null, playing:false,
+    seqTimer:null, level:0.4
+  };
+
+  function q(id){return document.getElementById(id)}
+  function setText(id,t){var el=q(id); if(el) el.textContent=t}
+
+  // Clipboard copy
+  function copyText(text, statusEl){
+    function ok(){ if(statusEl){ statusEl.textContent="Prompt copied"; statusEl.className="small"; } }
+    function fail(){ if(statusEl){ statusEl.textContent="Copy failed — select manually"; statusEl.className="small"; } }
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(ok,fail);
+    }else{
+      var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try{ document.execCommand("copy"); ok(); }catch(e){ fail(); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  // Audio
+  function ensureAudio(){
+    if(state.ctx) return;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    state.ctx = new AC();
+    state.gain = state.ctx.createGain();
+    state.gain.gain.value = state.level;
+    state.gain.connect(state.ctx.destination);
+  }
+
+  function startTone(freq){
+    ensureAudio();
+    stopTone();
+    state.osc = state.ctx.createOscillator();
+    state.osc.type = "sine";
+    state.osc.frequency.value = freq;
+    state.osc.connect(state.gain);
+    state.osc.start();
+    state.playing = true;
+  }
+
+  function stopTone(){
+    if(state.osc){
+      try{ state.osc.stop(0);}catch(e){}
+      try{ state.osc.disconnect();}catch(e){}
+    }
+    state.osc = null; state.playing=false;
+  }
+
+  function playOnce(freq, ms){
+    startTone(freq);
+    setTimeout(function(){ stopTone(); }, ms||1200);
+  }
+
+  function stopSequence(){
+    if(state.seqTimer){ clearTimeout(state.seqTimer); }
+    state.seqTimer = null;
+    stopTone();
+  }
+
+  function playSequence(){
+    stopSequence();
+    if(!state.palette || !state.palette.sequence || !state.palette.colors) return;
+    var seq = state.palette.sequence.slice(0);
+    var i = 0;
+    function step(){
+      if(i>=seq.length){ stopSequence(); return; }
+      var key = seq[i++];
+      var item = state.palette.colors[key];
+      if(!item){ step(); return; }
+      playOnce(item.freq, 800);
+      state.seqTimer = setTimeout(step, 950);
+    }
+    step();
+  }
+
+  // UI
+  function renderSwatches(){
+    var host = q("swatches"); host.innerHTML = "";
+    if(!state.palette) return;
+    var keys = state.palette.order || Object.keys(state.palette.colors);
+    keys.forEach(function(key){
+      var item = state.palette.colors[key];
+      var row = document.createElement("div"); row.className="swatch";
+      var chip = document.createElement("div"); chip.className="chip"; chip.style.background = item.hex;
+      var label = document.createElement("div");
+      label.innerHTML = "<strong>"+key+"</strong> — "+item.hex+" • "+(item.note||"")+
+                        " ("+(item.freq||"")+" Hz)"+(item.word?(" • “"+item.word+"”"):"");
+      var btn = document.createElement("button"); btn.textContent="Play";
+      btn.addEventListener("click", function(){ playOnce(item.freq, 1000); });
+      row.appendChild(chip); row.appendChild(label); row.appendChild(btn);
+      host.appendChild(row);
+    });
+  }
+
+  function setLevel(v){
+    state.level = Math.min(1, Math.max(0, v/100));
+    if(state.gain) state.gain.gain.value = state.level;
+    setText("lvl", String(v));
+  }
+
+  // Drills
+  function renderDrills(){
+    var drillsEl = q("drills"); drillsEl.innerHTML = "";
+    var checkpointEl = q("checkpoint"); checkpointEl.innerHTML = "";
+    var day = state.plan.days[state.dayIndex] || {};
+    setText("todayTitle", day.label || "Today");
+    var w = state.plan.window || {};
+    setText("windowInfo", "Window: "+(w.start||"") + " → +"+(w.days||3)+" days");
+
+    (day.drills||[]).forEach(function(step, i){
+      var card = document.createElement("div"); card.className="card";
+      var title = document.createElement("div");
+      title.innerHTML = "<strong>Drill "+(i+1)+":</strong> "+step.text;
+      var row = document.createElement("div"); row.className="row";
+      var btn = document.createElement("button"); btn.textContent = "Ask GPT";
+      var stat = document.createElement("span"); stat.className="small"; stat.textContent="";
+      btn.addEventListener("click", function(){ copyText(step.prompt||"", stat); });
+      row.appendChild(btn); row.appendChild(stat);
+      card.appendChild(title); card.appendChild(row);
+      drillsEl.appendChild(card);
+    });
+
+    if(day.checkpoint_prompt){
+      var ck = document.createElement("div"); ck.className="card";
+      var t = document.createElement("div"); t.innerHTML = "<strong>Checkpoint:</strong> day integration test";
+      var row = document.createElement("div"); row.className="row";
+      var b = document.createElement("button"); b.textContent="Ask GPT (Checkpoint)";
+      var s = document.createElement("span"); s.className="small"; s.textContent="";
+      b.addEventListener("click", function(){ copyText(day.checkpoint_prompt, s); });
+      row.appendChild(b); row.appendChild(s);
+      ck.appendChild(t); ck.appendChild(row);
+      checkpointEl.appendChild(ck);
+    }
+  }
+
+  // Notes
+  function initNotes(){
+    var key = "color-" + (new Date()).toISOString().slice(0,10);
+    var note = q("note");
+    var saved = localStorage.getItem(key);
+    if(saved) note.value = saved;
+    q("saveNote").addEventListener("click", function(){
+      try{
+        localStorage.setItem(key, note.value || "");
+        var ns = q("noteStatus"); ns.textContent = "Saved";
+        setTimeout(function(){ ns.textContent=""; }, 1500);
+      }catch(e){}
+    });
+  }
+
+  // Data loaders
+  function loadPlan(){
+    fetch("/color/data/plan.json").then(function(r){return r.json()}).then(function(j){
+      state.plan = j;
+      var start = new Date(j.window.start);
+      var now = new Date();
+      var idx = Math.floor((now - start) / (24*60*60*1000));
+      if(idx<0) idx=0; if(idx>j.days.length-1) idx=j.days.length-1;
+      state.dayIndex = idx;
+      renderDrills();
+    }).catch(function(){});
+  }
+
+  function loadPalette(){
+    fetch("/color/data/palette.json").then(function(r){return r.json()}).then(function(j){
+      state.palette = j;
+      renderSwatches();
+    }).catch(function(){});
+  }
+
+  // Wire controls
+  q("seqPlay").addEventListener("click", function(){ ensureAudio(); playSequence(); });
+  q("seqStop").addEventListener("click", function(){ stopSequence(); });
+  var lvl = q("level"); lvl.addEventListener("input", function(){ setLevel(parseInt(lvl.value,10)); });
+
+  // Kickoff
+  setLevel(parseInt(q("level").value,10));
+  initNotes();
+  loadPlan();
+  loadPalette();
+})();
+</script>
+</body>
+</html>
