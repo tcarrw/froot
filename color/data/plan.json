@@ -1,0 +1,64 @@
+{
+  "skill": "Color–Sound–Word",
+  "window": { "start": "2025-10-05T22:00:00-04:00", "days": 3 },
+  "days": [
+    {
+      "label": "Day 1 — Perception Calibration",
+      "drills": [
+        {
+          "text": "Color breath: pick a hue; inhale the color, exhale its complement. Note the feeling shift.",
+          "prompt": "Guide me through a 3-minute color-breath practice. I choose [COLOR]. Have me imagine inhaling it and exhaling its complement. Give calm cues every 20–30 seconds."
+        },
+        {
+          "text": "Sound matching: hum while looking at swatches; stop on the hue that fits your tone.",
+          "prompt": "Coach me to hum a steady tone and scan colors until one matches the feeling. Ask for one word that describes the match."
+        },
+        {
+          "text": "Word association: write 3 words for one chosen color.",
+          "prompt": "Help me produce three immediate words for my chosen color without overthinking; then compress into one 10–12 word line."
+        }
+      ],
+      "checkpoint_prompt": "Give me 3 yes/no cues: could I feel a difference between two hues, match one to a tone, and describe it in a word? If any 'no', offer a 60-second remedial scan."
+    },
+    {
+      "label": "Day 2 — Translation Practice",
+      "drills": [
+        {
+          "text": "Color → Note: assign five colors to notes and hum them in order (palette melody).",
+          "prompt": "Help me map five chosen colors to nearby pitches and hum a simple palette melody. Keep the total under 2 minutes."
+        },
+        {
+          "text": "Word gradient: arrange words from coolest→warmest; sketch a matching color line (mental or paper).",
+          "prompt": "Ask me for 5 feeling-words; sort them cool→warm and suggest a simple matching gradient description."
+        },
+        {
+          "text": "Movement match: move your hand with each color’s tempo (slow violet → quicker yellow).",
+          "prompt": "Give a 60-second kinesthetic drill to move hand speed and arc to match each color’s implied tempo."
+        }
+      ],
+      "checkpoint_prompt": "Quick test: can I reproduce my palette melody by memory and describe its mood in one sentence?"
+    },
+    {
+      "label": "Day 3 — Integration & Expression",
+      "drills": [
+        {
+          "text": "Color journal: draw or imagine a gradient and write one short line per band.",
+          "prompt": "Guide me to create a 3-band gradient and write one short line per band linking color→tone→word."
+        },
+        {
+          "text": "Synesthetic soundtrack: pick a song; note colors it paints start→finish.",
+          "prompt": "Prompt me to listen to one song and write a 4-part color progression it evokes (intro, verse, chorus, outro)."
+        },
+        {
+          "text": "Silent visualization: think a word (hope/storm) and note first flashed color.",
+          "prompt": "Lead a 60-second quiet visualization with two words (hope, storm) and ask for first color flashes, then one integrating sentence."
+        }
+      ],
+      "checkpoint_prompt": "Readiness: can I name a color, hum its note, and say one precise word within 10 seconds? If yes, generate a 12-word Jar badge line."
+    }
+  ],
+  "global_prompts": {
+    "jar_badge": "Write a 12-word status for Jar based on my color–sound checkpoint result.",
+    "coach_timer": "Coach me through [DRILL] for [DURATION] with calm cues every [INTERVAL]. Keep it under 120 words."
+  }
+}
