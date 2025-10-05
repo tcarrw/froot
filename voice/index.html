@@ -22,8 +22,7 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
   h1{font-size:20px;margin:0}
   h2{font-size:16px;margin:0 0 8px}
-  button,.btn{appearance:none;border:1px solid var(--line);background:#0E1423;color:var(--ink);
-    padding:8px 10px;border-radius:10px;cursor:pointer}
+  button{appearance:none;border:1px solid var(--line);background:#0E1423;color:var(--ink);padding:8px 10px;border-radius:10px;cursor:pointer}
   button:hover{border-color:#2A3550}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .stack{display:grid;gap:10px}
@@ -97,10 +96,10 @@
     <section class="card">
       <h2>About</h2>
       <ul class="bullets">
-        <li>This page loads drills from <code>data/plan.json</code> and a playlist from <code>data/playlist.json</code>.</li>
-        <li>Use the <strong>Ask GPT</strong> buttons to copy a coaching prompt for each drill.</li>
-        <li>Hums are quiet, looped mono WAVs (e.g., 110/165/220 Hz). Use <em>Blend</em> to mix with a pop track in the same key.</li>
-        <li>Notes save to your browser only (<code>localStorage</code>), keyed by date.</li>
+        <li>Loads drills from <code>data/plan.json</code> and the playlist from <code>data/playlist.json</code>.</li>
+        <li>Use <strong>Ask GPT</strong> to copy a coaching prompt for each drill.</li>
+        <li>Hums are looped mono WAVs; adjust <em>Blend</em> to mix with a pop track in the same key.</li>
+        <li>Notes save locally (<code>localStorage</code>), keyed by date.</li>
       </ul>
     </section>
   </div>
@@ -109,13 +108,14 @@
 (function(){
   var state = {
     plan:null, list:null, dayIndex:0, humNodes:[], humGains:[], ctx:null, srcs:[], gainMaster:null,
-    blend:70, trackIdx:0, ready:false
+    blend:70, trackIdx:0, ready:false,
+    sequencedStarted:false,
+    seqDelay:1.0
   };
 
   function q(id){return document.getElementById(id)}
   function setText(id, t){var el=q(id); if(el) el.textContent=t}
 
-  // Soft clipboard copy with fallback
   function copyText(text, statusEl){
     function ok(){ if(statusEl){ statusEl.textContent="Prompt copied"; statusEl.className="small ok"} }
     function fail(){ if(statusEl){ statusEl.textContent="Copy failed — select manually"; statusEl.className="small warn"} }
@@ -129,11 +129,9 @@
     }
   }
 
-  // Date helpers
   function todayKey(d){ return d.toISOString().slice(0,10); }
   function parseISO(s){ try{ return new Date(s); }catch(e){ return new Date(); } }
 
-  // Audio graph for hums
   function ensureAudioCtx(){
     if(state.ctx) return;
     var AC = window.AudioContext || window.webkitAudioContext;
@@ -155,12 +153,24 @@
     }).catch(function(){});
   }
 
-  function startHums(){
+  function startHums(sequential){
     if(!state.ctx) return;
-    for(var i=0;i<state.srcs.length;i++){
-      var s=state.srcs[i];
-      if(s && !s.started){
-        try{ s.start(0); s.started = true; }catch(e){}
+    if(!state.srcs.length) return;
+    if(sequential && !state.sequencedStarted){
+      var now = state.ctx.currentTime;
+      for(var i=0;i<state.srcs.length;i++){
+        var s = state.srcs[i];
+        if(s && !s.started){
+          try{ s.start(now + (i * state.seqDelay)); s.started = true; }catch(e){}
+        }
+      }
+      state.sequencedStarted = true;
+      return;
+    }
+    for(var j=0;j<state.srcs.length;j++){
+      var sj = state.srcs[j];
+      if(sj && !sj.started){
+        try{ sj.start(0); sj.started = true; }catch(e){}
       }
     }
   }
@@ -168,15 +178,12 @@
   function stopHums(){
     for(var i=0;i<state.srcs.length;i++){
       var s=state.srcs[i];
-      if(s && s.started){
-        try{ s.stop(0); }catch(e){}
-      }
+      if(s && s.started){ try{ s.stop(0); }catch(e){} }
     }
     state.srcs = [];
   }
 
   function setBlend(v){
-    // v: 0..100; 0 = hums only, 100 = pop only
     var pop = q("pop");
     var popVol = Math.min(1, Math.max(0, v/100));
     var humVol = 1 - popVol;
@@ -192,7 +199,7 @@
 
     var day = state.plan.days[state.dayIndex] || {};
     setText("todayTitle", day.label || "Today");
-    var windowInfo = "Window: " + state.plan.window.start + " → +"+state.plan.window.days+" days";
+    var windowInfo = "Window: " + state.plan.window.start + " → +" + state.plan.window.days + " days";
     setText("windowInfo", windowInfo);
 
     (day.drills||[]).forEach(function(step, i){
@@ -209,7 +216,6 @@
       drillsEl.appendChild(card);
     });
 
-    // optional day-level checkpoint
     if(day.checkpoint_prompt){
       var ck = document.createElement("div"); ck.className="card";
       var t = document.createElement("div"); t.innerHTML = "<strong>Checkpoint:</strong> day readiness test";
@@ -227,10 +233,9 @@
     fetch("data/playlist.json").then(function(r){return r.json()}).then(function(j){
       state.list = j;
       setText("humKey", "Key: " + (j.key||"—"));
-      // set up pop track list (we'll use native <audio> src)
       state.trackIdx = 0;
       setPopTrack(0, true);
-      // set up hums (AudioContext only once user interacts)
+
       var humList = q("humList"); humList.innerHTML = "";
       (j.layers && j.layers.hums ? j.layers.hums : []).forEach(function(h, idx){
         var row = document.createElement("div"); row.className="row pill"; row.setAttribute("data-idx", idx);
@@ -242,7 +247,6 @@
         row.appendChild(chk); row.appendChild(lab); row.appendChild(rng);
         humList.appendChild(row);
 
-        // lazy-create audio graph on first interaction
         function ensureAndLoad(){
           ensureAudioCtx();
           if(!state.srcs[idx]){
@@ -263,27 +267,23 @@
           g.gain.value = (rng.value/100) * on;
         });
 
-        // start hums when user hits play on pop or interacts with controls
-        row.addEventListener("pointerdown", function(){ ensureAndLoad(); startHums(); }, {passive:true});
+        row.addEventListener("pointerdown", function(){
+          ensureAndLoad();
+          startHums(true);
+        }, {passive:true});
       });
 
-      // Blend slider
       var blend = q("blend");
       blend.addEventListener("input", function(){ setBlend(parseInt(blend.value,10)); });
 
-      // Transport buttons
       q("restart").addEventListener("click", function(){
         var pop = q("pop"); try{ pop.currentTime = 0; pop.play(); }catch(e){}
-        ensureAudioCtx(); startHums();
+        ensureAudioCtx();
+        startHums(false);
       });
-      q("prevTrack").addEventListener("click", function(){
-        setPopTrack(state.trackIdx-1, true);
-      });
-      q("nextTrack").addEventListener("click", function(){
-        setPopTrack(state.trackIdx+1, true);
-      });
+      q("prevTrack").addEventListener("click", function(){ setPopTrack(state.trackIdx-1, true); });
+      q("nextTrack").addEventListener("click", function(){ setPopTrack(state.trackIdx+1, true); });
 
-      // start volumes
       setBlend(state.blend);
     }).catch(function(){});
   }
@@ -295,17 +295,13 @@
     var t = state.list.tracks[state.trackIdx];
     setText("trackTitle", t.title || "—");
     var el = q("pop");
-    // For cross-origin media, prefer direct file/stream URL in playlist.json ("url").
     if(t.url){ el.src = t.url; } else { el.removeAttribute("src"); }
-    try{
-      if(autoplay){ el.play().catch(function(){}); }
-    }catch(e){}
+    try{ if(autoplay){ el.play().catch(function(){}); } }catch(e){}
   }
 
   function loadPlan(){
     fetch("data/plan.json").then(function(r){return r.json()}).then(function(j){
       state.plan = j;
-      // Compute which day index we are in
       var start = parseISO(j.window && j.window.start ? j.window.start : new Date().toISOString());
       var now = new Date();
       var ms = now - start;
@@ -333,7 +329,6 @@
     });
   }
 
-  // Kickoff
   loadPlan();
   loadPlaylist();
   initNotes();
@@ -341,4 +336,3 @@
 </script>
 </body>
 </html>
-
