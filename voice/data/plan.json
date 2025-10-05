@@ -1,1 +1,66 @@
+{
+  "skill": "Voice & Resonance",
+  "window": { "start": "2025-10-04T22:00:00-04:00", "days": 3 },
+  "days": [
+    {
+      "label": "Day 1 — Discover",
+      "drills": [
+        {
+          "text": "60s gentle hum; locate vibration (throat/chest/skull).",
+          "prompt": "Coach me through a 60-second gentle hum with cues every 10 seconds. Focus on relaxed jaw and chest resonance. Start with a 5-second arrival."
+        },
+        {
+          "text": "Nasal inhale → 'mmm' exhale × 5.",
+          "prompt": "Guide 5 cycles of nasal inhale, 'mmm' exhale with a 1:2 inhale:exhale ratio. Keep instructions minimal and calm."
+        },
+        {
+          "text": "One-line note: where does my voice live today?",
+          "prompt": "Compress my felt sensation into one 12-word line for my Jar log."
+        }
+      ],
+      "checkpoint_prompt": "Ask me 3 yes/no cues to confirm no throat strain and steady pulse; if not, provide a 60s remedial soft-hum drill."
+    },
+    {
+      "label": "Day 2 — Control",
+      "drills": [
+        {
+          "text": "Soft vs. strong hum (no strain) × 5.",
+          "prompt": "Run a 5-round contrast practice: 6 seconds soft hum, 6 seconds slightly stronger, with reminders to avoid strain."
+        },
+        {
+          "text": "Read aloud 2 minutes with steady breath.",
+          "prompt": "Give a 10-second posture setup, 10-second breath setup, then quiet 20-second checkpoints during a 2-minute read-aloud to relax shoulders and jaw."
+        },
+        {
+          "text": "Warm water; jaw/neck stretch every 3 hours.",
+          "prompt": "Give a 30-second jaw/neck release routine I can repeat every 3 hours."
+        }
+      ],
+      "mix_prompt": "I’m layering hums at 110/220/165 Hz (A2→A3→E3) under a track in key A (≈96 BPM). Suggest starting gains (0–1), which partials to keep/drop, and how to avoid clashes."
+    },
+    {
+      "label": "Day 3 — Integrate",
+      "drills": [
+        {
+          "text": "Posture + breath + steady tone; speak one calm truth.",
+          "prompt": "Guide a 90-second integration: stance, 1:2 breath, steady tone, then one calm sentence. Keep it grounded."
+        },
+        {
+          "text": "Record once; listen for steadiness.",
+          "prompt": "Give a 4-point listening checklist (tone, breath noise, jaw tension, pace) and a 45-second remedial if one item fails."
+        },
+        {
+          "text": "60s silence; notice residual vibration.",
+          "prompt": "Lead a 60-second quiet scan to feel residual vibration; then produce one 10-word summary line."
+        }
+      ],
+      "checkpoint_prompt": "Evaluate readiness: ask for calm-count pulse before/after 30s hum; if delta ≤3 BPM and no throat strain, suggest a 12-word Jar badge line."
+    }
+  ],
+  "global_prompts": {
+    "jar_badge": "Write a 12-word status for Jar Oct 18 badge based on my checkpoint result. Tone: steady, non-hype.",
+    "tunes_mix": "I need a minimal plan to blend hums with a pop track in key A without clashes; give 5 bullet rules.",
+    "code_helper": "Provide a minimal vanilla JS audio mixer for 3 looped WAVs + blend slider vs <audio>, single file, no console logs."
+  }
+}
 
