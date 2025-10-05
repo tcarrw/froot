@@ -45,6 +45,7 @@
   .links{display:flex;gap:14px;flex-wrap:wrap}
   .btnlink{display:inline-block;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;text-decoration:none}
   .btnlink:hover{border-color:var(--accent)}
+  .tiny{font-size:.92em;color:var(--muted);display:block;margin-top:4px}
 </style>
 </head>
 <body>
@@ -103,15 +104,19 @@
     </aside>
   </div>
 
-  <!-- NEW: Playlists card linking to Tunes with seed param -->
+  <!-- Playlists card linking to Tunes + direct JSON in the Tunes data folder -->
   <section class="card" style="margin-top:18px">
-    <h2>Playlists (open in Tunes)</h2>
-    <p>Your active seed tint will carry into Tunes.</p>
+    <h2>Playlists</h2>
+    <p>Open in Tunes with your active seed tint, or view the raw JSON data.</p>
     <div class="links">
       <a id="toExplainer" class="btnlink" href="https://tunes.plnt.earth/mixes/explainer/">Explainer Mix</a>
+      <span class="tiny">Data: <a href="https://tunes.plnt.earth/data/illumina/1/tracks/explainer.json" target="_blank" rel="noopener">explainer.json</a></span>
+
       <a id="toAnchorPublic" class="btnlink" href="https://tunes.plnt.earth/mixes/anchorpublic/">Anchor Public</a>
+      <span class="tiny">Data: <a href="https://tunes.plnt.earth/data/illumina/1/tracks/anchor-public.json" target="_blank" rel="noopener">anchor-public.json</a></span>
+
       <a id="toAnchorBuilt" class="btnlink" href="https://tunes.plnt.earth/mixes/anchorbuilt/">Anchor Built</a>
-      <a id="toNoKings" class="btnlink" href="https://tunes.plnt.earth/mixes/nokings/">No Kings Day</a>
+      <span class="tiny">Data: <a href="https://tunes.plnt.earth/data/illumina/1/tracks/anchor-built.json" target="_blank" rel="noopener">anchor-built.json</a></span>
     </div>
   </section>
 
@@ -149,8 +154,7 @@
     plist:document.getElementById("plist"),
     toExplainer:document.getElementById("toExplainer"),
     toAnchorPublic:document.getElementById("toAnchorPublic"),
-    toAnchorBuilt:document.getElementById("toAnchorBuilt"),
-    toNoKings:document.getElementById("toNoKings")
+    toAnchorBuilt:document.getElementById("toAnchorBuilt")
   };
 
   function loadPrefs(){
@@ -159,9 +163,7 @@
       if(p.plKey && playlists[p.plKey]) state.plKey=p.plKey;
     }catch(_){}
   }
-  function savePrefs(){
-    try{ localStorage.setItem("froot_prefs", JSON.stringify({seedIndex:state.seedIndex, plKey:state.plKey})); }catch(_){}
-  }
+  function savePrefs(){ try{ localStorage.setItem("froot_prefs", JSON.stringify({seedIndex:state.seedIndex, plKey:state.plKey})); }catch(_){} }
   function youTubeId(url){ if(!url) return ""; var m=String(url).match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/i); return m?m[1]:""; }
 
   function applySeed(){
@@ -171,17 +173,17 @@
     els.seedName.textContent=s.name;
     els.seedEmoji.textContent=s.emoji;
     els.seedText.textContent=s.text;
-    // update Tunes links to carry seed
     var q="?seed="+encodeURIComponent(s.key);
     if(els.toExplainer) els.toExplainer.href="https://tunes.plnt.earth/mixes/explainer/"+q;
     if(els.toAnchorPublic) els.toAnchorPublic.href="https://tunes.plnt.earth/mixes/anchorpublic/"+q;
     if(els.toAnchorBuilt) els.toAnchorBuilt.href="https://tunes.plnt.earth/mixes/anchorbuilt/"+q;
-    if(els.toNoKings) els.toNoKings.href="https://tunes.plnt.earth/mixes/nokings/"+q;
   }
+
   function setPlaylistButtonActive(){
     var btns=els.plist.querySelectorAll("button");
     for(var i=0;i<btns.length;i++){ var b=btns[i]; if(b.getAttribute("data-pl")===state.plKey) b.classList.add("active"); else b.classList.remove("active"); }
   }
+
   function renderPlayer(){
     var t=state.tracks[state.current];
     if(!t){ els.videoSlot.innerHTML=""; els.trackTitle.textContent="—"; els.trackArtist.textContent="—"; els.countPill.textContent="0 / 0"; return; }
@@ -196,6 +198,7 @@
       els.videoSlot.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:10px;text-align:center"><a class="btn primary" href="'+safe+'" target="_blank" rel="noopener">Open Track</a></div>';
     }
   }
+
   function renderQueue(){
     if(!state.tracks.length){ els.queue.innerHTML='<div class="empty">No tracks found for this playlist.</div>'; return; }
     var out=[]; for(var i=0;i<state.tracks.length;i++){ var t=state.tracks[i];
@@ -210,6 +213,7 @@
     var rows=els.queue.querySelectorAll(".row");
     for(var j=0;j<rows.length;j++){ rows[j].onclick=function(){ var k=parseInt(this.getAttribute("data-idx")||"0",10); if(!isNaN(k)){ state.current=k; renderPlayer(); renderQueue(); }};}
   }
+
   function fetchList(){
     var def=playlists[state.plKey]; if(!def){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); return; }
     var controller=new AbortController(); var signal=controller.signal; setTimeout(function(){ try{controller.abort()}catch(_){} },9000);
@@ -221,10 +225,10 @@
       })
       .catch(function(){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); });
   }
+
   function prev(){ if(state.tracks.length){ state.current=(state.current-1+state.tracks.length)%state.tracks.length; renderPlayer(); renderQueue(); } }
   function next(){ if(state.tracks.length){ state.current=(state.current+1)%state.tracks.length; renderPlayer(); renderQueue(); } }
 
-  // controls
   document.getElementById("prevBtn").onclick=prev;
   document.getElementById("nextBtn").onclick=next;
   document.getElementById("playBtn").onclick=function(){ var iframe=document.getElementById("videoSlot").querySelector("iframe"); if(iframe&&iframe.src.indexOf("autoplay=1")<0){ iframe.src=iframe.src+(iframe.src.indexOf("?")>-1?"&":"?")+"autoplay=1"; } };
@@ -232,9 +236,13 @@
   document.getElementById("seedNext").onclick=function(){ state.seedIndex=(state.seedIndex+1)%seeds.length; applySeed(); savePrefs(); };
   document.getElementById("plist").addEventListener("click", function(e){ var t=e.target; var key=t&&t.getAttribute?t.getAttribute("data-pl"):""; if(key&&playlists[key]){ state.plKey=key; setPlaylistButtonActive(); savePrefs(); fetchList(); } });
 
+  function setPlaylistButtonActive(){
+    var btns=document.getElementById("plist").querySelectorAll("button");
+    for(var i=0;i<btns.length;i++){ var b=btns[i]; if(b.getAttribute("data-pl")===state.plKey) b.classList.add("active"); else b.classList.remove("active"); }
+  }
+
   // init
-  try{ var s=localStorage.getItem("froot_prefs"); if(s){ var p=JSON.parse(s); if(typeof p.seedIndex==="number") state.seedIndex=Math.max(0,Math.min(seeds.length-1,p.seedIndex)); if(p.plKey&&playlists[p.plKey]) state.plKey=p.plKey; }}catch(_){}
-  applySeed(); setPlaylistButtonActive(); fetchList();
+  loadPrefs(); applySeed(); setPlaylistButtonActive(); fetchList();
 })();
 </script>
 </body>
