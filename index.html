@@ -104,7 +104,6 @@
     </aside>
   </div>
 
-  <!-- Playlists card linking to Tunes + direct JSON in the Tunes data folder -->
   <section class="card" style="margin-top:18px">
     <h2>Playlists</h2>
     <p>Open in Tunes with your active seed tint, or view the raw JSON data.</p>
@@ -136,11 +135,14 @@
     {key:"fennel",   name:"Fennel",   emoji:"🌱", accent:"#7DE2A7", text:"Fennel lifts: lightness, breath, and green attention."},
     {key:"cardamom", name:"Cardamom", emoji:"✨", accent:"#C7B3FF", text:"Cardamom opens: bright perfume and welcome."}
   ];
+
+  /* POINT FROOT TO TUNES JSON (absolute URLs) */
   var playlists = {
-    "explainer":      { label:"Explainer",      file:"/data/illumina/1/tracks/explainer.json" },
-    "anchor-public":  { label:"Anchor Public",  file:"/data/illumina/1/tracks/anchor-public.json" },
-    "anchor-built":   { label:"Anchor Built",   file:"/data/illumina/1/tracks/anchor-built.json" }
+    "explainer":      { label:"Explainer",      file:"https://tunes.plnt.earth/data/illumina/1/tracks/explainer.json" },
+    "anchor-public":  { label:"Anchor Public",  file:"https://tunes.plnt.earth/data/illumina/1/tracks/anchor-public.json" },
+    "anchor-built":   { label:"Anchor Built",   file:"https://tunes.plnt.earth/data/illumina/1/tracks/anchor-built.json" }
   };
+
   var state = { seedIndex:0, plKey:"explainer", tracks:[], current:0 };
 
   var els = {
@@ -149,101 +151,4 @@
     videoSlot:document.getElementById("videoSlot"), trackTitle:document.getElementById("trackTitle"),
     trackArtist:document.getElementById("trackArtist"), countPill:document.getElementById("countPill"),
     queue:document.getElementById("queue"), seedPrev:document.getElementById("seedPrev"),
-    seedNext:document.getElementById("seedNext"), prevBtn:document.getElementById("prevBtn"),
-    nextBtn:document.getElementById("nextBtn"), playBtn:document.getElementById("playBtn"),
-    plist:document.getElementById("plist"),
-    toExplainer:document.getElementById("toExplainer"),
-    toAnchorPublic:document.getElementById("toAnchorPublic"),
-    toAnchorBuilt:document.getElementById("toAnchorBuilt")
-  };
-
-  function loadPrefs(){
-    try{ var s=localStorage.getItem("froot_prefs"); if(!s) return; var p=JSON.parse(s);
-      if(typeof p.seedIndex==="number") state.seedIndex=Math.max(0,Math.min(seeds.length-1,p.seedIndex));
-      if(p.plKey && playlists[p.plKey]) state.plKey=p.plKey;
-    }catch(_){}
-  }
-  function savePrefs(){ try{ localStorage.setItem("froot_prefs", JSON.stringify({seedIndex:state.seedIndex, plKey:state.plKey})); }catch(_){} }
-  function youTubeId(url){ if(!url) return ""; var m=String(url).match(/(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/i); return m?m[1]:""; }
-
-  function applySeed(){
-    var s=seeds[state.seedIndex];
-    document.documentElement.style.setProperty("--accent", s.accent);
-    els.seedTag.textContent=s.name.toUpperCase();
-    els.seedName.textContent=s.name;
-    els.seedEmoji.textContent=s.emoji;
-    els.seedText.textContent=s.text;
-    var q="?seed="+encodeURIComponent(s.key);
-    if(els.toExplainer) els.toExplainer.href="https://tunes.plnt.earth/mixes/explainer/"+q;
-    if(els.toAnchorPublic) els.toAnchorPublic.href="https://tunes.plnt.earth/mixes/anchorpublic/"+q;
-    if(els.toAnchorBuilt) els.toAnchorBuilt.href="https://tunes.plnt.earth/mixes/anchorbuilt/"+q;
-  }
-
-  function setPlaylistButtonActive(){
-    var btns=els.plist.querySelectorAll("button");
-    for(var i=0;i<btns.length;i++){ var b=btns[i]; if(b.getAttribute("data-pl")===state.plKey) b.classList.add("active"); else b.classList.remove("active"); }
-  }
-
-  function renderPlayer(){
-    var t=state.tracks[state.current];
-    if(!t){ els.videoSlot.innerHTML=""; els.trackTitle.textContent="—"; els.trackArtist.textContent="—"; els.countPill.textContent="0 / 0"; return; }
-    els.trackTitle.textContent = t.title||"Untitled";
-    els.trackArtist.textContent = t.artist || t.channel || "";
-    els.countPill.textContent = String(state.current+1)+" / "+String(state.tracks.length);
-    var id=youTubeId(t.url||t.link||t.youtube||"");
-    if(id){
-      els.videoSlot.innerHTML='<iframe width="100%" height="100%" src="https://www.youtube.com/embed/'+id+'?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
-    }else{
-      var safe=(t.url||t.link||"#");
-      els.videoSlot.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:10px;text-align:center"><a class="btn primary" href="'+safe+'" target="_blank" rel="noopener">Open Track</a></div>';
-    }
-  }
-
-  function renderQueue(){
-    if(!state.tracks.length){ els.queue.innerHTML='<div class="empty">No tracks found for this playlist.</div>'; return; }
-    var out=[]; for(var i=0;i<state.tracks.length;i++){ var t=state.tracks[i];
-      out.push('<div class="row'+(i===state.current?' active':'')+'" data-idx="'+i+'">'+
-        '<div class="num">'+(i+1)+'</div><div class="col">'+
-        '<div class="title">'+(t.title||"Untitled")+'</div>'+
-        '<div><small>'+(t.artist || t.channel || "")+'</small></div>'+
-        '<div class="source"><small>'+(t.platform || (youTubeId(t.url||t.link||t.youtube)?"YouTube":""))+'</small></div>'+
-      '</div></div>');
-    }
-    els.queue.innerHTML=out.join("");
-    var rows=els.queue.querySelectorAll(".row");
-    for(var j=0;j<rows.length;j++){ rows[j].onclick=function(){ var k=parseInt(this.getAttribute("data-idx")||"0",10); if(!isNaN(k)){ state.current=k; renderPlayer(); renderQueue(); }};}
-  }
-
-  function fetchList(){
-    var def=playlists[state.plKey]; if(!def){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); return; }
-    var controller=new AbortController(); var signal=controller.signal; setTimeout(function(){ try{controller.abort()}catch(_){} },9000);
-    fetch(def.file,{signal,headers:{"Accept":"application/json"}})
-      .then(function(r){ if(!r.ok) return Promise.reject(); return r.json(); })
-      .then(function(j){ var arr=Array.isArray(j)?j:(Array.isArray(j.tracks)?j.tracks:[]);
-        state.tracks=arr.map(function(x){return {title:x.title||x.name||"",artist:x.artist||x.by||x.channel||"",url:x.url||x.link||x.youtube||"",platform:x.platform||""};});
-        state.current=0; renderPlayer(); renderQueue();
-      })
-      .catch(function(){ state.tracks=[]; state.current=0; renderPlayer(); renderQueue(); });
-  }
-
-  function prev(){ if(state.tracks.length){ state.current=(state.current-1+state.tracks.length)%state.tracks.length; renderPlayer(); renderQueue(); } }
-  function next(){ if(state.tracks.length){ state.current=(state.current+1)%state.tracks.length; renderPlayer(); renderQueue(); } }
-
-  document.getElementById("prevBtn").onclick=prev;
-  document.getElementById("nextBtn").onclick=next;
-  document.getElementById("playBtn").onclick=function(){ var iframe=document.getElementById("videoSlot").querySelector("iframe"); if(iframe&&iframe.src.indexOf("autoplay=1")<0){ iframe.src=iframe.src+(iframe.src.indexOf("?")>-1?"&":"?")+"autoplay=1"; } };
-  document.getElementById("seedPrev").onclick=function(){ state.seedIndex=(state.seedIndex-1+seeds.length)%seeds.length; applySeed(); savePrefs(); };
-  document.getElementById("seedNext").onclick=function(){ state.seedIndex=(state.seedIndex+1)%seeds.length; applySeed(); savePrefs(); };
-  document.getElementById("plist").addEventListener("click", function(e){ var t=e.target; var key=t&&t.getAttribute?t.getAttribute("data-pl"):""; if(key&&playlists[key]){ state.plKey=key; setPlaylistButtonActive(); savePrefs(); fetchList(); } });
-
-  function setPlaylistButtonActive(){
-    var btns=document.getElementById("plist").querySelectorAll("button");
-    for(var i=0;i<btns.length;i++){ var b=btns[i]; if(b.getAttribute("data-pl")===state.plKey) b.classList.add("active"); else b.classList.remove("active"); }
-  }
-
-  // init
-  loadPrefs(); applySeed(); setPlaylistButtonActive(); fetchList();
-})();
-</script>
-</body>
-</html>
+    seedNext:document.getElementById("seedNext"), prevBtn:document.getElementById
