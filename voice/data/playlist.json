@@ -1,1 +1,50 @@
+{
+  "key": "A major",
+  "bpm": 96,
+  "layers": {
+    "hums": [
+      {
+        "name": "A2 tonic",
+        "freq": 110,
+        "file": "assets/hums/A2_110.wav",
+        "gain": 0.22
+      },
+      {
+        "name": "A3 octave",
+        "freq": 220,
+        "file": "assets/hums/A3_220.wav",
+        "gain": 0.18
+      },
+      {
+        "name": "E3 fifth",
+        "freq": 165,
+        "file": "assets/hums/E3_165.wav",
+        "gain": 0.14
+      }
+    ]
+  },
+  "tracks": [
+    {
+      "title": "Marina — I'm Not A Robot",
+      "service": "youtube",
+      "id": "official",
+      "url": "<YOUTUBE_URL>",
+      "key": "A"
+    },
+    {
+      "title": "Sabrina — Feather",
+      "service": "apple",
+      "id": "<APPLE_ID>",
+      "url": "<APPLE_URL>",
+      "key": "A"
+    },
+    {
+      "title": "Doechii — What It Is",
+      "service": "youtube",
+      "id": "official",
+      "url": "<YOUTUBE_URL>",
+      "key": "A"
+    }
+  ]
+}
 
