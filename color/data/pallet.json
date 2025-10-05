@@ -1,0 +1,12 @@
+{
+  "order": ["Red", "Orange", "Yellow", "Green", "Blue", "Violet"],
+  "sequence": ["Red", "Orange", "Yellow", "Green", "Blue", "Violet"],
+  "colors": {
+    "Red":    { "hex": "#E63946", "note": "C4", "freq": 261.63, "word": "vital" },
+    "Orange": { "hex": "#F4A261", "note": "D4", "freq": 293.66, "word": "open" },
+    "Yellow": { "hex": "#F1C40F", "note": "E4", "freq": 329.63, "word": "bright" },
+    "Green":  { "hex": "#2ECC71", "note": "G4", "freq": 392.00, "word": "steady" },
+    "Blue":   { "hex": "#3498DB", "note": "A4", "freq": 440.00, "word": "clear" },
+    "Violet": { "hex": "#9B59B6", "note": "B4", "freq": 493.88, "word": "reflective" }
+  }
+}
