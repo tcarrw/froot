@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Froot — Marina Reflection Edition · Muse + Honey + Share</title>
-  <meta name="description" content="Froot: a Marina-inspired color-sense studio with Muse skin, Honey Mode (128 Hz), Export, Share, and optional Bluetooth (BLE) send.">
+  <meta name="description" content="Froot: a Marina-inspired color-sense studio with Muse skin, Honey Mode (128 Hz), Export/Share, BLE send, and a crackle-safe audio engine.">
   <style>
     /* ===== Crisp, iOS-friendly typography ===== */
     html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
@@ -51,6 +51,7 @@
       transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
     }
     button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
+    button:active{filter:brightness(1.05)}
     .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02))}
     .ghost{opacity:.92}
 
@@ -314,12 +315,11 @@
   <script>
     /* ===== Local prefs (persist Muse/Honey between visits) ===== */
     var PREFS_KEY="froot_prefs_v1";
+    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:false,honey:false} }
+    function savePrefs(){ try{ localStorage.setItem(PREFS_KEY, JSON.stringify({muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')})) }catch(e){} }
     var prefs = loadPrefs();
     if(prefs.muse) document.body.classList.add("muse");
     if(prefs.honey) document.body.classList.add("honey");
-
-    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:false,honey:false} }
-    function savePrefs(){ try{ localStorage.setItem(PREFS_KEY, JSON.stringify({muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')})) }catch(e){} }
 
     /* ===== Map state ===== */
     var FROOT_KEY="froot_marina_map_v1";
@@ -330,8 +330,8 @@
       ancient:{name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23, id:"ancient"},
       heaven:{name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)", freq:587.33, id:"heaven"}
     };
-    var mapData=loadMap();
     function loadMap(){ try{var raw=localStorage.getItem(FROOT_KEY); if(raw){return JSON.parse(raw)} }catch(e){} return {blue:"",froot:"",immortal:"",ancient:"",heaven:""} }
+    var mapData=loadMap();
     function persist(){ try{localStorage.setItem(FROOT_KEY, JSON.stringify(mapData))}catch(e){} renderMap(); hydrateInputs() }
     function saveWord(key,val){ mapData[key]=(val||"").trim(); persist() }
     function resetMap(){ mapData={blue:"",froot:"",immortal:"",ancient:"",heaven:""}; stopTone(); honeyStop(); persist() }
@@ -352,31 +352,87 @@
       }
     }
 
-    /* ===== Audio engine ===== */
-    var ctx=null, osc=null, g=null, activeKey=null, pulseTimer=null;
+    /* ===== Crackle-safe Audio Engine ===== */
+    var ctx=null, master=null, comp=null, dc=null;
+    var toneOsc=null, toneGain=null, pulseTimer=null, activeKey=null;
     var honeyOsc=null, honeyGain=null;
-    function ensureCtx(){ if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)() } return ctx }
+    var retriggerGuard=false;
+
+    function ensureCtx(){
+      if(!ctx){
+        ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
+
+        // Master chain: headroom → compressor → DC-block → destination
+        master = ctx.createGain();            master.gain.value = 0.90;
+
+        comp   = ctx.createDynamicsCompressor();
+        comp.threshold.value = -24;
+        comp.knee.value      =   8;
+        comp.ratio.value     =   4;
+        comp.attack.value    = 0.003;
+        comp.release.value   = 0.250;
+
+        dc = ctx.createBiquadFilter();
+        dc.type = "highpass"; dc.frequency.value = 12;
+
+        master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
+      }
+      return ctx;
+    }
+
+    function killToneFast(now){
+      if(!toneOsc || !toneGain){ return; }
+      try{
+        toneGain.gain.setTargetAtTime(0.0001, now, 0.03); // ~60–80ms fade
+        toneOsc.stop(now + 0.06);
+      }catch(_){}
+      setTimeout(function(){
+        try{ toneOsc.disconnect(); }catch(_){}
+        try{ toneGain.disconnect(); }catch(_){}
+        toneOsc=null; toneGain=null;
+      }, 100);
+    }
 
     function playTone(key){
-      stopTone(); var s=seeds[key]; if(!s) return; ensureCtx();
-      osc=ctx.createOscillator(); g=ctx.createGain();
-      osc.type="sine"; osc.frequency.setValueAtTime(s.freq, ctx.currentTime);
-      var now=ctx.currentTime;
-      g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(0.28, now+0.08);
-      g.gain.exponentialRampToValueAtTime(0.20, now+0.40);
-      g.gain.exponentialRampToValueAtTime(0.0001, now+5.8);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(now); osc.stop(now+6.0);
-      activeKey=key; pulseOn(key);
-      osc.onended=function(){ pulseOff(key); activeKey=null };
+      ensureCtx();
+      var s = seeds[key]; if(!s) return;
+
+      var now = ctx.currentTime;
+
+      // Fade any previous tone before retrigger
+      if(toneOsc){ killToneFast(now); }
+
+      // Micro guard to prevent double-fire spam
+      if(retriggerGuard) return;
+      retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 120);
+
+      toneOsc  = ctx.createOscillator();
+      toneGain = ctx.createGain();
+
+      toneOsc.type = "sine";
+      toneOsc.frequency.setValueAtTime(s.freq, now);
+
+      // Smooth envelope
+      toneGain.gain.cancelScheduledValues(now);
+      toneGain.gain.setValueAtTime(0.0001, now);
+      toneGain.gain.exponentialRampToValueAtTime(0.26, now + 0.06);     // attack
+      toneGain.gain.setTargetAtTime(0.18, now + 0.30, 0.12);            // settle
+      toneGain.gain.setTargetAtTime(0.0001, now + 5.50, 0.25);          // release
+
+      toneOsc.connect(toneGain); toneGain.connect(master);
+      toneOsc.start(now);
+      toneOsc.stop(now + 6.0);
+
+      activeKey = key; pulseOn(key);
+      toneOsc.onended = function(){ pulseOff(key); activeKey=null; };
     }
+
     function stopTone(){
-      if(osc){ try{osc.stop()}catch(e){} }
-      if(g){ try{g.disconnect()}catch(e){} }
-      if(osc){ try{osc.disconnect()}catch(e){} }
-      osc=null; g=null; if(activeKey){ pulseOff(activeKey); activeKey=null }
+      if(!ctx){ return; }
+      killToneFast(ctx.currentTime);
     }
+
+    /* ===== Visual Pulse ===== */
     function pulseOn(key){
       var id="swatch-"+(key==="immortal"?"immortal":key); var el=document.getElementById(id); if(!el) return;
       el.classList.add("pulse"); clearInterval(pulseTimer);
@@ -404,13 +460,19 @@
     function honeyStart(){
       ensureCtx();
       if(honeyOsc){ return }
-      honeyOsc=ctx.createOscillator(); honeyGain=ctx.createGain();
-      honeyOsc.type="sine"; honeyOsc.frequency.setValueAtTime(128.0, ctx.currentTime);
-      var now=ctx.currentTime;
+      honeyOsc  = ctx.createOscillator();
+      honeyGain = ctx.createGain();
+      honeyOsc.type = "sine";
+      honeyOsc.frequency.setValueAtTime(128.0, ctx.currentTime);
+
+      var now = ctx.currentTime;
       honeyGain.gain.setValueAtTime(0.0001, now);
-      honeyGain.gain.exponentialRampToValueAtTime(0.12, now+0.25);
-      honeyOsc.connect(honeyGain); honeyGain.connect(ctx.destination);
+      honeyGain.gain.exponentialRampToValueAtTime(0.12, now + 0.25); // fade in
+
+      honeyOsc.connect(honeyGain);
+      honeyGain.connect(master); // route through master chain
       honeyOsc.start(now);
+
       var vol=document.getElementById("honeyVol"); if(vol){ honeyVolume(vol.value) }
     }
     function honeyStop(){
@@ -419,25 +481,25 @@
       try{
         honeyGain.gain.setTargetAtTime(0.0001, now, 0.25);
         setTimeout(function(){
-          try{ honeyOsc.stop() }catch(e){}
-          try{ honeyOsc.disconnect(); honeyGain.disconnect() }catch(e){}
+          try{ honeyOsc.stop() }catch(_){}
+          try{ honeyOsc.disconnect(); honeyGain.disconnect() }catch(_){}
           honeyOsc=null; honeyGain=null;
         }, 400);
-      }catch(e){
-        try{ honeyOsc.stop() }catch(_){}
+      }catch(_){
+        try{ honeyOsc.stop() }catch(__){}
         honeyOsc=null; honeyGain=null;
       }
     }
     function honeyVolume(val){
       if(!honeyGain || !ctx){ return }
       var v=Math.max(0, Math.min(100, Number(val)||0));
-      var gain = v/100 * 0.35;
+      var gain = v/100 * 0.35; // headroom
       honeyGain.gain.setTargetAtTime(gain, ctx.currentTime, 0.05);
     }
 
     /* ===== Export + Share ===== */
     function buildMapBlob(){
-      var payload={version:"1.2", map:mapData, prefs:{muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
+      var payload={version:"1.3", map:mapData, prefs:{muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
       return new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     }
     function exportMap(){
@@ -451,8 +513,8 @@
     async function shareMap(){
       var blob=buildMapBlob();
       var fileName="froot_marina_synesthesia_map.json";
-      var filesSupport = !!(navigator.canShare && navigator.canShare({files:[new File([blob], fileName, {type:blob.type})]}));
-      if(navigator.share && filesSupport){
+      var canFiles = !!(navigator.canShare && navigator.canShare({files:[new File([blob], fileName, {type:blob.type})]}));
+      if(navigator.share && canFiles){
         var f=new File([blob], fileName, {type:blob.type});
         await navigator.share({files:[f], title:"Froot Synesthesia Map", text:"My Froot color-sense map"});
         return;
@@ -463,39 +525,32 @@
         URL.revokeObjectURL(url);
         return;
       }
-      exportMap(); /* Fallback: just download */
+      exportMap(); /* fallback */
     }
 
-    /* ===== Bluetooth (BLE) send — Nordic UART Service path =====
-       This is **optional** and only works with BLE receivers that expose:
-       Service UUID: 6E400001-B5A3-F393-E0A9-E50E24DCCA9E
-       TX Char (write): 6E400002-B5A3-F393-E0A9-E50E24DCCA9E
-    */
+    /* ===== Bluetooth (BLE) send — Nordic UART Service ===== */
     var BLE={device:null, server:null, svc:null, tx:null};
     async function bleSend(){
       try{
-        var svcUUID   ="6e400001-b5a3-f393-e0a9-e50e24dcca9e";
-        var txUUID    ="6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+        var svcUUID="6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+        var txUUID ="6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         BLE.device = await navigator.bluetooth.requestDevice({filters:[{services:[svcUUID]}]});
         BLE.server = await BLE.device.gatt.connect();
         BLE.svc    = await BLE.server.getPrimaryService(svcUUID);
         BLE.tx     = await BLE.svc.getCharacteristic(txUUID);
 
         var blob=buildMapBlob();
-        var text = await blob.text();
-        var data = new TextEncoder().encode(text);
+        var text=await blob.text();
+        var data=new TextEncoder().encode(text);
 
-        // chunk to <= 180 bytes to be safe
         var mtu=180;
         for(var i=0;i<data.length;i+=mtu){
           var slice=data.slice(i, Math.min(i+mtu, data.length));
           await BLE.tx.writeValueWithoutResponse(slice);
-          // brief pacing without setTimeout (no console logs; this is fine to omit)
         }
-        // Optionally disconnect politely
         if(BLE.device && BLE.device.gatt.connected){ BLE.device.gatt.disconnect() }
       }catch(e){
-        // Silent fail by design (no console logs). If it fails, user can still Export/Share.
+        /* silent by design; Export/Share remain available */
       }
     }
 
