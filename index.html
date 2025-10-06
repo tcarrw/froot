@@ -2,32 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- Keep iOS media bar dark -->
+  <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0b0d11">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Froot — Marina Reflection Edition · Muse + Honey + Share</title>
-  <meta name="description" content="Froot: a Marina-inspired color-sense studio with Muse skin, Honey Mode (128 Hz), Export/Share, BLE send, crackle-safe audio, and background playback.">
+  <title>Froot — Marina Reflection Edition · Muse + Honey + FX</title>
+  <meta name="description" content="A Marina-inspired color-sense studio with Muse skin (night), Honey Mode (128 Hz), background playback, Share/BLE, aurora & butterfly FX, and a Princess of Power banner." />
   <style>
-    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
-    body{
-      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      font-variant-ligatures:common-ligatures contextual; font-synthesis-weight:none;
-      margin:0; color:var(--ink); background:var(--bg);
-    }
     :root{
+      color-scheme: dark; /* iOS media bar/buttons choose dark tints */
       --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
       --ring:#2c3444; --glow:#66e1ff;
+
+      /* Palettes */
       --blue-1:#0b2e40; --blue-2:#2cc2ff;
       --froot-1:#103018; --froot-2:#a4ff65;
-      --imm-1:#1b1030; --imm-2:#b38bff;
-      --ad-1:#2b1016;  --ad-2:#ff6a9e;
-      --hh-1:#0f1e33;  --hh-2:#86c9ff;
+      --imm-1:#1b1030;  --imm-2:#b38bff;
+      --ad-1:#2b1016;   --ad-2:#ff6a9e;
+      --hh-1:#0f1e33;   --hh-2:#86c9ff;
       --accent:#a4ff65;
+
+      /* Muse grain */
       --grain: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05), transparent 35%),
                radial-gradient(circle at 80% 0%, rgba(255,255,255,.04), transparent 40%),
                radial-gradient(circle at 40% 80%, rgba(0,0,0,.08), transparent 45%);
+
+      /* Honey visuals */
       --honey-a:#120e07; --honey-b:#3a2a0f; --honey-c:#d7aa3b; --honey-d:#f7d77a;
     }
+
+    /* Crisp, iOS-friendly typography */
+    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-variant-ligatures:common-ligatures contextual; font-synthesis-weight:none;
+    }
     *{box-sizing:border-box}
-    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:1}
+
+    /* Layout */
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:2}
     header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
     h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
     .tag{color:var(--muted);font-size:.95rem}
@@ -88,7 +105,7 @@
     hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
     :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
 
-    /* Muse Skin */
+    /* Muse Skin (night) */
     body.muse::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--grain);mix-blend-mode:overlay;opacity:.34;filter:contrast(105%) saturate(102%) blur(.2px)}
     .muse .card{
       border:1px solid transparent;border-radius:24px;
@@ -105,14 +122,14 @@
     }
     @keyframes shimmer {0%{transform:rotate(0) scale(1.02)} 100%{transform:rotate(360deg) scale(1.02)}}
 
-    /* Honey visuals */
+    /* Honey Mode visuals */
     body.honey{
       background:
         radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
         radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
         linear-gradient(180deg, var(--honey-a), var(--bg));
     }
-    .honey .honeycomb{position:fixed;inset:-200px;z-index:0;opacity:.12;pointer-events:none;background-image:
+    .honey .honeycomb{position:fixed;inset:-200px;z-index:1;opacity:.12;pointer-events:none;background-image:
       repeating-linear-gradient(60deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
       repeating-linear-gradient(120deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
       repeating-linear-gradient(0deg, rgba(255,206,84,.15) 0 2px, transparent 2px 35px);
@@ -121,6 +138,54 @@
     }
     @keyframes honeyFloat { 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
 
+    /* Aurora background (animated gradient ribbons) */
+    .aurora{
+      position:fixed; inset:-10% -10% -10% -10%; z-index:0; pointer-events:none; opacity:.55;
+      background:
+        radial-gradient(60% 80% at 10% 20%, rgba(44,194,255,.12), transparent 60%),
+        radial-gradient(70% 70% at 80% 10%, rgba(164,255,101,.10), transparent 60%),
+        radial-gradient(90% 90% at 50% 120%, rgba(179,139,255,.10), transparent 60%);
+      animation:auroraShift 30s linear infinite;
+      filter: blur(18px) saturate(110%);
+    }
+    @keyframes auroraShift{
+      0%{transform:translate3d(0,0,0) rotate(0deg)}
+      50%{transform:translate3d(0,-2%,0) rotate(180deg)}
+      100%{transform:translate3d(0,0,0) rotate(360deg)}
+    }
+
+    /* Princess of Power banner */
+    .princess{
+      position:sticky; top:8px; z-index:3; margin:0 auto 10px; max-width:1080px;
+      display:none; place-items:center; height:40px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,
+        linear-gradient(120deg, rgba(255,211,163,.7), rgba(255,111,186,.6), rgba(134,201,255,.6)) border-box;
+      border:1px solid transparent; border-radius:999px;
+      color:#ffe; font-weight:700; letter-spacing:.12em; font-size:.86rem; text-transform:uppercase;
+      box-shadow:0 6px 24px -12px rgba(0,0,0,.6);
+      overflow:hidden;
+    }
+    .princess .spark{position:absolute; inset:0; pointer-events:none; background:
+      radial-gradient(3px 3px at 10% 50%, rgba(255,255,255,.9) 0 40%, transparent 41%),
+      radial-gradient(2px 2px at 30% 20%, rgba(255,255,255,.8) 0 45%, transparent 46%),
+      radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.75) 0 45%, transparent 46%),
+      radial-gradient(3px 3px at 80% 30%, rgba(255,255,255,.9) 0 40%, transparent 41%);
+      opacity:.6; animation:twinkle 6s ease-in-out infinite;
+    }
+    @keyframes twinkle{0%,100%{opacity:.3} 50%{opacity:.85}}
+
+    /* Butterfly canvas overlay */
+    .fx-canvas{position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.65}
+
+    /* Saver mode reduces motion */
+    @media (prefers-reduced-motion: reduce){
+      .aurora{animation:none}
+      .honey .honeycomb{animation:none}
+      .muse .swatch.pulse::after{animation:none}
+    }
+
+    /* Print */
     @media print{
       body{background:#fff;color:#000}
       .wrap{padding:0}
@@ -128,21 +193,35 @@
       .card{break-inside:avoid;border-color:#ddd;background:#fff}
       .chip{color:#000}
       .swatch{border-color:#ddd}
+      .princess, .aurora, .honeycomb, .fx-canvas{display:none !important}
     }
   </style>
 </head>
 <body>
+  <!-- Background FX layers -->
+  <div class="aurora" aria-hidden="true"></div>
   <div class="honeycomb" aria-hidden="true"></div>
+  <canvas id="fx-butterflies" class="fx-canvas" aria-hidden="true"></canvas>
+
+  <!-- Princess banner -->
+  <div id="princessBanner" class="princess" role="status" aria-live="polite">
+    <span style="margin-right:8px">👑</span> PRINCESS OF POWER
+    <div class="spark"></div>
+  </div>
+
   <div class="wrap">
     <header>
       <div>
         <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
-        <div class="tag">Muse skin (default) + Honey Mode (128 Hz). Background playback supported. Share your map.</div>
+        <div class="tag">Muse (night) is default. Honey 128 Hz supports background playback. FX toggles: Butterfly, Princess banner, Saver.</div>
       </div>
       <div class="actions">
         <button class="ghost" type="button" onclick="toggleMuse()">Muse Skin</button>
         <button class="ghost" type="button" onclick="toggleHoney()">Honey Mode</button>
-        <button class="primary" type="button" onclick="exportMap()">Export (.json)</button>
+        <button class="ghost" type="button" onclick="toggleButterfly()">Butterfly FX</button>
+        <button class="ghost" type="button" onclick="togglePrincess()">Princess</button>
+        <button class="ghost" type="button" onclick="toggleSaver()">Saver</button>
+        <button class="primary" type="button" onclick="exportMap()">Export</button>
         <button class="ghost" type="button" onclick="shareMap()">Share</button>
         <button class="ghost" type="button" onclick="bleSend()">Bluetooth</button>
         <button class="ghost" type="button" onclick="resetMap()">Reset</button>
@@ -150,6 +229,7 @@
       </div>
     </header>
 
+    <!-- Honey controls -->
     <section class="card" id="honey-controls" style="display:none">
       <div class="row">
         <div class="label">🍯 Honey Mode — 128 Hz Background Bed</div>
@@ -160,29 +240,31 @@
             <input id="honeyVol" type="range" min="0" max="100" value="28" oninput="honeyVolume(this.value)" style="width:160px;vertical-align:middle">
           </label>
         </div>
-        <div class="tiny">Tip: start low; headphones recommended. Background playback continues with screen locked or app-switched (tab must remain open).</div>
+        <div class="tiny">Tip: gentle level; headphones recommended. Background playback continues with screen locked (tab must stay open).</div>
       </div>
     </section>
 
+    <!-- Intro -->
     <section class="card">
       <div class="row">
         <div>
           <div class="label">Welcome</div>
           <p style="margin:.2rem 0 0">
-            Choose a fruit, <em>hear</em> its tone, <em>see</em> its glow. Offer one word—your strongest association. Your map stays on your device.
+            Choose a fruit, <em>hear</em> its tone, <em>see</em> its glow. Offer one word — your strongest association. Your map saves locally.
           </p>
-          <div class="note">Background playback uses a hidden audio element + Media Session, so tones and Honey can keep playing with the screen locked.</div>
+          <div class="note">Muse adds iridescence; Honey adds warmth. Butterfly paints a soft particle sky. “Princess” adds a crown banner for flare moments.</div>
         </div>
         <div>
           <div class="legend" style="margin-top:8px">
             <span class="pill">🌀 Pulse = tone playing</span>
-            <span class="pill">📝 One word = strongest association</span>
-            <span class="pill">⬇ Export / Share = archive or send</span>
+            <span class="pill">📝 One word = your association</span>
+            <span class="pill">⬇ Export / Share / BLE</span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Modules -->
     <div class="grid">
       <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-freq="329.63">
         <div>
@@ -280,26 +362,40 @@
       </section>
     </div>
 
+    <!-- Map -->
     <section class="card" id="map-card">
       <div class="titleline">
         <h3>Your Synesthesia Map</h3>
         <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
       </div>
       <div class="map" id="map"></div>
-      <div class="foot">Your words save locally. Export, Share (native sheet), or Bluetooth (BLE UART) if your receiver supports it. Background playback continues while locked; closing the tab stops audio (browser limit).</div>
+      <div class="foot">Your words save locally. Export file, Share via the native sheet (AirDrop works great), or BLE send (UART) if supported.</div>
     </section>
 
-    <footer class="note">Made with care for learning and resonance. Muse adds sparkle; Honey adds warmth.</footer>
+    <footer class="note">Made with care for learning and resonance. Muse = sparkle; Honey = warmth; Butterfly = wonder.</footer>
   </div>
 
   <script>
-    /* ===== Prefs: default Muse ON (night mode vibe), Honey OFF ===== */
-    var PREFS_KEY="froot_prefs_v1";
-    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:true,honey:false} }
-    function savePrefs(){ try{ localStorage.setItem(PREFS_KEY, JSON.stringify({muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')})) }catch(e){} }
+    /* ===== Prefs (Muse default ON, others OFF) ===== */
+    var PREFS_KEY="froot_prefs_v2";
+    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:true,honey:false,butterfly:false,princess:false,saver:false} }
+    function savePrefs(){
+      try{
+        localStorage.setItem(PREFS_KEY, JSON.stringify({
+          muse:document.body.classList.contains('muse'),
+          honey:document.body.classList.contains('honey'),
+          butterfly:document.body.classList.contains('fx-on'),
+          princess:document.body.classList.contains('princess-on'),
+          saver:document.body.classList.contains('saver')
+        }));
+      }catch(e){}
+    }
     var prefs = loadPrefs();
     if(prefs.muse) document.body.classList.add("muse");
     if(prefs.honey) document.body.classList.add("honey");
+    if(prefs.butterfly) document.body.classList.add("fx-on");
+    if(prefs.princess) document.body.classList.add("princess-on");
+    if(prefs.saver) document.body.classList.add("saver");
 
     /* ===== Map state ===== */
     var FROOT_KEY="froot_marina_map_v1";
@@ -332,101 +428,104 @@
       }
     }
 
-    /* ===== Background Audio plumbing (MediaStream + hidden <audio>) ===== */
+    /* ===== Background audio plumbing (hidden <audio>) ===== */
     var ctx=null, master=null, comp=null, dc=null;
     var toneOsc=null, toneGain=null, pulseTimer=null, activeKey=null;
     var honeyOsc=null, honeyGain=null;
     var retriggerGuard=false;
+    var bgDest=null, bgAudio=null;
 
-    var bgDest=null, bgAudio=null; // keeps audio alive in background
-    function initBackgroundPipe(){
-      if(!ctx || bgDest){ return; }
-      bgDest = ctx.createMediaStreamDestination();
-      master.connect(bgDest);
-      bgAudio = new Audio();
-      bgAudio.srcObject = bgDest.stream;
-      bgAudio.loop = true;
-      bgAudio.playsInline = true;
-      // start only after user gesture
-      bgAudio.play().catch(function(){ /* ignored; will retry on first interaction */ });
-
-      if('mediaSession' in navigator){
-        try{
-          navigator.mediaSession.metadata = new MediaMetadata({
-            title: 'Froot — Honey',
-            artist: 'PLNT Earth',
-            album: 'Illumina',
-          });
-          navigator.mediaSession.setActionHandler('play', function(){ resumeCtx(); if(document.body.classList.contains('honey')) honeyStart(); });
-          navigator.mediaSession.setActionHandler('pause', function(){ honeyStop(); });
-        }catch(_){}
-      }
-    }
-    function resumeCtx(){ if(ctx && ctx.state==='suspended'){ ctx.resume(); if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } } }
-
-    /* ===== Crackle-safe Audio Engine ===== */
     function ensureCtx(){
       if(!ctx){
         ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
 
-        master = ctx.createGain();            master.gain.value = 0.90;
-        comp   = ctx.createDynamicsCompressor();
-        comp.threshold.value = -24; comp.knee.value = 8; comp.ratio.value = 4; comp.attack.value = 0.003; comp.release.value = 0.250;
-        dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 12;
+        master = ctx.createGain(); master.gain.value = 0.85; // headroom
+
+        // Gentler compressor (iOS friendly)
+        comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 2;
+        comp.attack.value    = 0.010; comp.release.value = 0.300;
+
+        dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 18;
 
         master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
 
-        initBackgroundPipe(); // prepare background routing
+        // Background route
+        bgDest = ctx.createMediaStreamDestination();
+        master.connect(bgDest);
+        bgAudio = new Audio(); bgAudio.srcObject = bgDest.stream;
+        bgAudio.loop = true; bgAudio.playsInline = true;
       }
       return ctx;
     }
+    function resumeCtx(){ if(ctx && ctx.state==='suspended'){ ctx.resume() } if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } }
 
+    /* ===== iOS-tuned crackle-safe audio ===== */
     function killToneFast(now){
       if(!toneOsc || !toneGain){ return; }
-      try{ toneGain.gain.setTargetAtTime(0.0001, now, 0.03); toneOsc.stop(now + 0.06); }catch(_){}
-      setTimeout(function(){ try{ toneOsc.disconnect(); }catch(_){}
-                           try{ toneGain.disconnect(); }catch(_){}
-                           toneOsc=null; toneGain=null; }, 100);
+      try{
+        var end = now + 0.10;
+        toneGain.gain.cancelScheduledValues(now);
+        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+        toneGain.gain.linearRampToValueAtTime(0.0005, end);
+        toneOsc.stop(end);
+      }catch(_){}
+      setTimeout(function(){
+        try{ toneOsc.disconnect(); }catch(_){}
+        try{ toneGain.disconnect(); }catch(_){}
+        toneOsc=null; toneGain=null;
+      }, 140);
     }
 
     function playTone(key){
       ensureCtx();
       var s = seeds[key]; if(!s) return;
       var now = ctx.currentTime;
+
       if(toneOsc){ killToneFast(now); }
-      if(retriggerGuard) return; retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 120);
+
+      if(retriggerGuard) return;
+      retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 250);
 
       toneOsc  = ctx.createOscillator();
       toneGain = ctx.createGain();
+
       toneOsc.type = "sine";
       toneOsc.frequency.setValueAtTime(s.freq, now);
 
+      const atk=0.030, hold=0.25, rel=0.150, peak=0.22, sus=0.16, tail=5.4;
+
       toneGain.gain.cancelScheduledValues(now);
-      toneGain.gain.setValueAtTime(0.0001, now);
-      toneGain.gain.exponentialRampToValueAtTime(0.26, now + 0.06);
-      toneGain.gain.setTargetAtTime(0.18, now + 0.30, 0.12);
-      toneGain.gain.setTargetAtTime(0.0001, now + 5.50, 0.25);
+      toneGain.gain.setValueAtTime(0.0, now);
+      toneGain.gain.linearRampToValueAtTime(peak, now + atk);
+      toneGain.gain.linearRampToValueAtTime(sus,  now + atk + hold);
+      toneGain.gain.setValueAtTime(sus, now + tail);
+      toneGain.gain.linearRampToValueAtTime(0.0005, now + tail + rel);
 
       toneOsc.connect(toneGain); toneGain.connect(master);
-      toneOsc.start(now); toneOsc.stop(now + 6.0);
+      toneOsc.start(now);
+      toneOsc.stop(now + tail + rel + 0.02);
 
       activeKey = key; pulseOn(key);
       toneOsc.onended = function(){ pulseOff(key); activeKey=null; };
-      if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } // keep the stream alive
-      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='playing'; }catch(_){ } }
-    }
 
-    function stopTone(){
-      if(!ctx){ return; }
-      killToneFast(ctx.currentTime);
+      resumeCtx();
+      if('mediaSession' in navigator){
+        try{
+          navigator.mediaSession.metadata = new MediaMetadata({ title:'Froot tone', artist:'PLNT Earth', album:'Illumina' });
+          navigator.mediaSession.playbackState='playing';
+        }catch(_){}
+      }
     }
+    function stopTone(){ if(!ctx){ return; } killToneFast(ctx.currentTime); }
 
-    /* Visual pulse */
+    /* Pulse visuals */
     function pulseOn(key){
       var id="swatch-"+(key==="immortal"?"immortal":key); var el=document.getElementById(id); if(!el) return;
       el.classList.add("pulse"); clearInterval(pulseTimer);
       var t0=performance.now();
       pulseTimer=setInterval(function(){
+        if(document.body.classList.contains('saver')) return;
         var t=(performance.now()-t0)/1000.0; var deg=120+Math.sin(t*2.0)*10;
         el.style.background="linear-gradient("+deg+"deg, var(--c1), var(--c2))";
       },60);
@@ -437,7 +536,7 @@
       clearInterval(pulseTimer); pulseTimer=null;
     }
 
-    /* Muse / Honey */
+    /* Muse / Honey / FX toggles */
     function toggleMuse(){ document.body.classList.toggle("muse"); savePrefs() }
     function toggleHoney(){
       var on=document.body.classList.toggle("honey");
@@ -445,53 +544,78 @@
       if(on){ honeyStart() } else { honeyStop() }
       savePrefs();
     }
+    function toggleButterfly(){
+      var on=document.body.classList.toggle("fx-on");
+      if(on){ startButterflies() } else { stopButterflies() }
+      savePrefs();
+    }
+    function togglePrincess(){
+      var on=!document.body.classList.contains("princess-on");
+      document.body.classList.toggle("princess-on", on);
+      document.getElementById("princessBanner").style.display = on ? "grid" : "none";
+      savePrefs();
+    }
+    function toggleSaver(){
+      document.body.classList.toggle("saver");
+      // pause/resume canvas animation automatically
+      if(document.body.classList.contains('saver')) stopButterflies(); else if(document.body.classList.contains('fx-on')) startButterflies();
+      savePrefs();
+    }
 
+    /* Honey (128 Hz) */
     function honeyStart(){
       ensureCtx();
-      if(honeyOsc){ return }
+      if(honeyOsc){ return; }
       honeyOsc  = ctx.createOscillator();
       honeyGain = ctx.createGain();
       honeyOsc.type = "sine";
       honeyOsc.frequency.setValueAtTime(128.0, ctx.currentTime);
 
       var now = ctx.currentTime;
-      honeyGain.gain.setValueAtTime(0.0001, now);
-      honeyGain.gain.exponentialRampToValueAtTime(0.12, now + 0.25);
+      honeyGain.gain.setValueAtTime(0.0, now);
+      honeyGain.gain.linearRampToValueAtTime(0.12, now + 0.25);
 
-      honeyOsc.connect(honeyGain);
-      honeyGain.connect(master);
+      honeyOsc.connect(honeyGain); honeyGain.connect(master);
       honeyOsc.start(now);
 
       var vol=document.getElementById("honeyVol"); if(vol){ honeyVolume(vol.value) }
-      if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) }
-      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='playing'; }catch(_){ } }
+      resumeCtx();
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='playing'; }catch(_){} }
     }
     function honeyStop(){
       if(!honeyOsc || !honeyGain || !ctx){ return }
       var now=ctx.currentTime;
       try{
-        honeyGain.gain.setTargetAtTime(0.0001, now, 0.25);
+        honeyGain.gain.cancelScheduledValues(now);
+        honeyGain.gain.setValueAtTime(honeyGain.gain.value, now);
+        honeyGain.gain.linearRampToValueAtTime(0.0005, now + 0.25);
         setTimeout(function(){
           try{ honeyOsc.stop() }catch(_){}
           try{ honeyOsc.disconnect(); honeyGain.disconnect() }catch(_){}
           honeyOsc=null; honeyGain=null;
-        }, 400);
+        }, 320);
       }catch(_){
         try{ honeyOsc.stop() }catch(__){}
         honeyOsc=null; honeyGain=null;
       }
-      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='paused'; }catch(_){ } }
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='paused'; }catch(_){} }
     }
     function honeyVolume(val){
       if(!honeyGain || !ctx){ return }
-      var v=Math.max(0, Math.min(100, Number(val)||0));
-      var gain = v/100 * 0.35;
-      honeyGain.gain.setTargetAtTime(gain, ctx.currentTime, 0.05);
+      var v = Math.max(0, Math.min(100, Number(val)||0));
+      var g = v/100 * 0.30;
+      honeyGain.gain.linearRampToValueAtTime(g, ctx.currentTime + 0.05);
     }
 
     /* Export + Share */
     function buildMapBlob(){
-      var payload={version:"1.4", map:mapData, prefs:{muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
+      var payload={version:"1.6", map:mapData, prefs:{
+        muse:document.body.classList.contains('muse'),
+        honey:document.body.classList.contains('honey'),
+        butterfly:document.body.classList.contains('fx-on'),
+        princess:document.body.classList.contains('princess-on'),
+        saver:document.body.classList.contains('saver')
+      }, timestamp:new Date().toISOString()};
       return new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     }
     function exportMap(){
@@ -520,7 +644,7 @@
       exportMap();
     }
 
-    /* Bluetooth (BLE) send — Nordic UART Service */
+    /* Bluetooth (BLE) send — Nordic UART Service (optional receiver) */
     var BLE={device:null, server:null, svc:null, tx:null};
     async function bleSend(){
       try{
@@ -536,15 +660,89 @@
       }catch(e){ /* silent */ }
     }
 
-    /* Init: render, restore Honey UI, prime background after first tap, keep alive on visibility changes */
+    /* Butterfly FX (canvas particles) */
+    var fxCanvas = document.getElementById('fx-butterflies');
+    var fxCtx = fxCanvas.getContext('2d');
+    var fxRAF = null, fxParts = [];
+    function resizeFX(){
+      fxCanvas.width = innerWidth * devicePixelRatio;
+      fxCanvas.height = innerHeight * devicePixelRatio;
+      fxCtx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    function spawnButterfly(){
+      return {
+        x: Math.random()*innerWidth,
+        y: innerHeight + Math.random()*80,
+        vx: (Math.random()*0.6-0.3),
+        vy: - (0.6 + Math.random()*1.2),
+        size: 6 + Math.random()*10,
+        hue: Math.random()*360,
+        life: 0,
+        max: 6 + Math.random()*8
+      };
+    }
+    function drawButterfly(p,t){
+      var s = p.size * (0.9 + 0.1*Math.sin(t*2 + p.hue));
+      fxCtx.save();
+      fxCtx.translate(p.x, p.y);
+      fxCtx.rotate(Math.sin(t*1.5 + p.hue)*0.3);
+      // wings (simple bezier leaves)
+      var g = fxCtx.createLinearGradient(-s,0,s,0);
+      g.addColorStop(0, "hsla("+(p.hue)+",80%,70%,.85)");
+      g.addColorStop(1, "hsla("+(p.hue+60)+",80%,60%,.85)");
+      fxCtx.fillStyle = g;
+      fxCtx.beginPath();
+      fxCtx.moveTo(0,0);
+      fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
+      fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
+      fxCtx.closePath(); fxCtx.fill();
+
+      fxCtx.scale(-1,1);
+      fxCtx.beginPath();
+      fxCtx.moveTo(0,0);
+      fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
+      fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
+      fxCtx.closePath(); fxCtx.fill();
+      fxCtx.restore();
+    }
+    function fxStep(){
+      if(document.body.classList.contains('saver')) return;
+      var now = performance.now()/1000;
+      fxCtx.clearRect(0,0,innerWidth,innerHeight);
+      if(fxParts.length < 24) fxParts.push(spawnButterfly());
+      for(var i=fxParts.length-1;i>=0;i--){
+        var p = fxParts[i];
+        p.life += 0.016;
+        p.x += p.vx + Math.sin(now*2 + p.hue)*0.2;
+        p.y += p.vy;
+        drawButterfly(p, now);
+        if(p.life > p.max || p.y < -60) fxParts.splice(i,1);
+      }
+      fxRAF = requestAnimationFrame(fxStep);
+    }
+    function startButterflies(){
+      if(document.body.classList.contains('saver')) return;
+      resizeFX(); fxParts = [];
+      if(!fxRAF) fxRAF = requestAnimationFrame(fxStep);
+      window.addEventListener('resize', resizeFX);
+    }
+    function stopButterflies(){
+      cancelAnimationFrame(fxRAF); fxRAF=null;
+      fxCtx.clearRect(0,0,innerWidth,innerHeight);
+      window.removeEventListener('resize', resizeFX);
+    }
+
+    /* Init */
     renderMap(); hydrateInputs();
+    // Restore UI states
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
-    document.addEventListener("click", function(){
-      ensureCtx(); resumeCtx(); initBackgroundPipe();
-    }, {once:true});
-    document.addEventListener("visibilitychange", function(){
-      if(document.visibilityState === "visible"){ resumeCtx(); }
-    });
+    if(prefs.princess){ document.getElementById("princessBanner").style.display="grid"; }
+    if(prefs.butterfly && !document.body.classList.contains('saver')) startButterflies();
+
+    // Prime audio after first tap
+    document.addEventListener("click", function(){ ensureCtx(); resumeCtx(); }, {once:true});
+    document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="visible"){ resumeCtx(); } });
+
   </script>
 </body>
 </html>
