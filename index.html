@@ -6,6 +6,22 @@
   <title>Froot — Marina Reflection Edition · Color-Sense Studio</title>
   <meta name="description" content="A polished, poetic Froot edition inspired by Marina — learn to hear color through tone-and-hue micro rituals.">
   <style>
+    /* ========== Crisp Typography Fixes (iOS/Safari friendly) ========== */
+    html{
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      -webkit-text-size-adjust: 100%;
+    }
+    body{
+      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-variant-ligatures: common-ligatures contextual;
+      font-synthesis-weight: none; /* avoids faux bold fuzz */
+      margin:0;
+      color:var(--ink);
+      background:var(--bg);
+    }
+
     :root{
       /* Night garden base */
       --bg:#0b0d11;           /* deep night */
@@ -22,11 +38,11 @@
       --imm-1:#1b1030; --imm-2:#b38bff;    /* “Immortal” — violet dusk */
       --ad-1:#2b1016; --ad-2:#ff6a9e;      /* “Ancient Dreams” — rose aurora */
       --hh-1:#0f1e33; --hh-2:#86c9ff;      /* “Handmade Heaven” — sky bloom */
-
       --accent:#a4ff65; /* default CTA */
     }
+
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+
     .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px}
     header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
     h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
@@ -34,11 +50,12 @@
     .actions{display:flex;gap:10px;flex-wrap:wrap}
     button{
       appearance:none;border:1px solid var(--edge);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
-      color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;transition:transform .08s ease, box-shadow .2s ease, border-color .2s ease;
-      box-shadow:0 0 0 0 rgba(102,225,255,0);
+      color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;
+      transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
+      /* avoid transform on text (prevents fractional rasterization) */
+      filter:saturate(1);
     }
     button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
-    button:active{transform:translateY(1px)}
     .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02));}
     .ghost{opacity:.9}
 
@@ -65,11 +82,11 @@
       background:radial-gradient(closest-side, rgba(255,255,255,.15), transparent 60%);
       opacity:.0;transform:scale(.9);transition:opacity .4s ease, transform .4s ease;pointer-events:none;
     }
-    .swatch.pulse::after{opacity:.65;transform:scale(1)}
+    .swatch.pulse::after{opacity:.6;transform:scale(1)}
     .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
 
     .controls{display:flex;flex-wrap:wrap;gap:10px}
-    .tiny{font-size:.85rem;color:var(--muted)}
+    .tiny{font-size:.92rem;color:var(--muted)}
     .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
     .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
     .huebar{
@@ -87,25 +104,31 @@
     }
     @media (max-width:920px){ .map{grid-template-columns:repeat(2,1fr)} }
     .chip{
-      border:1px solid var(--edge);border-radius:14px;padding:10px;background:linear-gradient(135deg,var(--c1),var(--c2));
-      color:#0b0d11; font-weight:600; text-shadow:0 1px 0 rgba(255,255,255,.25);
+      border:1px solid var(--edge);border-radius:14px;padding:10px;
+      background:linear-gradient(135deg,var(--c1),var(--c2));
+      /* Remove text-shadow for crisp glyph edges on iOS */
+      color:#0a0d12; font-weight:700;
       display:flex;align-items:center;justify-content:center;min-height:68px
     }
-    .chip .cap{background:rgba(255,255,255,.85);color:#0b0d11;border-radius:999px;padding:2px 8px;font-size:.8rem;font-weight:700;margin-left:8px}
+    .chip .cap{
+      /* Remove translucent white pill to avoid haloing; use solid for contrast */
+      background:#f5f7fb;
+      color:#0a0d12;
+      border-radius:999px;padding:2px 8px;font-size:.82rem;font-weight:750;margin-left:8px
+    }
 
     .legend{display:flex;flex-wrap:wrap;gap:10px}
     .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
     .foot{margin-top:24px;color:var(--muted);font-size:.9rem}
     hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
 
-    /* Focus & print */
     :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
     @media print{
       body{background:#fff;color:#000}
       .wrap{padding:0}
       header .actions{display:none}
       .card{break-inside:avoid;border-color:#ddd;background:#fff}
-      .chip{color:#000;text-shadow:none}
+      .chip{color:#000}
       .swatch{border-color:#ddd}
     }
   </style>
@@ -370,12 +393,12 @@
       osc.type = "sine";
       osc.frequency.setValueAtTime(s.freq, ctx.currentTime);
 
-      // Soft envelope
+      // Soft envelope, no clicks
       var now = ctx.currentTime;
       g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(0.3, now + 0.08);   // attack
-      g.gain.exponentialRampToValueAtTime(0.22, now + 0.40);  // settle
-      g.gain.exponentialRampToValueAtTime(0.0001, now + 5.80); // release tail
+      g.gain.exponentialRampToValueAtTime(0.28, now + 0.08);
+      g.gain.exponentialRampToValueAtTime(0.2,  now + 0.40);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 5.8);
 
       osc.connect(g); g.connect(ctx.destination);
       osc.start(now);
@@ -383,7 +406,6 @@
 
       activeKey = key;
       pulseOn(key);
-      // Ensure cleanup after stop
       osc.onended = function(){
         pulseOff(key);
         activeKey = null;
@@ -408,7 +430,6 @@
       var t0 = performance.now();
       pulseTimer = setInterval(function(){
         var t = (performance.now() - t0) / 1000.0;
-        // breathe the gradient angle subtly
         var deg = 120 + Math.sin(t*2.0)*10;
         el.style.background = "linear-gradient("+deg+"deg, var(--c1), var(--c2))";
       }, 60);
@@ -424,7 +445,7 @@
     renderMap();
     hydrateInputs();
 
-    /* Accessibility: resume audio on user gesture in some browsers */
+    /* Accessibility: resume audio on first user gesture in some browsers */
     document.addEventListener("click", function(){
       if(ctx && ctx.state === "suspended"){ ctx.resume(); }
     }, {once:true});
