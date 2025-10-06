@@ -214,6 +214,24 @@
     .fbr-hold .fbrLabel{ color:#f1c40f; }
     .fbr-out  .fbrLabel{ color:#e74c3c; }
 
+    /* ===== Quickbar (always-on-top) ===== */
+    .quickbar{
+      position:fixed; top:10px; right:10px; z-index:9999;
+      display:flex; gap:8px; align-items:center;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.15));
+      border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35); backdrop-filter: blur(6px);
+    }
+    .qbtn{
+      appearance:none; cursor:pointer;
+      border:1px solid rgba(255,255,255,.14); border-radius:10px;
+      background:rgba(255,255,255,.06); color:#fff; font-weight:800;
+      padding:8px 10px; min-width:40px;
+    }
+    .qbtn.on{ border-color:#3a5f44; background:linear-gradient(180deg, rgba(164,255,101,.18), rgba(0,0,0,.06)); }
+    .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)); }
+    .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px; }
+    
     /* Print */
     @media print{
       body{background:#fff;color:#000}
@@ -222,11 +240,19 @@
       .card{break-inside:avoid;border-color:#ddd;background:#fff}
       .chip{color:#000}
       .swatch{border-color:#ddd}
-      .princess, .aurora, .honeycomb, .fx-canvas{display:none !important}
+      .princess, .aurora, .honeycomb, .fx-canvas, .quickbar{display:none !important}
     }
   </style>
 </head>
 <body>
+  <!-- Always-on-top Quickbar -->
+  <div class="quickbar" role="toolbar" aria-label="Quick audio controls">
+    <button id="qb-mute" class="qbtn" type="button" title="Mute / Unmute" onclick="toggleMute()">🔊</button>
+    <div class="qsep" aria-hidden="true"></div>
+    <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz" onclick="toggleHoneyFromQuick()">🍯</button>
+    <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop" onclick="document.getElementById('loopToggle').click()">🔁</button>
+  </div>
+
   <!-- Background FX layers -->
   <div class="aurora" aria-hidden="true"></div>
   <div class="honeycomb" aria-hidden="true"></div>
@@ -463,6 +489,9 @@
     <footer class="note">Muse = sparkle; Honey = warmth; Butterfly = wonder. W1–W5 deepen a color per week; W6 integrates your pattern.</footer>
   </div>
 
+  <!-- Hidden audio element that keeps iOS audio session alive while locked -->
+  <audio id="bgPipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
+
   <script>
     /* ===== Prefs (Muse default ON, others OFF) ===== */
     var PREFS_KEY="froot_prefs_v3";
@@ -633,42 +662,93 @@
       };
     }
 
-    /* ===== Background audio plumbing (hidden <audio>) ===== */
+    /* ===== Background audio + output strategy (iOS-safe) ===== */
     var ctx=null, master=null, comp=null, dc=null;
     var toneOsc=null, toneGain=null, pulseTimer=null, activeKeyPlaying=null;
     var honeyOsc=null, honeyGain=null;
     var retriggerGuard=false;
-    var bgDest=null, bgAudio=null;
 
-    /* ===== Loop + LFO (breathing) state ===== */
+    // Pipe-only output for iOS lock screen (prevents comb/phase "chop")
+    var bgDest=null, bgAudio=null, usePipeOutput=false;
+
+    // Mute
+    var isMuted = false, MASTER_GAIN_TARGET = 0.85, MUTE_KEY='froot_mute_v1';
+
+    // Loop + LFO (breathing)
     var loopMode=false;
     var lfoOsc=null, lfoGain=null;
     var loopTimerMin=20, loopTimerId=null, loopStopDeadline=0, loopCountdownTick=0;
+
+    function isIOS(){
+      var ua = navigator.userAgent || '';
+      return /iP(hone|ad|od)/.test(ua) || (navigator.platform && /iP(hone|ad|od)/.test(navigator.platform));
+    }
 
     function ensureCtx(){
       if(!ctx){
         ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
 
-        master = ctx.createGain(); master.gain.value = 0.85; // headroom
-
-        // Gentler compressor (iOS friendly)
+        master = ctx.createGain(); master.gain.value = MASTER_GAIN_TARGET; // headroom
         comp = ctx.createDynamicsCompressor();
         comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 2;
         comp.attack.value    = 0.010; comp.release.value = 0.300;
-
         dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 18;
 
-        master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
+        // Choose a single output path:
+        usePipeOutput = isIOS(); // iOS → route ONLY to media element to keep session stable while locked
+        if(usePipeOutput){
+          bgDest = ctx.createMediaStreamDestination();
+          bgAudio = document.getElementById('bgPipe');
+          try{
+            bgAudio.setAttribute('playsinline','');
+            bgAudio.srcObject = bgDest.stream;
+            bgAudio.loop = true;
+          }catch(_){}
+          master.connect(comp); comp.connect(dc); dc.connect(bgDest);
+        } else {
+          master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
+        }
 
-        // Background route
-        bgDest = ctx.createMediaStreamDestination();
-        master.connect(bgDest);
-        bgAudio = new Audio(); bgAudio.srcObject = bgDest.stream;
-        bgAudio.loop = true; bgAudio.playsInline = true;
+        // Restore mute state
+        try{
+          isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false');
+        }catch(_){}
+        applyMuteImmediate(isMuted);
+        refreshQuickbar();
       }
       return ctx;
     }
-    function resumeCtx(){ if(ctx && ctx.state==='suspended'){ ctx.resume() } if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } }
+    function resumeCtx(){
+      if(ctx && ctx.state==='suspended'){ ctx.resume() }
+      if(usePipeOutput && bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) }
+    }
+
+    function applyMuteImmediate(mute){
+      if(!master || !ctx) return;
+      var now = ctx.currentTime;
+      try{
+        master.gain.cancelScheduledValues(now);
+        master.gain.setValueAtTime(master.gain.value, now);
+        master.gain.linearRampToValueAtTime(mute? 0.0001 : MASTER_GAIN_TARGET, now + 0.06);
+      }catch(_){}
+      var b = document.getElementById('qb-mute');
+      if(b){ b.classList.toggle('warn', mute); b.textContent = mute ? '🔇' : '🔊'; }
+    }
+    function toggleMute(){
+      ensureCtx();
+      isMuted = !isMuted;
+      try{ localStorage.setItem(MUTE_KEY, JSON.stringify(isMuted)); }catch(_){}
+      applyMuteImmediate(isMuted);
+    }
+    function refreshQuickbar(){
+      var hb = document.getElementById('qb-honey');
+      if(hb){ hb.classList.toggle('on', document.body.classList.contains('honey')); }
+      var lb = document.getElementById('qb-loop');
+      if(lb){ lb.classList.toggle('on', !!document.getElementById('loopToggle')?.checked); }
+      var mb = document.getElementById('qb-mute');
+      if(mb){ mb.classList.toggle('warn', isMuted); mb.textContent = isMuted ? '🔇' : '🔊'; }
+    }
+    function toggleHoneyFromQuick(){ toggleHoney(); refreshQuickbar(); }
 
     /* ===== iOS-tuned crackle-safe audio ===== */
     function killToneFast(now){
@@ -700,11 +780,13 @@
 
     /* ===== Loop toggle + persistence ===== */
     function setLoop(on){
+      ensureCtx();
       loopMode = !!on;
       try{ localStorage.setItem("froot_loop_v1", JSON.stringify({on:loopMode})) }catch(e){}
       // If user enables loop while a tone is playing, restart as sustained loop
       if(loopMode && activeKeyPlaying){ stopTone(); setTimeout(function(){ playTone(activeKeyPlaying); }, 120); }
       resetLoopCountdown();
+      refreshQuickbar();
     }
 
     /* ===== Breath Phase HUD (IN / HOLD / OUT) on active swatch ===== */
@@ -878,6 +960,9 @@
           try{
             navigator.mediaSession.metadata = new MediaMetadata({ title:'Froot tone (loop)', artist:'PLNT Earth', album:'Illumina' });
             navigator.mediaSession.playbackState='playing';
+            navigator.mediaSession.setActionHandler('play', ()=>{ if(!activeKeyPlaying && wkKey){ playTone(wkKey); } });
+            navigator.mediaSession.setActionHandler('pause', ()=>{ stopTone(); });
+            navigator.mediaSession.setActionHandler('stop',  ()=>{ stopTone(); });
           }catch(_){}
         }
       }
@@ -926,7 +1011,6 @@
       },60);
     }
     function pulseOff(key){
-      // key may be undefined onended after stop; try all swatches
       var el = key ? document.getElementById("swatch-"+(key==="immortal"?"immortal":key)) : null;
       if(el){ el.classList.remove("pulse"); el.style.background="" }
       clearInterval(pulseTimer); pulseTimer=null;
@@ -938,7 +1022,7 @@
       var on=document.body.classList.toggle("honey");
       document.getElementById("honey-controls").style.display = on ? "block" : "none";
       if(on){ honeyStart() } else { honeyStop() }
-      savePrefs();
+      savePrefs(); refreshQuickbar();
     }
     function toggleButterfly(){
       var on=document.body.classList.toggle("fx-on");
@@ -1182,7 +1266,12 @@
     if(prefs.butterfly && !document.body.classList.contains('saver')) startButterflies();
 
     document.addEventListener("click", function(){ ensureCtx(); resumeCtx(); }, {once:true});
-    document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="visible"){ resumeCtx(); } });
+    document.addEventListener("visibilitychange", function(){
+      if(document.visibilityState==="visible"){ resumeCtx(); }
+      else { // try to keep session hot on iOS when locking
+        if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); }
+      }
+    });
 
     initWeekDayUI();
 
@@ -1202,6 +1291,10 @@
       }catch(_){}
       // Default breath pattern
       setPatternPreset(4,7,8);
+
+      // Restore mute button UI
+      try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
+      refreshQuickbar();
     })();
   </script>
 </body>
