@@ -3,61 +3,56 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Froot — Marina Reflection Edition · Color-Sense Studio</title>
-  <meta name="description" content="A polished, poetic Froot edition inspired by Marina — learn to hear color through tone-and-hue micro rituals.">
+  <title>Froot — Marina Reflection Edition · Muse + Honey</title>
+  <meta name="description" content="A polished Froot edition inspired by Marina with Muse skin and Honey Mode (128 Hz background). Learn to hear color with tone-and-hue rituals.">
   <style>
-    /* ========== Crisp Typography Fixes (iOS/Safari friendly) ========== */
-    html{
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
-      -webkit-text-size-adjust: 100%;
-    }
+    /* ===== Crisp, iOS-friendly typography ===== */
+    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
     body{
-      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      font-variant-ligatures: common-ligatures contextual;
-      font-synthesis-weight: none; /* avoids faux bold fuzz */
-      margin:0;
-      color:var(--ink);
-      background:var(--bg);
+      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-variant-ligatures:common-ligatures contextual; font-synthesis-weight:none;
+      margin:0; color:var(--ink); background:var(--bg);
     }
 
     :root{
-      /* Night garden base */
-      --bg:#0b0d11;           /* deep night */
-      --panel:#121620;        /* inked slate */
-      --edge:#1e2430;         /* card border */
-      --ink:#e7edf7;          /* text */
-      --muted:#a9b4c7;        /* secondary text */
-      --ring:#2c3444;         /* focus ring */
-      --glow:#66e1ff;         /* subtle UI glow */
+      /* Studio base */
+      --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
+      --ring:#2c3444; --glow:#66e1ff;
+      /* Marina palettes */
+      --blue-1:#0b2e40; --blue-2:#2cc2ff;
+      --froot-1:#103018; --froot-2:#a4ff65;
+      --imm-1:#1b1030; --imm-2:#b38bff;
+      --ad-1:#2b1016;  --ad-2:#ff6a9e;
+      --hh-1:#0f1e33;  --hh-2:#86c9ff;
+      --accent:#a4ff65;
 
-      /* Marina-inspired palettes */
-      --blue-1:#0b2e40; --blue-2:#2cc2ff; /* “Blue” — ocean neon */
-      --froot-1:#103018; --froot-2:#a4ff65; /* “FROOT” — electric lime */
-      --imm-1:#1b1030; --imm-2:#b38bff;    /* “Immortal” — violet dusk */
-      --ad-1:#2b1016; --ad-2:#ff6a9e;      /* “Ancient Dreams” — rose aurora */
-      --hh-1:#0f1e33; --hh-2:#86c9ff;      /* “Handmade Heaven” — sky bloom */
-      --accent:#a4ff65; /* default CTA */
+      /* Muse grain */
+      --grain: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05), transparent 35%),
+               radial-gradient(circle at 80% 0%, rgba(255,255,255,.04), transparent 40%),
+               radial-gradient(circle at 40% 80%, rgba(0,0,0,.08), transparent 45%);
+
+      /* Honey visuals */
+      --honey-a:#120e07;
+      --honey-b:#3a2a0f;
+      --honey-c:#d7aa3b;
+      --honey-d:#f7d77a;
     }
 
     *{box-sizing:border-box}
-
-    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px}
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:1}
     header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
     h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
     .tag{color:var(--muted);font-size:.95rem}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
     button{
-      appearance:none;border:1px solid var(--edge);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
+      appearance:none;border:1px solid var(--edge);
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
       color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;
       transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
-      /* avoid transform on text (prevents fractional rasterization) */
-      filter:saturate(1);
     }
     button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
-    .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02));}
-    .ghost{opacity:.9}
+    .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02))}
+    .ghost{opacity:.92}
 
     .note{font-size:.95rem;color:var(--muted);margin-top:6px}
     .grid{display:grid;grid-template-columns:1fr;gap:14px}
@@ -66,10 +61,7 @@
       border:1px solid var(--edge);border-radius:18px;padding:18px
     }
     .row{display:grid;grid-template-columns:1fr;gap:12px}
-
-    .module{
-      display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch
-    }
+    .module{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
     @media (max-width:920px){ .module{grid-template-columns:1fr} }
 
     .swatch{
@@ -82,40 +74,24 @@
       background:radial-gradient(closest-side, rgba(255,255,255,.15), transparent 60%);
       opacity:.0;transform:scale(.9);transition:opacity .4s ease, transform .4s ease;pointer-events:none;
     }
-    .swatch.pulse::after{opacity:.6;transform:scale(1)}
+    .swatch.pulse::after{opacity:.65;transform:scale(1)}
     .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
 
     .controls{display:flex;flex-wrap:wrap;gap:10px}
     .tiny{font-size:.92rem;color:var(--muted)}
     .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
     .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
-    .huebar{
-      height:6px;border-radius:999px;background:linear-gradient(90deg, var(--c1), var(--c2));
-      box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6);
-    }
-    .input, textarea{
-      width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);
-      border-radius:12px;padding:11px 12px;min-height:44px
-    }
+    .huebar{height:6px;border-radius:999px;background:linear-gradient(90deg, var(--c1), var(--c2));box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6)}
+    .input, textarea{width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:11px 12px;min-height:44px}
     textarea{min-height:90px;resize:vertical}
 
-    .map{
-      display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px
-    }
+    .map{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
     @media (max-width:920px){ .map{grid-template-columns:repeat(2,1fr)} }
     .chip{
-      border:1px solid var(--edge);border-radius:14px;padding:10px;
-      background:linear-gradient(135deg,var(--c1),var(--c2));
-      /* Remove text-shadow for crisp glyph edges on iOS */
-      color:#0a0d12; font-weight:700;
-      display:flex;align-items:center;justify-content:center;min-height:68px
+      border:1px solid var(--edge);border-radius:14px;padding:10px;background:linear-gradient(135deg,var(--c1),var(--c2));
+      color:#0a0d12;font-weight:700;display:flex;align-items:center;justify-content:center;min-height:68px
     }
-    .chip .cap{
-      /* Remove translucent white pill to avoid haloing; use solid for contrast */
-      background:#f5f7fb;
-      color:#0a0d12;
-      border-radius:999px;padding:2px 8px;font-size:.82rem;font-weight:750;margin-left:8px
-    }
+    .chip .cap{background:#f5f7fb;color:#0a0d12;border-radius:999px;padding:2px 8px;font-size:.82rem;font-weight:750;margin-left:8px}
 
     .legend{display:flex;flex-wrap:wrap;gap:10px}
     .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
@@ -123,6 +99,41 @@
     hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
 
     :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+
+    /* ===== Muse Skin ===== */
+    body.muse::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--grain);mix-blend-mode:overlay;opacity:.34;filter:contrast(105%) saturate(102%) blur(.2px)}
+    .muse .card{
+      border:1px solid transparent;border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.05)) padding-box,
+        linear-gradient(120deg, rgba(164,255,101,.35), rgba(134,201,255,.35), rgba(179,139,255,.35)) border-box;
+    }
+    .muse h1, .muse h3{font-variant-caps:small-caps;letter-spacing:.08em}
+    .muse .swatch{border-radius:28px;-webkit-mask-image:radial-gradient(120% 100% at 60% 40%, #000 70%, transparent 100%);mask-image:radial-gradient(120% 100% at 60% 40%, #000 70%, transparent 100%)}
+    .muse .swatch.pulse::after{
+      opacity:.78;transform:scale(1.02);
+      background:conic-gradient(from 0deg, rgba(255,255,255,.18), transparent 40%, rgba(255,255,255,.12), transparent 75%);
+      animation:shimmer 6s cubic-bezier(.22,.61,.36,1) infinite;
+    }
+    @keyframes shimmer {0%{transform:rotate(0) scale(1.02)} 100%{transform:rotate(360deg) scale(1.02)}}
+
+    /* ===== Honey Mode visuals ===== */
+    body.honey{
+      background:
+        radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
+        radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
+        linear-gradient(180deg, var(--honey-a), var(--bg));
+    }
+    .honey .honeycomb{position:fixed;inset:-200px;z-index:0;opacity:.12;pointer-events:none;background-image:
+      repeating-linear-gradient(60deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
+      repeating-linear-gradient(120deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
+      repeating-linear-gradient(0deg, rgba(255,206,84,.15) 0 2px, transparent 2px 35px);
+      filter:blur(0.4px) contrast(105%) saturate(105%);
+      animation:honeyFloat 24s linear infinite;
+    }
+    @keyframes honeyFloat { 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
+
+    /* Print */
     @media print{
       body{background:#fff;color:#000}
       .wrap{padding:0}
@@ -134,29 +145,47 @@
   </style>
 </head>
 <body>
+  <div class="honeycomb" aria-hidden="true"></div>
   <div class="wrap">
     <header>
       <div>
         <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
-        <div class="tag">Hear color. See tone. A gentle studio for synesthetic learning — inspired by Marina.</div>
+        <div class="tag">Muse skin + Honey Mode (128 Hz). Hear color. See tone. Learn by tasting.</div>
       </div>
       <div class="actions">
-        <button class="ghost" type="button" onclick="window.print()">Print</button>
+        <button class="ghost" type="button" onclick="toggleMuse()">Muse Skin</button>
+        <button class="ghost" type="button" onclick="toggleHoney()">Honey Mode</button>
         <button class="primary" type="button" onclick="exportMap()">Export Map (.json)</button>
         <button class="ghost" type="button" onclick="resetMap()">Reset</button>
+        <button class="ghost" type="button" onclick="window.print()">Print</button>
       </div>
     </header>
 
-    <!-- Introduction -->
+    <!-- Honey controls -->
+    <section class="card" id="honey-controls" style="display:none">
+      <div class="row">
+        <div class="label">🍯 Honey Mode — 128 Hz Background Bed</div>
+        <div class="controls">
+          <button type="button" onclick="honeyStart()">Play 128 Hz</button>
+          <button type="button" onclick="honeyStop()">Stop</button>
+          <label class="label" style="margin-left:6px">Volume
+            <input type="range" min="0" max="100" value="28" oninput="honeyVolume(this.value)" style="width:160px;vertical-align:middle">
+          </label>
+        </div>
+        <div class="tiny">Tip: start low, use headphones if possible. 128 Hz is a warm, grounding tone; keep it gentle.</div>
+      </div>
+    </section>
+
+    <!-- Intro -->
     <section class="card">
       <div class="row">
         <div>
           <div class="label">Welcome</div>
           <p style="margin:.2rem 0 0">
-            This edition is a quiet mirror: five color-tone “fruit” inspired by Marina’s worlds. Touch a fruit to <em>hear</em> its tone and <em>see</em> its glow. 
-            Then answer with a single word. Your words become your synesthesia map (stored on your device).
+            A quiet mirror of Marina’s worlds. Choose a fruit, <em>hear</em> its tone, and <em>see</em> its glow. 
+            Offer a single word — your strongest association. Your words form a synesthesia map stored on your device.
           </p>
-          <div class="note">Tip: Don’t overthink. First word, soft breath, eyes half-closed. Let the color name you.</div>
+          <div class="note">Muse adds iridescent texture; Honey adds a soft 128 Hz bed and warm background.</div>
         </div>
         <div>
           <div class="legend" style="margin-top:8px">
@@ -170,124 +199,103 @@
 
     <!-- Modules -->
     <div class="grid">
-
-      <!-- BLUE -->
       <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-freq="329.63">
         <div>
-          <div class="titleline">
-            <h3>BLUE — Ocean Neon</h3>
-            <div class="huebar" aria-hidden="true"></div>
-          </div>
+          <div class="titleline"><h3>BLUE — Ocean Neon</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-blue" role="img" aria-label="Blue gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Ritual</div>
+          <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
             <button type="button" onclick="playTone('blue')">Hear Tone</button>
             <button type="button" onclick="stopTone()">Stop</button>
           </div>
-          <div class="tiny">Suggested key: E4 (≈ 329.63 Hz). Think: tide lines, chrome reflections, midnight pool.</div>
+          <div class="tiny">E4 ≈ 329.63 Hz · chrome tide at midnight</div>
           <div style="margin-top:10px">
-            <div class="label">Your one word</div>
+            <div class="label">Name the color you hear</div>
             <input class="input" id="word-blue" maxlength="24" placeholder="e.g., tide / neon / hush" oninput="saveWord('blue', this.value)" />
           </div>
         </div>
       </section>
 
-      <!-- FROOT -->
       <section class="card module" style="--c1:var(--froot-1);--c2:var(--froot-2)" data-key="froot" data-freq="554.37">
         <div>
-          <div class="titleline">
-            <h3>FROOT — Electric Lime</h3>
-            <div class="huebar" aria-hidden="true"></div>
-          </div>
+          <div class="titleline"><h3>FROOT — Electric Lime</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-froot" role="img" aria-label="Electric lime gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Ritual</div>
+          <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
             <button type="button" onclick="playTone('froot')">Hear Tone</button>
             <button type="button" onclick="stopTone()">Stop</button>
           </div>
-          <div class="tiny">Suggested key: C♯5 (≈ 554.37 Hz). Think: citrus snap, laser zest, bright nerve.</div>
+          <div class="tiny">C♯5 ≈ 554.37 Hz · laser citrus on the tongue</div>
           <div style="margin-top:10px">
-            <div class="label">Your one word</div>
+            <div class="label">Name the color you hear</div>
             <input class="input" id="word-froot" maxlength="24" placeholder="e.g., zest / spark / sugar" oninput="saveWord('froot', this.value)" />
           </div>
         </div>
       </section>
 
-      <!-- IMMORTAL -->
       <section class="card module" style="--c1:var(--imm-1);--c2:var(--imm-2)" data-key="immortal" data-freq="220">
         <div>
-          <div class="titleline">
-            <h3>IMMORTAL — Violet Dusk</h3>
-            <div class="huebar" aria-hidden="true"></div>
-          </div>
+          <div class="titleline"><h3>IMMORTAL — Violet Dusk</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-immortal" role="img" aria-label="Violet dusk gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Ritual</div>
+          <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
             <button type="button" onclick="playTone('immortal')">Hear Tone</button>
             <button type="button" onclick="stopTone()">Stop</button>
           </div>
-          <div class="tiny">Suggested key: A3 (220 Hz). Think: cathedral echo, candle smoke, glass memory.</div>
+          <div class="tiny">A3 = 220 Hz · violet glass, candle smoke</div>
           <div style="margin-top:10px">
-            <div class="label">Your one word</div>
+            <div class="label">Name the color you hear</div>
             <input class="input" id="word-immortal" maxlength="24" placeholder="e.g., veil / echo / dusk" oninput="saveWord('immortal', this.value)" />
           </div>
         </div>
       </section>
 
-      <!-- ANCIENT DREAMS -->
       <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-freq="349.23">
         <div>
-          <div class="titleline">
-            <h3>ANCIENT DREAMS — Rose Aurora</h3>
-            <div class="huebar" aria-hidden="true"></div>
-          </div>
+          <div class="titleline"><h3>ANCIENT DREAMS — Rose Aurora</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-ancient" role="img" aria-label="Rose aurora gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Ritual</div>
+          <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
             <button type="button" onclick="playTone('ancient')">Hear Tone</button>
             <button type="button" onclick="stopTone()">Stop</button>
           </div>
-          <div class="tiny">Suggested key: F4 (≈ 349.23 Hz). Think: pink horizon, incense wind, bronze halo.</div>
+          <div class="tiny">F4 ≈ 349.23 Hz · rose dawn, bronze halo</div>
           <div style="margin-top:10px">
-            <div class="label">Your one word</div>
+            <div class="label">Name the color you hear</div>
             <input class="input" id="word-ancient" maxlength="24" placeholder="e.g., blush / halo / myrrh" oninput="saveWord('ancient', this.value)" />
           </div>
         </div>
       </section>
 
-      <!-- HANDMADE HEAVEN -->
       <section class="card module" style="--c1:var(--hh-1);--c2:var(--hh-2)" data-key="heaven" data-freq="587.33">
         <div>
-          <div class="titleline">
-            <h3>HANDMADE HEAVEN — Sky Bloom</h3>
-            <div class="huebar" aria-hidden="true"></div>
-          </div>
+          <div class="titleline"><h3>HANDMADE HEAVEN — Sky Bloom</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-heaven" role="img" aria-label="Sky bloom gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Ritual</div>
+          <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
             <button type="button" onclick="playTone('heaven')">Hear Tone</button>
             <button type="button" onclick="stopTone()">Stop</button>
           </div>
-          <div class="tiny">Suggested key: D5 (≈ 587.33 Hz). Think: cold sunshine, wingbeat hush, bluebell breath.</div>
+          <div class="tiny">D5 ≈ 587.33 Hz · cold sunshine, bluebell air</div>
           <div style="margin-top:10px">
-            <div class="label">Your one word</div>
+            <div class="label">Name the color you hear</div>
             <input class="input" id="word-heaven" maxlength="24" placeholder="e.g., wing / hush / bell" oninput="saveWord('heaven', this.value)" />
           </div>
         </div>
       </section>
     </div>
 
-    <!-- Your Map -->
+    <!-- Map -->
     <section class="card" id="map-card">
       <div class="titleline">
         <h3>Your Synesthesia Map</h3>
@@ -298,157 +306,135 @@
     </section>
 
     <footer class="note">
-      Made with care for learning and resonance. This edition honors the art by inviting your own color-sense to bloom.
+      Made with care for learning and resonance. Muse adds sparkle; Honey adds warmth. Keep volume gentle.
     </footer>
   </div>
 
   <script>
-    /* ====== State & Persistence ====== */
-    var FROOT_KEY = "froot_marina_map_v1";
-    var seeds = {
-      blue:   { name:"Blue — Ocean Neon",      c1:"var(--blue-1)", c2:"var(--blue-2)",   freq:329.63,  id:"blue"   },
-      froot:  { name:"Froot — Electric Lime",  c1:"var(--froot-1)",c2:"var(--froot-2)",  freq:554.37,  id:"froot"  },
-      immortal:{name:"Immortal — Violet Dusk", c1:"var(--imm-1)",  c2:"var(--imm-2)",    freq:220.00,  id:"immortal"},
-      ancient:{ name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23,  id:"ancient"},
-      heaven: { name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)",   freq:587.33,  id:"heaven" }
+    /* ===== State & persistence ===== */
+    var FROOT_KEY="froot_marina_map_v1";
+    var seeds={
+      blue:{name:"Blue — Ocean Neon", c1:"var(--blue-1)", c2:"var(--blue-2)", freq:329.63, id:"blue"},
+      froot:{name:"Froot — Electric Lime", c1:"var(--froot-1)", c2:"var(--froot-2)", freq:554.37, id:"froot"},
+      immortal:{name:"Immortal — Violet Dusk", c1:"var(--imm-1)", c2:"var(--imm-2)", freq:220.00, id:"immortal"},
+      ancient:{name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23, id:"ancient"},
+      heaven:{name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)", freq:587.33, id:"heaven"}
     };
-    var mapData = loadMap();
-
-    function loadMap(){
-      try{
-        var raw = localStorage.getItem(FROOT_KEY);
-        if(raw){ return JSON.parse(raw); }
-      }catch(e){}
-      return { blue:"", froot:"", immortal:"", ancient:"", heaven:"" };
-    }
-    function persist(){
-      try{ localStorage.setItem(FROOT_KEY, JSON.stringify(mapData)); }catch(e){}
-      renderMap();
-      hydrateInputs();
-    }
-    function saveWord(key, val){
-      mapData[key] = (val || "").trim();
-      persist();
-    }
-    function resetMap(){
-      mapData = { blue:"", froot:"", immortal:"", ancient:"", heaven:"" };
-      stopTone();
-      persist();
-    }
+    var mapData=loadMap();
+    function loadMap(){try{var raw=localStorage.getItem(FROOT_KEY);if(raw){return JSON.parse(raw)}}catch(e){} return {blue:"",froot:"",immortal:"",ancient:"",heaven:""}}
+    function persist(){try{localStorage.setItem(FROOT_KEY, JSON.stringify(mapData))}catch(e){} renderMap(); hydrateInputs()}
+    function saveWord(key,val){mapData[key]=(val||"").trim(); persist()}
+    function resetMap(){mapData={blue:"",froot:"",immortal:"",ancient:"",heaven:""}; stopTone(); honeyStop(); persist()}
     function exportMap(){
-      var blob = new Blob([JSON.stringify({version:"1.0", map:mapData, timestamp:new Date().toISOString()}, null, 2)], {type:"application/json"});
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement("a");
-      a.href = url; a.download = "froot_marina_synesthesia_map.json";
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
+      var blob=new Blob([JSON.stringify({version:"1.1", map:mapData, honey: honeyActive(), timestamp:new Date().toISOString()}, null, 2)], {type:"application/json"});
+      var url=URL.createObjectURL(blob); var a=document.createElement("a"); a.href=url; a.download="froot_marina_synesthesia_map.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
-
     function hydrateInputs(){
-      var pairs = [
-        ["blue","word-blue"],["froot","word-froot"],["immortal","word-immortal"],
-        ["ancient","word-ancient"],["heaven","word-heaven"]
-      ];
-      for(var i=0;i<pairs.length;i++){
-        var key = pairs[i][0], id = pairs[i][1];
-        var el = document.getElementById(id);
-        if(el && mapData[key] !== undefined){ el.value = mapData[key]; }
-      }
+      [["blue","word-blue"],["froot","word-froot"],["immortal","word-immortal"],["ancient","word-ancient"],["heaven","word-heaven"]]
+      .forEach(function(p){var key=p[0],id=p[1];var el=document.getElementById(id);if(el && mapData[key]!==undefined){el.value=mapData[key]}})
     }
-
     function renderMap(){
-      var host = document.getElementById("map");
-      if(!host) return;
-      host.innerHTML = "";
+      var host=document.getElementById("map"); if(!host) return; host.innerHTML="";
       for(var k in seeds){
-        var s = seeds[k], word = (mapData[k]||"").trim();
-        var chip = document.createElement("div");
-        chip.className = "chip";
+        var s=seeds[k], word=(mapData[k]||"").trim();
+        var chip=document.createElement("div"); chip.className="chip";
         chip.style.setProperty("--c1", getComputedStyle(document.documentElement).getPropertyValue(s.c1.replace("var(","").replace(")","")).trim());
         chip.style.setProperty("--c2", getComputedStyle(document.documentElement).getPropertyValue(s.c2.replace("var(","").replace(")","")).trim());
-        chip.textContent = s.name.split(" — ")[0];
-        if(word){ 
-          var cap = document.createElement("span");
-          cap.className = "cap"; cap.textContent = word;
-          chip.appendChild(cap);
-        }
+        chip.textContent=s.name.split(" — ")[0];
+        if(word){var cap=document.createElement("span"); cap.className="cap"; cap.textContent=word; chip.appendChild(cap)}
         host.appendChild(chip);
       }
     }
 
-    /* ====== Audio Engine (Web Audio API) ====== */
-    var ctx = null, osc = null, g = null, activeKey = null, pulseTimer = null;
-
-    function ensureCtx(){
-      if(!ctx){ ctx = new (window.AudioContext || window.webkitAudioContext)(); }
-      return ctx;
-    }
+    /* ===== Audio engine ===== */
+    var ctx=null, osc=null, g=null, activeKey=null, pulseTimer=null;
+    var honeyOsc=null, honeyGain=null; // background 128 Hz
+    function ensureCtx(){ if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)() } return ctx }
 
     function playTone(key){
-      stopTone();
-      var s = seeds[key]; if(!s) return;
-      ensureCtx();
-      osc = ctx.createOscillator();
-      g = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(s.freq, ctx.currentTime);
-
-      // Soft envelope, no clicks
-      var now = ctx.currentTime;
+      stopTone(); var s=seeds[key]; if(!s) return; ensureCtx();
+      osc=ctx.createOscillator(); g=ctx.createGain();
+      osc.type="sine"; osc.frequency.setValueAtTime(s.freq, ctx.currentTime);
+      var now=ctx.currentTime;
       g.gain.setValueAtTime(0.0001, now);
-      g.gain.exponentialRampToValueAtTime(0.28, now + 0.08);
-      g.gain.exponentialRampToValueAtTime(0.2,  now + 0.40);
-      g.gain.exponentialRampToValueAtTime(0.0001, now + 5.8);
-
+      g.gain.exponentialRampToValueAtTime(0.28, now+0.08);
+      g.gain.exponentialRampToValueAtTime(0.20, now+0.40);
+      g.gain.exponentialRampToValueAtTime(0.0001, now+5.8);
       osc.connect(g); g.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 6.0);
-
-      activeKey = key;
-      pulseOn(key);
-      osc.onended = function(){
-        pulseOff(key);
-        activeKey = null;
-      };
+      osc.start(now); osc.stop(now+6.0);
+      activeKey=key; pulseOn(key);
+      osc.onended=function(){ pulseOff(key); activeKey=null };
+      // Keep Honey bed if active; tones overlay politely
     }
-
     function stopTone(){
-      if(osc){ try{ osc.stop(); }catch(e){} }
-      if(g){ try{ g.disconnect(); }catch(e){} }
-      if(osc){ try{ osc.disconnect(); }catch(e){} }
-      osc = null; g = null;
-      if(activeKey){ pulseOff(activeKey); activeKey = null; }
+      if(osc){ try{osc.stop()}catch(e){} }
+      if(g){ try{g.disconnect()}catch(e){} }
+      if(osc){ try{osc.disconnect()}catch(e){} }
+      osc=null; g=null; if(activeKey){ pulseOff(activeKey); activeKey=null }
     }
-
-    /* ====== Visual Pulse ====== */
     function pulseOn(key){
-      var id = "swatch-" + (key==="immortal" ? "immortal" : key);
-      var el = document.getElementById(id);
-      if(!el) return;
-      el.classList.add("pulse");
-      clearInterval(pulseTimer);
-      var t0 = performance.now();
-      pulseTimer = setInterval(function(){
-        var t = (performance.now() - t0) / 1000.0;
-        var deg = 120 + Math.sin(t*2.0)*10;
-        el.style.background = "linear-gradient("+deg+"deg, var(--c1), var(--c2))";
-      }, 60);
+      var id="swatch-"+(key==="immortal"?"immortal":key); var el=document.getElementById(id); if(!el) return;
+      el.classList.add("pulse"); clearInterval(pulseTimer);
+      var t0=performance.now();
+      pulseTimer=setInterval(function(){
+        var t=(performance.now()-t0)/1000.0; var deg=120+Math.sin(t*2.0)*10;
+        el.style.background="linear-gradient("+deg+"deg, var(--c1), var(--c2))";
+      },60);
     }
     function pulseOff(key){
-      var id = "swatch-" + (key==="immortal" ? "immortal" : key);
-      var el = document.getElementById(id);
-      if(el){ el.classList.remove("pulse"); el.style.background = ""; }
-      clearInterval(pulseTimer); pulseTimer = null;
+      var id="swatch-"+(key==="immortal"?"immortal":key); var el=document.getElementById(id);
+      if(el){ el.classList.remove("pulse"); el.style.background="" }
+      clearInterval(pulseTimer); pulseTimer=null;
     }
 
-    /* ====== Init ====== */
-    renderMap();
-    hydrateInputs();
+    /* ===== Muse / Honey toggles ===== */
+    function toggleMuse(){ document.body.classList.toggle("muse") }
 
-    /* Accessibility: resume audio on first user gesture in some browsers */
-    document.addEventListener("click", function(){
-      if(ctx && ctx.state === "suspended"){ ctx.resume(); }
-    }, {once:true});
+    function toggleHoney(){
+      var on=document.body.classList.toggle("honey");
+      var hc=document.getElementById("honey-controls");
+      hc.style.display = on ? "block" : "none";
+      if(on){ honeyStart() } else { honeyStop() }
+    }
+    function honeyActive(){ return document.body.classList.contains("honey") }
+
+    /* Background 128 Hz bed with gentle gain control */
+    function honeyStart(){
+      ensureCtx();
+      if(honeyOsc){ return } // already running
+      honeyOsc=ctx.createOscillator(); honeyGain=ctx.createGain();
+      honeyOsc.type="sine"; honeyOsc.frequency.setValueAtTime(128.0, ctx.currentTime);
+      var now=ctx.currentTime;
+      honeyGain.gain.setValueAtTime(0.0001, now);
+      honeyGain.gain.exponentialRampToValueAtTime(0.12, now+0.25); // fade in
+      honeyOsc.connect(honeyGain); honeyGain.connect(ctx.destination);
+      honeyOsc.start(now);
+    }
+    function honeyStop(){
+      if(!honeyOsc || !honeyGain || !ctx){ return }
+      var now=ctx.currentTime;
+      try{
+        honeyGain.gain.setTargetAtTime(0.0001, now, 0.25);
+        setTimeout(function(){
+          try{ honeyOsc.stop() }catch(e){}
+          try{ honeyOsc.disconnect(); honeyGain.disconnect() }catch(e){}
+          honeyOsc=null; honeyGain=null;
+        }, 400);
+      }catch(e){
+        try{ honeyOsc.stop() }catch(_){}
+        honeyOsc=null; honeyGain=null;
+      }
+    }
+    function honeyVolume(val){
+      if(!honeyGain || !ctx){ return }
+      var v=Math.max(0, Math.min(100, Number(val)||0));
+      var gain = v/100 * 0.35; // cap for safety
+      honeyGain.gain.setTargetAtTime(gain, ctx.currentTime, 0.05);
+    }
+
+    /* ===== Init ===== */
+    renderMap(); hydrateInputs();
+    document.addEventListener("click", function(){ if(ctx && ctx.state==="suspended"){ ctx.resume() } }, {once:true});
   </script>
 </body>
 </html>
