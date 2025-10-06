@@ -4,40 +4,28 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Froot — Marina Reflection Edition · Muse + Honey + Share</title>
-  <meta name="description" content="Froot: a Marina-inspired color-sense studio with Muse skin, Honey Mode (128 Hz), Export/Share, BLE send, and a crackle-safe audio engine.">
+  <meta name="description" content="Froot: a Marina-inspired color-sense studio with Muse skin, Honey Mode (128 Hz), Export/Share, BLE send, crackle-safe audio, and background playback.">
   <style>
-    /* ===== Crisp, iOS-friendly typography ===== */
     html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
     body{
       font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       font-variant-ligatures:common-ligatures contextual; font-synthesis-weight:none;
       margin:0; color:var(--ink); background:var(--bg);
     }
-
     :root{
-      /* Studio base */
       --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
       --ring:#2c3444; --glow:#66e1ff;
-      /* Marina palettes */
       --blue-1:#0b2e40; --blue-2:#2cc2ff;
       --froot-1:#103018; --froot-2:#a4ff65;
       --imm-1:#1b1030; --imm-2:#b38bff;
       --ad-1:#2b1016;  --ad-2:#ff6a9e;
       --hh-1:#0f1e33;  --hh-2:#86c9ff;
       --accent:#a4ff65;
-
-      /* Muse grain */
       --grain: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05), transparent 35%),
                radial-gradient(circle at 80% 0%, rgba(255,255,255,.04), transparent 40%),
                radial-gradient(circle at 40% 80%, rgba(0,0,0,.08), transparent 45%);
-
-      /* Honey visuals */
-      --honey-a:#120e07;
-      --honey-b:#3a2a0f;
-      --honey-c:#d7aa3b;
-      --honey-d:#f7d77a;
+      --honey-a:#120e07; --honey-b:#3a2a0f; --honey-c:#d7aa3b; --honey-d:#f7d77a;
     }
-
     *{box-sizing:border-box}
     .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:1}
     header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
@@ -100,7 +88,7 @@
     hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
     :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
 
-    /* ===== Muse Skin ===== */
+    /* Muse Skin */
     body.muse::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--grain);mix-blend-mode:overlay;opacity:.34;filter:contrast(105%) saturate(102%) blur(.2px)}
     .muse .card{
       border:1px solid transparent;border-radius:24px;
@@ -117,7 +105,7 @@
     }
     @keyframes shimmer {0%{transform:rotate(0) scale(1.02)} 100%{transform:rotate(360deg) scale(1.02)}}
 
-    /* ===== Honey Mode visuals ===== */
+    /* Honey visuals */
     body.honey{
       background:
         radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
@@ -133,7 +121,6 @@
     }
     @keyframes honeyFloat { 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
 
-    /* Print */
     @media print{
       body{background:#fff;color:#000}
       .wrap{padding:0}
@@ -150,7 +137,7 @@
     <header>
       <div>
         <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
-        <div class="tag">Muse skin + Honey Mode (128 Hz). Share or send your map. Learn by tasting.</div>
+        <div class="tag">Muse skin (default) + Honey Mode (128 Hz). Background playback supported. Share your map.</div>
       </div>
       <div class="actions">
         <button class="ghost" type="button" onclick="toggleMuse()">Muse Skin</button>
@@ -163,7 +150,6 @@
       </div>
     </header>
 
-    <!-- Honey controls -->
     <section class="card" id="honey-controls" style="display:none">
       <div class="row">
         <div class="label">🍯 Honey Mode — 128 Hz Background Bed</div>
@@ -174,20 +160,18 @@
             <input id="honeyVol" type="range" min="0" max="100" value="28" oninput="honeyVolume(this.value)" style="width:160px;vertical-align:middle">
           </label>
         </div>
-        <div class="tiny">Tip: start low, use headphones if possible. 128 Hz is a warm, grounding tone; keep it gentle.</div>
+        <div class="tiny">Tip: start low; headphones recommended. Background playback continues with screen locked or app-switched (tab must remain open).</div>
       </div>
     </section>
 
-    <!-- Intro -->
     <section class="card">
       <div class="row">
         <div>
           <div class="label">Welcome</div>
           <p style="margin:.2rem 0 0">
-            A quiet mirror of Marina’s worlds. Choose a fruit, <em>hear</em> its tone, and <em>see</em> its glow. 
-            Offer a single word — your strongest association. Your words form a synesthesia map stored on your device.
+            Choose a fruit, <em>hear</em> its tone, <em>see</em> its glow. Offer one word—your strongest association. Your map stays on your device.
           </p>
-          <div class="note">Muse adds iridescent texture; Honey adds a soft 128 Hz bed and warm background. Share will open your device’s native sheet.</div>
+          <div class="note">Background playback uses a hidden audio element + Media Session, so tones and Honey can keep playing with the screen locked.</div>
         </div>
         <div>
           <div class="legend" style="margin-top:8px">
@@ -199,7 +183,6 @@
       </div>
     </section>
 
-    <!-- Modules -->
     <div class="grid">
       <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-freq="329.63">
         <div>
@@ -297,25 +280,22 @@
       </section>
     </div>
 
-    <!-- Map -->
     <section class="card" id="map-card">
       <div class="titleline">
         <h3>Your Synesthesia Map</h3>
         <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
       </div>
       <div class="map" id="map"></div>
-      <div class="foot">Your words save locally. Export to file, Share with your device sheet, or try Bluetooth (BLE) if your receiver supports it.</div>
+      <div class="foot">Your words save locally. Export, Share (native sheet), or Bluetooth (BLE UART) if your receiver supports it. Background playback continues while locked; closing the tab stops audio (browser limit).</div>
     </section>
 
-    <footer class="note">
-      Made with care for learning and resonance. Muse adds sparkle; Honey adds warmth. Keep volume gentle.
-    </footer>
+    <footer class="note">Made with care for learning and resonance. Muse adds sparkle; Honey adds warmth.</footer>
   </div>
 
   <script>
-    /* ===== Local prefs (persist Muse/Honey between visits) ===== */
+    /* ===== Prefs: default Muse ON (night mode vibe), Honey OFF ===== */
     var PREFS_KEY="froot_prefs_v1";
-    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:false,honey:false} }
+    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:true,honey:false} }
     function savePrefs(){ try{ localStorage.setItem(PREFS_KEY, JSON.stringify({muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')})) }catch(e){} }
     var prefs = loadPrefs();
     if(prefs.muse) document.body.classList.add("muse");
@@ -352,79 +332,88 @@
       }
     }
 
-    /* ===== Crackle-safe Audio Engine ===== */
+    /* ===== Background Audio plumbing (MediaStream + hidden <audio>) ===== */
     var ctx=null, master=null, comp=null, dc=null;
     var toneOsc=null, toneGain=null, pulseTimer=null, activeKey=null;
     var honeyOsc=null, honeyGain=null;
     var retriggerGuard=false;
 
+    var bgDest=null, bgAudio=null; // keeps audio alive in background
+    function initBackgroundPipe(){
+      if(!ctx || bgDest){ return; }
+      bgDest = ctx.createMediaStreamDestination();
+      master.connect(bgDest);
+      bgAudio = new Audio();
+      bgAudio.srcObject = bgDest.stream;
+      bgAudio.loop = true;
+      bgAudio.playsInline = true;
+      // start only after user gesture
+      bgAudio.play().catch(function(){ /* ignored; will retry on first interaction */ });
+
+      if('mediaSession' in navigator){
+        try{
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: 'Froot — Honey',
+            artist: 'PLNT Earth',
+            album: 'Illumina',
+          });
+          navigator.mediaSession.setActionHandler('play', function(){ resumeCtx(); if(document.body.classList.contains('honey')) honeyStart(); });
+          navigator.mediaSession.setActionHandler('pause', function(){ honeyStop(); });
+        }catch(_){}
+      }
+    }
+    function resumeCtx(){ if(ctx && ctx.state==='suspended'){ ctx.resume(); if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } } }
+
+    /* ===== Crackle-safe Audio Engine ===== */
     function ensureCtx(){
       if(!ctx){
         ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
 
-        // Master chain: headroom → compressor → DC-block → destination
         master = ctx.createGain();            master.gain.value = 0.90;
-
         comp   = ctx.createDynamicsCompressor();
-        comp.threshold.value = -24;
-        comp.knee.value      =   8;
-        comp.ratio.value     =   4;
-        comp.attack.value    = 0.003;
-        comp.release.value   = 0.250;
-
-        dc = ctx.createBiquadFilter();
-        dc.type = "highpass"; dc.frequency.value = 12;
+        comp.threshold.value = -24; comp.knee.value = 8; comp.ratio.value = 4; comp.attack.value = 0.003; comp.release.value = 0.250;
+        dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 12;
 
         master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
+
+        initBackgroundPipe(); // prepare background routing
       }
       return ctx;
     }
 
     function killToneFast(now){
       if(!toneOsc || !toneGain){ return; }
-      try{
-        toneGain.gain.setTargetAtTime(0.0001, now, 0.03); // ~60–80ms fade
-        toneOsc.stop(now + 0.06);
-      }catch(_){}
-      setTimeout(function(){
-        try{ toneOsc.disconnect(); }catch(_){}
-        try{ toneGain.disconnect(); }catch(_){}
-        toneOsc=null; toneGain=null;
-      }, 100);
+      try{ toneGain.gain.setTargetAtTime(0.0001, now, 0.03); toneOsc.stop(now + 0.06); }catch(_){}
+      setTimeout(function(){ try{ toneOsc.disconnect(); }catch(_){}
+                           try{ toneGain.disconnect(); }catch(_){}
+                           toneOsc=null; toneGain=null; }, 100);
     }
 
     function playTone(key){
       ensureCtx();
       var s = seeds[key]; if(!s) return;
-
       var now = ctx.currentTime;
-
-      // Fade any previous tone before retrigger
       if(toneOsc){ killToneFast(now); }
-
-      // Micro guard to prevent double-fire spam
-      if(retriggerGuard) return;
-      retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 120);
+      if(retriggerGuard) return; retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 120);
 
       toneOsc  = ctx.createOscillator();
       toneGain = ctx.createGain();
-
       toneOsc.type = "sine";
       toneOsc.frequency.setValueAtTime(s.freq, now);
 
-      // Smooth envelope
       toneGain.gain.cancelScheduledValues(now);
       toneGain.gain.setValueAtTime(0.0001, now);
-      toneGain.gain.exponentialRampToValueAtTime(0.26, now + 0.06);     // attack
-      toneGain.gain.setTargetAtTime(0.18, now + 0.30, 0.12);            // settle
-      toneGain.gain.setTargetAtTime(0.0001, now + 5.50, 0.25);          // release
+      toneGain.gain.exponentialRampToValueAtTime(0.26, now + 0.06);
+      toneGain.gain.setTargetAtTime(0.18, now + 0.30, 0.12);
+      toneGain.gain.setTargetAtTime(0.0001, now + 5.50, 0.25);
 
       toneOsc.connect(toneGain); toneGain.connect(master);
-      toneOsc.start(now);
-      toneOsc.stop(now + 6.0);
+      toneOsc.start(now); toneOsc.stop(now + 6.0);
 
       activeKey = key; pulseOn(key);
       toneOsc.onended = function(){ pulseOff(key); activeKey=null; };
+      if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } // keep the stream alive
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='playing'; }catch(_){ } }
     }
 
     function stopTone(){
@@ -432,7 +421,7 @@
       killToneFast(ctx.currentTime);
     }
 
-    /* ===== Visual Pulse ===== */
+    /* Visual pulse */
     function pulseOn(key){
       var id="swatch-"+(key==="immortal"?"immortal":key); var el=document.getElementById(id); if(!el) return;
       el.classList.add("pulse"); clearInterval(pulseTimer);
@@ -448,7 +437,7 @@
       clearInterval(pulseTimer); pulseTimer=null;
     }
 
-    /* ===== Muse / Honey ===== */
+    /* Muse / Honey */
     function toggleMuse(){ document.body.classList.toggle("muse"); savePrefs() }
     function toggleHoney(){
       var on=document.body.classList.toggle("honey");
@@ -467,13 +456,15 @@
 
       var now = ctx.currentTime;
       honeyGain.gain.setValueAtTime(0.0001, now);
-      honeyGain.gain.exponentialRampToValueAtTime(0.12, now + 0.25); // fade in
+      honeyGain.gain.exponentialRampToValueAtTime(0.12, now + 0.25);
 
       honeyOsc.connect(honeyGain);
-      honeyGain.connect(master); // route through master chain
+      honeyGain.connect(master);
       honeyOsc.start(now);
 
       var vol=document.getElementById("honeyVol"); if(vol){ honeyVolume(vol.value) }
+      if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) }
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='playing'; }catch(_){ } }
     }
     function honeyStop(){
       if(!honeyOsc || !honeyGain || !ctx){ return }
@@ -489,17 +480,18 @@
         try{ honeyOsc.stop() }catch(__){}
         honeyOsc=null; honeyGain=null;
       }
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='paused'; }catch(_){ } }
     }
     function honeyVolume(val){
       if(!honeyGain || !ctx){ return }
       var v=Math.max(0, Math.min(100, Number(val)||0));
-      var gain = v/100 * 0.35; // headroom
+      var gain = v/100 * 0.35;
       honeyGain.gain.setTargetAtTime(gain, ctx.currentTime, 0.05);
     }
 
-    /* ===== Export + Share ===== */
+    /* Export + Share */
     function buildMapBlob(){
-      var payload={version:"1.3", map:mapData, prefs:{muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
+      var payload={version:"1.4", map:mapData, prefs:{muse:document.body.classList.contains('muse'), honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
       return new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     }
     function exportMap(){
@@ -525,10 +517,10 @@
         URL.revokeObjectURL(url);
         return;
       }
-      exportMap(); /* fallback */
+      exportMap();
     }
 
-    /* ===== Bluetooth (BLE) send — Nordic UART Service ===== */
+    /* Bluetooth (BLE) send — Nordic UART Service */
     var BLE={device:null, server:null, svc:null, tx:null};
     async function bleSend(){
       try{
@@ -538,26 +530,21 @@
         BLE.server = await BLE.device.gatt.connect();
         BLE.svc    = await BLE.server.getPrimaryService(svcUUID);
         BLE.tx     = await BLE.svc.getCharacteristic(txUUID);
-
-        var blob=buildMapBlob();
-        var text=await blob.text();
-        var data=new TextEncoder().encode(text);
-
-        var mtu=180;
-        for(var i=0;i<data.length;i+=mtu){
-          var slice=data.slice(i, Math.min(i+mtu, data.length));
-          await BLE.tx.writeValueWithoutResponse(slice);
-        }
+        var blob=buildMapBlob(); var text=await blob.text(); var data=new TextEncoder().encode(text);
+        var mtu=180; for(var i=0;i<data.length;i+=mtu){ await BLE.tx.writeValueWithoutResponse(data.slice(i, Math.min(i+mtu, data.length))); }
         if(BLE.device && BLE.device.gatt.connected){ BLE.device.gatt.disconnect() }
-      }catch(e){
-        /* silent by design; Export/Share remain available */
-      }
+      }catch(e){ /* silent */ }
     }
 
-    /* ===== Init ===== */
+    /* Init: render, restore Honey UI, prime background after first tap, keep alive on visibility changes */
     renderMap(); hydrateInputs();
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
-    document.addEventListener("click", function(){ if(ctx && ctx.state==="suspended"){ ctx.resume() } }, {once:true});
+    document.addEventListener("click", function(){
+      ensureCtx(); resumeCtx(); initBackgroundPipe();
+    }, {once:true});
+    document.addEventListener("visibilitychange", function(){
+      if(document.visibilityState === "visible"){ resumeCtx(); }
+    });
   </script>
 </body>
 </html>
