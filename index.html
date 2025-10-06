@@ -1,541 +1,1208 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Froot — Breath-Synced Loop Tone (Single-File)</title>
-<style>
-  :root{
-    --bg:#0f1222;
-    --card:#161a31;
-    --ink:#e9ecff;
-    --muted:#99a1c7;
-    --accent:#7aa2ff;
+  <meta charset="utf-8" />
+  <!-- Keep iOS media bar dark -->
+  <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0b0d11">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    /* Breath phase colors */
-    --breath-in:#2ecc71;   /* green */
-    --breath-hold:#f1c40f; /* yellow */
-    --breath-out:#e74c3c;  /* red/orange */
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; background:radial-gradient(1200px 700px at 20% -10%, #1d2344 0%, var(--bg) 58%  ), radial-gradient(800px 600px at 120% 120%, #1a1f3c 0%, var(--bg) 60%);
-    color:var(--ink); font:500 16px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    display:flex; align-items:center; justify-content:center; padding:28px;
-  }
-  .wrap{width:clamp(320px, 92vw, 980px)}
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.08));
-    border:1px solid rgba(255,255,255,.08);
-    border-radius:16px; padding:18px 18px 22px; box-shadow:0 10px 40px rgba(0,0,0,.35);
-  }
-  h1{margin:0 0 8px; font-size:20px; letter-spacing:.3px}
-  .sub{color:var(--muted); margin-bottom:14px}
-  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
-  .modebadge{
-    display:inline-flex; align-items:center; gap:8px;
-    background:rgba(122,162,255,.12); color:#cfe0ff; border:1px solid rgba(122,162,255,.25);
-    padding:8px 10px; border-radius:10px; font-weight:600; font-size:14px; user-select:none;
-  }
-  #varGroup{display:none}
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Froot — Marina Reflection Edition · Weeks + Honey + FX</title>
+  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, and Princess of Power integration." />
+  <style>
+    :root{
+      color-scheme: dark;
+      --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
+      --ring:#2c3444; --glow:#66e1ff;
 
-  .panel{
-    margin-top:14px; display:grid; grid-template-columns: 1fr 320px; gap:14px;
-  }
-  @media (max-width:880px){ .panel{grid-template-columns:1fr} }
+      /* Palettes */
+      --blue-1:#0b2e40; --blue-2:#2cc2ff;
+      --froot-1:#103018; --froot-2:#a4ff65;
+      --imm-1:#1b1030;  --imm-2:#b38bff;
+      --ad-1:#2b1016;   --ad-2:#ff6a9e;
+      --hh-1:#0f1e33;   --hh-2:#86c9ff;
+      --accent:#a4ff65;
 
-  /* ===== Ball ===== */
-  .ballWrap{display:flex; align-items:center; justify-content:center; padding:18px}
-  #breathBall{
-    position:relative; width:min(58vw, 360px); height:min(58vw, 360px); min-width:220px; min-height:220px;
-    border-radius:50%; cursor:pointer; user-select:none;
-    background:
-      radial-gradient(120% 120% at 30% 25%, rgba(255,255,255,.35), rgba(255,255,255,.06) 42%, rgba(255,255,255,0) 60%),
-      radial-gradient(100% 100% at 70% 70%, rgba(122,162,255,.3), rgba(122,162,255,.05) 50%, rgba(122,162,255,0) 70%),
-      linear-gradient(160deg, #2d355e 0%, #1f2445 60%, #181d3a 100%);
-    box-shadow:
-      inset 0 0 60px rgba(122,162,255,.14),
-      0 18px 45px rgba(0,0,0,.40),
-      0 2px 0 1px rgba(255,255,255,.06) inset;
-    transition: transform .20s ease, box-shadow .25s ease;
-    outline:none;
-  }
-  #breathBall:hover{ transform: translateY(-1px) scale(1.01); }
-  #breathBall.playing{ transform: translateY(-2px) scale(1.02); }
-  /* Optional gentle tint on the ball by phase */
-  #breathBall.phase-in   { box-shadow: inset 0 0 60px rgba(46,204,113,.35), 0 18px 45px rgba(0,0,0,.40), 0 2px 0 1px rgba(255,255,255,.06) inset; }
-  #breathBall.phase-hold { box-shadow: inset 0 0 60px rgba(241,196,15,.35), 0 18px 45px rgba(0,0,0,.40), 0 2px 0 1px rgba(255,255,255,.06) inset; }
-  #breathBall.phase-out  { box-shadow: inset 0 0 60px rgba(231,76,60,.35), 0 18px 45px rgba(0,0,0,.40), 0 2px 0 1px rgba(255,255,255,.06) inset; }
+      /* Muse grain */
+      --grain: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05), transparent 35%),
+               radial-gradient(circle at 80% 0%, rgba(255,255,255,.04), transparent 40%),
+               radial-gradient(circle at 40% 80%, rgba(0,0,0,.08), transparent 45%);
 
-  /* ===== Breath Phase HUD (label + sweeping arc + edge flash) ===== */
-  .phaseHUD{ position:absolute; inset:8%; border-radius:50%; pointer-events:none; }
-  .phaseHUD .phaseArc{ position:absolute; inset:-6px; border-radius:50%;
-    background: conic-gradient(var(--phase-color, #22d) 0deg var(--arc, 0deg), transparent var(--arc, 0deg) 360deg);
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,.18));
-  }
-  .phaseHUD .phaseEdge{ position:absolute; inset:-6px; border-radius:50%; box-shadow:0 0 0 0 rgba(255,255,255,0); }
-  .phaseHUD .phaseLabel{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-weight:800; font-size: clamp(26px, 6.2vw, 48px);
-    letter-spacing:.10em; text-shadow:0 1px 2px rgba(0,0,0,.18); mix-blend-mode:hard-light; font-variant-caps:all-small-caps;
-  }
-  .phaseHUD .subtext{
-    position:absolute; left:0; right:0; bottom:12%; text-align:center; font-size:12px; color:rgba(255,255,255,.7)
-  }
-  .phaseHUD .phaseEdge.flash{ animation: edgeFlash 180ms ease-out; }
-  @keyframes edgeFlash{ from{ box-shadow:0 0 0 14px rgba(255,255,255,.92);} to{ box-shadow:0 0 0 0 rgba(255,255,255,0);} }
-  .phase-in   .phaseHUD{ --phase-color: var(--breath-in); }
-  .phase-hold .phaseHUD{ --phase-color: var(--breath-hold); }
-  .phase-out  .phaseHUD{ --phase-color: var(--breath-out); }
-  .phase-in   .phaseLabel{ color: var(--breath-in); }
-  .phase-hold .phaseLabel{ color: var(--breath-hold); }
-  .phase-out  .phaseLabel{ color: var(--breath-out); }
+      /* Honey visuals */
+      --honey-a:#120e07; --honey-b:#3a2a0f; --honey-c:#d7aa3b; --honey-d:#f7d77a;
+    }
 
-  /* ===== Right-side controls ===== */
-  .panelR{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.05)); border:1px solid rgba(255,255,255,.08);
-    border-radius:12px; padding:12px}
-  .ctl{margin:6px 0 12px}
-  .ctl label{display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:13px; margin-bottom:6px}
-  input[type="range"]{width:100%}
-  .caps{font-variant-caps:all-small-caps; letter-spacing:.06em}
-  .mini{font-size:12px; color:var(--muted)}
-  .btn{
-    display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.05); padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:700; color:#fff; text-decoration:none;
-  }
-  .btn:active{ transform: translateY(1px) }
-  .hint{color:var(--muted); font-size:12px; margin-top:8px}
-  .row .modebadge input[type="checkbox"]{ transform: translateY(1px) }
-</style>
+    /* Crisp, iOS-friendly typography */
+    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--ink);
+      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-variant-ligatures:common-ligatures contextual; font-synthesis-weight:none;
+    }
+    *{box-sizing:border-box}
+    button[disabled]{opacity:.5; cursor:not-allowed}
+
+    /* Layout */
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:2}
+    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+    h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
+    .tag{color:var(--muted);font-size:.95rem}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    button{
+      appearance:none;border:1px solid var(--edge);
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
+      color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;
+      transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
+    }
+    button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
+    button:active{filter:brightness(1.05)}
+    .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02))}
+    .ghost{opacity:.92}
+
+    .note{font-size:.95rem;color:var(--muted);margin-top:6px}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)),var(--panel);
+      border:1px solid var(--edge);border-radius:18px;padding:18px
+    }
+    .row{display:grid;grid-template-columns:1fr;gap:12px}
+    .module{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
+    @media (max-width:920px){ .module{grid-template-columns:1fr} }
+
+    .swatch{
+      position:relative;border-radius:14px;border:1px solid var(--edge);overflow:hidden;isolation:isolate;min-height:180px;
+      background:linear-gradient(135deg, var(--c1), var(--c2));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 30px -12px rgba(0,0,0,.5);
+    }
+    .swatch::after{
+      content:"";position:absolute;inset:-40%;border-radius:50%;
+      background:radial-gradient(closest-side, rgba(255,255,255,.15), transparent 60%);
+      opacity:.0;transform:scale(.9);transition:opacity .4s ease, transform .4s ease;pointer-events:none;
+    }
+    .swatch.pulse::after{opacity:.65;transform:scale(1)}
+    .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
+
+    .controls{display:flex;flex-wrap:wrap;gap:10px}
+    .tiny{font-size:.92rem;color:var(--muted)}
+    .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
+    .huebar{height:6px;border-radius:999px;background:linear-gradient(90deg, var(--c1), var(--c2));box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6)}
+    .input, textarea{width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:11px 12px;min-height:44px}
+    textarea{min-height:90px;resize:vertical}
+
+    .map{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px}
+    @media (max-width:920px){ .map{grid-template-columns:repeat(2,1fr)} }
+    .chip{
+      border:1px solid var(--edge);border-radius:14px;padding:10px;background:linear-gradient(135deg,var(--c1),var(--c2));
+      color:#0a0d12;font-weight:700;display:flex;align-items:center;justify-content:center;min-height:68px
+    }
+    .chip .cap{background:#f5f7fb;color:#0a0d12;border-radius:999px;padding:2px 8px;font-size:.82rem;font-weight:750;margin-left:8px}
+
+    .legend{display:flex;flex-wrap:wrap;gap:10px}
+    .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
+    .foot{margin-top:24px;color:var(--muted);font-size:.9rem}
+    hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
+    :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+
+    /* Week/Day Picker */
+    .seg{display:flex;gap:8px;flex-wrap:wrap}
+    .seg button{padding:8px 12px;border-radius:999px;font-size:.9rem}
+    .seg .sel{border-color:#3a5f44;background:linear-gradient(180deg,rgba(164,255,101,.10),rgba(0,0,0,.02))}
+    .modebadge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.9rem;color:var(--muted)}
+    .dim{opacity:.35; filter:saturate(.7)}
+
+    /* Muse Skin (night) */
+    body.muse::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--grain);mix-blend-mode:overlay;opacity:.34;filter:contrast(105%) saturate(102%) blur(.2px)}
+    .muse .card{
+      border:1px solid transparent;border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.05)) padding-box,
+        linear-gradient(120deg, rgba(164,255,101,.35), rgba(134,201,255,.35), rgba(179,139,255,.35)) border-box;
+    }
+    .muse h1, .muse h3{font-variant-caps:small-caps;letter-spacing:.08em}
+    .muse .swatch{border-radius:28px;-webkit-mask-image:radial-gradient(120% 100% at 60% 40%, #000 70%, transparent 100%);mask-image:radial-gradient(120% 100% at 60% 40%, #000 70%, transparent 100%)}
+    .muse .swatch.pulse::after{
+      opacity:.78;transform:scale(1.02);
+      background:conic-gradient(from 0deg, rgba(255,255,255,.18), transparent 40%, rgba(255,255,255,.12), transparent 75%);
+      animation:shimmer 6s cubic-bezier(.22,.61,.36,1) infinite;
+    }
+    @keyframes shimmer {0%{transform:rotate(0) scale(1.02)} 100%{transform:rotate(360deg) scale(1.02)}}
+
+    /* Honey Mode visuals */
+    body.honey{
+      background:
+        radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
+        radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
+        linear-gradient(180deg, var(--honey-a), var(--bg));
+    }
+    .honey .honeycomb{position:fixed;inset:-200px;z-index:1;opacity:.12;pointer-events:none;background-image:
+      repeating-linear-gradient(60deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
+      repeating-linear-gradient(120deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
+      repeating-linear-gradient(0deg, rgba(255,206,84,.15) 0 2px, transparent 2px 35px);
+      filter:blur(0.4px) contrast(105%) saturate(105%);
+      animation:honeyFloat 24s linear infinite;
+    }
+    @keyframes honeyFloat { 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
+
+    /* Aurora background */
+    .aurora{
+      position:fixed; inset:-10% -10% -10% -10%; z-index:0; pointer-events:none; opacity:.55;
+      background:
+        radial-gradient(60% 80% at 10% 20%, rgba(44,194,255,.12), transparent 60%),
+        radial-gradient(70% 70% at 80% 10%, rgba(164,255,101,.10), transparent 60%),
+        radial-gradient(90% 90% at 50% 120%, rgba(179,139,255,.10), transparent 60%);
+      animation:auroraShift 30s linear infinite;
+      filter: blur(18px) saturate(110%);
+    }
+    @keyframes auroraShift{
+      0%{transform:translate3d(0,0,0) rotate(0deg)}
+      50%{transform:translate3d(0,-2%,0) rotate(180deg)}
+      100%{transform:translate3d(0,0,0) rotate(360deg)}
+    }
+
+    /* Princess of Power banner */
+    .princess{
+      position:sticky; top:8px; z-index:3; margin:0 auto 10px; max-width:1080px;
+      display:none; place-items:center; height:40px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,
+        linear-gradient(120deg, rgba(255,211,163,.7), rgba(255,111,186,.6), rgba(134,201,255,.6)) border-box;
+      border:1px solid transparent; border-radius:999px;
+      color:#ffe; font-weight:700; letter-spacing:.12em; font-size:.86rem; text-transform:uppercase;
+      box-shadow:0 6px 24px -12px rgba(0,0,0,.6);
+      overflow:hidden;
+    }
+    .princess .spark{position:absolute; inset:0; pointer-events:none; background:
+      radial-gradient(3px 3px at 10% 50%, rgba(255,255,255,.9) 0 40%, transparent 41%),
+      radial-gradient(2px 2px at 30% 20%, rgba(255,255,255,.8) 0 45%, transparent 46%),
+      radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.75) 0 45%, transparent 46%),
+      radial-gradient(3px 3px at 80% 30%, rgba(255,255,255,.9) 0 40%, transparent 41%);
+      opacity:.6; animation:twinkle 6s ease-in-out infinite;
+    }
+    @keyframes twinkle{0%,100%{opacity:.3} 50%{opacity:.85}}
+
+    /* Butterfly canvas overlay */
+    .fx-canvas{position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.65}
+
+    /* Saver mode reduces motion */
+    @media (prefers-reduced-motion: reduce){
+      .aurora{animation:none}
+      .honey .honeycomb{animation:none}
+      .muse .swatch.pulse::after{animation:none}
+    }
+
+    /* ===== Breath Phase HUD (overlay inside active swatch) ===== */
+    .fbrHUD{ position:absolute; inset:8%; border-radius:50%; pointer-events:none; }
+    .fbrHUD .fbrArc{ position:absolute; inset:-6px; border-radius:50%;
+      background: conic-gradient(var(--fbr-color, #22d) 0deg var(--fbr-arc, 0deg), transparent var(--fbr-arc, 0deg) 360deg);
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.18));
+    }
+    .fbrHUD .fbrEdge{ position:absolute; inset:-6px; border-radius:50%; box-shadow:0 0 0 0 rgba(255,255,255,0); }
+    .fbrHUD .fbrLabel{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-weight:800; font-size: clamp(22px, 4.8vw, 40px);
+      letter-spacing:.10em; text-shadow:0 1px 2px rgba(0,0,0,.18); mix-blend-mode:hard-light; font-variant-caps:all-small-caps;
+    }
+    .fbrHUD .fbrEdge.flash{ animation: fbrEdgeFlash 180ms ease-out; }
+    @keyframes fbrEdgeFlash{ from{ box-shadow:0 0 0 14px rgba(255,255,255,.92);} to{ box-shadow:0 0 0 0 rgba(255,255,255,0);} }
+    .fbr-in   .fbrHUD{ --fbr-color:#2ecc71; }
+    .fbr-hold .fbrHUD{ --fbr-color:#f1c40f; }
+    .fbr-out  .fbrHUD{ --fbr-color:#e74c3c; }
+    .fbr-in   .fbrLabel{ color:#2ecc71; }
+    .fbr-hold .fbrLabel{ color:#f1c40f; }
+    .fbr-out  .fbrLabel{ color:#e74c3c; }
+
+    /* Print */
+    @media print{
+      body{background:#fff;color:#000}
+      .wrap{padding:0}
+      header .actions{display:none}
+      .card{break-inside:avoid;border-color:#ddd;background:#fff}
+      .chip{color:#000}
+      .swatch{border-color:#ddd}
+      .princess, .aurora, .honeycomb, .fx-canvas{display:none !important}
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Practice Rhythm</h1>
-      <div class="sub">Tap the orb to start/stop. With <b>Loop</b> on, tone sustains and the orb shows clear phase changes: <b>IN → HOLD → OUT</b>.</div>
+  <!-- Background FX layers -->
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="honeycomb" aria-hidden="true"></div>
+  <canvas id="fx-butterflies" class="fx-canvas" aria-hidden="true"></canvas>
 
-      <div class="row" style="gap:8px 10px;margin-bottom:8px">
-        <span id="modeBadge" class="modebadge">🎯 Mode: Signal</span>
-        <div id="varGroup" class="modebadge" style="display:none"> … </div>
-
-        <!-- Loop toggle -->
-        <label class="modebadge" style="cursor:pointer">
-          <input id="loopToggle" type="checkbox" onchange="setLoop(this.checked)" style="margin-right:8px">
-          🔁 Loop tone (hands-free)
-        </label>
-
-        <!-- Loop auto‑stop -->
-        <label class="modebadge" style="cursor:pointer">
-          ⏱️ Auto‑stop:
-          <select id="loopTimer" onchange="setLoopTimer(this.value)" style="margin-left:6px">
-            <option value="0">Off</option>
-            <option value="5">5m</option>
-            <option value="10">10m</option>
-            <option value="20" selected>20m</option>
-            <option value="30">30m</option>
-            <option value="45">45m</option>
-            <option value="60">60m</option>
-          </select>
-          <span id="loopCountdown" style="margin-left:8px; opacity:.85"></span>
-        </label>
-      </div>
-
-      <div class="panel">
-        <!-- Left: Orb -->
-        <div class="ballWrap">
-          <div id="breathBall" tabindex="0" aria-label="Breathing Orb (tap to play/pause)"></div>
-        </div>
-
-        <!-- Right: Controls -->
-        <div class="panelR">
-          <div class="ctl">
-            <label class="caps">Frequency <span><strong id="freqLabel">440</strong> Hz</span></label>
-            <input id="freq" type="range" min="110" max="880" step="1" value="440" oninput="updateFreqLabel()">
-          </div>
-
-          <div class="ctl" style="margin-top:16px">
-            <div class="caps" style="margin-bottom:6px">Breath Pattern</div>
-            <div class="row" style="gap:6px; flex-wrap:wrap">
-              <button class="btn" onclick="setPatternPreset(4,7,8)">🌬️ 4–7–8</button>
-              <button class="btn" onclick="setPatternPreset(4,4,4)">⚖️ Box 4–4–4</button>
-              <button class="btn" onclick="setPatternPreset(5,5,5)">🟩 5–5–5</button>
-              <button class="btn" onclick="setPatternPreset(6,2,8)">🌊 6–2–8</button>
-            </div>
-            <div class="mini hint">Phase ring resets each phase; a brief edge flash + tiny haptic marks the exact switch.</div>
-          </div>
-
-          <div class="ctl" style="margin-top:10px">
-            <div class="caps" style="margin-bottom:6px">Quick Actions</div>
-            <div class="row" style="gap:8px; flex-wrap:wrap">
-              <button class="btn" onclick="togglePlay()"><span id="playIcon">▶️</span> <span id="playText">Play</span></button>
-              <button class="btn" onclick="stopTone()">⏹️ Stop</button>
-            </div>
-          </div>
-
-          <div class="hint">Tip: enable <b>Loop</b> for hands‑free practice; the tone “breathes” gently and stays in the background.</div>
-        </div>
-      </div>
-    </div>
+  <!-- Princess banner -->
+  <div id="princessBanner" class="princess" role="status" aria-live="polite">
+    <span style="margin-right:8px">👑</span> PRINCESS OF POWER
+    <div class="spark"></div>
   </div>
 
-  <!-- Hidden audio element (optional pipe for some browsers/background) -->
-  <audio id="bgPipe" preload="auto" style="display:none"></audio>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
+        <div class="tag">Weeks (W1–W6) + Days (1–7). Muse night skin, Honey 128 Hz (background), Variation days, Butterfly FX, Princess banner.</div>
+      </div>
+      <div class="actions">
+        <button class="ghost" type="button" onclick="toggleMuse()">Muse</button>
+        <button class="ghost" type="button" onclick="toggleHoney()">Honey</button>
+        <button class="ghost" type="button" onclick="toggleButterfly()">Butterfly</button>
+        <button class="ghost" type="button" onclick="togglePrincess()">Princess</button>
+        <button class="ghost" type="button" onclick="toggleSaver()">Saver</button>
+        <button class="primary" type="button" onclick="exportMap()">Export</button>
+        <button class="ghost" type="button" onclick="shareMap()">Share</button>
+        <button class="ghost" type="button" onclick="bleSend()">Bluetooth</button>
+        <button class="ghost" type="button" onclick="resetMap()">Reset</button>
+        <button class="ghost" type="button" onclick="window.print()">Print</button>
+      </div>
+    </header>
 
-<script>
-/* ============================================================
-   Minimal audio engine with breath‑synced LFO + loop + HUD
-   Single-file; no external assets.
-   ============================================================ */
-let ctx=null, master=null, comp=null;
-let toneOsc=null, toneGain=null;
-let lfoOsc=null, lfoGain=null;
-let pipeDest=null, pipeOsc=null, pipeGain=null; // optional background pipe
-let retriggerGuard=false, activePlaying=false;
+    <!-- Week/Day Controls -->
+    <section class="card">
+      <div class="row">
+        <div class="label">Practice Rhythm</div>
+        <div class="seg" id="weekSeg"></div>
+        <div class="seg" id="daySeg" style="margin-top:6px"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+          <span id="modeBadge" class="modebadge">🎯 Mode: Signal</span>
+          <div id="varGroup" class="modebadge" style="display:none">
+            <span>Δfreq</span>
+            <input id="varSlider" type="range" min="-50" max="50" value="0" step="1" style="width:160px;vertical-align:middle"
+              oninput="onVarChange(this.value)">
+            <span id="varOut">0 Hz</span>
+          </div>
 
-let loopMode=false;
-let loopTimerMin=20, loopTimerId=null, loopStopDeadline=0, loopCountdownTick=0;
+          <!-- Loop toggle -->
+          <label class="modebadge" style="cursor:pointer">
+            <input id="loopToggle" type="checkbox" onchange="setLoop(this.checked)" style="margin-right:8px">
+            🔁 Loop tone (hands-free)
+          </label>
 
-/* ------------------ Utilities ------------------ */
-function $(q, root){ return (root||document).querySelector(q); }
-function updateFreqLabel(){ $('#freqLabel').textContent = $('#freq').value; }
-function getNow(){ return ctx ? ctx.currentTime : 0; }
-function ensureCtx(){
-  if(ctx) return;
-  ctx = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'interactive'});
-  master = ctx.createGain();
-  // Gentle master level
-  master.gain.value = 0.9;
+          <!-- Loop auto‑stop -->
+          <label class="modebadge" style="cursor:pointer">
+            ⏱️ Auto‑stop:
+            <select id="loopTimer" onchange="setLoopTimer(this.value)" style="margin-left:6px">
+              <option value="0">Off</option>
+              <option value="5">5m</option>
+              <option value="10">10m</option>
+              <option value="20" selected>20m</option>
+              <option value="30">30m</option>
+              <option value="45">45m</option>
+              <option value="60">60m</option>
+            </select>
+            <span id="loopCountdown" style="margin-left:8px; opacity:.85"></span>
+          </label>
+        </div>
+        <div class="tiny">W1–W5 focus on one color each week. W6 = Integration. Day 1 Signal • Days 2–5 Variation (slider) • Day 6 Quiet Walk • Day 7 Integration.</div>
+      </div>
+    </section>
 
-  // Mild compressor to tame edges
-  comp = ctx.createDynamicsCompressor();
-  comp.threshold.value = -18; comp.knee.value = 22; comp.ratio.value = 3.0; comp.attack.value = 0.006; comp.release.value = 0.22;
-  master.connect(comp); comp.connect(ctx.destination);
+    <!-- Honey controls -->
+    <section class="card" id="honey-controls" style="display:none">
+      <div class="row">
+        <div class="label">🍯 Honey Mode — 128 Hz Background Bed</div>
+        <div class="controls">
+          <button type="button" onclick="honeyStart()">Play 128 Hz</button>
+          <button type="button" onclick="honeyStop()">Stop</button>
+          <label class="label" style="margin-left:6px">Volume
+            <input id="honeyVol" type="range" min="0" max="100" value="28" oninput="honeyVolume(this.value)" style="width:160px;vertical-align:middle">
+          </label>
+        </div>
+        <div class="tiny">Tip: gentle level; headphones recommended. Background playback continues with screen locked (tab must stay open).</div>
+      </div>
+    </section>
 
-  // Optional pipe for <audio> element (helps some mobile browsers keep "audio session" active)
-  pipeDest = ctx.createMediaStreamDestination();
-  const bg = $('#bgPipe');
-  try { bg.srcObject = pipeDest.stream; } catch(_){}
-}
-function resumeCtx(){ if(ctx && ctx.state==='suspended'){ ctx.resume().catch(()=>{}); } }
+    <!-- Intro -->
+    <section class="card">
+      <div class="row">
+        <div>
+          <div class="label">Welcome</div>
+          <p style="margin:.2rem 0 0">
+            Choose the current <strong>Week</strong> and <strong>Day</strong>. Play the tone for your color (or take a quiet day), and write one word — your strongest association. Your map saves locally.
+          </p>
+          <div class="note">Princess auto-appears on <strong>Week 6</strong> export. Variation slider is available on Days 2–5 for W1–W5.</div>
+        </div>
+        <div>
+          <div class="legend" style="margin-top:8px">
+            <span class="pill">🌀 Pulse = tone playing</span>
+            <span class="pill">📝 One word = association</span>
+            <span class="pill">⬇ Export / Share / BLE</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-/* ------------------ Loop persistence ------------------ */
-function setLoop(on){
-  loopMode = !!on;
-  try{ localStorage.setItem("froot_loop_v1", JSON.stringify({on:loopMode})) }catch(e){}
-  // If enabling while playing, restart as sustained loop
-  if(loopMode && activePlaying){ stopTone(); setTimeout(()=>{ playTone(); }, 120); }
-  resetLoopCountdown();
-}
-try{
-  const lp = JSON.parse(localStorage.getItem("froot_loop_v1")||"{}");
-  if(lp.on){ const box = $('#loopToggle'); if(box){ box.checked = true; } loopMode = true; }
-}catch(_){}
+    <!-- Modules -->
+    <div class="grid" id="modules">
+      <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-week="1" data-freq="329.63">
+        <div>
+          <div class="titleline"><h3>BLUE — Ocean Neon</h3><div class="huebar" aria-hidden="true"></div></div>
+          <div class="swatch" id="swatch-blue" role="img" aria-label="Blue gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-blue" type="button" onclick="playTone('blue')">Hear Tone</button>
+            <button id="stop-blue" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">E4 ≈ 329.63 Hz · chrome tide at midnight</div>
+          <div style="margin-top:10px">
+            <div class="label">Name the color you hear</div>
+            <input class="input" id="word-blue" maxlength="24" placeholder="e.g., tide / neon / hush" oninput="saveWord('blue', this.value)" />
+          </div>
+        </div>
+      </section>
 
-/* ------------------ Loop auto-stop timer ------------------ */
-function setLoopTimer(minStr){
-  loopTimerMin = parseInt(minStr,10) || 0;
-  try{ localStorage.setItem('froot_loop_timer_v1', String(loopTimerMin)); }catch(_){}
-  resetLoopCountdown();
-}
-function resetLoopCountdown(){
-  if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=null; }
-  if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; }
-  const cd = $('#loopCountdown'); if(cd) cd.textContent='';
-  if(loopMode && activePlaying && loopTimerMin>0){
-    const ms = loopTimerMin*60000;
-    loopStopDeadline = Date.now()+ms;
-    loopTimerId = setTimeout(()=>{ stopTone(); }, ms);
-    loopCountdownTick = setInterval(()=>{
-      const left = Math.max(0, loopStopDeadline - Date.now());
-      const m = Math.floor(left/60000), s = Math.floor((left%60000)/1000);
-      if(cd){ cd.textContent = (m>0? (m+'m ') : '') + (s+'s left'); }
-      if(left<=0){ clearInterval(loopCountdownTick); loopCountdownTick=0; if(cd){ cd.textContent=''; } }
-    }, 1000);
-  } else {
-    loopStopDeadline = 0;
-  }
-}
-// Restore timer on load
-document.addEventListener('DOMContentLoaded', ()=>{
-  let tmin = parseInt(localStorage.getItem('froot_loop_timer_v1')||'20',10);
-  if(!isNaN(tmin)){ const sel=$('#loopTimer'); if(sel){ sel.value=String(tmin); } loopTimerMin=tmin; }
-});
+      <section class="card module" style="--c1:var(--froot-1);--c2:var(--froot-2)" data-key="froot" data-week="2" data-freq="554.37">
+        <div>
+          <div class="titleline"><h3>FROOT — Electric Lime</h3><div class="huebar" aria-hidden="true"></div></div>
+          <div class="swatch" id="swatch-froot" role="img" aria-label="Electric lime gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-froot" type="button" onclick="playTone('froot')">Hear Tone</button>
+            <button id="stop-froot" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">C♯5 ≈ 554.37 Hz · laser citrus on the tongue</div>
+          <div style="margin-top:10px">
+            <div class="label">Name the color you hear</div>
+            <input class="input" id="word-froot" maxlength="24" placeholder="e.g., zest / spark / sugar" oninput="saveWord('froot', this.value)" />
+          </div>
+        </div>
+      </section>
 
-/* ------------------ Breath Phase HUD ------------------ */
-const breathUI = (function(){
-  let hud, arc, edge, label, subtext, raf = 0, t0 = 0, dur = 1000, ball;
-  function attach(){
-    ball = $('#breathBall') || document.querySelector('#ball, #orb, .ball, .orb, .dot, .circle');
-    if(!ball) return;
-    if(ball.querySelector('.phaseHUD')){
-      hud = ball.querySelector('.phaseHUD');
-      arc = hud.querySelector('.phaseArc'); edge = hud.querySelector('.phaseEdge'); label = hud.querySelector('.phaseLabel'); subtext = hud.querySelector('.subtext');
-      return;
+      <section class="card module" style="--c1:var(--imm-1);--c2:var(--imm-2)" data-key="immortal" data-week="3" data-freq="220">
+        <div>
+          <div class="titleline"><h3>IMMORTAL — Violet Dusk</h3><div class="huebar" aria-hidden="true"></div></div>
+          <div class="swatch" id="swatch-immortal" role="img" aria-label="Violet dusk gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-immortal" type="button" onclick="playTone('immortal')">Hear Tone</button>
+            <button id="stop-immortal" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">A3 = 220 Hz · violet glass, candle smoke</div>
+          <div style="margin-top:10px">
+            <div class="label">Name the color you hear</div>
+            <input class="input" id="word-immortal" maxlength="24" placeholder="e.g., veil / echo / dusk" oninput="saveWord('immortal', this.value)" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-week="4" data-freq="349.23">
+        <div>
+          <div class="titleline"><h3>ANCIENT DREAMS — Rose Aurora</h3><div class="huebar" aria-hidden="true"></div></div>
+          <div class="swatch" id="swatch-ancient" role="img" aria-label="Rose aurora gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-ancient" type="button" onclick="playTone('ancient')">Hear Tone</button>
+            <button id="stop-ancient" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">F4 ≈ 349.23 Hz · rose dawn, bronze halo</div>
+          <div style="margin-top:10px">
+            <div class="label">Name the color you hear</div>
+            <input class="input" id="word-ancient" maxlength="24" placeholder="e.g., blush / halo / myrrh" oninput="saveWord('ancient', this.value)" />
+          </div>
+        </div>
+      </section>
+
+      <section class="card module" style="--c1:var(--hh-1);--c2:var(--hh-2)" data-key="heaven" data-week="5" data-freq="587.33">
+        <div>
+          <div class="titleline"><h3>HANDMADE HEAVEN — Sky Bloom</h3><div class="huebar" aria-hidden="true"></div></div>
+          <div class="swatch" id="swatch-heaven" role="img" aria-label="Sky bloom gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-heaven" type="button" onclick="playTone('heaven')">Hear Tone</button>
+            <button id="stop-heaven" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">D5 ≈ 587.33 Hz · cold sunshine, bluebell air</div>
+          <div style="margin-top:10px">
+            <div class="label">Name the color you hear</div>
+            <input class="input" id="word-heaven" maxlength="24" placeholder="e.g., wing / hush / bell" oninput="saveWord('heaven', this.value)" />
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Integration Journal -->
+    <section class="card" id="journal">
+      <div class="titleline">
+        <h3>Week Journal — Integration</h3>
+        <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="label">Week Note</div>
+          <textarea id="j_note" placeholder="One short reflection from this week."></textarea>
+        </div>
+        <div>
+          <div class="label">Resonance Poem (3 lines)</div>
+          <textarea id="j_poem" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
+        </div>
+      </div>
+      <div class="foot">Journal saves locally per week. Princess auto-pops when exporting on Week 6.</div>
+    </section>
+
+    <!-- Map -->
+    <section class="card" id="map-card">
+      <div class="titleline">
+        <h3>Your Synesthesia Map</h3>
+        <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
+      </div>
+      <div class="map" id="map"></div>
+      <div class="foot">Export file, Share via the native sheet (AirDrop works great), or BLE send (UART) if supported.</div>
+    </section>
+
+    <footer class="note">Muse = sparkle; Honey = warmth; Butterfly = wonder. W1–W5 deepen a color per week; W6 integrates your pattern.</footer>
+  </div>
+
+  <script>
+    /* ===== Prefs (Muse default ON, others OFF) ===== */
+    var PREFS_KEY="froot_prefs_v3";
+    function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:true,honey:false,butterfly:false,princess:false,saver:false} }
+    function savePrefs(){
+      try{
+        localStorage.setItem(PREFS_KEY, JSON.stringify({
+          muse:document.body.classList.contains('muse'),
+          honey:document.body.classList.contains('honey'),
+          butterfly:document.body.classList.contains('fx-on'),
+          princess:document.body.classList.contains('princess-on'),
+          saver:document.body.classList.contains('saver')
+        }));
+      }catch(e){}
     }
-    ball.insertAdjacentHTML('beforeend',
-      '<div class="phaseHUD">'+
-        '<div class="phaseArc" style="--arc:0deg"></div>'+
-        '<div class="phaseEdge"></div>'+
-        '<div class="phaseLabel">READY</div>'+
-        '<div class="subtext">tap to start</div>'+
-      '</div>'
-    );
-    hud = ball.querySelector('.phaseHUD'); arc = hud.querySelector('.phaseArc');
-    edge = hud.querySelector('.phaseEdge'); label = hud.querySelector('.phaseLabel'); subtext = hud.querySelector('.subtext');
-  }
-  function progressLoop(now){
-    const p = Math.min(1, (now - t0)/dur);
-    arc.style.setProperty('--arc', (p*360)+'deg');
-    if(p < 1) { raf = requestAnimationFrame(progressLoop); }
-  }
-  function flashEdge(){ edge.classList.remove('flash'); void edge.offsetWidth; edge.classList.add('flash'); }
-  function vibrate(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||12); }catch(_){ } }
-  function setPhase(name, ms){
-    if(!hud){ attach(); } if(!hud) return;
-    const ball = $('#breathBall');
-    ball.classList.remove('phase-in','phase-hold','phase-out');
-    const tag = (name==='hold'?'phase-hold':(name==='out'?'phase-out':'phase-in'));
-    ball.classList.add(tag);
-    label.textContent = (name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
-    if(subtext){ subtext.textContent = ''; }
-    cancelAnimationFrame(raf); t0 = performance.now(); dur = Math.max(200, (ms|0)||1000);
-    arc.style.setProperty('--arc','0deg'); raf = requestAnimationFrame(progressLoop);
-    flashEdge(); vibrate(10);
-  }
-  function ready(){ if(!hud){ attach(); } if(!hud) return; label.textContent='READY'; if(subtext){ subtext.textContent='tap to start'; } arc.style.setProperty('--arc','0deg'); }
-  return { attach, setPhase, ready };
-})();
-function setBreathPhaseUI(phaseName, durationMs){ breathUI.setPhase(phaseName, durationMs); }
+    var prefs = loadPrefs();
+    if(prefs.muse) document.body.classList.add("muse");
+    if(prefs.honey) document.body.classList.add("honey");
+    if(prefs.butterfly) document.body.classList.add("fx-on");
+    if(prefs.princess) document.body.classList.add("princess-on");
+    if(prefs.saver) document.body.classList.add("saver");
 
-/* ------------------ Guided-breath driver (IN→HOLD→OUT) ------------------ */
-const breathDriver = (function(){
-  let cfg = {in:4000, hold:7000, out:8000}; // default 4-7-8
-  let tid = null, running = false, seq = ['in','hold','out'], idx = 0;
+    /* ===== Week/Day schedule ===== */
+    var SCHEDULE_KEY="froot_schedule_v1";
+    function loadSched(){ try{var r=localStorage.getItem(SCHEDULE_KEY); if(r) return JSON.parse(r)}catch(e){} return {week:1, day:1} }
+    function saveSched(){ try{ localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedule)) }catch(e){} }
+    var schedule = loadSched(); // week:1-6, day:1-7
 
-  function step(){
-    const name = seq[idx]; const ms = cfg[name] || 1000;
-    setBreathPhaseUI(name, ms);
-    syncLFOToPhase(name, ms); // << synchronize sound dynamics to visual phase
-    tid = setTimeout(()=>{ idx = (idx+1) % seq.length; step(); }, ms);
-  }
-  function start(){ if(running) return; running = true; idx=0; step(); }
-  function stop(){ running=false; clearTimeout(tid); tid=null; try{ breathUI.ready(); }catch(_){} }
-  function isRunning(){ return running; }
-  function setPattern(msIn, msHold, msOut){
-    cfg.in=msIn|0; cfg.hold=msHold|0; cfg.out=msOut|0;
-    // If running, restart the cycle at IN with new timings
-    if(running){ stop(); start(); }
-  }
-  function getPattern(){ return { ...cfg }; }
-  return { start, stop, isRunning, setPattern, getPattern };
-})();
-function setPatternPreset(pin, phold, pout){
-  breathDriver.setPattern(pin*1000, phold*1000, pout*1000);
-}
+    var WEEK_KEYS = {1:"blue",2:"froot",3:"immortal",4:"ancient",5:"heaven",6:"integration"};
+    var VAR_KEY="froot_variation_v1";
+    function loadVar(){ try{var r=localStorage.getItem(VAR_KEY); if(r) return JSON.parse(r)}catch(e){} return {blue:0,froot:0,immortal:0,ancient:0,heaven:0} }
+    function saveVar(){ try{ localStorage.setItem(VAR_KEY, JSON.stringify(variation)) }catch(e){} }
+    var variation = loadVar(); // per-color ΔHz
 
-/* ------------------ Breath-synced LFO shaping ------------------ */
-function syncLFOToPhase(name, ms){
-  if(!ctx || !toneGain || !lfoOsc || !lfoGain) return;
-  const now = ctx.currentTime;
-  // Target depths: deeper on IN, flat on HOLD, lighter on OUT
-  const targetDepth = (name==='in') ? 0.055 : (name==='hold' ? 0.0 : 0.025);
-  const baseLevel   = (name==='in') ? 0.20  : (name==='hold' ? 0.18 : 0.16);
-  const targetHz    = (name==='in') ? 0.14  : (name==='hold' ? 0.06 : 0.10);
+    /* ===== Map & Journal state ===== */
+    var FROOT_KEY="froot_marina_map_v1";
+    function loadMap(){ try{var raw=localStorage.getItem(FROOT_KEY); if(raw){return JSON.parse(raw)} }catch(e){} return {blue:"",froot:"",immortal:"",ancient:"",heaven:""} }
+    var mapData=loadMap();
+    function persist(){ try{localStorage.setItem(FROOT_KEY, JSON.stringify(mapData))}catch(e){} renderMap(); hydrateInputs() }
+    function saveWord(key,val){ mapData[key]=(val||"").trim(); persist() }
+    function resetMap(){ mapData={blue:"",froot:"",immortal:"",ancient:"",heaven:""}; stopTone(); honeyStop(); persist() }
 
-  try{
-    // Smooth ramps to avoid clicks
-    lfoGain.gain.cancelScheduledValues(now);
-    lfoGain.gain.setValueAtTime(lfoGain.gain.value, now);
-    lfoGain.gain.linearRampToValueAtTime(targetDepth, now + 0.25);
+    var J_KEY="froot_journal_v1";
+    function loadJournal(){ try{var r=localStorage.getItem(J_KEY); if(r) return JSON.parse(r)}catch(e){} return {} }
+    function saveJournal(){ try{ localStorage.setItem(J_KEY, JSON.stringify(journal)) }catch(e){} }
+    var journal = loadJournal(); // {1:{note:'',poem:''}, ...}
 
-    lfoOsc.frequency.cancelScheduledValues(now);
-    lfoOsc.frequency.setValueAtTime(lfoOsc.frequency.value, now);
-    lfoOsc.frequency.linearRampToValueAtTime(targetHz, now + 0.25);
-
-    // Also subtly steer the base sustained level
-    toneGain.gain.cancelScheduledValues(now);
-    toneGain.gain.setValueAtTime(toneGain.gain.value, now);
-    toneGain.gain.linearRampToValueAtTime(baseLevel, now + 0.30);
-  }catch(_){}
-}
-
-/* ------------------ Tone engine ------------------ */
-function playTone(){
-  ensureCtx();
-
-  // Stop any current tone first
-  const now = getNow();
-  if(toneOsc){ killToneFast(now); }
-
-  if(retriggerGuard) return; retriggerGuard = true; setTimeout(()=>{ retriggerGuard=false; }, 250);
-
-  // Build oscillator & gain
-  toneOsc  = ctx.createOscillator();
-  toneGain = ctx.createGain();
-
-  const freq = parseFloat($('#freq').value)||440;
-  toneOsc.type = "sine";
-  toneOsc.frequency.setValueAtTime(freq, now);
-
-  // One-shot envelope (LOOP OFF)
-  if(!loopMode){
-    const atk=0.030, hold=0.25, rel=0.150, peak=0.22, sus=0.16, tail=5.4;
-    toneGain.gain.cancelScheduledValues(now);
-    toneGain.gain.setValueAtTime(0.0, now);
-    toneGain.gain.linearRampToValueAtTime(peak, now + atk);
-    toneGain.gain.linearRampToValueAtTime(sus,  now + atk + hold);
-    toneGain.gain.setValueAtTime(sus, now + tail);
-    toneGain.gain.linearRampToValueAtTime(0.0005, now + tail + rel);
-
-    toneOsc.connect(toneGain); toneGain.connect(master);
-    toneOsc.start(now);
-    toneOsc.stop(now + tail + rel + 0.02);
-
-    activePlaying = true; pulseOn();
-    toneOsc.onended = ()=>{ pulseOff(); activePlaying=false; };
-
-  } else {
-    // LOOP ON → sustained tone with gentle breathing (LFO), synced to phases
-    toneGain.gain.cancelScheduledValues(now);
-    toneGain.gain.setValueAtTime(0.0, now);
-    toneGain.gain.linearRampToValueAtTime(0.18, now + 0.18); // ~180ms fade
-
-    // LFO
-    lfoOsc = ctx.createOscillator();
-    lfoGain = ctx.createGain();
-    lfoOsc.type = "sine";
-    lfoOsc.frequency.setValueAtTime(0.12, now);
-    lfoGain.gain.setValueAtTime(0.03, now);
-
-    lfoOsc.connect(lfoGain);
-    lfoGain.connect(toneGain.gain);
-
-    toneOsc.connect(toneGain); toneGain.connect(master);
-    toneOsc.start(now); lfoOsc.start(now);
-
-    // Start breath driver (will also call syncLFOToPhase)
-    try{ breathDriver.start(); }catch(_){}
-
-    activePlaying = true; pulseOn();
-  }
-
-  resumeCtx();
-  setMediaSessionPlaying(true);
-  resetLoopCountdown();
-}
-
-function stopTone(){
-  if(!ctx){ return; }
-  const now = getNow();
-
-  // Fade-out main tone
-  killToneFast(now);
-
-  // Clean up LFO if present
-  if(lfoOsc || lfoGain){
-    try{
-      lfoGain.gain.cancelScheduledValues(now);
-      lfoGain.gain.setValueAtTime(lfoGain.gain.value, now);
-      lfoGain.gain.linearRampToValueAtTime(0.0, now + 0.12);
-      lfoOsc.stop(now + 0.14);
-    }catch(_){}
-    setTimeout(function(){
-      try{ lfoOsc.disconnect(); }catch(_){}
-      try{ lfoGain.disconnect(); }catch(_){}
-      lfoOsc = null; lfoGain = null;
-    }, 180);
-  }
-
-  // Stop guided breath loop + UI reset
-  try{ breathDriver.stop(); }catch(_){}
-
-  // Cancel timer UI
-  if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=null; }
-  if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; }
-  const _cd = $('#loopCountdown'); if(_cd){ _cd.textContent=''; }
-
-  activePlaying = false; pulseOff();
-  setMediaSessionPlaying(false);
-}
-function killToneFast(now){
-  try{
-    if(toneGain){
-      const cur = Math.max(0.0002, toneGain.gain.value);
-      toneGain.gain.cancelScheduledValues(now);
-      toneGain.gain.setValueAtTime(cur, now);
-      toneGain.gain.linearRampToValueAtTime(0.0001, now + 0.12);
+    function hydrateJournal(){
+      var w = schedule.week;
+      var j = journal[w] || {note:"",poem:""};
+      var n = document.getElementById("j_note"), p = document.getElementById("j_poem");
+      if(n) n.value = j.note || "";
+      if(p) p.value = j.poem || "";
     }
-    if(toneOsc){
-      toneOsc.stop(now + 0.14);
+
+    function renderWeekSeg(){
+      var host = document.getElementById('weekSeg'); host.innerHTML="";
+      for(var i=1;i<=6;i++){
+        var b=document.createElement('button'); b.textContent="W"+i;
+        if(i===schedule.week) b.classList.add("sel");
+        (function(ii){
+          b.onclick=function(){ schedule.week=ii; saveSched(); applyScheduleUI(); }
+        })(i);
+        host.appendChild(b);
+      }
     }
-  }catch(_){}
-  setTimeout(function(){
-    try{ toneOsc && toneOsc.disconnect(); }catch(_){}
-    try{ toneGain && toneGain.disconnect(); }catch(_){}
-    toneOsc=null; toneGain=null;
-  }, 180);
-}
+    function renderDaySeg(){
+      var host = document.getElementById('daySeg'); host.innerHTML="";
+      for(var i=1;i<=7;i++){
+        var b=document.createElement('button'); b.textContent="Day "+i;
+        if(i===schedule.day) b.classList.add("sel");
+        (function(ii){
+          b.onclick=function(){ schedule.day=ii; saveSched(); applyScheduleUI(); }
+        })(i);
+        host.appendChild(b);
+      }
+    }
 
-/* ------------------ UI helpers ------------------ */
-function pulseOn(){ const b=$('#breathBall'); b && b.classList.add('playing'); $('#playIcon').textContent='⏸️'; $('#playText').textContent='Pause'; }
-function pulseOff(){ const b=$('#breathBall'); b && b.classList.remove('playing'); $('#playIcon').textContent='▶️'; $('#playText').textContent='Play'; }
-function togglePlay(){ if(activePlaying){ stopTone(); } else { playTone(); } }
+    function modeFor(schedule){
+      if(schedule.week===6) return {icon:"🧭", name:"Integration"};
+      if(schedule.day===1) return {icon:"🎯", name:"Signal"};
+      if(schedule.day>=2 && schedule.day<=5) return {icon:"🎚️", name:"Variation"};
+      if(schedule.day===6) return {icon:"🚶", name:"Quiet Walk"};
+      return {icon:"📜", name:"Integration"};
+    }
 
-/* ------------------ Media Session (locks/OS controls) ------------------ */
-function setMediaSessionPlaying(isPlaying){
-  if(!('mediaSession' in navigator)) return;
-  try{
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: (loopMode?'Froot tone (loop)':'Froot tone'),
-      artist:'PLNT Earth', album:'Illumina'
-    });
-    navigator.mediaSession.playbackState = isPlaying?'playing':'paused';
-    navigator.mediaSession.setActionHandler('play', ()=>{ if(!activePlaying) playTone(); });
-    navigator.mediaSession.setActionHandler('pause', ()=>{ if(activePlaying) stopTone(); });
-    navigator.mediaSession.setActionHandler('stop', ()=>{ if(activePlaying) stopTone(); });
-  }catch(_){}
-}
+    function applyScheduleUI(){
+      renderWeekSeg(); renderDaySeg(); hydrateJournal();
 
-/* ------------------ Background pipe (optional) ------------------ */
-function startPipe(){
-  if(!ctx || !pipeDest) return;
-  if(pipeOsc) return;
-  // Very low-level subsonic to keep stream alive
-  pipeOsc = ctx.createOscillator(); pipeOsc.type='sine'; pipeOsc.frequency.value = 20;
-  pipeGain = ctx.createGain(); pipeGain.gain.value = 0.00001; // nearly inaudible
-  pipeOsc.connect(pipeGain); pipeGain.connect(pipeDest);
-  const bg = $('#bgPipe'); try{ bg.muted=false; bg.play().catch(()=>{}); }catch(_){}
-  pipeOsc.start();
-}
-function stopPipe(){
-  if(!ctx) return;
-  try{ const bg=$('#bgPipe'); bg.pause(); }catch(_){}
-  try{ pipeOsc && pipeOsc.stop(); }catch(_){}
-  try{ pipeGain && pipeGain.disconnect(); }catch(_){}
-  pipeOsc=null; pipeGain=null;
-}
+      var mode = modeFor(schedule);
+      var badge = document.getElementById('modeBadge');
+      if(badge) badge.textContent = mode.icon + " Mode: " + mode.name;
 
-/* ------------------ Wire up interactions ------------------ */
-document.addEventListener('DOMContentLoaded', ()=>{
-  breathUI.attach();
-  updateFreqLabel();
+      /* highlight active module */
+      var activeKey = WEEK_KEYS[schedule.week];
+      var cards = document.querySelectorAll('.module');
+      cards.forEach(function(card){
+        var wk = Number(card.getAttribute('data-week'));
+        var k  = card.getAttribute('data-key');
+        var dim = (wk !== schedule.week);
+        card.style.opacity = dim ? 0.45 : 1;
+        var play = document.getElementById('play-'+k);
+        var stop = document.getElementById('stop-'+k);
+        if(play){ play.disabled = dim; }
+        if(stop){ stop.disabled = dim; }
+      });
 
-  // Tap/click orb to toggle play
-  const ball = $('#breathBall');
-  ball.addEventListener('click', togglePlay);
-  ball.addEventListener('keydown', (e)=>{ if(e.code==='Space' || e.code==='Enter'){ e.preventDefault(); togglePlay(); } });
+      /* Variation slider visibility */
+      var varGroup = document.getElementById('varGroup');
+      var slider = document.getElementById('varSlider');
+      var out = document.getElementById('varOut');
+      if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
+        varGroup.style.display="inline-flex";
+        var k = WEEK_KEYS[schedule.week];
+        slider.value = (variation[k]||0);
+        out.textContent = ((variation[k]||0) >=0 ? "+" : "") + (variation[k]||0) + " Hz";
+      } else {
+        varGroup.style.display="none";
+      }
 
-  // Auto-start/stop background pipe with loop state
-  const loopBox = $('#loopToggle');
-  if(loopBox){ loopBox.addEventListener('change', ()=>{ if(loopBox.checked){ startPipe(); } else { stopPipe(); } }); if(loopBox.checked){ startPipe(); } }
-});
+      /* Quiet Walk day: disable play on active week */
+      var quiet = (schedule.day===6);
+      if(activeKey && quiet){
+        var pb = document.getElementById('play-'+activeKey);
+        if(pb) pb.disabled = true;
+      }
 
-// Try to keep audio resumed when returning to tab
-document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible'){ resumeCtx(); } });
+      /* Journal title hint & Integration display */
+      var journalCard = document.getElementById('journal');
+      journalCard.querySelector('h3').textContent = "Week Journal — " + (schedule.week===6 ? "Integration" : "Notes");
+    }
 
-/* ------------------ Defaults ------------------ */
-setPatternPreset(4,7,8); // 4-7-8 default
-</script>
+    function onVarChange(val){
+      var k = WEEK_KEYS[schedule.week];
+      if(!k || schedule.week>5) return;
+      variation[k] = Math.max(-50, Math.min(50, Number(val)||0));
+      var out=document.getElementById('varOut'); if(out) out.textContent = (variation[k]>=0?"+":"") + variation[k] + " Hz";
+      saveVar();
+    }
+
+    /* ===== Render map & hydrate inputs ===== */
+    function hydrateInputs(){
+      [["blue","word-blue"],["froot","word-froot"],["immortal","word-immortal"],["ancient","word-ancient"],["heaven","word-heaven"]]
+      .forEach(function(p){ var el=document.getElementById(p[1]); if(el){ el.value = mapData[p[0]] || "" } })
+    }
+    function renderMap(){
+      var host=document.getElementById("map"); if(!host) return; host.innerHTML="";
+      var seeds = getSeeds();
+      for(var k in seeds){
+        var s=seeds[k], word=(mapData[k]||"").trim();
+        var chip=document.createElement("div"); chip.className="chip";
+        chip.style.setProperty("--c1", getComputedStyle(document.documentElement).getPropertyValue(s.c1.replace("var(","").replace(")","")).trim());
+        chip.style.setProperty("--c2", getComputedStyle(document.documentElement).getPropertyValue(s.c2.replace("var(","").replace(")","")).trim());
+        chip.textContent=s.name.split(" — ")[0];
+        if(word){ var cap=document.createElement("span"); cap.className="cap"; cap.textContent=word; chip.appendChild(cap) }
+        host.appendChild(chip);
+      }
+    }
+
+    /* ===== Seeds (modules) ===== */
+    function getSeeds(){
+      return {
+        blue:{name:"Blue — Ocean Neon", c1:"var(--blue-1)", c2:"var(--blue-2)", freq:329.63, id:"blue"},
+        froot:{name:"Froot — Electric Lime", c1:"var(--froot-1)", c2:"var(--froot-2)", freq:554.37, id:"froot"},
+        immortal:{name:"Immortal — Violet Dusk", c1:"var(--imm-1)", c2:"var(--imm-2)", freq:220.00, id:"immortal"},
+        ancient:{name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23, id:"ancient"},
+        heaven:{name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)", freq:587.33, id:"heaven"}
+      };
+    }
+
+    /* ===== Background audio plumbing (hidden <audio>) ===== */
+    var ctx=null, master=null, comp=null, dc=null;
+    var toneOsc=null, toneGain=null, pulseTimer=null, activeKeyPlaying=null;
+    var honeyOsc=null, honeyGain=null;
+    var retriggerGuard=false;
+    var bgDest=null, bgAudio=null;
+
+    /* ===== Loop + LFO (breathing) state ===== */
+    var loopMode=false;
+    var lfoOsc=null, lfoGain=null;
+    var loopTimerMin=20, loopTimerId=null, loopStopDeadline=0, loopCountdownTick=0;
+
+    function ensureCtx(){
+      if(!ctx){
+        ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: "interactive" });
+
+        master = ctx.createGain(); master.gain.value = 0.85; // headroom
+
+        // Gentler compressor (iOS friendly)
+        comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 2;
+        comp.attack.value    = 0.010; comp.release.value = 0.300;
+
+        dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 18;
+
+        master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
+
+        // Background route
+        bgDest = ctx.createMediaStreamDestination();
+        master.connect(bgDest);
+        bgAudio = new Audio(); bgAudio.srcObject = bgDest.stream;
+        bgAudio.loop = true; bgAudio.playsInline = true;
+      }
+      return ctx;
+    }
+    function resumeCtx(){ if(ctx && ctx.state==='suspended'){ ctx.resume() } if(bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) } }
+
+    /* ===== iOS-tuned crackle-safe audio ===== */
+    function killToneFast(now){
+      if(!toneOsc || !toneGain){ return; }
+      try{
+        var end = now + 0.10;
+        toneGain.gain.cancelScheduledValues(now);
+        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+        toneGain.gain.linearRampToValueAtTime(0.0005, end);
+        toneOsc.stop(end);
+      }catch(_){}
+      setTimeout(function(){
+        try{ toneOsc.disconnect(); }catch(_){}
+        try{ toneGain.disconnect(); }catch(_){}
+        toneOsc=null; toneGain=null;
+      }, 140);
+    }
+
+    function effectiveFreq(base, key){
+      // Only apply variation on W1–W5 and days 2–5
+      if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
+        var delta = variation[key] || 0;
+        var f = base + delta;
+        if(f < 20) f = 20; if(f > 18000) f = 18000;
+        return f;
+      }
+      return base;
+    }
+
+    /* ===== Loop toggle + persistence ===== */
+    function setLoop(on){
+      loopMode = !!on;
+      try{ localStorage.setItem("froot_loop_v1", JSON.stringify({on:loopMode})) }catch(e){}
+      // If user enables loop while a tone is playing, restart as sustained loop
+      if(loopMode && activeKeyPlaying){ stopTone(); setTimeout(function(){ playTone(activeKeyPlaying); }, 120); }
+      resetLoopCountdown();
+    }
+
+    /* ===== Breath Phase HUD (IN / HOLD / OUT) on active swatch ===== */
+    var breathUI = (function(){
+      var host=null, hud=null, arc=null, edge=null, label=null, raf=0, t0=0, dur=1000;
+
+      function currentHost(){
+        var wkKey = WEEK_KEYS[schedule.week];
+        var id = "swatch-" + (wkKey==="immortal"?"immortal":wkKey);
+        return document.getElementById(id);
+      }
+      function attach(){
+        var h = currentHost(); if(!h) return;
+        if(host !== h){ host = h; }
+        if(host.querySelector('.fbrHUD')){
+          hud = host.querySelector('.fbrHUD');
+          arc = hud.querySelector('.fbrArc'); edge = hud.querySelector('.fbrEdge'); label = hud.querySelector('.fbrLabel');
+          return;
+        }
+        host.insertAdjacentHTML('beforeend',
+          '<div class="fbrHUD">'+
+            '<div class="fbrArc" style="--fbr-arc:0deg"></div>'+
+            '<div class="fbrEdge"></div>'+
+            '<div class="fbrLabel">READY</div>'+
+          '</div>'
+        );
+        hud = host.querySelector('.fbrHUD');
+        arc = hud.querySelector('.fbrArc');
+        edge = hud.querySelector('.fbrEdge');
+        label = hud.querySelector('.fbrLabel');
+      }
+      function progress(now){
+        var p = Math.min(1, (now - t0)/dur);
+        arc.style.setProperty('--fbr-arc', (p*360)+'deg');
+        if(p<1){ raf = requestAnimationFrame(progress); }
+      }
+      function flash(){ edge.classList.remove('flash'); void edge.offsetWidth; edge.classList.add('flash'); }
+      function vibrate(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||12); }catch(_){ } }
+      function setPhase(name, ms){
+        if(!hud){ attach(); } if(!hud) return;
+        host.classList.remove('fbr-in','fbr-hold','fbr-out');
+        host.classList.add(name==='hold'?'fbr-hold':(name==='out'?'fbr-out':'fbr-in'));
+        label.textContent = (name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
+        cancelAnimationFrame(raf); t0 = performance.now(); dur = Math.max(200, (ms|0)||1000);
+        arc.style.setProperty('--fbr-arc','0deg'); raf = requestAnimationFrame(progress);
+        flash(); vibrate(10);
+      }
+      function ready(){ if(!hud){ attach(); } if(!hud) return; label.textContent='READY'; arc.style.setProperty('--fbr-arc','0deg'); host && host.classList.remove('fbr-in','fbr-hold','fbr-out'); }
+      return { attach, setPhase, ready };
+    })();
+    function setBreathPhaseUI(phaseName, durationMs){ breathUI.setPhase(phaseName, durationMs); }
+
+    /* ===== Guided-breath driver (4–7–8 default) ===== */
+    var breathDriver = (function(){
+      var cfg = {in:4000, hold:7000, out:8000};
+      var tid=null, running=false, seq=['in','hold','out'], idx=0;
+      function step(){
+        var name = seq[idx]; var ms = cfg[name]||1000;
+        setBreathPhaseUI(name, ms);
+        syncLFOToPhase(name, ms);
+        tid = setTimeout(function(){ idx=(idx+1)%seq.length; step(); }, ms);
+      }
+      function start(){ if(running) return; running=true; idx=0; breathUI.attach(); step(); }
+      function stop(){ running=false; clearTimeout(tid); tid=null; try{ breathUI.ready(); }catch(_){ } }
+      function setPattern(msIn, msHold, msOut){ cfg.in=msIn|0; cfg.hold=msHold|0; cfg.out=msOut|0; if(running){ stop(); start(); } }
+      return { start, stop, setPattern };
+    })();
+    function setPatternPreset(pin, phold, pout){ breathDriver.setPattern(pin*1000, phold*1000, pout*1000); }
+
+    /* ===== LFO sync to breath phases ===== */
+    function syncLFOToPhase(name, ms){
+      if(!ctx || !toneGain || !lfoOsc || !lfoGain) return;
+      var now = ctx.currentTime;
+      var depth = (name==='in') ? 0.055 : (name==='hold' ? 0.00 : 0.025);
+      var base  = (name==='in') ? 0.20  : (name==='hold' ? 0.18 : 0.16);
+      var rate  = (name==='in') ? 0.14  : (name==='hold' ? 0.06 : 0.10);
+      try{
+        lfoGain.gain.cancelScheduledValues(now);
+        lfoGain.gain.setValueAtTime(lfoGain.gain.value, now);
+        lfoGain.gain.linearRampToValueAtTime(depth, now + 0.25);
+
+        lfoOsc.frequency.cancelScheduledValues(now);
+        lfoOsc.frequency.setValueAtTime(lfoOsc.frequency.value, now);
+        lfoOsc.frequency.linearRampToValueAtTime(rate, now + 0.25);
+
+        toneGain.gain.cancelScheduledValues(now);
+        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+        toneGain.gain.linearRampToValueAtTime(base, now + 0.30);
+      }catch(_){}
+    }
+
+    function playTone(key){
+      ensureCtx();
+
+      // Quiet Walk day disables tone for the active week
+      var wkKey = WEEK_KEYS[schedule.week];
+      if(schedule.day===6 && key===wkKey) return;
+
+      var seeds = getSeeds();
+      var s = seeds[key]; if(!s) return;
+      var now = ctx.currentTime;
+
+      // Stop any current tone first
+      if(toneOsc){ killToneFast(now); }
+
+      // Guard against rapid re-triggers
+      if(retriggerGuard) return; retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 250);
+
+      // Build oscillator & gain
+      toneOsc  = ctx.createOscillator();
+      toneGain = ctx.createGain();
+
+      var freq = effectiveFreq(s.freq, key);
+      toneOsc.type = "sine";
+      toneOsc.frequency.setValueAtTime(freq, now);
+
+      if(!loopMode){
+        // One-shot envelope (existing behavior)
+        const atk=0.030, hold=0.25, rel=0.150, peak=0.22, sus=0.16, tail=5.4;
+
+        toneGain.gain.cancelScheduledValues(now);
+        toneGain.gain.setValueAtTime(0.0, now);
+        toneGain.gain.linearRampToValueAtTime(peak, now + atk);
+        toneGain.gain.linearRampToValueAtTime(sus,  now + atk + hold);
+        toneGain.gain.setValueAtTime(sus, now + tail);
+        toneGain.gain.linearRampToValueAtTime(0.0005, now + tail + rel);
+
+        toneOsc.connect(toneGain); toneGain.connect(master);
+        toneOsc.start(now);
+        toneOsc.stop(now + tail + rel + 0.02);
+
+        activeKeyPlaying = key; pulseOn(key);
+        toneOsc.onended = function(){ pulseOff(key); activeKeyPlaying=null; };
+
+        resumeCtx();
+        if('mediaSession' in navigator){
+          try{
+            navigator.mediaSession.metadata = new MediaMetadata({ title:'Froot tone', artist:'PLNT Earth', album:'Illumina' });
+            navigator.mediaSession.playbackState='playing';
+          }catch(_){}
+        }
+      } else {
+        // LOOP ON → sustained tone with gentle breathing (LFO), synced to phases
+        toneGain.gain.cancelScheduledValues(now);
+        toneGain.gain.setValueAtTime(0.0, now);
+        toneGain.gain.linearRampToValueAtTime(0.18, now + 0.18); // soft fade
+
+        // Create LFO
+        lfoOsc = ctx.createOscillator();
+        lfoGain = ctx.createGain();
+        lfoOsc.type = "sine";
+        lfoOsc.frequency.setValueAtTime(0.12, now);  // slow breath
+        lfoGain.gain.setValueAtTime(0.03, now);      // subtle depth
+
+        lfoOsc.connect(lfoGain);
+        lfoGain.connect(toneGain.gain);
+
+        toneOsc.connect(toneGain); toneGain.connect(master);
+        toneOsc.start(now);
+        lfoOsc.start(now);
+
+        activeKeyPlaying = key; pulseOn(key);
+        toneOsc.onended = function(){ pulseOff(key); activeKeyPlaying=null; };
+
+        // Start guided breathing + timer
+        try{ breathDriver.start(); }catch(_){}
+        resetLoopCountdown();
+
+        resumeCtx();
+        if('mediaSession' in navigator){
+          try{
+            navigator.mediaSession.metadata = new MediaMetadata({ title:'Froot tone (loop)', artist:'PLNT Earth', album:'Illumina' });
+            navigator.mediaSession.playbackState='playing';
+          }catch(_){}
+        }
+      }
+    }
+
+    function stopTone(){
+      if(!ctx){ return; }
+      var now = ctx.currentTime;
+
+      // Fade-out main tone
+      killToneFast(now);
+
+      // Clean up LFO if present
+      if(lfoOsc || lfoGain){
+        try{
+          lfoGain.gain.cancelScheduledValues(now);
+          lfoGain.gain.setValueAtTime(lfoGain.gain.value, now);
+          lfoGain.gain.linearRampToValueAtTime(0.0, now + 0.12);
+          lfoOsc.stop(now + 0.14);
+        }catch(_){}
+        setTimeout(function(){
+          try{ lfoOsc.disconnect(); }catch(_){}
+          try{ lfoGain.disconnect(); }catch(_){}
+          lfoOsc = null; lfoGain = null;
+        }, 180);
+      }
+
+      // Stop guided breath + UI
+      try{ breathDriver.stop(); }catch(_){}
+
+      // Timer reset
+      if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=null; }
+      if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; }
+      var _cd = document.getElementById('loopCountdown'); if(_cd){ _cd.textContent=''; }
+    }
+
+    /* Pulse visuals */
+    function pulseOn(key){
+      var id="swatch-"+(key==="immortal"?"immortal":key); var el=document.getElementById(id); if(!el) return;
+      el.classList.add("pulse"); clearInterval(pulseTimer);
+      var t0=performance.now();
+      pulseTimer=setInterval(function(){
+        if(document.body.classList.contains('saver')) return;
+        var t=(performance.now()-t0)/1000.0; var deg=120+Math.sin(t*2.0)*10;
+        el.style.background="linear-gradient("+deg+"deg, var(--c1), var(--c2))";
+      },60);
+    }
+    function pulseOff(key){
+      // key may be undefined onended after stop; try all swatches
+      var el = key ? document.getElementById("swatch-"+(key==="immortal"?"immortal":key)) : null;
+      if(el){ el.classList.remove("pulse"); el.style.background="" }
+      clearInterval(pulseTimer); pulseTimer=null;
+    }
+
+    /* Muse / Honey / FX toggles */
+    function toggleMuse(){ document.body.classList.toggle("muse"); savePrefs() }
+    function toggleHoney(){
+      var on=document.body.classList.toggle("honey");
+      document.getElementById("honey-controls").style.display = on ? "block" : "none";
+      if(on){ honeyStart() } else { honeyStop() }
+      savePrefs();
+    }
+    function toggleButterfly(){
+      var on=document.body.classList.toggle("fx-on");
+      if(on){ startButterflies() } else { stopButterflies() }
+      savePrefs();
+    }
+    function togglePrincess(){
+      var on=!document.body.classList.contains("princess-on");
+      document.body.classList.toggle("princess-on", on);
+      document.getElementById("princessBanner").style.display = on ? "grid" : "none";
+      savePrefs();
+    }
+    function toggleSaver(){
+      document.body.classList.toggle("saver");
+      if(document.body.classList.contains('saver')) stopButterflies(); else if(document.body.classList.contains('fx-on')) startButterflies();
+      savePrefs();
+    }
+
+    /* Honey (128 Hz) */
+    function honeyStart(){
+      ensureCtx();
+      if(honeyOsc){ return }
+      honeyOsc  = ctx.createOscillator();
+      honeyGain = ctx.createGain();
+      honeyOsc.type = "sine";
+      honeyOsc.frequency.setValueAtTime(128.0, ctx.currentTime);
+
+      var now = ctx.currentTime;
+      honeyGain.gain.setValueAtTime(0.0, now);
+      honeyGain.gain.linearRampToValueAtTime(0.12, now + 0.25);
+
+      honeyOsc.connect(honeyGain); honeyGain.connect(master);
+      honeyOsc.start(now);
+
+      var vol=document.getElementById("honeyVol"); if(vol){ honeyVolume(vol.value) }
+      resumeCtx();
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='playing'; }catch(_){} }
+    }
+    function honeyStop(){
+      if(!honeyOsc || !honeyGain || !ctx){ return }
+      var now=ctx.currentTime;
+      try{
+        honeyGain.gain.cancelScheduledValues(now);
+        honeyGain.gain.setValueAtTime(honeyGain.gain.value, now);
+        honeyGain.gain.linearRampToValueAtTime(0.0005, now + 0.25);
+        setTimeout(function(){
+          try{ honeyOsc.stop() }catch(_){}
+          try{ honeyOsc.disconnect(); honeyGain.disconnect() }catch(_){}
+          honeyOsc=null; honeyGain=null;
+        }, 320);
+      }catch(_){
+        try{ honeyOsc.stop() }catch(__){}
+        honeyOsc=null; honeyGain=null;
+      }
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='paused'; }catch(_){ } }
+    }
+    function honeyVolume(val){
+      if(!honeyGain || !ctx){ return }
+      var v = Math.max(0, Math.min(100, Number(val)||0));
+      var g = v/100 * 0.30;
+      honeyGain.gain.linearRampToValueAtTime(g, ctx.currentTime + 0.05);
+    }
+
+    /* Journal persistence */
+    var jn=document.getElementById('j_note'), jp=document.getElementById('j_poem');
+    if(jn){ jn.addEventListener('input', function(){ var w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; saveJournal(); }) }
+    if(jp){ jp.addEventListener('input', function(){ var w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; saveJournal(); }) }
+
+    /* Export + Share (auto-Princess on Week 6) */
+    function buildMapBlob(){
+      var payload={version:"2.0",
+        schedule:schedule,
+        variation:variation,
+        map:mapData,
+        journal:journal[schedule.week]||{},
+        prefs:{
+          muse:document.body.classList.contains('muse'),
+          honey:document.body.classList.contains('honey'),
+          butterfly:document.body.classList.contains('fx-on'),
+          princess:document.body.classList.contains('princess-on'),
+          saver:document.body.classList.contains('saver')
+        },
+        timestamp:new Date().toISOString()
+      };
+      return new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    }
+    function exportMap(){
+      if(schedule.week===6){ // flare moment
+        document.body.classList.add("princess-on");
+        var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; }
+      }
+      var blob=buildMapBlob();
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement("a");
+      a.href=url; a.download="froot_marina_synesthesia_map.json";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+    async function shareMap(){
+      if(schedule.week===6){
+        document.body.classList.add("princess-on");
+        var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; }
+      }
+      var blob=buildMapBlob();
+      var fileName="froot_marina_synesthesia_map.json";
+      var canFiles = !!(navigator.canShare && navigator.canShare({files:[new File([blob], fileName, {type:blob.type})]}));
+      if(navigator.share && canFiles){
+        var f=new File([blob], fileName, {type:blob.type});
+        await navigator.share({files:[f], title:"Froot Synesthesia Map", text:"My Froot color-sense map"});
+        return;
+      }
+      if(navigator.share){
+        var url=URL.createObjectURL(blob);
+        await navigator.share({title:"Froot Synesthesia Map", text:"My Froot color-sense map", url});
+        URL.revokeObjectURL(url);
+        return;
+      }
+      exportMap();
+    }
+
+    /* Bluetooth (BLE) send — Nordic UART Service (optional receiver) */
+    var BLE={device:null, server:null, svc:null, tx:null};
+    async function bleSend(){
+      try{
+        var svcUUID="6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+        var txUUID ="6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+        BLE.device = await navigator.bluetooth.requestDevice({filters:[{services:[svcUUID]}]});
+        BLE.server = await BLE.device.gatt.connect();
+        BLE.svc    = await BLE.server.getPrimaryService(svcUUID);
+        BLE.tx     = await BLE.svc.getCharacteristic(txUUID);
+        var blob=buildMapBlob(); var text=await blob.text(); var data=new TextEncoder().encode(text);
+        var mtu=180; for(var i=0;i<data.length;i+=mtu){ await BLE.tx.writeValueWithoutResponse(data.slice(i, Math.min(i+mtu, data.length))); }
+        if(BLE.device && BLE.device.gatt.connected){ BLE.device.gatt.disconnect() }
+      }catch(e){ /* silent */ }
+    }
+
+    /* Butterfly FX (canvas particles) */
+    var fxCanvas = document.getElementById('fx-butterflies');
+    var fxCtx = fxCanvas.getContext('2d');
+    var fxRAF = null, fxParts = [];
+    function resizeFX(){
+      fxCanvas.width = innerWidth * devicePixelRatio;
+      fxCanvas.height = innerHeight * devicePixelRatio;
+      fxCtx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    function spawnButterfly(){
+      return {
+        x: Math.random()*innerWidth,
+        y: innerHeight + Math.random()*80,
+        vx: (Math.random()*0.6-0.3),
+        vy: - (0.6 + Math.random()*1.2),
+        size: 6 + Math.random()*10,
+        hue: Math.random()*360,
+        life: 0,
+        max: 6 + Math.random()*8
+      };
+    }
+    function drawButterfly(p,t){
+      var s = p.size * (0.9 + 0.1*Math.sin(t*2 + p.hue));
+      fxCtx.save();
+      fxCtx.translate(p.x, p.y);
+      fxCtx.rotate(Math.sin(t*1.5 + p.hue)*0.3);
+      var g = fxCtx.createLinearGradient(-s,0,s,0);
+      g.addColorStop(0, "hsla("+(p.hue)+",80%,70%,.85)");
+      g.addColorStop(1, "hsla("+(p.hue+60)+",80%,60%,.85)");
+      fxCtx.fillStyle = g;
+      fxCtx.beginPath();
+      fxCtx.moveTo(0,0);
+      fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
+      fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
+      fxCtx.closePath(); fxCtx.fill();
+      fxCtx.scale(-1,1);
+      fxCtx.beginPath();
+      fxCtx.moveTo(0,0);
+      fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
+      fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
+      fxCtx.closePath(); fxCtx.fill();
+      fxCtx.restore();
+    }
+    function fxStep(){
+      if(document.body.classList.contains('saver')) return;
+      var now = performance.now()/1000;
+      fxCtx.clearRect(0,0,innerWidth,innerHeight);
+      if(fxParts.length < 24) fxParts.push(spawnButterfly());
+      for(var i=fxParts.length-1;i>=0;i--){
+        var p = fxParts[i];
+        p.life += 0.016;
+        p.x += p.vx + Math.sin(now*2 + p.hue)*0.2;
+        p.y += p.vy;
+        drawButterfly(p, now);
+        if(p.life > p.max || p.y < -60) fxParts.splice(i,1);
+      }
+      fxRAF = requestAnimationFrame(fxStep);
+    }
+    function startButterflies(){
+      if(document.body.classList.contains('saver')) return;
+      resizeFX(); fxParts = [];
+      if(!fxRAF) fxRAF = requestAnimationFrame(fxStep);
+      window.addEventListener('resize', resizeFX);
+    }
+    function stopButterflies(){
+      cancelAnimationFrame(fxRAF); fxRAF=null;
+      fxCtx.clearRect(0,0,innerWidth,innerHeight);
+      window.removeEventListener('resize', resizeFX);
+    }
+
+    /* Build Week/Day UI & apply state */
+    function initWeekDayUI(){
+      applyScheduleUI();
+      hydrateInputs(); renderMap(); hydrateJournal();
+    }
+
+    /* ===== Loop Auto‑stop Timer ===== */
+    function setLoopTimer(minStr){
+      loopTimerMin = parseInt(minStr,10) || 0;
+      try{ localStorage.setItem('froot_loop_timer_v1', String(loopTimerMin)); }catch(_){}
+      resetLoopCountdown();
+    }
+    function resetLoopCountdown(){
+      if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=null; }
+      if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; }
+      var cd = document.getElementById('loopCountdown'); if(cd) cd.textContent='';
+      if(loopMode && activeKeyPlaying && loopTimerMin>0){
+        var ms = loopTimerMin*60000;
+        loopStopDeadline = Date.now()+ms;
+        loopTimerId = setTimeout(function(){ stopTone(); }, ms);
+        loopCountdownTick = setInterval(function(){
+          var left = Math.max(0, loopStopDeadline - Date.now());
+          var m = Math.floor(left/60000), s = Math.floor((left%60000)/1000);
+          if(cd){ cd.textContent = (m>0? (m+'m ') : '') + (s+'s left'); }
+          if(left<=0){ clearInterval(loopCountdownTick); loopCountdownTick=0; if(cd){ cd.textContent=''; } }
+        }, 1000);
+      } else {
+        loopStopDeadline = 0;
+      }
+    }
+
+    /* Init */
+    if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
+    if(prefs.princess){ document.getElementById("princessBanner").style.display="grid"; }
+    if(prefs.butterfly && !document.body.classList.contains('saver')) startButterflies();
+
+    document.addEventListener("click", function(){ ensureCtx(); resumeCtx(); }, {once:true});
+    document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="visible"){ resumeCtx(); } });
+
+    initWeekDayUI();
+
+    /* Wire Loop controls + restore persisted state */
+    (function(){
+      var box = document.getElementById('loopToggle');
+      var sel = document.getElementById('loopTimer');
+      if(box){ box.addEventListener('change', function(){ setLoop(this.checked); }); }
+      if(sel){ sel.addEventListener('change', function(){ setLoopTimer(this.value); }); }
+      try{
+        var lp = JSON.parse(localStorage.getItem("froot_loop_v1")||"{}");
+        if(lp.on){ if(box) box.checked = true; loopMode = true; }
+      }catch(_){}
+      try{
+        var tmin = parseInt(localStorage.getItem('froot_loop_timer_v1')||'20',10);
+        if(!isNaN(tmin)){ loopTimerMin=tmin; if(sel){ sel.value = String(tmin); } }
+      }catch(_){}
+      // Default breath pattern
+      setPatternPreset(4,7,8);
+    })();
+  </script>
 </body>
 </html>
