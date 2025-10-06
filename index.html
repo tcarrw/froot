@@ -9,11 +9,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Froot — Marina Reflection Edition · Muse + Honey + FX</title>
-  <meta name="description" content="A Marina-inspired color-sense studio with Muse skin (night), Honey Mode (128 Hz), background playback, Share/BLE, aurora & butterfly FX, and a Princess of Power banner." />
+  <title>Froot — Marina Reflection Edition · Weeks + Honey + FX</title>
+  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, and Princess of Power integration." />
   <style>
     :root{
-      color-scheme: dark; /* iOS media bar/buttons choose dark tints */
+      color-scheme: dark;
       --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
       --ring:#2c3444; --glow:#66e1ff;
 
@@ -42,6 +42,7 @@
       font-variant-ligatures:common-ligatures contextual; font-synthesis-weight:none;
     }
     *{box-sizing:border-box}
+    button[disabled]{opacity:.5; cursor:not-allowed}
 
     /* Layout */
     .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:2}
@@ -105,6 +106,13 @@
     hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
     :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
 
+    /* Week/Day Picker */
+    .seg{display:flex;gap:8px;flex-wrap:wrap}
+    .seg button{padding:8px 12px;border-radius:999px;font-size:.9rem}
+    .seg .sel{border-color:#3a5f44;background:linear-gradient(180deg,rgba(164,255,101,.10),rgba(0,0,0,.02))}
+    .modebadge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.9rem;color:var(--muted)}
+    .dim{opacity:.35; filter:saturate(.7)}
+
     /* Muse Skin (night) */
     body.muse::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:var(--grain);mix-blend-mode:overlay;opacity:.34;filter:contrast(105%) saturate(102%) blur(.2px)}
     .muse .card{
@@ -138,7 +146,7 @@
     }
     @keyframes honeyFloat { 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
 
-    /* Aurora background (animated gradient ribbons) */
+    /* Aurora background */
     .aurora{
       position:fixed; inset:-10% -10% -10% -10%; z-index:0; pointer-events:none; opacity:.55;
       background:
@@ -213,12 +221,12 @@
     <header>
       <div>
         <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
-        <div class="tag">Muse (night) is default. Honey 128 Hz supports background playback. FX toggles: Butterfly, Princess banner, Saver.</div>
+        <div class="tag">Weeks (W1–W6) + Days (1–7). Muse night skin, Honey 128 Hz (background), Variation days, Butterfly FX, Princess banner.</div>
       </div>
       <div class="actions">
-        <button class="ghost" type="button" onclick="toggleMuse()">Muse Skin</button>
-        <button class="ghost" type="button" onclick="toggleHoney()">Honey Mode</button>
-        <button class="ghost" type="button" onclick="toggleButterfly()">Butterfly FX</button>
+        <button class="ghost" type="button" onclick="toggleMuse()">Muse</button>
+        <button class="ghost" type="button" onclick="toggleHoney()">Honey</button>
+        <button class="ghost" type="button" onclick="toggleButterfly()">Butterfly</button>
         <button class="ghost" type="button" onclick="togglePrincess()">Princess</button>
         <button class="ghost" type="button" onclick="toggleSaver()">Saver</button>
         <button class="primary" type="button" onclick="exportMap()">Export</button>
@@ -228,6 +236,25 @@
         <button class="ghost" type="button" onclick="window.print()">Print</button>
       </div>
     </header>
+
+    <!-- Week/Day Controls -->
+    <section class="card">
+      <div class="row">
+        <div class="label">Practice Rhythm</div>
+        <div class="seg" id="weekSeg"></div>
+        <div class="seg" id="daySeg" style="margin-top:6px"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+          <span id="modeBadge" class="modebadge">🎯 Mode: Signal</span>
+          <div id="varGroup" class="modebadge" style="display:none">
+            <span>Δfreq</span>
+            <input id="varSlider" type="range" min="-50" max="50" value="0" step="1" style="width:160px;vertical-align:middle"
+              oninput="onVarChange(this.value)">
+            <span id="varOut">0 Hz</span>
+          </div>
+        </div>
+        <div class="tiny">W1–W5 focus on one color each week. W6 = Integration. Day 1 Signal • Days 2–5 Variation (slider) • Day 6 Quiet Walk • Day 7 Integration.</div>
+      </div>
+    </section>
 
     <!-- Honey controls -->
     <section class="card" id="honey-controls" style="display:none">
@@ -250,14 +277,14 @@
         <div>
           <div class="label">Welcome</div>
           <p style="margin:.2rem 0 0">
-            Choose a fruit, <em>hear</em> its tone, <em>see</em> its glow. Offer one word — your strongest association. Your map saves locally.
+            Choose the current <strong>Week</strong> and <strong>Day</strong>. Play the tone for your color (or take a quiet day), and write one word — your strongest association. Your map saves locally.
           </p>
-          <div class="note">Muse adds iridescence; Honey adds warmth. Butterfly paints a soft particle sky. “Princess” adds a crown banner for flare moments.</div>
+          <div class="note">Princess auto-appears on <strong>Week 6</strong> export. Variation slider is available on Days 2–5 for W1–W5.</div>
         </div>
         <div>
           <div class="legend" style="margin-top:8px">
             <span class="pill">🌀 Pulse = tone playing</span>
-            <span class="pill">📝 One word = your association</span>
+            <span class="pill">📝 One word = association</span>
             <span class="pill">⬇ Export / Share / BLE</span>
           </div>
         </div>
@@ -265,8 +292,8 @@
     </section>
 
     <!-- Modules -->
-    <div class="grid">
-      <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-freq="329.63">
+    <div class="grid" id="modules">
+      <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-week="1" data-freq="329.63">
         <div>
           <div class="titleline"><h3>BLUE — Ocean Neon</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-blue" role="img" aria-label="Blue gradient pulse"></div>
@@ -274,8 +301,8 @@
         <div>
           <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
-            <button type="button" onclick="playTone('blue')">Hear Tone</button>
-            <button type="button" onclick="stopTone()">Stop</button>
+            <button id="play-blue" type="button" onclick="playTone('blue')">Hear Tone</button>
+            <button id="stop-blue" type="button" onclick="stopTone()">Stop</button>
           </div>
           <div class="tiny">E4 ≈ 329.63 Hz · chrome tide at midnight</div>
           <div style="margin-top:10px">
@@ -285,7 +312,7 @@
         </div>
       </section>
 
-      <section class="card module" style="--c1:var(--froot-1);--c2:var(--froot-2)" data-key="froot" data-freq="554.37">
+      <section class="card module" style="--c1:var(--froot-1);--c2:var(--froot-2)" data-key="froot" data-week="2" data-freq="554.37">
         <div>
           <div class="titleline"><h3>FROOT — Electric Lime</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-froot" role="img" aria-label="Electric lime gradient pulse"></div>
@@ -293,8 +320,8 @@
         <div>
           <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
-            <button type="button" onclick="playTone('froot')">Hear Tone</button>
-            <button type="button" onclick="stopTone()">Stop</button>
+            <button id="play-froot" type="button" onclick="playTone('froot')">Hear Tone</button>
+            <button id="stop-froot" type="button" onclick="stopTone()">Stop</button>
           </div>
           <div class="tiny">C♯5 ≈ 554.37 Hz · laser citrus on the tongue</div>
           <div style="margin-top:10px">
@@ -304,7 +331,7 @@
         </div>
       </section>
 
-      <section class="card module" style="--c1:var(--imm-1);--c2:var(--imm-2)" data-key="immortal" data-freq="220">
+      <section class="card module" style="--c1:var(--imm-1);--c2:var(--imm-2)" data-key="immortal" data-week="3" data-freq="220">
         <div>
           <div class="titleline"><h3>IMMORTAL — Violet Dusk</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-immortal" role="img" aria-label="Violet dusk gradient pulse"></div>
@@ -312,8 +339,8 @@
         <div>
           <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
-            <button type="button" onclick="playTone('immortal')">Hear Tone</button>
-            <button type="button" onclick="stopTone()">Stop</button>
+            <button id="play-immortal" type="button" onclick="playTone('immortal')">Hear Tone</button>
+            <button id="stop-immortal" type="button" onclick="stopTone()">Stop</button>
           </div>
           <div class="tiny">A3 = 220 Hz · violet glass, candle smoke</div>
           <div style="margin-top:10px">
@@ -323,7 +350,7 @@
         </div>
       </section>
 
-      <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-freq="349.23">
+      <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-week="4" data-freq="349.23">
         <div>
           <div class="titleline"><h3>ANCIENT DREAMS — Rose Aurora</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-ancient" role="img" aria-label="Rose aurora gradient pulse"></div>
@@ -331,8 +358,8 @@
         <div>
           <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
-            <button type="button" onclick="playTone('ancient')">Hear Tone</button>
-            <button type="button" onclick="stopTone()">Stop</button>
+            <button id="play-ancient" type="button" onclick="playTone('ancient')">Hear Tone</button>
+            <button id="stop-ancient" type="button" onclick="stopTone()">Stop</button>
           </div>
           <div class="tiny">F4 ≈ 349.23 Hz · rose dawn, bronze halo</div>
           <div style="margin-top:10px">
@@ -342,7 +369,7 @@
         </div>
       </section>
 
-      <section class="card module" style="--c1:var(--hh-1);--c2:var(--hh-2)" data-key="heaven" data-freq="587.33">
+      <section class="card module" style="--c1:var(--hh-1);--c2:var(--hh-2)" data-key="heaven" data-week="5" data-freq="587.33">
         <div>
           <div class="titleline"><h3>HANDMADE HEAVEN — Sky Bloom</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-heaven" role="img" aria-label="Sky bloom gradient pulse"></div>
@@ -350,8 +377,8 @@
         <div>
           <div class="label">Tasting Ritual</div>
           <div class="controls" style="margin-bottom:10px">
-            <button type="button" onclick="playTone('heaven')">Hear Tone</button>
-            <button type="button" onclick="stopTone()">Stop</button>
+            <button id="play-heaven" type="button" onclick="playTone('heaven')">Hear Tone</button>
+            <button id="stop-heaven" type="button" onclick="stopTone()">Stop</button>
           </div>
           <div class="tiny">D5 ≈ 587.33 Hz · cold sunshine, bluebell air</div>
           <div style="margin-top:10px">
@@ -362,6 +389,25 @@
       </section>
     </div>
 
+    <!-- Integration Journal -->
+    <section class="card" id="journal">
+      <div class="titleline">
+        <h3>Week Journal — Integration</h3>
+        <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
+      </div>
+      <div class="row">
+        <div>
+          <div class="label">Week Note</div>
+          <textarea id="j_note" placeholder="One short reflection from this week."></textarea>
+        </div>
+        <div>
+          <div class="label">Resonance Poem (3 lines)</div>
+          <textarea id="j_poem" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
+        </div>
+      </div>
+      <div class="foot">Journal saves locally per week. Princess auto-pops when exporting on Week 6.</div>
+    </section>
+
     <!-- Map -->
     <section class="card" id="map-card">
       <div class="titleline">
@@ -369,15 +415,15 @@
         <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
       </div>
       <div class="map" id="map"></div>
-      <div class="foot">Your words save locally. Export file, Share via the native sheet (AirDrop works great), or BLE send (UART) if supported.</div>
+      <div class="foot">Export file, Share via the native sheet (AirDrop works great), or BLE send (UART) if supported.</div>
     </section>
 
-    <footer class="note">Made with care for learning and resonance. Muse = sparkle; Honey = warmth; Butterfly = wonder.</footer>
+    <footer class="note">Muse = sparkle; Honey = warmth; Butterfly = wonder. W1–W5 deepen a color per week; W6 integrates your pattern.</footer>
   </div>
 
   <script>
     /* ===== Prefs (Muse default ON, others OFF) ===== */
-    var PREFS_KEY="froot_prefs_v2";
+    var PREFS_KEY="froot_prefs_v3";
     function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:true,honey:false,butterfly:false,princess:false,saver:false} }
     function savePrefs(){
       try{
@@ -397,26 +443,132 @@
     if(prefs.princess) document.body.classList.add("princess-on");
     if(prefs.saver) document.body.classList.add("saver");
 
-    /* ===== Map state ===== */
+    /* ===== Week/Day schedule ===== */
+    var SCHEDULE_KEY="froot_schedule_v1";
+    function loadSched(){ try{var r=localStorage.getItem(SCHEDULE_KEY); if(r) return JSON.parse(r)}catch(e){} return {week:1, day:1} }
+    function saveSched(){ try{ localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedule)) }catch(e){} }
+    var schedule = loadSched(); // week:1-6, day:1-7
+
+    var WEEK_KEYS = {1:"blue",2:"froot",3:"immortal",4:"ancient",5:"heaven",6:"integration"};
+    var VAR_KEY="froot_variation_v1";
+    function loadVar(){ try{var r=localStorage.getItem(VAR_KEY); if(r) return JSON.parse(r)}catch(e){} return {blue:0,froot:0,immortal:0,ancient:0,heaven:0} }
+    function saveVar(){ try{ localStorage.setItem(VAR_KEY, JSON.stringify(variation)) }catch(e){} }
+    var variation = loadVar(); // per-color ΔHz
+
+    /* ===== Map & Journal state ===== */
     var FROOT_KEY="froot_marina_map_v1";
-    var seeds={
-      blue:{name:"Blue — Ocean Neon", c1:"var(--blue-1)", c2:"var(--blue-2)", freq:329.63, id:"blue"},
-      froot:{name:"Froot — Electric Lime", c1:"var(--froot-1)", c2:"var(--froot-2)", freq:554.37, id:"froot"},
-      immortal:{name:"Immortal — Violet Dusk", c1:"var(--imm-1)", c2:"var(--imm-2)", freq:220.00, id:"immortal"},
-      ancient:{name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23, id:"ancient"},
-      heaven:{name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)", freq:587.33, id:"heaven"}
-    };
     function loadMap(){ try{var raw=localStorage.getItem(FROOT_KEY); if(raw){return JSON.parse(raw)} }catch(e){} return {blue:"",froot:"",immortal:"",ancient:"",heaven:""} }
     var mapData=loadMap();
     function persist(){ try{localStorage.setItem(FROOT_KEY, JSON.stringify(mapData))}catch(e){} renderMap(); hydrateInputs() }
     function saveWord(key,val){ mapData[key]=(val||"").trim(); persist() }
     function resetMap(){ mapData={blue:"",froot:"",immortal:"",ancient:"",heaven:""}; stopTone(); honeyStop(); persist() }
+
+    var J_KEY="froot_journal_v1";
+    function loadJournal(){ try{var r=localStorage.getItem(J_KEY); if(r) return JSON.parse(r)}catch(e){} return {} }
+    function saveJournal(){ try{ localStorage.setItem(J_KEY, JSON.stringify(journal)) }catch(e){} }
+    var journal = loadJournal(); // {1:{note:'',poem:''}, ...}
+
+    function hydrateJournal(){
+      var w = schedule.week;
+      var j = journal[w] || {note:"",poem:""};
+      var n = document.getElementById("j_note"), p = document.getElementById("j_poem");
+      if(n) n.value = j.note || "";
+      if(p) p.value = j.poem || "";
+    }
+
+    function renderWeekSeg(){
+      var host = document.getElementById('weekSeg'); host.innerHTML="";
+      for(var i=1;i<=6;i++){
+        var b=document.createElement('button'); b.textContent="W"+i;
+        if(i===schedule.week) b.classList.add("sel");
+        (function(ii){
+          b.onclick=function(){ schedule.week=ii; saveSched(); applyScheduleUI(); }
+        })(i);
+        host.appendChild(b);
+      }
+    }
+    function renderDaySeg(){
+      var host = document.getElementById('daySeg'); host.innerHTML="";
+      for(var i=1;i<=7;i++){
+        var b=document.createElement('button'); b.textContent="Day "+i;
+        if(i===schedule.day) b.classList.add("sel");
+        (function(ii){
+          b.onclick=function(){ schedule.day=ii; saveSched(); applyScheduleUI(); }
+        })(i);
+        host.appendChild(b);
+      }
+    }
+
+    function modeFor(schedule){
+      if(schedule.week===6) return {icon:"🧭", name:"Integration"};
+      if(schedule.day===1) return {icon:"🎯", name:"Signal"};
+      if(schedule.day>=2 && schedule.day<=5) return {icon:"🎚️", name:"Variation"};
+      if(schedule.day===6) return {icon:"🚶", name:"Quiet Walk"};
+      return {icon:"📜", name:"Integration"};
+    }
+
+    function applyScheduleUI(){
+      renderWeekSeg(); renderDaySeg(); hydrateJournal();
+
+      var mode = modeFor(schedule);
+      var badge = document.getElementById('modeBadge');
+      if(badge) badge.textContent = mode.icon + " Mode: " + mode.name;
+
+      /* highlight active module */
+      var activeKey = WEEK_KEYS[schedule.week];
+      var cards = document.querySelectorAll('.module');
+      cards.forEach(function(card){
+        var wk = Number(card.getAttribute('data-week'));
+        var k  = card.getAttribute('data-key');
+        var dim = (wk !== schedule.week);
+        card.style.opacity = dim ? 0.45 : 1;
+        var play = document.getElementById('play-'+k);
+        var stop = document.getElementById('stop-'+k);
+        if(play){ play.disabled = dim; }
+        if(stop){ stop.disabled = dim; }
+      });
+
+      /* Variation slider visibility */
+      var varGroup = document.getElementById('varGroup');
+      var slider = document.getElementById('varSlider');
+      var out = document.getElementById('varOut');
+      if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
+        varGroup.style.display="inline-flex";
+        var k = WEEK_KEYS[schedule.week];
+        slider.value = (variation[k]||0);
+        out.textContent = ((variation[k]||0) >=0 ? "+" : "") + (variation[k]||0) + " Hz";
+      } else {
+        varGroup.style.display="none";
+      }
+
+      /* Quiet Walk day: disable play on active week */
+      var quiet = (schedule.day===6);
+      if(activeKey && quiet){
+        var pb = document.getElementById('play-'+activeKey);
+        if(pb) pb.disabled = true;
+      }
+
+      /* Journal title hint & Integration display */
+      var journalCard = document.getElementById('journal');
+      journalCard.querySelector('h3').textContent = "Week Journal — " + (schedule.week===6 ? "Integration" : "Notes");
+    }
+
+    function onVarChange(val){
+      var k = WEEK_KEYS[schedule.week];
+      if(!k || schedule.week>5) return;
+      variation[k] = Math.max(-50, Math.min(50, Number(val)||0));
+      var out=document.getElementById('varOut'); if(out) out.textContent = (variation[k]>=0?"+":"") + variation[k] + " Hz";
+      saveVar();
+    }
+
+    /* ===== Render map & hydrate inputs ===== */
     function hydrateInputs(){
       [["blue","word-blue"],["froot","word-froot"],["immortal","word-immortal"],["ancient","word-ancient"],["heaven","word-heaven"]]
       .forEach(function(p){ var el=document.getElementById(p[1]); if(el){ el.value = mapData[p[0]] || "" } })
     }
     function renderMap(){
       var host=document.getElementById("map"); if(!host) return; host.innerHTML="";
+      var seeds = getSeeds();
       for(var k in seeds){
         var s=seeds[k], word=(mapData[k]||"").trim();
         var chip=document.createElement("div"); chip.className="chip";
@@ -428,9 +580,20 @@
       }
     }
 
+    /* ===== Seeds (modules) ===== */
+    function getSeeds(){
+      return {
+        blue:{name:"Blue — Ocean Neon", c1:"var(--blue-1)", c2:"var(--blue-2)", freq:329.63, id:"blue"},
+        froot:{name:"Froot — Electric Lime", c1:"var(--froot-1)", c2:"var(--froot-2)", freq:554.37, id:"froot"},
+        immortal:{name:"Immortal — Violet Dusk", c1:"var(--imm-1)", c2:"var(--imm-2)", freq:220.00, id:"immortal"},
+        ancient:{name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23, id:"ancient"},
+        heaven:{name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)", freq:587.33, id:"heaven"}
+      };
+    }
+
     /* ===== Background audio plumbing (hidden <audio>) ===== */
     var ctx=null, master=null, comp=null, dc=null;
-    var toneOsc=null, toneGain=null, pulseTimer=null, activeKey=null;
+    var toneOsc=null, toneGain=null, pulseTimer=null, activeKeyPlaying=null;
     var honeyOsc=null, honeyGain=null;
     var retriggerGuard=false;
     var bgDest=null, bgAudio=null;
@@ -477,21 +640,37 @@
       }, 140);
     }
 
+    function effectiveFreq(base, key){
+      // Only apply variation on W1–W5 and days 2–5
+      if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
+        var delta = variation[key] || 0;
+        var f = base + delta;
+        if(f < 20) f = 20; if(f > 18000) f = 18000;
+        return f;
+      }
+      return base;
+    }
+
     function playTone(key){
       ensureCtx();
+
+      // Quiet Walk day disables tone for the active week
+      var wkKey = WEEK_KEYS[schedule.week];
+      if(schedule.day===6 && key===wkKey) return;
+
+      var seeds = getSeeds();
       var s = seeds[key]; if(!s) return;
       var now = ctx.currentTime;
 
       if(toneOsc){ killToneFast(now); }
-
-      if(retriggerGuard) return;
-      retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 250);
+      if(retriggerGuard) return; retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 250);
 
       toneOsc  = ctx.createOscillator();
       toneGain = ctx.createGain();
 
+      var freq = effectiveFreq(s.freq, key);
       toneOsc.type = "sine";
-      toneOsc.frequency.setValueAtTime(s.freq, now);
+      toneOsc.frequency.setValueAtTime(freq, now);
 
       const atk=0.030, hold=0.25, rel=0.150, peak=0.22, sus=0.16, tail=5.4;
 
@@ -506,8 +685,8 @@
       toneOsc.start(now);
       toneOsc.stop(now + tail + rel + 0.02);
 
-      activeKey = key; pulseOn(key);
-      toneOsc.onended = function(){ pulseOff(key); activeKey=null; };
+      activeKeyPlaying = key; pulseOn(key);
+      toneOsc.onended = function(){ pulseOff(key); activeKeyPlaying=null; };
 
       resumeCtx();
       if('mediaSession' in navigator){
@@ -557,7 +736,6 @@
     }
     function toggleSaver(){
       document.body.classList.toggle("saver");
-      // pause/resume canvas animation automatically
       if(document.body.classList.contains('saver')) stopButterflies(); else if(document.body.classList.contains('fx-on')) startButterflies();
       savePrefs();
     }
@@ -565,7 +743,7 @@
     /* Honey (128 Hz) */
     function honeyStart(){
       ensureCtx();
-      if(honeyOsc){ return; }
+      if(honeyOsc){ return }
       honeyOsc  = ctx.createOscillator();
       honeyGain = ctx.createGain();
       honeyOsc.type = "sine";
@@ -607,18 +785,34 @@
       honeyGain.gain.linearRampToValueAtTime(g, ctx.currentTime + 0.05);
     }
 
-    /* Export + Share */
+    /* Journal persistence */
+    var jn=document.getElementById('j_note'), jp=document.getElementById('j_poem');
+    if(jn){ jn.addEventListener('input', function(){ var w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; saveJournal(); }) }
+    if(jp){ jp.addEventListener('input', function(){ var w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; saveJournal(); }) }
+
+    /* Export + Share (auto-Princess on Week 6) */
     function buildMapBlob(){
-      var payload={version:"1.6", map:mapData, prefs:{
-        muse:document.body.classList.contains('muse'),
-        honey:document.body.classList.contains('honey'),
-        butterfly:document.body.classList.contains('fx-on'),
-        princess:document.body.classList.contains('princess-on'),
-        saver:document.body.classList.contains('saver')
-      }, timestamp:new Date().toISOString()};
+      var payload={version:"2.0",
+        schedule:schedule,
+        variation:variation,
+        map:mapData,
+        journal:journal[schedule.week]||{},
+        prefs:{
+          muse:document.body.classList.contains('muse'),
+          honey:document.body.classList.contains('honey'),
+          butterfly:document.body.classList.contains('fx-on'),
+          princess:document.body.classList.contains('princess-on'),
+          saver:document.body.classList.contains('saver')
+        },
+        timestamp:new Date().toISOString()
+      };
       return new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     }
     function exportMap(){
+      if(schedule.week===6){ // flare moment
+        document.body.classList.add("princess-on");
+        var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; }
+      }
       var blob=buildMapBlob();
       var url=URL.createObjectURL(blob);
       var a=document.createElement("a");
@@ -627,6 +821,10 @@
       URL.revokeObjectURL(url);
     }
     async function shareMap(){
+      if(schedule.week===6){
+        document.body.classList.add("princess-on");
+        var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; }
+      }
       var blob=buildMapBlob();
       var fileName="froot_marina_synesthesia_map.json";
       var canFiles = !!(navigator.canShare && navigator.canShare({files:[new File([blob], fileName, {type:blob.type})]}));
@@ -686,7 +884,6 @@
       fxCtx.save();
       fxCtx.translate(p.x, p.y);
       fxCtx.rotate(Math.sin(t*1.5 + p.hue)*0.3);
-      // wings (simple bezier leaves)
       var g = fxCtx.createLinearGradient(-s,0,s,0);
       g.addColorStop(0, "hsla("+(p.hue)+",80%,70%,.85)");
       g.addColorStop(1, "hsla("+(p.hue+60)+",80%,60%,.85)");
@@ -696,7 +893,6 @@
       fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
       fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
       fxCtx.closePath(); fxCtx.fill();
-
       fxCtx.scale(-1,1);
       fxCtx.beginPath();
       fxCtx.moveTo(0,0);
@@ -732,17 +928,21 @@
       window.removeEventListener('resize', resizeFX);
     }
 
+    /* Build Week/Day UI & apply state */
+    function initWeekDayUI(){
+      applyScheduleUI();
+      hydrateInputs(); renderMap(); hydrateJournal();
+    }
+
     /* Init */
-    renderMap(); hydrateInputs();
-    // Restore UI states
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
     if(prefs.princess){ document.getElementById("princessBanner").style.display="grid"; }
     if(prefs.butterfly && !document.body.classList.contains('saver')) startButterflies();
 
-    // Prime audio after first tap
     document.addEventListener("click", function(){ ensureCtx(); resumeCtx(); }, {once:true});
     document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="visible"){ resumeCtx(); } });
 
+    initWeekDayUI();
   </script>
 </body>
 </html>
