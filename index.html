@@ -1,154 +1,433 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Froot — Illumina Garden</title>
-<meta name="description" content="Froot — seasonal Illumina garden of reflection and sound.">
-<style>
-  :root{
-    --bg:#0B0F19; --ink:#E6EAF2; --muted:#94A3B8; --line:rgba(255,255,255,.12);
-    --accent:#FAD02C; --accent2:#A4E8FF;
-  }
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 ui-sans-serif,system-ui}
-  .wrap{max-width:960px;margin:0 auto;padding:20px}
-  header{display:flex;align-items:center;gap:12px}
-  h1{margin:0;font-size:28px;letter-spacing:.03em}
-  .pill{padding:.25rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:13px}
-  .player-bar{position:sticky;top:0;z-index:10;background:linear-gradient(0deg, rgba(11,15,25,.7), rgba(11,15,25,.9));backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-  .player-inner{max-width:960px;margin:0 auto;padding:14px 20px;display:grid;grid-template-columns:1fr 320px;gap:16px}
-  .player-video{aspect-ratio:16/9;background:#111;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .player-meta{display:flex;flex-direction:column;gap:8px}
-  .meta-title{font-weight:700}.meta-artist{color:var(--muted);font-size:14px}
-  .controls{display:flex;gap:8px;flex-wrap:wrap}
-  .btn{padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer;font-weight:600}
-  .btn:hover{border-color:var(--accent)} .btn.primary{background:var(--accent);color:#111;border-color:transparent}
-  .tag{font-size:12px;color:#111;background:var(--accent);padding:.25rem .5rem;border-radius:999px;font-weight:700}
-  .switchers{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}
-  .group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .seg button{padding:.45rem .75rem;background:transparent;border:0;color:var(--ink);cursor:pointer}
-  .seg button.active{background:var(--accent);color:#111;font-weight:800}
-  .seedchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);padding:.25rem .6rem;border-radius:999px}
-  .arrow{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--ink);cursor:pointer}
-  .arrow:hover{border-color:var(--accent)}
-  .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
-  .card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#0F1524}
-  .card h2{margin:.25rem 0 8px;font-size:18px;letter-spacing:.02em}
-  .queue{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:12px}
-  .row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
-  .row:hover{background:rgba(255,255,255,.04)} .row.active{background:rgba(250,208,44,.18)}
-  .num{width:28px;text-align:right;color:var(--muted)} .title{font-weight:600} .source{font-size:12px;color:var(--muted)}
-  .empty{color:var(--muted)} a{color:var(--accent2);text-decoration:none} a:hover{text-decoration:underline}
-  footer{margin:26px 0 40px;color:var(--muted);font-size:.95em}
-  .links{display:flex;gap:14px;flex-wrap:wrap}
-  .btnlink{display:inline-block;padding:.5rem .8rem;border:1px solid var(--line);border-radius:10px;text-decoration:none}
-  .btnlink:hover{border-color:var(--accent)}
-  .tiny{font-size:.92em;color:var(--muted);display:block;margin-top:4px}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Froot — Marina Reflection Edition · Color-Sense Studio</title>
+  <meta name="description" content="A polished, poetic Froot edition inspired by Marina — learn to hear color through tone-and-hue micro rituals.">
+  <style>
+    :root{
+      /* Night garden base */
+      --bg:#0b0d11;           /* deep night */
+      --panel:#121620;        /* inked slate */
+      --edge:#1e2430;         /* card border */
+      --ink:#e7edf7;          /* text */
+      --muted:#a9b4c7;        /* secondary text */
+      --ring:#2c3444;         /* focus ring */
+      --glow:#66e1ff;         /* subtle UI glow */
+
+      /* Marina-inspired palettes */
+      --blue-1:#0b2e40; --blue-2:#2cc2ff; /* “Blue” — ocean neon */
+      --froot-1:#103018; --froot-2:#a4ff65; /* “FROOT” — electric lime */
+      --imm-1:#1b1030; --imm-2:#b38bff;    /* “Immortal” — violet dusk */
+      --ad-1:#2b1016; --ad-2:#ff6a9e;      /* “Ancient Dreams” — rose aurora */
+      --hh-1:#0f1e33; --hh-2:#86c9ff;      /* “Handmade Heaven” — sky bloom */
+
+      --accent:#a4ff65; /* default CTA */
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px}
+    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+    h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
+    .tag{color:var(--muted);font-size:.95rem}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    button{
+      appearance:none;border:1px solid var(--edge);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
+      color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;transition:transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+      box-shadow:0 0 0 0 rgba(102,225,255,0);
+    }
+    button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
+    button:active{transform:translateY(1px)}
+    .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02));}
+    .ghost{opacity:.9}
+
+    .note{font-size:.95rem;color:var(--muted);margin-top:6px}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)),var(--panel);
+      border:1px solid var(--edge);border-radius:18px;padding:18px
+    }
+    .row{display:grid;grid-template-columns:1fr;gap:12px}
+
+    .module{
+      display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch
+    }
+    @media (max-width:920px){ .module{grid-template-columns:1fr} }
+
+    .swatch{
+      position:relative;border-radius:14px;border:1px solid var(--edge);overflow:hidden;isolation:isolate;min-height:180px;
+      background:linear-gradient(135deg, var(--c1), var(--c2));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 30px -12px rgba(0,0,0,.5);
+    }
+    .swatch::after{
+      content:"";position:absolute;inset:-40%;border-radius:50%;
+      background:radial-gradient(closest-side, rgba(255,255,255,.15), transparent 60%);
+      opacity:.0;transform:scale(.9);transition:opacity .4s ease, transform .4s ease;pointer-events:none;
+    }
+    .swatch.pulse::after{opacity:.65;transform:scale(1)}
+    .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
+
+    .controls{display:flex;flex-wrap:wrap;gap:10px}
+    .tiny{font-size:.85rem;color:var(--muted)}
+    .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
+    .huebar{
+      height:6px;border-radius:999px;background:linear-gradient(90deg, var(--c1), var(--c2));
+      box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6);
+    }
+    .input, textarea{
+      width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);
+      border-radius:12px;padding:11px 12px;min-height:44px
+    }
+    textarea{min-height:90px;resize:vertical}
+
+    .map{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:10px
+    }
+    @media (max-width:920px){ .map{grid-template-columns:repeat(2,1fr)} }
+    .chip{
+      border:1px solid var(--edge);border-radius:14px;padding:10px;background:linear-gradient(135deg,var(--c1),var(--c2));
+      color:#0b0d11; font-weight:600; text-shadow:0 1px 0 rgba(255,255,255,.25);
+      display:flex;align-items:center;justify-content:center;min-height:68px
+    }
+    .chip .cap{background:rgba(255,255,255,.85);color:#0b0d11;border-radius:999px;padding:2px 8px;font-size:.8rem;font-weight:700;margin-left:8px}
+
+    .legend{display:flex;flex-wrap:wrap;gap:10px}
+    .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
+    .foot{margin-top:24px;color:var(--muted);font-size:.9rem}
+    hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
+
+    /* Focus & print */
+    :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+    @media print{
+      body{background:#fff;color:#000}
+      .wrap{padding:0}
+      header .actions{display:none}
+      .card{break-inside:avoid;border-color:#ddd;background:#fff}
+      .chip{color:#000;text-shadow:none}
+      .swatch{border-color:#ddd}
+    }
+  </style>
 </head>
 <body>
-
-<div class="player-bar">
-  <div class="player-inner">
-    <div class="player-video" id="videoSlot" aria-label="Player"></div>
-    <div class="player-meta">
-      <div><span class="tag" id="seedTag">APPLE</span></div>
-      <div class="meta-title" id="trackTitle">—</div>
-      <div class="meta-artist" id="trackArtist">—</div>
-      <div class="controls">
-        <button class="btn" id="prevBtn">Prev</button>
-        <button class="btn primary" id="playBtn">Play</button>
-        <button class="btn" id="nextBtn">Next</button>
-        <span class="pill" id="countPill">0 / 0</span>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
+        <div class="tag">Hear color. See tone. A gentle studio for synesthetic learning — inspired by Marina.</div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="wrap">
-  <header>
-    <h1>🍋 Froot</h1>
-    <span class="pill">Illumina garden of reflection & sound</span>
-  </header>
-
-  <div class="switchers">
-    <div class="group" aria-label="Seed switcher">
-      <button class="arrow" id="seedPrev" aria-label="Previous seed">⟵</button>
-      <div class="seedchip"><strong id="seedName">Apple</strong> <span id="seedEmoji">🍎</span></div>
-      <button class="arrow" id="seedNext" aria-label="Next seed">⟶</button>
-    </div>
-    <div class="group" aria-label="Playlist switcher">
-      <div class="seg" id="plist">
-        <button data-pl="explainer" class="active">Explainer</button>
-        <button data-pl="anchor-public">Anchor Public</button>
-        <button data-pl="anchor-built">Anchor Built</button>
+      <div class="actions">
+        <button class="ghost" type="button" onclick="window.print()">Print</button>
+        <button class="primary" type="button" onclick="exportMap()">Export Map (.json)</button>
+        <button class="ghost" type="button" onclick="resetMap()">Reset</button>
       </div>
-    </div>
-  </div>
+    </header>
 
-  <div class="grid">
+    <!-- Introduction -->
     <section class="card">
-      <h2>About this Seed</h2>
-      <p id="seedText">Apple is the gentle start: clear sweetness, bright focus, and beginner’s luck.</p>
-      <div class="links">
-        <a class="btnlink" href="/spreads/">Browse spreads</a>
-        <a class="btnlink" href="/reflect/">Reflect</a>
-        <a class="btnlink" href="/about/">About Froot</a>
+      <div class="row">
+        <div>
+          <div class="label">Welcome</div>
+          <p style="margin:.2rem 0 0">
+            This edition is a quiet mirror: five color-tone “fruit” inspired by Marina’s worlds. Touch a fruit to <em>hear</em> its tone and <em>see</em> its glow. 
+            Then answer with a single word. Your words become your synesthesia map (stored on your device).
+          </p>
+          <div class="note">Tip: Don’t overthink. First word, soft breath, eyes half-closed. Let the color name you.</div>
+        </div>
+        <div>
+          <div class="legend" style="margin-top:8px">
+            <span class="pill">🌀 Pulse = tone playing</span>
+            <span class="pill">📝 One word = strongest association</span>
+            <span class="pill">⬇ Export = share or archive later</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <aside class="queue" id="queue" aria-label="Track queue">
-      <div class="empty">Loading playlist…</div>
-    </aside>
+    <!-- Modules -->
+    <div class="grid">
+
+      <!-- BLUE -->
+      <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-freq="329.63">
+        <div>
+          <div class="titleline">
+            <h3>BLUE — Ocean Neon</h3>
+            <div class="huebar" aria-hidden="true"></div>
+          </div>
+          <div class="swatch" id="swatch-blue" role="img" aria-label="Blue gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button type="button" onclick="playTone('blue')">Hear Tone</button>
+            <button type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">Suggested key: E4 (≈ 329.63 Hz). Think: tide lines, chrome reflections, midnight pool.</div>
+          <div style="margin-top:10px">
+            <div class="label">Your one word</div>
+            <input class="input" id="word-blue" maxlength="24" placeholder="e.g., tide / neon / hush" oninput="saveWord('blue', this.value)" />
+          </div>
+        </div>
+      </section>
+
+      <!-- FROOT -->
+      <section class="card module" style="--c1:var(--froot-1);--c2:var(--froot-2)" data-key="froot" data-freq="554.37">
+        <div>
+          <div class="titleline">
+            <h3>FROOT — Electric Lime</h3>
+            <div class="huebar" aria-hidden="true"></div>
+          </div>
+          <div class="swatch" id="swatch-froot" role="img" aria-label="Electric lime gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button type="button" onclick="playTone('froot')">Hear Tone</button>
+            <button type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">Suggested key: C♯5 (≈ 554.37 Hz). Think: citrus snap, laser zest, bright nerve.</div>
+          <div style="margin-top:10px">
+            <div class="label">Your one word</div>
+            <input class="input" id="word-froot" maxlength="24" placeholder="e.g., zest / spark / sugar" oninput="saveWord('froot', this.value)" />
+          </div>
+        </div>
+      </section>
+
+      <!-- IMMORTAL -->
+      <section class="card module" style="--c1:var(--imm-1);--c2:var(--imm-2)" data-key="immortal" data-freq="220">
+        <div>
+          <div class="titleline">
+            <h3>IMMORTAL — Violet Dusk</h3>
+            <div class="huebar" aria-hidden="true"></div>
+          </div>
+          <div class="swatch" id="swatch-immortal" role="img" aria-label="Violet dusk gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button type="button" onclick="playTone('immortal')">Hear Tone</button>
+            <button type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">Suggested key: A3 (220 Hz). Think: cathedral echo, candle smoke, glass memory.</div>
+          <div style="margin-top:10px">
+            <div class="label">Your one word</div>
+            <input class="input" id="word-immortal" maxlength="24" placeholder="e.g., veil / echo / dusk" oninput="saveWord('immortal', this.value)" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ANCIENT DREAMS -->
+      <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-freq="349.23">
+        <div>
+          <div class="titleline">
+            <h3>ANCIENT DREAMS — Rose Aurora</h3>
+            <div class="huebar" aria-hidden="true"></div>
+          </div>
+          <div class="swatch" id="swatch-ancient" role="img" aria-label="Rose aurora gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button type="button" onclick="playTone('ancient')">Hear Tone</button>
+            <button type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">Suggested key: F4 (≈ 349.23 Hz). Think: pink horizon, incense wind, bronze halo.</div>
+          <div style="margin-top:10px">
+            <div class="label">Your one word</div>
+            <input class="input" id="word-ancient" maxlength="24" placeholder="e.g., blush / halo / myrrh" oninput="saveWord('ancient', this.value)" />
+          </div>
+        </div>
+      </section>
+
+      <!-- HANDMADE HEAVEN -->
+      <section class="card module" style="--c1:var(--hh-1);--c2:var(--hh-2)" data-key="heaven" data-freq="587.33">
+        <div>
+          <div class="titleline">
+            <h3>HANDMADE HEAVEN — Sky Bloom</h3>
+            <div class="huebar" aria-hidden="true"></div>
+          </div>
+          <div class="swatch" id="swatch-heaven" role="img" aria-label="Sky bloom gradient pulse"></div>
+        </div>
+        <div>
+          <div class="label">Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button type="button" onclick="playTone('heaven')">Hear Tone</button>
+            <button type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny">Suggested key: D5 (≈ 587.33 Hz). Think: cold sunshine, wingbeat hush, bluebell breath.</div>
+          <div style="margin-top:10px">
+            <div class="label">Your one word</div>
+            <input class="input" id="word-heaven" maxlength="24" placeholder="e.g., wing / hush / bell" oninput="saveWord('heaven', this.value)" />
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Your Map -->
+    <section class="card" id="map-card">
+      <div class="titleline">
+        <h3>Your Synesthesia Map</h3>
+        <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
+      </div>
+      <div class="map" id="map"></div>
+      <div class="foot">Your words save locally in your browser. Export anytime to share or archive.</div>
+    </section>
+
+    <footer class="note">
+      Made with care for learning and resonance. This edition honors the art by inviting your own color-sense to bloom.
+    </footer>
   </div>
 
-  <section class="card" style="margin-top:18px">
-    <h2>Playlists</h2>
-    <p>Open in Tunes with your active seed tint, or view the raw JSON data.</p>
-    <div class="links">
-      <a id="toExplainer" class="btnlink" href="https://tunes.plnt.earth/mixes/explainer/">Explainer Mix</a>
-      <span class="tiny">Data: <a href="https://tunes.plnt.earth/data/illumina/1/tracks/explainer.json" target="_blank" rel="noopener">explainer.json</a></span>
+  <script>
+    /* ====== State & Persistence ====== */
+    var FROOT_KEY = "froot_marina_map_v1";
+    var seeds = {
+      blue:   { name:"Blue — Ocean Neon",      c1:"var(--blue-1)", c2:"var(--blue-2)",   freq:329.63,  id:"blue"   },
+      froot:  { name:"Froot — Electric Lime",  c1:"var(--froot-1)",c2:"var(--froot-2)",  freq:554.37,  id:"froot"  },
+      immortal:{name:"Immortal — Violet Dusk", c1:"var(--imm-1)",  c2:"var(--imm-2)",    freq:220.00,  id:"immortal"},
+      ancient:{ name:"Ancient Dreams — Rose Aurora", c1:"var(--ad-1)", c2:"var(--ad-2)", freq:349.23,  id:"ancient"},
+      heaven: { name:"Handmade Heaven — Sky Bloom", c1:"var(--hh-1)", c2:"var(--hh-2)",   freq:587.33,  id:"heaven" }
+    };
+    var mapData = loadMap();
 
-      <a id="toAnchorPublic" class="btnlink" href="https://tunes.plnt.earth/mixes/anchorpublic/">Anchor Public</a>
-      <span class="tiny">Data: <a href="https://tunes.plnt.earth/data/illumina/1/tracks/anchor-public.json" target="_blank" rel="noopener">anchor-public.json</a></span>
+    function loadMap(){
+      try{
+        var raw = localStorage.getItem(FROOT_KEY);
+        if(raw){ return JSON.parse(raw); }
+      }catch(e){}
+      return { blue:"", froot:"", immortal:"", ancient:"", heaven:"" };
+    }
+    function persist(){
+      try{ localStorage.setItem(FROOT_KEY, JSON.stringify(mapData)); }catch(e){}
+      renderMap();
+      hydrateInputs();
+    }
+    function saveWord(key, val){
+      mapData[key] = (val || "").trim();
+      persist();
+    }
+    function resetMap(){
+      mapData = { blue:"", froot:"", immortal:"", ancient:"", heaven:"" };
+      stopTone();
+      persist();
+    }
+    function exportMap(){
+      var blob = new Blob([JSON.stringify({version:"1.0", map:mapData, timestamp:new Date().toISOString()}, null, 2)], {type:"application/json"});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "froot_marina_synesthesia_map.json";
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
 
-      <a id="toAnchorBuilt" class="btnlink" href="https://tunes.plnt.earth/mixes/anchorbuilt/">Anchor Built</a>
-      <span class="tiny">Data: <a href="https://tunes.plnt.earth/data/illumina/1/tracks/anchor-built.json" target="_blank" rel="noopener">anchor-built.json</a></span>
-    </div>
-  </section>
+    function hydrateInputs(){
+      var pairs = [
+        ["blue","word-blue"],["froot","word-froot"],["immortal","word-immortal"],
+        ["ancient","word-ancient"],["heaven","word-heaven"]
+      ];
+      for(var i=0;i<pairs.length;i++){
+        var key = pairs[i][0], id = pairs[i][1];
+        var el = document.getElementById(id);
+        if(el && mapData[key] !== undefined){ el.value = mapData[key]; }
+      }
+    }
 
-  <footer>
-    Connected · <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://tunes.plnt.earth/">Tunes</a>
-  </footer>
-</div>
+    function renderMap(){
+      var host = document.getElementById("map");
+      if(!host) return;
+      host.innerHTML = "";
+      for(var k in seeds){
+        var s = seeds[k], word = (mapData[k]||"").trim();
+        var chip = document.createElement("div");
+        chip.className = "chip";
+        chip.style.setProperty("--c1", getComputedStyle(document.documentElement).getPropertyValue(s.c1.replace("var(","").replace(")","")).trim());
+        chip.style.setProperty("--c2", getComputedStyle(document.documentElement).getPropertyValue(s.c2.replace("var(","").replace(")","")).trim());
+        chip.textContent = s.name.split(" — ")[0];
+        if(word){ 
+          var cap = document.createElement("span");
+          cap.className = "cap"; cap.textContent = word;
+          chip.appendChild(cap);
+        }
+        host.appendChild(chip);
+      }
+    }
 
-<script>
-(function(){
-  var seeds = [
-    {key:"apple",    name:"Apple",    emoji:"🍎", accent:"#FAD02C", text:"Apple is the gentle start: clear sweetness, bright focus, and beginner’s luck."},
-    {key:"pumpkin",  name:"Pumpkin",  emoji:"🎃", accent:"#FF8A3D", text:"Pumpkin warms the field: cozy courage and steady fire."},
-    {key:"cumin",    name:"Cumin",    emoji:"🌰", accent:"#D0A15F", text:"Cumin sharpens: earthy clarity, pattern recognition."},
-    {key:"cinnamon", name:"Cinnamon", emoji:"🌿", accent:"#D66A4E", text:"Cinnamon sparks: playful heat and memory trails."},
-    {key:"clove",    name:"Clove",    emoji:"🧭", accent:"#B55B3A", text:"Clove protects: boundary setting with kindness."},
-    {key:"fennel",   name:"Fennel",   emoji:"🌱", accent:"#7DE2A7", text:"Fennel lifts: lightness, breath, and green attention."},
-    {key:"cardamom", name:"Cardamom", emoji:"✨", accent:"#C7B3FF", text:"Cardamom opens: bright perfume and welcome."}
-  ];
+    /* ====== Audio Engine (Web Audio API) ====== */
+    var ctx = null, osc = null, g = null, activeKey = null, pulseTimer = null;
 
-  /* POINT FROOT TO TUNES JSON (absolute URLs) */
-  var playlists = {
-    "explainer":      { label:"Explainer",      file:"https://tunes.plnt.earth/data/illumina/1/tracks/explainer.json" },
-    "anchor-public":  { label:"Anchor Public",  file:"https://tunes.plnt.earth/data/illumina/1/tracks/anchor-public.json" },
-    "anchor-built":   { label:"Anchor Built",   file:"https://tunes.plnt.earth/data/illumina/1/tracks/anchor-built.json" }
-  };
+    function ensureCtx(){
+      if(!ctx){ ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+      return ctx;
+    }
 
-  var state = { seedIndex:0, plKey:"explainer", tracks:[], current:0 };
+    function playTone(key){
+      stopTone();
+      var s = seeds[key]; if(!s) return;
+      ensureCtx();
+      osc = ctx.createOscillator();
+      g = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(s.freq, ctx.currentTime);
 
-  var els = {
-    seedTag:document.getElementById("seedTag"), seedName:document.getElementById("seedName"),
-    seedEmoji:document.getElementById("seedEmoji"), seedText:document.getElementById("seedText"),
-    videoSlot:document.getElementById("videoSlot"), trackTitle:document.getElementById("trackTitle"),
-    trackArtist:document.getElementById("trackArtist"), countPill:document.getElementById("countPill"),
-    queue:document.getElementById("queue"), seedPrev:document.getElementById("seedPrev"),
-    seedNext:document.getElementById("seedNext"), prevBtn:document.getElementById
+      // Soft envelope
+      var now = ctx.currentTime;
+      g.gain.setValueAtTime(0.0001, now);
+      g.gain.exponentialRampToValueAtTime(0.3, now + 0.08);   // attack
+      g.gain.exponentialRampToValueAtTime(0.22, now + 0.40);  // settle
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 5.80); // release tail
+
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 6.0);
+
+      activeKey = key;
+      pulseOn(key);
+      // Ensure cleanup after stop
+      osc.onended = function(){
+        pulseOff(key);
+        activeKey = null;
+      };
+    }
+
+    function stopTone(){
+      if(osc){ try{ osc.stop(); }catch(e){} }
+      if(g){ try{ g.disconnect(); }catch(e){} }
+      if(osc){ try{ osc.disconnect(); }catch(e){} }
+      osc = null; g = null;
+      if(activeKey){ pulseOff(activeKey); activeKey = null; }
+    }
+
+    /* ====== Visual Pulse ====== */
+    function pulseOn(key){
+      var id = "swatch-" + (key==="immortal" ? "immortal" : key);
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.classList.add("pulse");
+      clearInterval(pulseTimer);
+      var t0 = performance.now();
+      pulseTimer = setInterval(function(){
+        var t = (performance.now() - t0) / 1000.0;
+        // breathe the gradient angle subtly
+        var deg = 120 + Math.sin(t*2.0)*10;
+        el.style.background = "linear-gradient("+deg+"deg, var(--c1), var(--c2))";
+      }, 60);
+    }
+    function pulseOff(key){
+      var id = "swatch-" + (key==="immortal" ? "immortal" : key);
+      var el = document.getElementById(id);
+      if(el){ el.classList.remove("pulse"); el.style.background = ""; }
+      clearInterval(pulseTimer); pulseTimer = null;
+    }
+
+    /* ====== Init ====== */
+    renderMap();
+    hydrateInputs();
+
+    /* Accessibility: resume audio on user gesture in some browsers */
+    document.addEventListener("click", function(){
+      if(ctx && ctx.state === "suspended"){ ctx.resume(); }
+    }, {once:true});
+  </script>
+</body>
+</html>
