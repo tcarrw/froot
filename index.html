@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#0b0d11">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Froot — Marina Reflection Edition · Weeks + Honey + FX</title>
   <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, and Princess of Power integration." />
-
   <style>
     :root{
       color-scheme: dark;
@@ -34,6 +34,7 @@
       --honey-a:#120e07; --honey-b:#3a2a0f; --honey-c:#d7aa3b; --honey-d:#f7d77a;
     }
 
+    /* Crisp, iOS-friendly typography */
     html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
     body{
       margin:0; background:var(--bg); color:var(--ink);
@@ -43,6 +44,7 @@
     *{box-sizing:border-box}
     button[disabled]{opacity:.5; cursor:not-allowed}
 
+    /* Layout */
     .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:2}
     header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
     h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
@@ -230,10 +232,10 @@
     .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)); }
     .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px; }
 
-    /* Guide list */
-    .guide{margin:.35rem 0 .2rem 1rem; padding:0; color:var(--muted); font-size:.94rem}
-    .guide li{margin:.28rem 0}
-    .poem{color:#dbe7ff; font-style:italic; opacity:.85; margin-top:.35rem; line-height:1.35}
+    /* Clear instructions list */
+    .ritual{margin:8px 0 0 0; padding-left:20px; color:var(--muted)}
+    .ritual li{margin:.25rem 0}
+    .aside{font-size:.85rem; color:var(--muted); margin-top:8px}
 
     /* Print */
     @media print{
@@ -250,10 +252,10 @@
 <body>
   <!-- Always-on-top Quickbar -->
   <div class="quickbar" role="toolbar" aria-label="Quick audio controls">
-    <button id="qb-mute" class="qbtn" type="button" title="Mute / Unmute (M)" onclick="toggleMute()">🔊</button>
+    <button id="qb-mute" class="qbtn" type="button" title="Mute / Unmute" onclick="toggleMute()">🔊</button>
     <div class="qsep" aria-hidden="true"></div>
-    <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz (H)" onclick="toggleHoneyFromQuick()">🍯</button>
-    <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop (L)" onclick="document.getElementById('loopToggle').click()">🔁</button>
+    <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz" onclick="toggleHoneyFromQuick()">🍯</button>
+    <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop" onclick="document.getElementById('loopToggle').click()">🔁</button>
   </div>
 
   <!-- Background FX layers -->
@@ -271,7 +273,7 @@
     <header>
       <div>
         <h1>Froot — <span style="opacity:.9">Marina Reflection Edition</span></h1>
-        <div class="tag">A studio for listening in color. Weeks and Days give rhythm; tones give thread; your words make the tapestry.</div>
+        <div class="tag">Breathe with color. One week, one hue; one day, one ritual. The tone leads, the orb whispers <em>In / Hold / Out</em>, and you leave a single word like a breadcrumb back to yourself.</div>
       </div>
       <div class="actions">
         <button class="ghost" type="button" onclick="toggleMuse()">Muse</button>
@@ -320,25 +322,25 @@
               <option value="45">45m</option>
               <option value="60">60m</option>
             </select>
-            <span id="loopCountdown" style="margin-left:8px; opacity:.85" aria-live="polite"></span>
+            <span id="loopCountdown" style="margin-left:8px; opacity:.85"></span>
           </label>
         </div>
-        <div class="tiny">How it flows: pick your Week and Day → press a color’s <b>Hear Tone</b> → (optional) turn on <b>Loop</b> for hands‑free + breathing ring → write one word → repeat tomorrow. Day 6 is a quiet walk.</div>
+        <div class="tiny">W1–W5 focus on one color each week. W6 integrates your map. Day 1 Signal • Days 2–5 Variation (Δfreq) • Day 6 Quiet Walk • Day 7 Integration.</div>
       </div>
     </section>
 
     <!-- Honey controls -->
     <section class="card" id="honey-controls" style="display:none">
       <div class="row">
-        <div class="label">🍯 Honey — a 128 Hz background bed</div>
+        <div class="label">🍯 Honey — 128 Hz Background Bed</div>
         <div class="controls">
-          <button type="button" onclick="honeyStart()">Play 128 Hz</button>
+          <button type="button" onclick="honeyStart()">Play 128 Hz</button>
           <button type="button" onclick="honeyStop()">Stop</button>
           <label class="label" style="margin-left:6px">Volume
             <input id="honeyVol" type="range" min="0" max="100" value="28" oninput="honeyVolume(this.value)" style="width:160px;vertical-align:middle">
           </label>
         </div>
-        <div class="tiny">Honey sits low and warm. It keeps the audio session awake when the screen sleeps. Use the 🔊 button to mute everything in a heartbeat.</div>
+        <div class="tiny">Use gently, like lamplight. Honey and the tone both honor the mute button (🔊) in the corner.</div>
       </div>
     </section>
 
@@ -348,16 +350,15 @@
         <div>
           <div class="label">Welcome</div>
           <p style="margin:.2rem 0 0">
-            This is a small ritual. One tone, one breath, one word. The site remembers for you.
+            Each session is a small ceremony: choose your <strong>Week</strong>, your <strong>Day</strong>, then the color offers a single tone. You may turn on <strong>Loop</strong> for hands‑free breathwork (the orb will clearly mark <em>IN → HOLD → OUT</em>). When the minute is done, leave just <strong>one word</strong> — the flavor of what you heard.
           </p>
-          <p class="poem">“Breathe in the color. Hold the hush. Breathe out the name.”</p>
-          <div class="note">Days 2–5 unlock the Δfreq slider for subtle variation. Week 6 gathers what you learned.</div>
+          <div class="note">On Days 2–5, a Δfreq slider lets you nudge the note; the tone will <em>glide</em> without clicks when looping. Day 6 is a quiet walk: no tone. Week 6 gathers every color into a single page of you.</div>
         </div>
         <div>
           <div class="legend" style="margin-top:8px">
-            <span class="pill">🔁 Loop = hands‑free + breathing ring</span>
-            <span class="pill">🍯 Honey = low bed (toggle on top)</span>
-            <span class="pill">🔊 = instant mute</span>
+            <span class="pill">🔁 Loop for hands‑free</span>
+            <span class="pill">🍯 Honey = warm bed @ 128 Hz</span>
+            <span class="pill">🔊 Mute = instant hush</span>
           </div>
         </div>
       </div>
@@ -372,24 +373,24 @@
           <div class="swatch" id="swatch-blue" role="img" aria-label="Blue gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Practice Guide</div>
-          <ol class="guide">
-            <li>Set <b>Week</b> and <b>Day</b> above. Day 6 is <b>Quiet Walk</b> (no tone for this week).</li>
-            <li>Press <b>Hear Tone</b>. If you want it hands‑free, enable <b>🔁 Loop</b>; the swatch ring shows <em>IN → HOLD → OUT</em>.</li>
-            <li>On Days 2–5, adjust <b>Δfreq</b> to taste. Blue likes tiny ripples.</li>
-            <li>Optionally toggle <b>🍯 Honey</b> (top‑right) for a warm, steady bed; set its volume in Honey controls.</li>
-            <li>Type one word that Blue whispers to you. It fills your map.</li>
-            <li>Need silence in a pinch? Tap <b>🔊</b> to mute everything instantly.</li>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-blue" type="button" onclick="playTone('blue')">Hear Tone</button>
+            <button id="stop-blue" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny"><em>E4 ≈ 329.63 Hz — chrome tide at midnight.</em></div>
+          <ol class="ritual">
+            <li>Select <strong>W1</strong> and today’s <strong>Day</strong> above.</li>
+            <li>Tap <strong>Hear Tone</strong>. Switch on <strong>🔁 Loop</strong> if you want a continuous note while you breathe.</li>
+            <li>Match the orb’s phases: <strong>IN</strong> (slow), <strong>HOLD</strong> (still), <strong>OUT</strong> (longer). A ring and a tiny flash mark each switch.</li>
+            <li>On Days 2–5, adjust <strong>Δfreq</strong> to taste; the pitch <em>glides</em> to avoid clicks.</li>
+            <li>Optionally layer <strong>🍯 Honey</strong> for warmth, or use the corner <strong>🔊 Mute</strong> for instant silence.</li>
+            <li>Type one word below — the blue you tasted — then move on with your day.</li>
           </ol>
-          <div class="tiny">E4 ≈ 329.63 Hz · chrome tide at midnight</div>
-          <p class="poem">Blue swims through headphones like moonwater—steady, clean, and kind.</p>
+          <div class="aside">If anything feels off, stop. Soft volume is wise; headphones are kinder than speakers.</div>
           <div style="margin-top:10px">
             <div class="label">Name the color you hear</div>
             <input class="input" id="word-blue" maxlength="24" placeholder="e.g., tide / neon / hush" oninput="saveWord('blue', this.value)" />
-          </div>
-          <div class="controls" style="margin-top:10px">
-            <button id="play-blue" type="button" onclick="playTone('blue')">Hear Tone</button>
-            <button id="stop-blue" type="button" onclick="stopTone()">Stop</button>
           </div>
         </div>
       </section>
@@ -401,24 +402,24 @@
           <div class="swatch" id="swatch-froot" role="img" aria-label="Electric lime gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Practice Guide</div>
-          <ol class="guide">
-            <li>Choose your <b>Week</b>/<b>Day</b>. If today is Day 6, the tone rests—go outside and listen to the world.</li>
-            <li>Tap <b>Hear Tone</b>. Switch on <b>🔁 Loop</b> to let it run while you breathe with the ring.</li>
-            <li>Days 2–5: nudge <b>Δfreq</b> for a fresh zest. Small moves, bright effect.</li>
-            <li>Turn on <b>🍯 Honey</b> for a soft undercurrent. Use the volume slider to blend.</li>
-            <li>Write <b>one word</b>—not many, just the ripest one.</li>
-            <li>Export or share anytime; the map is yours.</li>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-froot" type="button" onclick="playTone('froot')">Hear Tone</button>
+            <button id="stop-froot" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny"><em>C♯5 ≈ 554.37 Hz — laser citrus on the tongue.</em></div>
+          <ol class="ritual">
+            <li>Confirm <strong>W2</strong> and your <strong>Day</strong>.</li>
+            <li>Tap <strong>Hear Tone</strong>. For walking or journaling, enable <strong>🔁 Loop</strong> and set an <strong>Auto‑stop</strong> timer.</li>
+            <li>Breathe with the orb’s cues; the word “IN / HOLD / OUT” appears right in the glow.</li>
+            <li>Days 2–5: nudge <strong>Δfreq</strong>. The sound eases to the new pitch (no crackle).</li>
+            <li>Layer <strong>🍯 Honey</strong> if you like a low, steady bed. Use <strong>🔊</strong> anytime.</li>
+            <li>Offer one word — the lime’s aftertaste.</li>
           </ol>
-          <div class="tiny">C♯5 ≈ 554.37 Hz · laser citrus on the tongue</div>
-          <p class="poem">Froot sparks on contact—sweet voltage, green lightning on the palate.</p>
+          <div class="aside">Quiet Walk (Day 6) disables the active week’s tone — let color ride along in silence.</div>
           <div style="margin-top:10px">
             <div class="label">Name the color you hear</div>
             <input class="input" id="word-froot" maxlength="24" placeholder="e.g., zest / spark / sugar" oninput="saveWord('froot', this.value)" />
-          </div>
-          <div class="controls" style="margin-top:10px">
-            <button id="play-froot" type="button" onclick="playTone('froot')">Hear Tone</button>
-            <button id="stop-froot" type="button" onclick="stopTone()">Stop</button>
           </div>
         </div>
       </section>
@@ -430,53 +431,53 @@
           <div class="swatch" id="swatch-immortal" role="img" aria-label="Violet dusk gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Practice Guide</div>
-          <ol class="guide">
-            <li>Confirm your <b>Week</b>/<b>Day</b> above. Day 6 stays silent by design.</li>
-            <li>Press <b>Hear Tone</b>. For stillness, enable <b>🔁 Loop</b> and ride the ring: <em>IN → HOLD → OUT</em>.</li>
-            <li>On Days 2–5, adjust <b>Δfreq</b> slowly—Immortal prefers candle‑flame changes.</li>
-            <li>Optionally add <b>🍯 Honey</b> and keep it low.</li>
-            <li>Offer a single word to the week’s ledger.</li>
-            <li>Mute any time with <b>🔊</b> (top‑right).</li>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-immortal" type="button" onclick="playTone('immortal')">Hear Tone</button>
+            <button id="stop-immortal" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny"><em>A3 = 220 Hz — violet glass, candle smoke.</em></div>
+          <ol class="ritual">
+            <li>Choose <strong>W3</strong>, choose the <strong>Day</strong>.</li>
+            <li>Press <strong>Hear Tone</strong>. Turn on <strong>🔁 Loop</strong> for sustained stillness (background‑safe on iPhone).</li>
+            <li>Let the orb lead the breath. When the ring flashes, switch phases.</li>
+            <li>On Variation days, slide <strong>Δfreq</strong> as mood requires; the pitch glides cleanly.</li>
+            <li>Add <strong>🍯 Honey</strong> if you want warmth beneath the dusk.</li>
+            <li>Write a single word — a violet you can return to later.</li>
           </ol>
-          <div class="tiny">A3 = 220 Hz · violet glass, candle smoke</div>
-          <p class="poem">Violet keeps secrets; you’ll hear them if you breathe between the beats.</p>
+          <div class="aside">If you feel light‑headed, pause. This practice is gentler than ambition.</div>
           <div style="margin-top:10px">
             <div class="label">Name the color you hear</div>
             <input class="input" id="word-immortal" maxlength="24" placeholder="e.g., veil / echo / dusk" oninput="saveWord('immortal', this.value)" />
           </div>
-          <div class="controls" style="margin-top:10px">
-            <button id="play-immortal" type="button" onclick="playTone('immortal')">Hear Tone</button>
-            <button id="stop-immortal" type="button" onclick="stopTone()">Stop</button>
-          </div>
         </div>
       </section>
 
-      <!-- ANCIENT DREAMS -->
+      <!-- ANCIENT -->
       <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-week="4" data-freq="349.23">
         <div>
           <div class="titleline"><h3>ANCIENT DREAMS — Rose Aurora</h3><div class="huebar" aria-hidden="true"></div></div>
           <div class="swatch" id="swatch-ancient" role="img" aria-label="Rose aurora gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Practice Guide</div>
-          <ol class="guide">
-            <li>Pick your <b>Week</b>/<b>Day</b>. If Day 6, walk and let the city sing instead.</li>
-            <li>Tap <b>Hear Tone</b>. Turn on <b>🔁 Loop</b> to keep the chord of attention while the ring guides your breath.</li>
-            <li>Days 2–5: taste a tiny <b>Δfreq</b> shift; notice how the color changes character.</li>
-            <li>Add <b>🍯 Honey</b> if you want a golden floor.</li>
-            <li>Write one word. Simple, brave, exact.</li>
-            <li>Save, share, or send by BLE when you like.</li>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-ancient" type="button" onclick="playTone('ancient')">Hear Tone</button>
+            <button id="stop-ancient" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny"><em>F4 ≈ 349.23 Hz — rose dawn, bronze halo.</em></div>
+          <ol class="ritual">
+            <li>Set <strong>W4</strong> and your <strong>Day</strong>.</li>
+            <li>Begin with <strong>Hear Tone</strong>. For writing or stretching, enable <strong>🔁 Loop</strong> and, if helpful, a 10–20 min <strong>Auto‑stop</strong>.</li>
+            <li>Follow <strong>IN → HOLD → OUT</strong>. The orb’s edge flashes exactly when to change.</li>
+            <li>Days 2–5: explore with <strong>Δfreq</strong>. The sound transitions smoothly to guard against crackle.</li>
+            <li>Layer <strong>🍯 Honey</strong> as a low hum underneath. Use <strong>🔊</strong> for instant hush.</li>
+            <li>Capture one word — the rose that arrived.</li>
           </ol>
-          <div class="tiny">F4 ≈ 349.23 Hz · rose dawn, bronze halo</div>
-          <p class="poem">A petal opens; the room remembers its first light.</p>
+          <div class="aside">Quiet Walk on Day 6 is part of the music — the breath becomes the instrument.</div>
           <div style="margin-top:10px">
             <div class="label">Name the color you hear</div>
             <input class="input" id="word-ancient" maxlength="24" placeholder="e.g., blush / halo / myrrh" oninput="saveWord('ancient', this.value)" />
-          </div>
-          <div class="controls" style="margin-top:10px">
-            <button id="play-ancient" type="button" onclick="playTone('ancient')">Hear Tone</button>
-            <button id="stop-ancient" type="button" onclick="stopTone()">Stop</button>
           </div>
         </div>
       </section>
@@ -488,24 +489,24 @@
           <div class="swatch" id="swatch-heaven" role="img" aria-label="Sky bloom gradient pulse"></div>
         </div>
         <div>
-          <div class="label">Practice Guide</div>
-          <ol class="guide">
-            <li>Confirm <b>Week</b>/<b>Day</b>. Day 6: leave the screen; let trees do the teaching.</li>
-            <li>Press <b>Hear Tone</b>. For a cloudless loop, flip on <b>🔁</b> and breathe with the ring.</li>
-            <li>Days 2–5: try a feather‑light <b>Δfreq</b> to tilt the sky.</li>
-            <li>Blend <b>🍯 Honey</b> to taste. It helps the tone carry when locked.</li>
-            <li>Gift one word to the map, like a small kite.</li>
-            <li>Use <b>🔊</b> to hush the whole scene in an instant.</li>
+          <div class="label">Tasting Ritual</div>
+          <div class="controls" style="margin-bottom:10px">
+            <button id="play-heaven" type="button" onclick="playTone('heaven')">Hear Tone</button>
+            <button id="stop-heaven" type="button" onclick="stopTone()">Stop</button>
+          </div>
+          <div class="tiny"><em>D5 ≈ 587.33 Hz — cold sunshine, bluebell air.</em></div>
+          <ol class="ritual">
+            <li>Choose <strong>W5</strong> and your <strong>Day</strong>.</li>
+            <li>Tap <strong>Hear Tone</strong>. For a steady field of sky, switch on <strong>🔁 Loop</strong>.</li>
+            <li>Let breath and word arrive together. The orb keeps the time.</li>
+            <li>On Variation days, shift <strong>Δfreq</strong> by feel; the note glides, click‑free.</li>
+            <li>Honey (🍯) adds warmth; <strong>🔊</strong> mutes instantly.</li>
+            <li>Offer one word — the weather inside.</li>
           </ol>
-          <div class="tiny">D5 ≈ 587.33 Hz · cold sunshine, bluebell air</div>
-          <p class="poem">Some days the sky hums back. Listen until it does.</p>
+          <div class="aside">Week 6 gathers all five words; export or share from the top when you’re ready.</div>
           <div style="margin-top:10px">
             <div class="label">Name the color you hear</div>
             <input class="input" id="word-heaven" maxlength="24" placeholder="e.g., wing / hush / bell" oninput="saveWord('heaven', this.value)" />
-          </div>
-          <div class="controls" style="margin-top:10px">
-            <button id="play-heaven" type="button" onclick="playTone('heaven')">Hear Tone</button>
-            <button id="stop-heaven" type="button" onclick="stopTone()">Stop</button>
           </div>
         </div>
       </section>
@@ -527,7 +528,7 @@
           <textarea id="j_poem" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
         </div>
       </div>
-      <div class="foot">Journal saves locally per week. Princess auto‑pops when exporting on Week 6.</div>
+      <div class="foot">Your map and words live on your device only. On Week 6, the Princess banner graces your export.</div>
     </section>
 
     <!-- Map -->
@@ -537,10 +538,10 @@
         <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
       </div>
       <div class="map" id="map"></div>
-      <div class="foot">Export a file, share from the native sheet, or send by BLE UART if supported.</div>
+      <div class="foot">Export, share, or send via BLE when you want to carry your colors elsewhere.</div>
     </section>
 
-    <footer class="note">Last touch: keyboard shortcuts — <b>L</b> Loop, <b>H</b> Honey, <b>M</b> Mute. Background playback is tuned for iPhone lock screen.</footer>
+    <footer class="note">Last touch: if the world feels loud, tap 🔊 to hush; tap 🔁 to return to the small steady thing that is your breath.</footer>
   </div>
 
   <!-- Hidden audio element that keeps iOS audio session alive while locked -->
@@ -673,7 +674,7 @@
         if(pb) pb.disabled = true;
       }
 
-      /* Journal title hint & Integration display */
+      /* Journal */
       var journalCard = document.getElementById('journal');
       journalCard.querySelector('h3').textContent = "Week Journal — " + (schedule.week===6 ? "Integration" : "Notes");
     }
@@ -684,6 +685,8 @@
       variation[k] = Math.max(-50, Math.min(50, Number(val)||0));
       var out=document.getElementById('varOut'); if(out) out.textContent = (variation[k]>=0?"+":"") + variation[k] + " Hz";
       saveVar();
+      // NEW: glide pitch if looping to avoid clicks
+      smoothSetLoopFreqIfActive();
     }
 
     /* ===== Render map & hydrate inputs ===== */
@@ -724,8 +727,6 @@
 
     // Pipe-only output for iOS lock screen (prevents chop)
     var bgDest=null, bgAudio=null, usePipeOutput=false;
-    // Keepalive for iOS (nearly inaudible)
-    var pipeOsc=null, pipeGain=null;
 
     // Mute
     var isMuted = false, MASTER_GAIN_TARGET = 0.85, MUTE_KEY='froot_mute_v1';
@@ -750,7 +751,8 @@
         comp.attack.value    = 0.010; comp.release.value = 0.300;
         dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 18;
 
-        usePipeOutput = isIOS(); // iOS → route to media element to keep session stable while locked
+        // Choose a single output path:
+        usePipeOutput = isIOS(); // iOS → route ONLY to media element to keep session stable while locked
         if(usePipeOutput){
           bgDest = ctx.createMediaStreamDestination();
           bgAudio = document.getElementById('bgPipe');
@@ -760,14 +762,14 @@
             bgAudio.loop = true;
           }catch(_){}
           master.connect(comp); comp.connect(dc); dc.connect(bgDest);
-          // start keepalive
-          startPipeKeepAlive();
         } else {
           master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
         }
 
         // Restore mute state
-        try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
+        try{
+          isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false');
+        }catch(_){}
         applyMuteImmediate(isMuted);
         refreshQuickbar();
       }
@@ -778,38 +780,48 @@
       if(usePipeOutput && bgAudio && bgAudio.paused){ bgAudio.play().catch(function(){}) }
     }
 
-    function startPipeKeepAlive(){
-      if(!usePipeOutput || !ctx || !bgDest) return;
-      if(pipeOsc) return;
+    function applyMuteImmediate(mute){
+      if(!master || !ctx) return;
+      var now = ctx.currentTime;
       try{
-        pipeOsc = ctx.createOscillator();
-        pipeGain = ctx.createGain();
-        pipeOsc.type='sine';
-        pipeOsc.frequency.value = 20; // sub-audio hint
-        pipeGain.gain.value = 0.00002; // essentially inaudible
-        pipeOsc.connect(pipeGain); pipeGain.connect(bgDest);
-        pipeOsc.start();
-        bgAudio.muted = false;
-        bgAudio.play().catch(function(){});
+        master.gain.cancelScheduledValues(now);
+        master.gain.setValueAtTime(master.gain.value, now);
+        master.gain.linearRampToValueAtTime(mute? 0.0001 : MASTER_GAIN_TARGET, now + 0.06);
       }catch(_){}
+      var b = document.getElementById('qb-mute');
+      if(b){ b.classList.toggle('warn', mute); b.textContent = mute ? '🔇' : '🔊'; }
     }
+    function toggleMute(){
+      ensureCtx();
+      isMuted = !isMuted;
+      try{ localStorage.setItem(MUTE_KEY, JSON.stringify(isMuted)); }catch(_){}
+      applyMuteImmediate(isMuted);
+    }
+    function refreshQuickbar(){
+      var hb = document.getElementById('qb-honey');
+      if(hb){ hb.classList.toggle('on', document.body.classList.contains('honey')); }
+      var lb = document.getElementById('qb-loop');
+      if(lb){ lb.classList.toggle('on', !!document.getElementById('loopToggle')?.checked); }
+      var mb = document.getElementById('qb-mute');
+      if(mb){ mb.classList.toggle('warn', isMuted); mb.textContent = isMuted ? '🔇' : '🔊'; }
+    }
+    function toggleHoneyFromQuick(){ toggleHoney(); refreshQuickbar(); }
 
     /* ===== iOS-tuned crackle-safe audio ===== */
     function killToneFast(now){
       if(!toneOsc || !toneGain){ return; }
       try{
-        var end = now + 0.14;
+        var end = now + 0.10;
         toneGain.gain.cancelScheduledValues(now);
-        // start from current to avoid discontinuities
-        toneGain.gain.setValueAtTime(Math.max(0.0002, toneGain.gain.value), now);
-        toneGain.gain.linearRampToValueAtTime(0.0001, end);
+        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+        toneGain.gain.linearRampToValueAtTime(0.0005, end);
         toneOsc.stop(end);
       }catch(_){}
       setTimeout(function(){
         try{ toneOsc.disconnect(); }catch(_){}
         try{ toneGain.disconnect(); }catch(_){}
         toneOsc=null; toneGain=null;
-      }, 190);
+      }, 140);
     }
 
     function effectiveFreq(base, key){
@@ -923,6 +935,22 @@
       }catch(_){}
     }
 
+    function smoothSetLoopFreqIfActive(){
+      if(!ctx || !toneOsc || !activeKeyPlaying || !loopMode) return;
+      var seeds = getSeeds(); var s = seeds[activeKeyPlaying]; if(!s) return;
+      var target = effectiveFreq(s.freq, activeKeyPlaying);
+      var now = ctx.currentTime;
+      try{
+        var cur = toneOsc.frequency.value || target;
+        toneOsc.frequency.cancelScheduledValues(now);
+        toneOsc.frequency.setValueAtTime(cur, now);
+        // short glide avoids zipper noise
+        toneOsc.frequency.linearRampToValueAtTime(Math.max(1, target), now + 0.12);
+      }catch(_){
+        try{ toneOsc.frequency.value = target; }catch(__){}
+      }
+    }
+
     function playTone(key){
       ensureCtx();
 
@@ -950,7 +978,7 @@
 
       if(!loopMode){
         // One-shot envelope (existing behavior)
-        const atk=0.030, hold=0.25, rel=0.180, peak=0.22, sus=0.16, tail=5.4;
+        const atk=0.030, hold=0.25, rel=0.150, peak=0.22, sus=0.16, tail=5.4;
 
         toneGain.gain.cancelScheduledValues(now);
         toneGain.gain.setValueAtTime(0.0, now);
@@ -1005,7 +1033,7 @@
           try{
             navigator.mediaSession.metadata = new MediaMetadata({ title:'Froot tone (loop)', artist:'PLNT Earth', album:'Illumina' });
             navigator.mediaSession.playbackState='playing';
-            navigator.mediaSession.setActionHandler('play', ()=>{ if(!activeKeyPlaying){ playTone(wkKey); } });
+            navigator.mediaSession.setActionHandler('play', ()=>{ if(!activeKeyPlaying && wkKey){ playTone(wkKey); } });
             navigator.mediaSession.setActionHandler('pause', ()=>{ stopTone(); });
             navigator.mediaSession.setActionHandler('stop',  ()=>{ stopTone(); });
           }catch(_){}
@@ -1042,6 +1070,11 @@
       if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=null; }
       if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; }
       var _cd = document.getElementById('loopCountdown'); if(_cd){ _cd.textContent=''; }
+
+      // Clear pulse state if needed
+      if(activeKeyPlaying){ pulseOff(activeKeyPlaying); activeKeyPlaying=null; }
+
+      if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='paused'; }catch(_){ } }
     }
 
     /* Pulse visuals */
@@ -1305,53 +1338,19 @@
       }
     }
 
-    /* ===== Mute + Quickbar helpers ===== */
-    function applyMuteImmediate(mute){
-      if(!master || !ctx) return;
-      var now = ctx.currentTime;
-      try{
-        master.gain.cancelScheduledValues(now);
-        master.gain.setValueAtTime(master.gain.value, now);
-        master.gain.linearRampToValueAtTime(mute? 0.0001 : MASTER_GAIN_TARGET, now + 0.06);
-      }catch(_){}
-      var b = document.getElementById('qb-mute');
-      if(b){ b.classList.toggle('warn', mute); b.textContent = mute ? '🔇' : '🔊'; }
-    }
-    function toggleMute(){
-      ensureCtx();
-      isMuted = !isMuted;
-      try{ localStorage.setItem(MUTE_KEY, JSON.stringify(isMuted)); }catch(_){}
-      applyMuteImmediate(isMuted);
-    }
-    function refreshQuickbar(){
-      var hb = document.getElementById('qb-honey');
-      if(hb){ hb.classList.toggle('on', document.body.classList.contains('honey')); }
-      var lb = document.getElementById('qb-loop');
-      if(lb){ lb.classList.toggle('on', !!document.getElementById('loopToggle')?.checked); }
-      var mb = document.getElementById('qb-mute');
-      if(mb){ mb.classList.toggle('warn', isMuted); mb.textContent = isMuted ? '🔇' : '🔊'; }
-    }
-    function toggleHoneyFromQuick(){ toggleHoney(); refreshQuickbar(); }
-
     /* Init */
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
     if(prefs.princess){ document.getElementById("princessBanner").style.display="grid"; }
     if(prefs.butterfly && !document.body.classList.contains('saver')) startButterflies();
 
-    // First gesture unlocks audio; also primes pipe keepalive for iOS
-    function primeAudio(){ ensureCtx(); resumeCtx(); document.removeEventListener("click", primeAudio); }
-    document.addEventListener("click", primeAudio, {once:true});
+    document.addEventListener("click", function(){
+      ensureCtx(); resumeCtx();
+      if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); }
+    }, {once:true});
 
     document.addEventListener("visibilitychange", function(){
       if(document.visibilityState==="visible"){ resumeCtx(); }
       else { if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); } }
-    });
-    window.addEventListener('pageshow', resumeCtx);
-    window.addEventListener('focus', resumeCtx);
-    window.addEventListener('keydown', (e)=>{
-      if(e.key==='m' || e.key==='M'){ e.preventDefault(); toggleMute(); }
-      if(e.key==='h' || e.key==='H'){ e.preventDefault(); toggleHoneyFromQuick(); }
-      if(e.key==='l' || e.key==='L'){ e.preventDefault(); document.getElementById('loopToggle').click(); }
     });
 
     initWeekDayUI();
