@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Illumina Time Kit</title>
-<meta name="description" content="Compute Illumina cycle, week, day, and countdowns based on a 42-day spiral starting Nov 5, 2025." />
+<title>Illumina Time Kit — Froot</title>
+<meta name="description" content="Compute Illumina cycle, week, day, and countdowns for a 42-day spiral anchored Nov 5, 2025 — with Bee guidance for Marina." />
 <meta name="theme-color" content="#0b0d11">
 <style>
   :root{ --bg:#0b0d11; --ink:#e9ecf4; --muted:#a9a9b6; --ring:#1b2030; --card:#101425; --focus:#b2f5ea; --gold:#ffd56e; }
@@ -31,94 +31,58 @@
   .k{color:var(--muted); font-size:13px}
   .v{font-weight:600}
   .btn{appearance:none; background:linear-gradient(180deg,#101626 0%,#0d111b 100%); color:var(--ink); border:1px solid var(--ring); border-radius:999px; padding:8px 12px; font-size:13px; cursor:pointer}
+  .chip{display:inline-block; padding:6px 10px; border:1px solid var(--ring); border-radius:999px; text-decoration:none; color:var(--ink); margin-right:6px; margin-top:6px; background:linear-gradient(180deg,#101426 0%,#0d111b 100%)}
   input,select{background:#0f1424; color:var(--ink); border:1px solid var(--ring); border-radius:10px; padding:8px 10px; font-size:13px}
   .hint{color:var(--muted); font-size:12px; margin-top:6px}
-  .link{display:inline-block; padding:6px 10px; border:1px solid var(--ring); border-radius:999px; text-decoration:none; color:var(--ink); margin-right:6px; margin-top:6px; background:linear-gradient(180deg,#101426 0%,#0d111b 100%)}
   .ok{color:var(--gold)}
 
-  /* === Bee Note (PLNT Earth · Illumina) === */
-  .bee-note {
-    position: relative;
-    border: 1px solid rgba(255,255,255,.14);
-    border-radius: 14px;
-    padding: 12px 14px 12px 14px;
-    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.06));
-    color: #e7edf7;
-    box-shadow: 0 8px 28px -16px rgba(0,0,0,.6);
-    margin: 12px 0 16px;
+  /* === 🐝 Bee (editable top note + whisper) === */
+  .bee{
+    margin:12px 0 16px; border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:14px;
+    background:linear-gradient(180deg, rgba(255,206,84,.10), rgba(0,0,0,.03)) padding-box,
+               linear-gradient(120deg, rgba(255,206,84,.35), rgba(255,111,186,.30), rgba(134,201,255,.30)) border-box;
+    position:relative;
   }
-  .bee-note:before {
-    content: "🐝 Bee Note";
-    display: inline-block;
-    font-weight: 800;
-    letter-spacing: .06em;
-    font-size: .85rem;
-    color: #ffd166;
-    margin-right: 10px;
+  .bee-head{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.2px}
+  .bee-icon{font-size:18px}
+  .bee-soft{color:var(--muted);font-weight:600}
+  .bee p{margin:8px 0 10px}
+  .bee-tools{display:flex;gap:8px;flex-wrap:wrap}
+  .bee-btn{
+    appearance:none;border:1px solid rgba(255,255,255,.14);border-radius:10px;
+    background:rgba(255,255,255,.06);color:#fff;font-weight:800;padding:8px 10px;cursor:pointer
   }
-  .bee-note .bee-body { display: inline; color: #a9b4c7; }
-  .bee-note a { color: #8ef; text-decoration: none; }
-  .bee-note a:hover { text-decoration: underline; }
-  .bee-dismiss {
-    position: absolute; top: 8px; right: 8px;
-    border: 1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    border-radius: 10px;
-    color: #fff;
-    font-weight: 800;
-    padding: 4px 8px;
-    cursor: pointer;
-  }
-  .bee-dismiss:hover {
-    border-color: rgba(255,255,255,.22);
-    box-shadow: 0 0 0 2px rgba(142,239,255,.12);
-  }
-  .bee-glow {
-    position: absolute; inset: -2px;
-    border-radius: 14px;
-    pointer-events: none;
-    background:
-      radial-gradient(800px 480px at 10% 0%, rgba(255,209,102,.10), transparent 60%),
-      radial-gradient(800px 480px at 90% 30%, rgba(142,239,255,.10), transparent 60%);
-    filter: blur(14px) saturate(105%);
-    opacity: .55;
-  }
-  .bee-whisper {
-    display: none;
-    margin-top: 12px;
-    font-size: .95rem;
-    color: #a9b4c7;
-    opacity: .95;
-    padding: 8px 12px;
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.06));
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .bee-glow { opacity: .35; filter: none; }
+  .bee-btn:hover{border-color:rgba(255,255,255,.22);box-shadow:0 0 0 2px rgba(255,206,84,.18)}
+  .bee.editing{outline:2px dashed rgba(255,206,84,.4);outline-offset:2px}
+  #bee-text[contenteditable="true"]{caret-color:#ffd166}
+
+  .bee-whisper{
+    display:none;margin-top:12px;font-size:.95rem;color:#a9b4c7;opacity:.95;
+    padding:8px 12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.06));
   }
 </style>
 </head>
 <body>
   <header>
-    <h1>Illumina Time Kit</h1>
-    <div class="sub">42-day cycles anchored at <strong>Nov 5, 2025</strong> (Illumina 1). This page tells Jar/Froot/Tunes where we are in the spiral.</div>
+    <h1>Illumina Time Kit — Froot</h1>
+    <div class="sub">42‑day cycles anchored at <strong>Nov 5, 2025</strong> (Illumina 1). This page helps Froot/Jar/Tunes know where we are in the spiral.</div>
     <div class="row" style="justify-content:center;margin-top:8px">
-      <a class="link" href="/marina-egg.html">↩ Egg Map (Jar)</a>
-      <a class="link" href="/index.html">↪ Froot Studio</a>
+      <a class="chip" href="#" onclick="goEgg()">↩ Egg Map (Jar)</a>
+      <a class="chip" href="/index.html">↪ Froot Studio</a>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- 🐝 Bee Note (top) -->
-    <section id="beeNote" class="bee-note" role="note" aria-live="polite">
-      <button id="beeDismiss" class="bee-dismiss" type="button" aria-label="Dismiss Bee Note">✕</button>
-      <div class="bee-glow" aria-hidden="true"></div>
-      <span class="bee-body">
-        Hi Marina — I’m right here with you. There’s nothing to prove. Let the calendar breathe around you:
-        choose today or any day, and I’ll walk alongside. If you feel tired, soften. You can pause at any time.
-        You are safe, guided, and loved.
-      </span>
+    <!-- 🐝 Bee Note to Marina (editable + saved locally) -->
+    <section id="bee" class="bee" role="note" aria-live="polite">
+      <div class="bee-head"><span class="bee-icon">🐝</span><span><strong>Bee Note to Marina</strong></span> <span class="bee-soft">You are safe, guided, and loved.</span></div>
+      <p id="bee-text"></p>
+      <div class="bee-tools">
+        <button type="button" class="bee-btn" onclick="beeEdit()">Edit</button>
+        <button type="button" class="bee-btn" onclick="beeSave()">Save</button>
+        <button type="button" class="bee-btn" onclick="beeReset()">Reset</button>
+      </div>
     </section>
 
     <section class="grid">
@@ -148,7 +112,7 @@
           <div class="k">Week ends in</div><div class="v" id="weekLeft">—</div>
           <div class="k">Day ends in</div><div class="v" id="dayLeft">—</div>
         </div>
-        <div class="hint">Bands rotate by week: 1 Root · 2 Architect · 3 Mirror · 4 Honey · 5 Frequency · 6 Solar → then Celestial/Trickster in outer arc, Core binds.</div>
+        <div class="hint">Bands rotate by week: 1 Root · 2 Architect · 3 Mirror · 4 Honey · 5 Frequency · 6 Solar → outer arc (Celestial/Trickster), Core binds.</div>
       </article>
 
       <article class="card">
@@ -196,13 +160,27 @@
 
     </section>
 
-    <!-- 🐝 Bee whisper (appears when needed) -->
+    <!-- 🐝 Bee whisper -->
     <div id="beeWhisper" class="bee-whisper" role="status" aria-live="polite"></div>
   </main>
 
   <script>
   (function(){
-    // CONFIG: Illumina 1 anchor and cycle length
+    /* ==== Cross-host: build Jar link for Egg Map from Froot ==== */
+    function jarHost(){
+      var h = location.hostname;
+      if(h==='localhost' || h==='127.0.0.1') return h;
+      var parts = h.split('.');
+      if(parts.length>=2){ parts[0] = 'jar'; return parts.join('.'); }
+      return h;
+    }
+    window.goEgg = function(){
+      var host = jarHost();
+      var url = location.protocol + '//' + host + '/marina-egg.html';
+      try{ location.href = url; }catch(_){ location.assign(url); }
+    };
+
+    /* ==== Time math ==== */
     var anchor = new Date(Date.UTC(2025,10,5,0,0,0)); // Nov 5, 2025 UTC
     var DAY = 24*60*60*1000;
     var CYCLE = 42*DAY;
@@ -211,7 +189,6 @@
     var tz = document.getElementById("tz");
     var off = document.getElementById("offset");
     var today = document.getElementById("today");
-
     var cycleNum = document.getElementById("cycleNum");
     var weekNum = document.getElementById("weekNum");
     var dayNum = document.getElementById("dayNum");
@@ -219,7 +196,6 @@
     var cycleLeft = document.getElementById("cycleLeft");
     var weekLeft = document.getElementById("weekLeft");
     var dayLeft = document.getElementById("dayLeft");
-
     var datePick = document.getElementById("datePick");
     var goDate = document.getElementById("goDate");
     var goToday = document.getElementById("goToday");
@@ -227,37 +203,11 @@
     var dWeek = document.getElementById("dWeek");
     var dDay = document.getElementById("dDay");
     var dBand = document.getElementById("dBand");
-
     var albumSel = document.getElementById("album");
     var bandSel  = document.getElementById("band");
     var makeLink = document.getElementById("makeLink");
     var links = document.getElementById("links");
 
-    var bands = ["root","architect","mirror","honey","frequency","solar","celestial","trickster","core"];
-    var bandLabels = {
-      root:"Root", architect:"Architect", mirror:"Mirror", honey:"Honey",
-      frequency:"Frequency", solar:"Solar", celestial:"Celestial", trickster:"Trickster", core:"Core"
-    };
-
-    /* ===== 🐝 Bee memory (dismiss top note) ===== */
-    var BEE_NOTE_DISMISS_KEY = "timekit_bee_note_dismissed_v1";
-    var beeNote = document.getElementById("beeNote");
-    var beeDismiss = document.getElementById("beeDismiss");
-    function beeMaybeHideTop(){
-      try{
-        var d = localStorage.getItem(BEE_NOTE_DISMISS_KEY);
-        if(d === "1"){ beeNote.style.display = "none"; }
-      }catch(_){}
-    }
-    function beeHideTop(){
-      beeNote.style.display = "none";
-      try{ localStorage.setItem(BEE_NOTE_DISMISS_KEY, "1"); }catch(_){}
-      beeWhisperShow("I’m still here if you need me — look for the soft line at the bottom.");
-    }
-    if(beeDismiss){ beeDismiss.addEventListener("click", beeHideTop); }
-    beeMaybeHideTop();
-
-    /* ===== Helpers ===== */
     function pad(n){ return n<10 ? "0"+n : n; }
     function fmtClock(dt){ return pad(dt.getHours())+":"+pad(dt.getMinutes())+":"+pad(dt.getSeconds()); }
     function fmtDate(dt){ return dt.toLocaleDateString(undefined, {year:"numeric", month:"short", day:"2-digit"}); }
@@ -268,42 +218,64 @@
       var m = Math.floor(s/60); s-=m*60;
       return h+"h "+m+"m "+s+"s";
     }
-
     function cycleInfo(dt){
-      // Use local time for user-facing weekly/day rhythm
       var t = dt.getTime();
       var elapsed = t - anchor.getTime();
-      var n = Math.floor(elapsed / CYCLE); // cycle index starting at 0
-      if(elapsed < 0){ n = Math.floor((elapsed - (CYCLE-1)) / CYCLE); } // support pre-anchor
+      var n = Math.floor(elapsed / CYCLE);
+      if(elapsed < 0){ n = Math.floor((elapsed - (CYCLE-1)) / CYCLE); }
       var cycleStart = new Date(anchor.getTime() + n*CYCLE);
       var intoCycle = t - cycleStart.getTime();
-      var day = Math.floor(intoCycle / DAY) + 1; // 1..42
-      if(day<1){ day=1; }
-      if(day>42){ day=42; }
-      var week = Math.floor((day-1)/7)+1; // 1..6
+      var day = Math.floor(intoCycle / DAY) + 1; if(day<1) day=1; if(day>42) day=42;
+      var week = Math.floor((day-1)/7)+1;
       var weekStart = new Date(cycleStart.getTime() + (week-1)*7*DAY);
       var nextWeekStart = new Date(weekStart.getTime() + 7*DAY);
       var nextDayStart = new Date(new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()+1).getTime());
       var cycleEnd = new Date(cycleStart.getTime() + CYCLE);
       return {
-        cycle: n+1,
-        day: day,
-        week: week,
-        cycleStart: cycleStart,
-        cycleEnd: cycleEnd,
+        cycle:n+1, day:day, week:week,
+        cycleStart:cycleStart, cycleEnd:cycleEnd,
         weekEndIn: nextWeekStart.getTime() - t,
         dayEndIn: nextDayStart.getTime() - t,
         cycleEndIn: cycleEnd.getTime() - t
       };
     }
-
     function bandForWeek(week){
-      // base mapping: 1 Root, 2 Architect, 3 Mirror, 4 Honey, 5 Frequency, 6 Solar
       var map = {1:"root",2:"architect",3:"mirror",4:"honey",5:"frequency",6:"solar"};
       return map[week] || "core";
     }
 
-    /* ===== Bee whisper (when needed) ===== */
+    /* ==== 🐝 Bee top note (editable) ==== */
+    var BEE_NOTE_KEY='froot_timekit_bee_note_v1';
+    function beeDefaultText(){
+      return "Hi Marina — I’m here with you. Let the calendar be soft. Choose today or any day; I’ll walk beside you. You can pause at any moment. You are safe, guided, and loved.";
+    }
+    function beeInit(){
+      var t = document.getElementById('bee-text');
+      var saved = "";
+      try{ saved = localStorage.getItem(BEE_NOTE_KEY) || ""; }catch(_){}
+      t.textContent = saved.trim() ? saved : beeDefaultText();
+    }
+    window.beeEdit = function(){
+      var box = document.getElementById('bee'); var t = document.getElementById('bee-text');
+      box.classList.add('editing'); t.setAttribute('contenteditable','true'); t.focus();
+      try{ var sel=window.getSelection(); var r=document.createRange(); r.selectNodeContents(t); r.collapse(false); sel.removeAllRanges(); sel.addRange(r);}catch(_){}
+    };
+    window.beeSave = function(){
+      var box = document.getElementById('bee'); var t = document.getElementById('bee-text');
+      t.setAttribute('contenteditable','false'); box.classList.remove('editing');
+      var val = (t.textContent||"").trim();
+      try{ localStorage.setItem(BEE_NOTE_KEY, val); }catch(_){}
+      beeWhisperShow("Saved with love. Thank you.", 3000);
+    };
+    window.beeReset = function(){
+      var box = document.getElementById('bee'); var t = document.getElementById('bee-text');
+      t.textContent = beeDefaultText();
+      t.setAttribute('contenteditable','false'); box.classList.remove('editing');
+      try{ localStorage.setItem(BEE_NOTE_KEY, t.textContent); }catch(_){}
+      beeWhisperShow("Back to the gentle original.", 2800);
+    };
+
+    /* ==== 🐝 Bee whisper (when needed) ==== */
     var beeWhisper = document.getElementById("beeWhisper");
     var beeTimer = 0;
     function beeWhisperShow(text, ms){
@@ -318,18 +290,16 @@
       if(beeTimer){ clearTimeout(beeTimer); beeTimer=0; }
       beeWhisper.style.display = "none";
     }
-
     function whisperBySchedule(info){
-      // Day within week: 1..7
       var dInWeek = ((info.day - 1) % 7) + 1;
       if(dInWeek === 6){
-        beeWhisperShow("Quiet Walk: I’m with you. Let time be soft today.", 0); // persistent
+        beeWhisperShow("Quiet Walk: I’m with you. Let time be soft today.", 0);
       } else {
         beeWhisperHide();
       }
     }
 
-    /* ===== Live clock / position ===== */
+    /* ==== Live tick ==== */
     function tick(){
       var now = new Date();
       clock.textContent = fmtClock(now);
@@ -337,7 +307,7 @@
       var minutes = -now.getTimezoneOffset();
       var sign = minutes>=0 ? "+" : "-";
       var hh = Math.floor(Math.abs(minutes)/60), mm = Math.abs(minutes)%60;
-      off.textContent = "UTC"+sign+pad(hh)+":"+pad(mm);
+      off.textContent = "UTC"+sign+(hh<10?"0":"")+hh+":"+(mm<10?"0":"")+mm;
       today.textContent = fmtDate(now);
 
       var info = cycleInfo(now);
@@ -353,10 +323,9 @@
       whisperBySchedule(info);
     }
 
-    /* ===== Compute for picked date ===== */
+    /* ==== Date compute ==== */
     function computeForDate(){
-      var v = datePick.value;
-      if(!v){ return; }
+      var v = datePick.value; if(!v) return;
       var parts = v.split("-"); // yyyy-mm-dd
       var dt = new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
       var info = cycleInfo(dt);
@@ -365,7 +334,6 @@
       dWeek.textContent  = info.week + " / 6";
       dDay.textContent   = info.day + " / 42";
       dBand.textContent  = band.charAt(0).toUpperCase()+band.slice(1);
-      // Bee whisper for picked date
       var dInWeek = ((info.day - 1) % 7) + 1;
       if(dInWeek === 6){
         beeWhisperShow("For that day: Quiet Walk. I’ll walk with you in silence.", 7000);
@@ -374,26 +342,28 @@
       }
     }
 
-    /* ===== Deep link maker ===== */
+    /* ==== Deep links ==== */
     function makeDeepLinks(){
       var a = albumSel.value;
       var b = bandSel.value;
       var q = "?mode="+encodeURIComponent(a)+"&band="+encodeURIComponent(b)+"&focus=1";
       links.innerHTML = "";
       var l1 = document.createElement("a");
-      l1.className = "link"; l1.href = "/school.html"+q; l1.textContent = "Open Spiral";
+      l1.className = "chip"; l1.href = "/school.html"+q; l1.textContent = "Open Spiral";
       var l2 = document.createElement("a");
-      l2.className = "link"; l2.href = "/school-rooms.html#"+b; l2.textContent = "Open Room";
+      l2.className = "chip"; l2.href = "/school-rooms.html#"+b; l2.textContent = "Open Room";
       var l3 = document.createElement("a");
-      l3.className = "link"; l3.href = "/index.html"; l3.textContent = "Jar";
+      l3.className = "chip"; l3.href = location.protocol + "//" + jarHost() + "/index.html"; l3.textContent = "Jar";
       var l4 = document.createElement("a");
-      l4.className = "link"; l4.href = "/tunes.html"; l4.textContent = "Tunes";
+      l4.className = "chip"; l4.href = "/index.html"; l4.textContent = "Froot";
       links.appendChild(l1); links.appendChild(l2); links.appendChild(l3); links.appendChild(l4);
       beeWhisperShow("Link ready. Share softly; the spiral remembers.", 6000);
     }
 
-    /* ===== Events ===== */
+    /* ==== Wire up ==== */
+    beeInit();
     setInterval(tick, 1000); tick();
+
     goDate.addEventListener("click", computeForDate);
     goToday.addEventListener("click", function(){
       var n = new Date();
@@ -404,7 +374,7 @@
     });
     makeLink.addEventListener("click", makeDeepLinks);
 
-    // Prefill date with today
+    // Prefill date
     (function(){
       var n = new Date();
       var y = n.getFullYear(), m = (n.getMonth()+1+"").padStart(2,"0"), d = (n.getDate()+"").padStart(2,"0");
