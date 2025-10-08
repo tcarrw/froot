@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Peach — Froot of the Month + Nectar Practice</title>
+  <meta name="description" content="Peach Froot: warmth, kindness, courage. Nectar practice with accurate 128 Hz option, loop, and breath orb."/>
+  <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#0b0d11">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root{
+      --bg:#0b0d11; --ink:#f2f2f2; --muted:#aeb6c3; --line:#1b2029; --card:#10131a;
+      --peach1:#2a1612; --peach2:#3a1f16; --peach3:#d97745; --peach4:#ffc2a1;
+      --nectar:#ffd6ae; --accent:#ff965a;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:
+      radial-gradient(1200px 820px at 80% 10%, rgba(255,198,158,.22), transparent 60%),
+      radial-gradient(900px 600px at 15% 90%, rgba(217,119,69,.28), transparent 65%),
+      linear-gradient(180deg, var(--bg), #0a0c12 60%, #07090e);
+      color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,Inter,Roboto}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px 16px 56px}
+    header{display:flex;align-items:center;justify-content:space-between;margin:6px 0 18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .peach{width:18px;height:18px;border-radius:50%;
+      background: radial-gradient(circle at 35% 35%, var(--peach4) 0 22%, var(--peach3) 28% 60%, var(--peach2) 62% 100%);
+      box-shadow:0 0 26px 6px rgba(255,150,90,.25)}
+    h1{font-size:20px;margin:0;letter-spacing:.3px}
+    .tag{font-size:12px;color:var(--muted);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:960px){.grid{grid-template-columns:1.1fr .9fr}}
+    .card{background:linear-gradient(180deg, rgba(16,19,26,.7), rgba(16,19,26,.55)); border:1px solid var(--line);border-radius:14px;padding:18px}
+    .card h2{margin:2px 0 8px;font-size:16px}
+    .sub{color:var(--muted);font-size:13px}
+    .pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#151a23;border:1px solid var(--line);font-size:12px}
+    .peachline{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .peachline .pill{background:rgba(217,119,69,.08);border-color:rgba(217,119,69,.22)}
+    .nectarCard{display:grid;gap:10px}
+    .hud{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:10px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:linear-gradient(180deg,#2a303b,#1b2029);color:var(--ink);font-weight:600;cursor:pointer}
+    .btn:active{transform:translateY(1px)}
+    .switch{display:inline-flex;align-items:center;gap:8px}
+    .switch input{width:18px;height:18px}
+    .toneBox{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .input{display:flex;flex-direction:column;gap:6px}
+    .input label{font-size:12px;color:var(--muted)}
+    .input input,.input select{background:#0f1218;border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px 12px;font-size:14px;outline:none}
+    .orbWrap{display:flex;align-items:center;justify-content:center;margin:6px 0 4px}
+    .orb{
+      width:120px;height:120px;border-radius:999px;
+      background: radial-gradient(circle at 35% 35%, var(--peach4) 0 26%, var(--peach3) 28% 62%, var(--peach2) 64% 100%);
+      box-shadow:0 0 40px 10px rgba(255,150,90,.18), inset 0 0 40px rgba(255,214,174,.2);
+      transform:scale(1); transition:transform .9s ease}
+    .note{font-size:12px;color:var(--muted);text-align:center}
+    .list{margin:10px 0}
+    .list li{margin:6px 0}
+    .mini{font-size:12px;color:#cbd5e1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <span class="peach" aria-hidden="true"></span>
+        <div>
+          <h1>Peach — Froot of the Month + Nectar</h1>
+          <div class="sub">Theme: warmth · kindness · courageous softness. Nectar: the gentle practice layer that sweetens the work.</div>
+        </div>
+      </div>
+      <span class="tag">Illumina · Froot + Ritual</span>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Peach Profile</h2>
+        <div class="sub">Color meaning and field function.</div>
+        <div class="peachline">
+          <span class="pill">Element: Water × Fire (steam)</span>
+          <span class="pill">Axis: Care → Courage</span>
+          <span class="pill">Season: Late Summer → Early Autumn</span>
+          <span class="pill">Body: chest warmth · jaw unclench</span>
+          <span class="pill">Companions: Sabrina (🍯), girl in red (🌹)</span>
+        </div>
+        <ul class="list">
+          <li><strong>Why Peach:</strong> it’s kindness with a backbone. Not performance—presence.</li>
+          <li><strong>Use:</strong> when you’re softening after confrontation, or inviting people closer without losing edge.</li>
+          <li><strong>Symbol:</strong> a small bruise that proves the fruit is real.</li>
+        </ul>
+      </section>
+
+      <section class="card nectarCard" id="nectar">
+        <h2>Nectar Practice</h2>
+        <div class="sub">Sip-sized ritual with accurate 128 Hz option, loop, and a breath orb.</div>
+
+        <div class="toneBox">
+          <div class="input">
+            <label for="freq">Tone frequency (Hz)</label>
+            <input id="freq" type="number" value="128" min="20" max="500"/>
+          </div>
+          <div class="input">
+            <label for="gain">Volume</label>
+            <input id="gain" type="range" value="0.08" min="0" max="0.4" step="0.01"/>
+          </div>
+        </div>
+
+        <div class="hud">
+          <button class="btn" id="toggle" onclick="toggleTone()">▶︎ Play</button>
+          <label class="switch"><input id="loop" type="checkbox" onchange="setLoop(this.checked)"> Loop</label>
+          <label class="switch"><input id="orbGuide" type="checkbox" checked onchange="setGuide(this.checked)"> Breath orb</label>
+          <label class="switch"><input id="bgHold" type="checkbox" checked onchange="holdAudio(this.checked)"> Background hold</label>
+          <span class="mini">Mode: <span id="mode">Silent until Play</span></span>
+        </div>
+
+        <div class="orbWrap" aria-hidden="true"><div id="orb" class="orb"></div></div>
+        <div class="note" id="cue">Inhale as the orb grows · Hold · Exhale as it softens (4–2–6).</div>
+
+        <div class="input" style="margin-top:8px">
+          <label for="mantra">Peach mantra</label>
+          <input id="mantra" type="text" placeholder="e.g., ‘I soften without losing myself.’" />
+        </div>
+
+        <div class="hud" style="margin-top:6px">
+          <button class="btn" onclick="startSip()">🍯 One Sip (60s)</button>
+          <button class="btn" onclick="saveSip()">Save Note</button>
+        </div>
+
+        <ul class="list mini" id="log"></ul>
+      </section>
+    </div>
+
+    <section class="card" style="margin-top:16px">
+      <h2>Peach × Nectar — How to Use</h2>
+      <ol class="list">
+        <li>Choose your **intention line**. Keep it plain language.</li>
+        <li>Tap **Play**. If you need hands-free, enable **Loop** and **Background hold**.</li>
+        <li>Follow the **breath orb** (4 in · 2 hold · 6 out). Adjust volume gently.</li>
+        <li>Run a **🍯 One Sip** (60 seconds). End in 10 seconds of silence.</li>
+        <li>Save a micro-note. The field remembers the smallest honest thing.</li>
+      </ol>
+    </section>
+  </div>
+
+  <script>
+    var ctx, osc, gain, running=false, loop=false, guide=true, raf=0, wakeEl=null;
+    function ensureCtx(){
+      if(!ctx){
+        ctx=new (window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
+        gain=ctx.createGain(); gain.gain.value=0; gain.connect(ctx.destination);
+      }
+    }
+    function startOsc(freq){
+      ensureCtx();
+      stopOsc();
+      osc=ctx.createOscillator();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(Number(freq)||128, ctx.currentTime);
+      osc.connect(gain);
+      var target=Number(document.getElementById('gain').value)||0.08;
+      var now=ctx.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(Math.max(target,0.0002), now+0.03);
+      osc.start();
+      running=true;
+      document.getElementById('toggle').textContent='■ Stop';
+      document.getElementById('mode').textContent='Playing';
+    }
+    function stopOsc(){
+      if(!ctx)return;
+      if(osc){
+        var now=ctx.currentTime;
+        try{
+          gain.gain.cancelScheduledValues(now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now+0.03);
+        }catch(e){}
+        try{ osc.stop(now+0.035);}catch(e){}
+      }
+      osc=null; running=false;
+      document.getElementById('toggle').textContent='▶︎ Play';
+      document.getElementById('mode').textContent='Ready';
+      if(!loop) cancelAnimationFrame(raf);
+    }
+    function toggleTone(){
+      if(running){ stopOsc(); if(loop){ setTimeout(()=>startOsc(val('freq')),120); } return; }
+      resume().then(()=>startOsc(val('freq')));
+      if(loop){ scheduleLoop(); }
+    }
+    function setLoop(v){ loop=v; if(v && running){ scheduleLoop(); } }
+    function scheduleLoop(){
+      var period=120000; // soft long loop; tone continues, orb cycles
+      setTimeout(function(){ if(loop && !running){ resume().then(()=>startOsc(val('freq')));} }, period);
+    }
+    function setGuide(v){ guide=v; if(!v){ cancelAnimationFrame(raf); } else { animateOrb(); } }
+    function holdAudio(v){
+      if(v){
+        if(!wakeEl){
+          wakeEl=new Audio();
+          wakeEl.src='data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAA'; // tiny silent loop
+          wakeEl.loop=true; wakeEl.volume=0.0001;
+        }
+        wakeEl.play().catch(function(){});
+      }else{
+        if(wakeEl){ wakeEl.pause(); }
+      }
+    }
+    function resume(){ ensureCtx(); if(ctx.state!=='running'){ return ctx.resume(); } return Promise.resolve(); }
+    function val(id){ return document.getElementById(id).value; }
+    document.getElementById('gain').addEventListener('input',function(){
+      if(!ctx)return;
+      var now=ctx.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.linearRampToValueAtTime(Number(this.value)||0.08, now+0.02);
+    });
+    document.getElementById('freq').addEventListener('change',function(){
+      if(osc && ctx){ osc.frequency.setValueAtTime(Number(this.value)||128, ctx.currentTime); }
+    });
+    function animateOrb(){
+      cancelAnimationFrame(raf);
+      var orb=document.getElementById('orb');
+      var t0=performance.now();
+      (function frame(t){
+        var dt=(t-t0)/1000;
+        var phase=dt%12; // 4 in, 2 hold, 6 out
+        var scale = phase<4 ? (1+0.18*(phase/4)) : (phase<6 ? 1.18 : (1.18-0.24*((phase-6)/6)));
+        orb.style.transform='scale('+scale.toFixed(3)+')';
+        var cue=document.getElementById('cue');
+        if(phase<4) cue.textContent='Inhale (4)…'; else if(phase<6) cue.textContent='Hold (2)…'; else cue.textContent='Exhale (6)…';
+        if(guide) raf=requestAnimationFrame(frame);
+      })(t0);
+    }
+    animateOrb();
+
+    function startSip(){
+      var btn=document.getElementById('toggle');
+      if(!running){ toggleTone(); }
+      var secs=60, start=Date.now();
+      var it=setInterval(function(){
+        var left=Math.max(0, secs - Math.floor((Date.now()-start)/1000));
+        document.getElementById('mode').textContent='Sip: '+left+'s';
+        if(left<=0){ clearInterval(it); stopOsc(); document.getElementById('mode').textContent='Silence settling'; setTimeout(()=>{document.getElementById('mode').textContent='Ready';},1200); }
+      },250);
+    }
+    function saveSip(){
+      var mantra=document.getElementById('mantra').value.trim();
+      var freq=Number(document.getElementById('freq').value)||128;
+      var k='nectar/peach/log', arr=[];
+      try{ arr=JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){}
+      arr.unshift({t:new Date().toISOString(), mantra:mantra||'—', freq:freq});
+      try{ localStorage.setItem(k, JSON.stringify(arr)); }catch(e){}
+      renderLog(arr);
+      if(!mantra) document.getElementById('mantra').value='';
+    }
+    function renderLog(arr){
+      var ul=document.getElementById('log'); ul.innerHTML='';
+      arr.slice(0,10).forEach(function(x){
+        var li=document.createElement('li');
+        li.textContent = new Date(x.t).toLocaleString()+' · '+x.freq+'Hz · '+x.mantra;
+        ul.appendChild(li);
+      });
+    }
+    (function boot(){
+      var k='nectar/peach/log', arr=[];
+      try{ arr=JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){}
+      renderLog(arr);
+    })();
+  </script>
+</body>
+</html>
