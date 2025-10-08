@@ -7,10 +7,9 @@
   <meta name="theme-color" content="#0b0d11">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Froot — Marina Reflection Edition · Weeks + Honey + FX</title>
-  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, and Princess of Power integration." />
+  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Bee notes, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, Trickster micro-wander, and Liminal Bridge to Jar." />
   <style>
     :root{
       color-scheme: dark;
@@ -45,8 +44,8 @@
     button[disabled]{opacity:.5; cursor:not-allowed}
 
     /* Layout */
-    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px;position:relative;z-index:2}
-    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 84px;position:relative;z-index:2}
+    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
     h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
     .tag{color:var(--muted);font-size:.95rem}
     .actions{display:flex;gap:10px;flex-wrap:wrap}
@@ -76,11 +75,7 @@
       background:linear-gradient(135deg, var(--c1), var(--c2));
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 30px -12px rgba(0,0,0,.5);
     }
-    .swatch::after{
-      content:"";position:absolute;inset:-40%;border-radius:50%;
-      background:radial-gradient(closest-side, rgba(255,255,255,.15), transparent 60%);
-      opacity:.0;transform:scale(.9);transition:opacity .4s ease, transform .4s ease;pointer-events:none;
-    }
+    .swatch::after{content:"";position:absolute;inset:-40%;border-radius:50%;background:radial-gradient(closest-side, rgba(255,255,255,.15), transparent 60%);opacity:.0;transform:scale(.9);transition:opacity .4s ease, transform .4s ease;pointer-events:none}
     .swatch.pulse::after{opacity:.65;transform:scale(1)}
     .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
 
@@ -123,11 +118,7 @@
     }
     .muse h1, .muse h3{font-variant-caps:small-caps;letter-spacing:.08em}
     .muse .swatch{border-radius:28px;-webkit-mask-image:radial-gradient(120% 100% at 60% 40%, #000 70%, transparent 100%);mask-image:radial-gradient(120% 100% at 60% 40%, #000 70%, transparent 100%)}
-    .muse .swatch.pulse::after{
-      opacity:.78;transform:scale(1.02);
-      background:conic-gradient(from 0deg, rgba(255,255,255,.18), transparent 40%, rgba(255,255,255,.12), transparent 75%);
-      animation:shimmer 6s cubic-bezier(.22,.61,.36,1) infinite;
-    }
+    .muse .swatch.pulse::after{opacity:.78;transform:scale(1.02);background:conic-gradient(from 0deg, rgba(255,255,255,.18), transparent 40%, rgba(255,255,255,.12), transparent 75%);animation:shimmer 6s cubic-bezier(.22,.61,.36,1) infinite}
     @keyframes shimmer {0%{transform:rotate(0) scale(1.02)} 100%{transform:rotate(360deg) scale(1.02)}}
 
     /* Honey Mode visuals */
@@ -141,9 +132,7 @@
       repeating-linear-gradient(60deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
       repeating-linear-gradient(120deg, rgba(255,206,84,.25) 0 2px, transparent 2px 40px),
       repeating-linear-gradient(0deg, rgba(255,206,84,.15) 0 2px, transparent 2px 35px);
-      filter:blur(0.4px) contrast(105%) saturate(105%);
-      animation:honeyFloat 24s linear infinite;
-    }
+      filter:blur(0.4px) contrast(105%) saturate(105%);animation:honeyFloat 24s linear infinite}
     @keyframes honeyFloat { 0%{transform:translateY(0)} 100%{transform:translateY(40px)} }
 
     /* Aurora background */
@@ -153,34 +142,20 @@
         radial-gradient(60% 80% at 10% 20%, rgba(44,194,255,.12), transparent 60%),
         radial-gradient(70% 70% at 80% 10%, rgba(164,255,101,.10), transparent 60%),
         radial-gradient(90% 90% at 50% 120%, rgba(179,139,255,.10), transparent 60%);
-      animation:auroraShift 30s linear infinite;
-      filter: blur(18px) saturate(110%);
+      animation:auroraShift 30s linear infinite; filter: blur(18px) saturate(110%);
     }
-    @keyframes auroraShift{
-      0%{transform:translate3d(0,0,0) rotate(0deg)}
-      50%{transform:translate3d(0,-2%,0) rotate(180deg)}
-      100%{transform:translate3d(0,0,0) rotate(360deg)}
-    }
+    @keyframes auroraShift{ 0%{transform:translate3d(0,0,0) rotate(0)} 50%{transform:translate3d(0,-2%,0) rotate(180deg)} 100%{transform:translate3d(0,0,0) rotate(360deg)} }
 
     /* Princess of Power banner */
-    .princess{
-      position:sticky; top:8px; z-index:3; margin:0 auto 10px; max-width:1080px;
-      display:none; place-items:center; height:40px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,
+    .princess{ position:sticky; top:8px; z-index:3; margin:0 auto 10px; max-width:1080px; display:none; place-items:center; height:40px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,
         linear-gradient(120deg, rgba(255,211,163,.7), rgba(255,111,186,.6), rgba(134,201,255,.6)) border-box;
-      border:1px solid transparent; border-radius:999px;
-      color:#ffe; font-weight:700; letter-spacing:.12em; font-size:.86rem; text-transform:uppercase;
-      box-shadow:0 6px 24px -12px rgba(0,0,0,.6);
-      overflow:hidden;
-    }
+      border:1px solid transparent; border-radius:999px; color:#ffe; font-weight:700; letter-spacing:.12em; font-size:.86rem; text-transform:uppercase; box-shadow:0 6px 24px -12px rgba(0,0,0,.6); overflow:hidden}
     .princess .spark{position:absolute; inset:0; pointer-events:none; background:
       radial-gradient(3px 3px at 10% 50%, rgba(255,255,255,.9) 0 40%, transparent 41%),
       radial-gradient(2px 2px at 30% 20%, rgba(255,255,255,.8) 0 45%, transparent 46%),
       radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.75) 0 45%, transparent 46%),
-      radial-gradient(3px 3px at 80% 30%, rgba(255,255,255,.9) 0 40%, transparent 41%);
-      opacity:.6; animation:twinkle 6s ease-in-out infinite;
-    }
+      radial-gradient(3px 3px at 80% 30%, rgba(255,255,255,.9) 0 40%, transparent 41%); opacity:.6; animation:twinkle 6s ease-in-out infinite}
     @keyframes twinkle{0%,100%{opacity:.3} 50%{opacity:.85}}
 
     /* Butterfly canvas overlay */
@@ -232,68 +207,40 @@
     .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)); }
     .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px; }
 
-    /* Clear instructions list */
-    .ritual{margin:8px 0 0 0; padding-left:20px; color:var(--muted)}
-    .ritual li{margin:.25rem 0}
-    .aside{font-size:.85rem; color:var(--muted); margin-top:8px}
-
-    /* Print */
-    @media print{
-      body{background:#fff;color:#000}
-      .wrap{padding:0}
-      header .actions{display:none}
-      .card{break-inside:avoid;border-color:#ddd;background:#fff}
-      .chip{color:#000}
-      .swatch{border-color:#ddd}
-      .princess, .aurora, .honeycomb, .fx-canvas, .quickbar{display:none !important}
-    }
-
-    /* === Bee Note (top) and Bee Footer Whisper (when needed) === */
-    .bee{
-      margin-top:12px;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:16px;
-      padding:14px 14px 12px;
-      background:
-        linear-gradient(180deg, rgba(255,206,84,.10), rgba(0,0,0,.03)) padding-box,
-        linear-gradient(120deg, rgba(255,206,84,.35), rgba(255,111,186,.30), rgba(134,201,255,.30)) border-box;
-      position:relative;
-    }
+    /* Bee (b + a) */
+    .bee{margin:12px 0 0;border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:linear-gradient(180deg, rgba(255,206,84,.10), rgba(0,0,0,.03)) padding-box,linear-gradient(120deg, rgba(255,206,84,.35), rgba(255,111,186,.30), rgba(134,201,255,.30)) border-box;position:relative}
     .bee-head{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.2px}
-    .bee-icon{font-size:18px}
     .bee-soft{color:var(--muted);font-weight:600}
     .bee p{margin:8px 0 10px}
     .bee-tools{display:flex;gap:8px;flex-wrap:wrap}
-    .bee-btn{
-      appearance:none;border:1px solid rgba(255,255,255,.14);border-radius:10px;
-      background:rgba(255,255,255,.06);color:#fff;font-weight:800;padding:8px 10px;cursor:pointer
-    }
+    .bee-btn{appearance:none;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.06);color:#fff;font-weight:800;padding:8px 10px;cursor:pointer}
     .bee-btn:hover{border-color:rgba(255,255,255,.22);box-shadow:0 0 0 2px rgba(255,206,84,.18)}
     .bee.editing{outline:2px dashed rgba(255,206,84,.4);outline-offset:2px}
     #bee-text[contenteditable="true"]{caret-color:#ffd166}
-
-    .bee-footer{
-      position:fixed; left:50%; transform:translateX(-50%);
-      bottom:14px; z-index:9999; display:none; align-items:center; gap:8px;
-      padding:10px 14px; border-radius:999px;
-      background:
-        linear-gradient(180deg, rgba(255,206,84,.14), rgba(0,0,0,.14)) padding-box,
-        linear-gradient(120deg, rgba(255,206,84,.6), rgba(255,111,186,.45), rgba(134,201,255,.45)) border-box;
-      border:1px solid transparent; color:#fff; font-weight:700;
-      box-shadow:0 12px 28px rgba(0,0,0,.35); backdrop-filter: blur(6px);
-      max-width:90vw; text-align:center;
-    }
+    .bee-footer{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:9999;display:none;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:linear-gradient(180deg, rgba(255,206,84,.14), rgba(0,0,0,.14)) padding-box,linear-gradient(120deg, rgba(255,206,84,.6), rgba(255,111,186,.45), rgba(134,201,255,.45)) border-box;border:1px solid transparent;color:#fff;font-weight:700;box-shadow:0 12px 28px rgba(0,0,0,.35);backdrop-filter:blur(6px);max-width:90vw;text-align:center}
     .bee-footer.on{display:inline-flex}
-    .bee-footer .bee-icon{font-size:16px}
+
+    /* Liminal Bridge */
+    .bridge-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.06);cursor:pointer}
+    .bridge-modal{position:fixed;inset:0;z-index:10020;display:none;align-items:center;justify-content:center;background:rgba(10,12,16,.55);backdrop-filter:blur(6px)}
+    .bridge-modal.on{display:flex}
+    .bridge-card{width:min(520px,92vw);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:16px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,linear-gradient(120deg, rgba(164,255,101,.45), rgba(134,201,255,.40), rgba(255,209,102,.35)) border-box;color:#e7edf7}
+    .bridge-title{margin:0 0 6px;font-size:18px;letter-spacing:.2px}
+    .bridge-text{margin:6px 0 12px;color:#a9b4c7}
+    .bridge-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .bridge-btn{appearance:none;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-weight:800;padding:10px 12px;cursor:pointer}
+    .bridge-btn.primary{border-color:#28452e;background:linear-gradient(180deg, rgba(164,255,101,.22), rgba(0,0,0,.08))}
+    
   </style>
 </head>
 <body>
-  <!-- Always-on-top Quickbar -->
+  <!-- Quickbar -->
   <div class="quickbar" role="toolbar" aria-label="Quick audio controls">
     <button id="qb-mute" class="qbtn" type="button" title="Mute / Unmute" onclick="toggleMute()">🔊</button>
     <div class="qsep" aria-hidden="true"></div>
     <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz" onclick="toggleHoneyFromQuick()">🍯</button>
     <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop" onclick="document.getElementById('loopToggle').click()">🔁</button>
+    <button id="qb-trick" class="qbtn" type="button" title="Toggle Trickster (gentle drift)" onclick="toggleTrickster()">🃏</button>
   </div>
 
   <!-- Background FX layers -->
@@ -319,17 +266,26 @@
         <button class="ghost" type="button" onclick="toggleButterfly()">Butterfly</button>
         <button class="ghost" type="button" onclick="togglePrincess()">Princess</button>
         <button class="ghost" type="button" onclick="toggleSaver()">Saver</button>
+        <button class="ghost" type="button" onclick="openBridge()">Bridge</button>
         <button class="primary" type="button" onclick="exportMap()">Export</button>
         <button class="ghost" type="button" onclick="shareMap()">Share</button>
         <button class="ghost" type="button" onclick="bleSend()">Bluetooth</button>
         <button class="ghost" type="button" onclick="resetMap()">Reset</button>
         <button class="ghost" type="button" onclick="window.print()">Print</button>
-        <!-- Smart cross-host links -->
-        <button class="ghost" type="button" onclick="location.href=eggURL()">↩ Egg Map</button>
-        <button class="ghost" type="button" onclick="goSchool()">School</button>
-        <button class="ghost" type="button" onclick="goRooms()">Rooms</button>
       </div>
     </header>
+
+    <!-- 🐝 Bee Note (b) -->
+    <section id="bee" class="bee" role="note" aria-live="polite">
+      <div class="bee-head"><span>🐝</span><span><strong>Bee Note to Marina</strong></span> <span class="bee-soft">You are safe, guided, and loved.</span></div>
+      <p id="bee-text">Hi Marina — we’ll go slowly. Choose your week and day, listen softly, and let one word arrive. If anything feels loud, we pause. I’m right here.</p>
+      <div class="bee-tools">
+        <button type="button" class="bee-btn" onclick="beeEdit()">Edit</button>
+        <button type="button" class="bee-btn" onclick="beeSave()">Save</button>
+        <button type="button" class="bee-btn" onclick="beeReset()">Reset</button>
+        <button type="button" class="bee-btn" onclick="openBridge()">🌉 Bridge</button>
+      </div>
+    </section>
 
     <!-- Week/Day Controls -->
     <section class="card">
@@ -341,8 +297,7 @@
           <span id="modeBadge" class="modebadge">🎯 Mode: Signal</span>
           <div id="varGroup" class="modebadge" style="display:none">
             <span>Δfreq</span>
-            <input id="varSlider" type="range" min="-50" max="50" value="0" step="1" style="width:160px;vertical-align:middle"
-              oninput="onVarChange(this.value)">
+            <input id="varSlider" type="range" min="-50" max="50" value="0" step="1" style="width:160px;vertical-align:middle" oninput="onVarChange(this.value)">
             <span id="varOut">0 Hz</span>
           </div>
 
@@ -386,7 +341,7 @@
       </div>
     </section>
 
-    <!-- Intro + Bee Note -->
+    <!-- Intro -->
     <section class="card">
       <div class="row">
         <div>
@@ -395,22 +350,13 @@
             Each session is a small ceremony: choose your <strong>Week</strong>, your <strong>Day</strong>, then the color offers a single tone. You may turn on <strong>Loop</strong> for hands‑free breathwork (the orb will clearly mark <em>IN → HOLD → OUT</em>). When the minute is done, leave just <strong>one word</strong> — the flavor of what you heard.
           </p>
           <div class="note">On Days 2–5, a Δfreq slider lets you nudge the note; the tone will <em>glide</em> without clicks when looping. Day 6 is a quiet walk: no tone. Week 6 gathers every color into a single page of you.</div>
-
-          <!-- 🐝 Bee Note to Marina (editable, saved locally) -->
-          <div id="bee" class="bee" aria-live="polite">
-            <div class="bee-head"><span class="bee-icon">🐝</span><span><strong>Bee Note to Marina</strong></span> <span class="bee-soft">You are safe, guided, and loved.</span></div>
-            <p id="bee-text"></p>
-            <div class="bee-tools">
-              <button type="button" class="bee-btn" onclick="beeEdit()">Edit</button>
-              <button type="button" class="bee-btn" onclick="beeSave()">Save</button>
-              <button type="button" class="bee-btn" onclick="beeReset()">Reset</button>
-            </div>
-          </div>
         </div>
         <div>
           <div class="legend" style="margin-top:8px">
             <span class="pill">🔁 Loop for hands‑free</span>
             <span class="pill">🍯 Honey = warm bed @ 128 Hz</span>
+            <span class="pill">🃏 Trickster = gentle drift</span>
+            <span class="pill">🌉 Bridge = Practice ⇄ Reflect</span>
             <span class="pill">🔊 Mute = instant hush</span>
           </div>
         </div>
@@ -567,46 +513,98 @@
 
     <!-- Integration Journal -->
     <section class="card" id="journal">
-      <div class="titleline">
-        <h3>Week Journal — Integration</h3>
-        <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
-      </div>
+      <div class="titleline"><h3>Week Journal — Integration</h3><div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div></div>
       <div class="row">
-        <div>
-          <div class="label">Week Note</div>
-          <textarea id="j_note" placeholder="One short reflection from this week."></textarea>
-        </div>
-        <div>
-          <div class="label">Resonance Poem (3 lines)</div>
-          <textarea id="j_poem" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
-        </div>
+        <div><div class="label">Week Note</div><textarea id="j_note" placeholder="One short reflection from this week."></textarea></div>
+        <div><div class="label">Resonance Poem (3 lines)</div><textarea id="j_poem" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea></div>
       </div>
       <div class="foot">Your map and words live on your device only. On Week 6, the Princess banner graces your export.</div>
     </section>
 
     <!-- Map -->
     <section class="card" id="map-card">
-      <div class="titleline">
-        <h3>Your Synesthesia Map</h3>
-        <div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div>
-      </div>
+      <div class="titleline"><h3>Your Synesthesia Map</h3><div class="huebar" style="--c1:#3a3f4a;--c2:#778199" aria-hidden="true"></div></div>
       <div class="map" id="map"></div>
-      <div class="foot">Export, share, or send via BLE when you want to carry your colors elsewhere.</div>
+      <div class="foot">Export, share, or send via BLE when you want to carry your colors elsewhere. <button class="bridge-chip" type="button" onclick="openBridge()">🌉 Bridge</button></div>
     </section>
 
-    <footer class="note">Last touch: if the world feels loud, tap 🔊 to hush; tap 🔁 to return to the small steady thing that is your breath.</footer>
-  </div>
-
-  <!-- Bee Footer Whisper (appears when needed) -->
-  <div id="bee-footer" class="bee-footer" role="status" aria-live="polite">
-    <span class="bee-icon">🐝</span>
-    <span id="bee-footer-text">I’m here with you. Quiet is music too.</span>
+    <footer class="note">Last touch: if the world feels loud, tap 🔊 to hush; tap 🔁 to return to the small steady thing that is your breath. — <b>🐝</b></footer>
   </div>
 
   <!-- Hidden audio element that keeps iOS audio session alive while locked -->
   <audio id="bgPipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
 
+  <!-- Bee footer whisper (a) -->
+  <div id="bee-footer" class="bee-footer" role="status" aria-live="polite"><span>🐝</span>&nbsp;<span id="bee-footer-text">Here is slow and safe.</span></div>
+
+  <!-- 🌉 Liminal Bridge modal -->
+  <div id="bridgeModal" class="bridge-modal" role="dialog" aria-modal="true" aria-labelledby="bridgeTitle">
+    <div class="bridge-card">
+      <h3 id="bridgeTitle" class="bridge-title">Liminal Bridge</h3>
+      <p class="bridge-text">Two lights, one path: <b>Practice</b> here in Froot (tone, breath, word) or <b>Reflect</b> in Jar (School, Rooms, Egg). Audio will pause as we cross. We’ll keep the warmth on the other side. — <b>🐝</b></p>
+      <div class="bridge-actions">
+        <button class="bridge-btn" type="button" onclick="bridgeTo('jar.school')">↩ Go to Jar · School</button>
+        <button class="bridge-btn" type="button" onclick="bridgeTo('jar.rooms')">↩ Go to Jar · Rooms</button>
+        <button class="bridge-btn" type="button" onclick="bridgeTo('jar.egg')">↩ Egg Map</button>
+        <button class="bridge-btn primary" type="button" onclick="closeBridge()">Stay in Froot</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    /* ===== Cross-host helpers (Froot ⇄ Jar) ===== */
+    function jarBaseURL(){
+      var h = location.hostname;
+      if(h==='localhost'||h==='127.0.0.1') return '';
+      var p=h.split('.'); if(p.length>=2){ p[0]='jar'; return location.protocol+'//'+p.join('.'); }
+      return '';
+    }
+    function openBridge(){ try{ stopTone(); }catch(_){} try{ honeyStop(); }catch(_){ } document.getElementById('bridgeModal').classList.add('on'); }
+    function closeBridge(){ document.getElementById('bridgeModal').classList.remove('on'); }
+    function bridgeTo(dest){
+      try{ stopTone(); }catch(_){}
+      try{ honeyStop(); }catch(_){}
+      var base = jarBaseURL()||'';
+      var url = '/school.html';
+      if(dest==='jar.rooms') url='/school-rooms.html';
+      if(dest==='jar.egg') url='/marina-egg.html';
+      try{ location.href = base + url; }catch(_){ location.assign(base+url); }
+    }
+
+    /* ===== Bee (b + a) ===== */
+    var BEE_NOTE_KEY='froot_bee_note_v1', beeTimer=0;
+    function beeDefaultText(){
+      return "Hi Marina — we’ll go slowly. Choose your week and day, listen softly, and let one word arrive. If anything feels loud, we pause. You are safe, guided, and loved.";
+    }
+    (function beeInit(){
+      var t=document.getElementById('bee-text');
+      try{ var saved=localStorage.getItem(BEE_NOTE_KEY)||""; if(saved.trim()) t.textContent=saved; else t.textContent=beeDefaultText(); }catch(_){ t.textContent=beeDefaultText(); }
+      beeWhisper("Here is slow and safe.", 3800);
+    })();
+    function beeEdit(){
+      var box=document.getElementById('bee'), t=document.getElementById('bee-text');
+      box.classList.add('editing'); t.setAttribute('contenteditable','true'); t.focus();
+      try{ var s=window.getSelection(), r=document.createRange(); r.selectNodeContents(t); r.collapse(false); s.removeAllRanges(); s.addRange(r);}catch(_){}
+    }
+    function beeSave(){
+      var box=document.getElementById('bee'), t=document.getElementById('bee-text');
+      t.setAttribute('contenteditable','false'); box.classList.remove('editing');
+      var val=(t.textContent||"").trim(); try{ localStorage.setItem(BEE_NOTE_KEY, val); }catch(_){}
+      beeWhisper("Saved with love. Thank you.", 2600);
+    }
+    function beeReset(){
+      var box=document.getElementById('bee'), t=document.getElementById('bee-text');
+      t.textContent=beeDefaultText(); t.setAttribute('contenteditable','false'); box.classList.remove('editing');
+      try{ localStorage.setItem(BEE_NOTE_KEY, t.textContent); }catch(_){}
+      beeWhisper("Back to the gentle original.", 2600);
+    }
+    function beeWhisper(text, ms){
+      var el=document.getElementById('bee-footer'), tx=document.getElementById('bee-footer-text');
+      if(!el||!tx) return; tx.textContent=text; el.classList.add('on');
+      if(beeTimer){ clearTimeout(beeTimer); beeTimer=0; }
+      if(ms && ms>0){ beeTimer=setTimeout(function(){ el.classList.remove('on'); }, ms); }
+    }
+
     /* ===== Prefs (Muse default ON, others OFF) ===== */
     var PREFS_KEY="froot_prefs_v3";
     function loadPrefs(){ try{var r=localStorage.getItem(PREFS_KEY); if(r) return JSON.parse(r)}catch(e){} return {muse:true,honey:false,butterfly:false,princess:false,saver:false} }
@@ -646,7 +644,7 @@
     var mapData=loadMap();
     function persist(){ try{localStorage.setItem(FROOT_KEY, JSON.stringify(mapData))}catch(e){} renderMap(); hydrateInputs() }
     function saveWord(key,val){ mapData[key]=(val||"").trim(); persist() }
-    function resetMap(){ mapData={blue:"",froot:"",immortal:"",ancient:"",heaven:""}; stopTone(); honeyStop(); persist() }
+    function resetMap(){ mapData={blue:"",froot:"",immortal:"",ancient:"",heaven:""}; stopTone(); honeyStop(); persist(); beeWhisper("Cleared. We can begin again.", 2400); }
 
     var J_KEY="froot_journal_v1";
     function loadJournal(){ try{var r=localStorage.getItem(J_KEY); if(r) return JSON.parse(r)}catch(e){} return {} }
@@ -666,9 +664,7 @@
       for(var i=1;i<=6;i++){
         var b=document.createElement('button'); b.textContent="W"+i;
         if(i===schedule.week) b.classList.add("sel");
-        (function(ii){
-          b.onclick=function(){ schedule.week=ii; saveSched(); applyScheduleUI(); }
-        })(i);
+        (function(ii){ b.onclick=function(){ schedule.week=ii; saveSched(); applyScheduleUI(); } })(i);
         host.appendChild(b);
       }
     }
@@ -677,9 +673,7 @@
       for(var i=1;i<=7;i++){
         var b=document.createElement('button'); b.textContent="Day "+i;
         if(i===schedule.day) b.classList.add("sel");
-        (function(ii){
-          b.onclick=function(){ schedule.day=ii; saveSched(); applyScheduleUI(); }
-        })(i);
+        (function(ii){ b.onclick=function(){ schedule.day=ii; saveSched(); applyScheduleUI(); } })(i);
         host.appendChild(b);
       }
     }
@@ -699,7 +693,6 @@
       var badge = document.getElementById('modeBadge');
       if(badge) badge.textContent = mode.icon + " Mode: " + mode.name;
 
-      /* highlight active module */
       var activeKey = WEEK_KEYS[schedule.week];
       var cards = document.querySelectorAll('.module');
       cards.forEach(function(card){
@@ -713,7 +706,6 @@
         if(stop){ stop.disabled = dim; }
       });
 
-      /* Variation slider visibility */
       var varGroup = document.getElementById('varGroup');
       var slider = document.getElementById('varSlider');
       var out = document.getElementById('varOut');
@@ -726,19 +718,14 @@
         varGroup.style.display="none";
       }
 
-      /* Quiet Walk day: disable play on active week */
       var quiet = (schedule.day===6);
       if(activeKey && quiet){
         var pb = document.getElementById('play-'+activeKey);
         if(pb) pb.disabled = true;
       }
 
-      /* Journal */
       var journalCard = document.getElementById('journal');
       journalCard.querySelector('h3').textContent = "Week Journal — " + (schedule.week===6 ? "Integration" : "Notes");
-
-      /* Bee footer: when needed */
-      beeFooterSetBySchedule();
     }
 
     function onVarChange(val){
@@ -747,7 +734,6 @@
       variation[k] = Math.max(-50, Math.min(50, Number(val)||0));
       var out=document.getElementById('varOut'); if(out) out.textContent = (variation[k]>=0?"+":"") + variation[k] + " Hz";
       saveVar();
-      // NEW: glide pitch if looping to avoid clicks
       smoothSetLoopFreqIfActive();
     }
 
@@ -818,20 +804,14 @@
         if(usePipeOutput){
           bgDest = ctx.createMediaStreamDestination();
           bgAudio = document.getElementById('bgPipe');
-          try{
-            bgAudio.setAttribute('playsinline','');
-            bgAudio.srcObject = bgDest.stream;
-            bgAudio.loop = true;
-          }catch(_){}
+          try{ bgAudio.setAttribute('playsinline',''); bgAudio.srcObject = bgDest.stream; bgAudio.loop = true; }catch(_){}
           master.connect(comp); comp.connect(dc); dc.connect(bgDest);
         } else {
           master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
         }
 
         // Restore mute state
-        try{
-          isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false');
-        }catch(_){}
+        try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
         applyMuteImmediate(isMuted);
         refreshQuickbar();
       }
@@ -858,17 +838,12 @@
       isMuted = !isMuted;
       try{ localStorage.setItem(MUTE_KEY, JSON.stringify(isMuted)); }catch(_){}
       applyMuteImmediate(isMuted);
-      // Bee whisper on mute/unmute
-      if(isMuted){ beeFooterShow("Silence is welcome. I am here with you.", 5000); }
-      else { beeFooterShow("Welcome back. Gentle is enough.", 4000); }
     }
     function refreshQuickbar(){
-      var hb = document.getElementById('qb-honey');
-      if(hb){ hb.classList.toggle('on', document.body.classList.contains('honey')); }
-      var lb = document.getElementById('qb-loop');
-      if(lb){ lb.classList.toggle('on', !!document.getElementById('loopToggle')?.checked); }
-      var mb = document.getElementById('qb-mute');
-      if(mb){ mb.classList.toggle('warn', isMuted); mb.textContent = isMuted ? '🔇' : '🔊'; }
+      var hb = document.getElementById('qb-honey'); if(hb){ hb.classList.toggle('on', document.body.classList.contains('honey')); }
+      var lb = document.getElementById('qb-loop'); if(lb){ lb.classList.toggle('on', !!document.getElementById('loopToggle')?.checked); }
+      var mb = document.getElementById('qb-mute'); if(mb){ mb.classList.toggle('warn', isMuted); mb.textContent = isMuted ? '🔇' : '🔊'; }
+      var tb = document.getElementById('qb-trick'); if(tb){ tb.classList.toggle('on', !!tricksterOn); }
     }
     function toggleHoneyFromQuick(){ toggleHoney(); refreshQuickbar(); }
 
@@ -890,7 +865,6 @@
     }
 
     function effectiveFreq(base, key){
-      // Only apply variation on W1–W5 and days 2–5
       if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
         var delta = variation[key] || 0;
         var f = base + delta;
@@ -905,99 +879,63 @@
       ensureCtx();
       loopMode = !!on;
       try{ localStorage.setItem("froot_loop_v1", JSON.stringify({on:loopMode})) }catch(e){}
-      // If user enables loop while a tone is playing, restart as sustained loop
       if(loopMode && activeKeyPlaying){ stopTone(); setTimeout(function(){ playTone(activeKeyPlaying); }, 120); }
       resetLoopCountdown();
       refreshQuickbar();
-      if(loopMode){ beeFooterShow("I’ll keep time while you breathe.", 4000); }
     }
 
-    /* ===== Breath Phase HUD (IN / HOLD / OUT) on active swatch ===== */
-    var breathUI = (function(){
-      var host=null, hud=null, arc=null, edge=null, label=null, raf=0, t0=0, dur=1000;
-
-      function currentHost(){
-        var wkKey = WEEK_KEYS[schedule.week];
-        var id = "swatch-" + (wkKey==="immortal"?"immortal":wkKey);
-        return document.getElementById(id);
-      }
+    /* ===== Breath Phase HUD ===== */
+    var breathUI=(function(){
+      var host=null,hud=null,arc=null,edge=null,label=null,raf=0,t0=0,dur=1000;
+      function currentHost(){ var wkKey=WEEK_KEYS[schedule.week]; var id="swatch-"+(wkKey==="immortal"?"immortal":wkKey); return document.getElementById(id); }
       function attach(){
-        var h = currentHost(); if(!h) return;
-        if(host !== h){ host = h; }
+        var h=currentHost(); if(!h) return;
+        if(host!==h){ host=h; }
         if(host.querySelector('.fbrHUD')){
-          hud = host.querySelector('.fbrHUD');
-          arc = hud.querySelector('.fbrArc'); edge = hud.querySelector('.fbrEdge'); label = hud.querySelector('.fbrLabel');
-          return;
+          hud=host.querySelector('.fbrHUD'); arc=hud.querySelector('.fbrArc'); edge=hud.querySelector('.fbrEdge'); label=hud.querySelector('.fbrLabel'); return;
         }
-        host.insertAdjacentHTML('beforeend',
-          '<div class="fbrHUD">'+
-            '<div class="fbrArc" style="--fbr-arc:0deg"></div>'+
-            '<div class="fbrEdge"></div>'+
-            '<div class="fbrLabel">READY</div>'+
-          '</div>'
-        );
-        hud = host.querySelector('.fbrHUD');
-        arc = hud.querySelector('.fbrArc');
-        edge = hud.querySelector('.fbrEdge');
-        label = hud.querySelector('.fbrLabel');
+        host.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="fbrArc" style="--fbr-arc:0deg"></div><div class="fbrEdge"></div><div class="fbrLabel">READY</div></div>');
+        hud=host.querySelector('.fbrHUD'); arc=hud.querySelector('.fbrArc'); edge=hud.querySelector('.fbrEdge'); label=hud.querySelector('.fbrLabel');
       }
-      function progress(now){
-        var p = Math.min(1, (now - t0)/dur);
-        arc.style.setProperty('--fbr-arc', (p*360)+'deg');
-        if(p<1){ raf = requestAnimationFrame(progress); }
-      }
+      function progress(now){ var p=Math.min(1,(now-t0)/dur); arc.style.setProperty('--fbr-arc',(p*360)+'deg'); if(p<1){ raf=requestAnimationFrame(progress); } }
       function flash(){ edge.classList.remove('flash'); void edge.offsetWidth; edge.classList.add('flash'); }
       function vibrate(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms||12); }catch(_){ } }
       function setPhase(name, ms){
         if(!hud){ attach(); } if(!hud) return;
         host.classList.remove('fbr-in','fbr-hold','fbr-out');
         host.classList.add(name==='hold'?'fbr-hold':(name==='out'?'fbr-out':'fbr-in'));
-        label.textContent = (name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
-        cancelAnimationFrame(raf); t0 = performance.now(); dur = Math.max(200, (ms|0)||1000);
-        arc.style.setProperty('--fbr-arc','0deg'); raf = requestAnimationFrame(progress);
+        label.textContent=(name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
+        cancelAnimationFrame(raf); t0=performance.now(); dur=Math.max(200,(ms|0)||1000);
+        arc.style.setProperty('--fbr-arc','0deg'); raf=requestAnimationFrame(progress);
         flash(); vibrate(10);
       }
       function ready(){ if(!hud){ attach(); } if(!hud) return; label.textContent='READY'; arc.style.setProperty('--fbr-arc','0deg'); host && host.classList.remove('fbr-in','fbr-hold','fbr-out'); }
-      return { attach, setPhase, ready };
+      return {setPhase,ready,attach};
     })();
     function setBreathPhaseUI(phaseName, durationMs){ breathUI.setPhase(phaseName, durationMs); }
 
     /* ===== Guided-breath driver (4–7–8 default) ===== */
-    var breathDriver = (function(){
-      var cfg = {in:4000, hold:7000, out:8000};
-      var tid=null, running=false, seq=['in','hold','out'], idx=0;
-      function step(){
-        var name = seq[idx]; var ms = cfg[name]||1000;
-        setBreathPhaseUI(name, ms);
-        syncLFOToPhase(name, ms);
-        tid = setTimeout(function(){ idx=(idx+1)%seq.length; step(); }, ms);
-      }
+    var breathDriver=(function(){
+      var cfg={in:4000, hold:7000, out:8000}, tid=null, running=false, seq=['in','hold','out'], idx=0;
+      function step(){ var name=seq[idx]; var ms=cfg[name]||1000; setBreathPhaseUI(name,ms); syncLFOToPhase(name,ms); tid=setTimeout(function(){ idx=(idx+1)%seq.length; step(); },ms); }
       function start(){ if(running) return; running=true; idx=0; breathUI.attach(); step(); }
       function stop(){ running=false; clearTimeout(tid); tid=null; try{ breathUI.ready(); }catch(_){ } }
       function setPattern(msIn, msHold, msOut){ cfg.in=msIn|0; cfg.hold=msHold|0; cfg.out=msOut|0; if(running){ stop(); start(); } }
       return { start, stop, setPattern };
     })();
-    function setPatternPreset(pin, phold, pout){ breathDriver.setPattern(pin*1000, phold*1000, pout*1000); }
+    function setPatternPreset(pin,phold,pout){ breathDriver.setPattern(pin*1000, phold*1000, pout*1000); }
 
     /* ===== LFO sync to breath phases ===== */
     function syncLFOToPhase(name, ms){
       if(!ctx || !toneGain || !lfoOsc || !lfoGain) return;
-      var now = ctx.currentTime;
-      var depth = (name==='in') ? 0.055 : (name==='hold' ? 0.00 : 0.025);
-      var base  = (name==='in') ? 0.20  : (name==='hold' ? 0.18 : 0.16);
-      var rate  = (name==='in') ? 0.14  : (name==='hold' ? 0.06 : 0.10);
+      var now=ctx.currentTime;
+      var depth=(name==='in')?0.055:(name==='hold'?0.00:0.025);
+      var base =(name==='in')?0.20 :(name==='hold'?0.18:0.16);
+      var rate =(name==='in')?0.14 :(name==='hold'?0.06:0.10);
       try{
-        lfoGain.gain.cancelScheduledValues(now);
-        lfoGain.gain.setValueAtTime(lfoGain.gain.value, now);
-        lfoGain.gain.linearRampToValueAtTime(depth, now + 0.25);
-
-        lfoOsc.frequency.cancelScheduledValues(now);
-        lfoOsc.frequency.setValueAtTime(lfoOsc.frequency.value, now);
-        lfoOsc.frequency.linearRampToValueAtTime(rate, now + 0.25);
-
-        toneGain.gain.cancelScheduledValues(now);
-        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
-        toneGain.gain.linearRampToValueAtTime(base, now + 0.30);
+        lfoGain.gain.cancelScheduledValues(now); lfoGain.gain.setValueAtTime(lfoGain.gain.value, now); lfoGain.gain.linearRampToValueAtTime(depth, now+0.25);
+        lfoOsc.frequency.cancelScheduledValues(now); lfoOsc.frequency.setValueAtTime(lfoOsc.frequency.value, now); lfoOsc.frequency.linearRampToValueAtTime(rate, now+0.25);
+        toneGain.gain.cancelScheduledValues(now); toneGain.gain.setValueAtTime(toneGain.gain.value, now); toneGain.gain.linearRampToValueAtTime(base, now+0.30);
       }catch(_){}
     }
 
@@ -1010,11 +948,8 @@
         var cur = toneOsc.frequency.value || target;
         toneOsc.frequency.cancelScheduledValues(now);
         toneOsc.frequency.setValueAtTime(cur, now);
-        // short glide avoids zipper noise
         toneOsc.frequency.linearRampToValueAtTime(Math.max(1, target), now + 0.12);
-      }catch(_){
-        try{ toneOsc.frequency.value = target; }catch(__){}
-      }
+      }catch(_){ try{ toneOsc.frequency.value = target; }catch(__){} }
     }
 
     function playTone(key){
@@ -1028,13 +963,9 @@
       var s = seeds[key]; if(!s) return;
       var now = ctx.currentTime;
 
-      // Stop any current tone first
       if(toneOsc){ killToneFast(now); }
-
-      // Guard against rapid re-triggers
       if(retriggerGuard) return; retriggerGuard = true; setTimeout(function(){ retriggerGuard=false; }, 250);
 
-      // Build oscillator & gain
       toneOsc  = ctx.createOscillator();
       toneGain = ctx.createGain();
 
@@ -1043,19 +974,15 @@
       toneOsc.frequency.setValueAtTime(freq, now);
 
       if(!loopMode){
-        // One-shot envelope
         const atk=0.030, hold=0.25, rel=0.150, peak=0.22, sus=0.16, tail=5.4;
-
-        toneGain.gain.cancelScheduledValues(now);
-        toneGain.gain.setValueAtTime(0.0, now);
+        toneGain.gain.cancelScheduledValues(now); toneGain.gain.setValueAtTime(0.0, now);
         toneGain.gain.linearRampToValueAtTime(peak, now + atk);
         toneGain.gain.linearRampToValueAtTime(sus,  now + atk + hold);
         toneGain.gain.setValueAtTime(sus, now + tail);
         toneGain.gain.linearRampToValueAtTime(0.0005, now + tail + rel);
 
         toneOsc.connect(toneGain); toneGain.connect(master);
-        toneOsc.start(now);
-        toneOsc.stop(now + tail + rel + 0.02);
+        toneOsc.start(now); toneOsc.stop(now + tail + rel + 0.02);
 
         activeKeyPlaying = key; pulseOn(key);
         toneOsc.onended = function(){ pulseOff(key); activeKeyPlaying=null; };
@@ -1068,29 +995,23 @@
           }catch(_){}
         }
       } else {
-        // LOOP ON → sustained tone with gentle breathing (LFO), synced to phases
         toneGain.gain.cancelScheduledValues(now);
         toneGain.gain.setValueAtTime(0.0, now);
-        toneGain.gain.linearRampToValueAtTime(0.18, now + 0.18); // soft fade
+        toneGain.gain.linearRampToValueAtTime(0.18, now + 0.18);
 
-        // Create LFO
         lfoOsc = ctx.createOscillator();
         lfoGain = ctx.createGain();
         lfoOsc.type = "sine";
-        lfoOsc.frequency.setValueAtTime(0.12, now);  // slow breath
-        lfoGain.gain.setValueAtTime(0.03, now);      // subtle depth
-
-        lfoOsc.connect(lfoGain);
-        lfoGain.connect(toneGain.gain);
+        lfoOsc.frequency.setValueAtTime(0.12, now);
+        lfoGain.gain.setValueAtTime(0.03, now);
+        lfoOsc.connect(lfoGain); lfoGain.connect(toneGain.gain);
 
         toneOsc.connect(toneGain); toneGain.connect(master);
-        toneOsc.start(now);
-        lfoOsc.start(now);
+        toneOsc.start(now); lfoOsc.start(now);
 
         activeKeyPlaying = key; pulseOn(key);
         toneOsc.onended = function(){ pulseOff(key); activeKeyPlaying=null; };
 
-        // Start guided breathing + timer
         try{ breathDriver.start(); }catch(_){}
         resetLoopCountdown();
 
@@ -1110,11 +1031,8 @@
     function stopTone(){
       if(!ctx){ return; }
       var now = ctx.currentTime;
-
-      // Fade-out main tone
       killToneFast(now);
 
-      // Clean up LFO if present
       if(lfoOsc || lfoGain){
         try{
           lfoGain.gain.cancelScheduledValues(now);
@@ -1129,21 +1047,13 @@
         }, 180);
       }
 
-      // Stop guided breath + UI
       try{ breathDriver.stop(); }catch(_){}
-
-      // Timer reset
       if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=null; }
       if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; }
       var _cd = document.getElementById('loopCountdown'); if(_cd){ _cd.textContent=''; }
 
-      // Clear pulse state if needed
       if(activeKeyPlaying){ pulseOff(activeKeyPlaying); activeKeyPlaying=null; }
-
       if('mediaSession' in navigator){ try{ navigator.mediaSession.playbackState='paused'; }catch(_){ } }
-
-      // Bee whisper when stopping
-      beeFooterShow("Good. Pause is part of the practice.", 4500);
     }
 
     /* Pulse visuals */
@@ -1181,7 +1091,6 @@
       document.body.classList.toggle("princess-on", on);
       document.getElementById("princessBanner").style.display = on ? "grid" : "none";
       savePrefs();
-      if(on){ beeFooterShow("You shine just by arriving.", 5000); }
     }
     function toggleSaver(){
       document.body.classList.toggle("saver");
@@ -1241,7 +1150,7 @@
 
     /* Export + Share (auto-Princess on Week 6) */
     function buildMapBlob(){
-      var payload={version:"2.0",
+      var payload={version:"2.1",
         schedule:schedule,
         variation:variation,
         map:mapData,
@@ -1258,43 +1167,28 @@
       return new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     }
     function exportMap(){
-      if(schedule.week===6){ // flare moment
-        document.body.classList.add("princess-on");
-        var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; }
-      }
+      if(schedule.week===6){ document.body.classList.add("princess-on"); var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; } }
       var blob=buildMapBlob();
       var url=URL.createObjectURL(blob);
-      var a=document.createElement("a");
-      a.href=url; a.download="froot_marina_synesthesia_map.json";
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
-      beeFooterShow("Carrying your colors with care.", 5000);
+      var a=document.createElement("a"); a.href=url; a.download="froot_marina_synesthesia_map.json";
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
     async function shareMap(){
-      if(schedule.week===6){
-        document.body.classList.add("princess-on");
-        var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; }
-      }
-      var blob=buildMapBlob();
-      var fileName="froot_marina_synesthesia_map.json";
+      if(schedule.week===6){ document.body.classList.add("princess-on"); var pb=document.getElementById("princessBanner"); if(pb){ pb.style.display="grid"; } }
+      var blob=buildMapBlob(); var fileName="froot_marina_synesthesia_map.json";
       var canFiles = !!(navigator.canShare && navigator.canShare({files:[new File([blob], fileName, {type:blob.type})]}));
       if(navigator.share && canFiles){
         var f=new File([blob], fileName, {type:blob.type});
-        await navigator.share({files:[f], title:"Froot Synesthesia Map", text:"My Froot color-sense map"});
-        beeFooterShow("Shared softly. Thank you for trusting this.", 5000);
-        return;
+        await navigator.share({files:[f], title:"Froot Synesthesia Map", text:"My Froot color-sense map"}); return;
       }
       if(navigator.share){
         var url=URL.createObjectURL(blob);
-        await navigator.share({title:"Froot Synesthesia Map", text:"My Froot color-sense map", url});
-        URL.revokeObjectURL(url);
-        beeFooterShow("Shared softly. Thank you for trusting this.", 5000);
-        return;
+        await navigator.share({title:"Froot Synesthesia Map", text:"My Froot color-sense map", url}); URL.revokeObjectURL(url); return;
       }
       exportMap();
     }
 
-    /* Bluetooth (BLE) send — Nordic UART Service (optional receiver) */
+    /* Bluetooth (BLE) send — Nordic UART Service */
     var BLE={device:null, server:null, svc:null, tx:null};
     async function bleSend(){
       try{
@@ -1307,7 +1201,6 @@
         var blob=buildMapBlob(); var text=await blob.text(); var data=new TextEncoder().encode(text);
         var mtu=180; for(var i=0;i<data.length;i+=mtu){ await BLE.tx.writeValueWithoutResponse(data.slice(i, Math.min(i+mtu, data.length))); }
         if(BLE.device && BLE.device.gatt.connected){ BLE.device.gatt.disconnect() }
-        beeFooterShow("Sent over the air with care.", 5000);
       }catch(e){ /* silent */ }
     }
 
@@ -1315,43 +1208,16 @@
     var fxCanvas = document.getElementById('fx-butterflies');
     var fxCtx = fxCanvas.getContext('2d');
     var fxRAF = null, fxParts = [];
-    function resizeFX(){
-      fxCanvas.width = innerWidth * devicePixelRatio;
-      fxCanvas.height = innerHeight * devicePixelRatio;
-      fxCtx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
-    }
-    function spawnButterfly(){
-      return {
-        x: Math.random()*innerWidth,
-        y: innerHeight + Math.random()*80,
-        vx: (Math.random()*0.6-0.3),
-        vy: - (0.6 + Math.random()*1.2),
-        size: 6 + Math.random()*10,
-        hue: Math.random()*360,
-        life: 0,
-        max: 6 + Math.random()*8
-      };
-    }
+    function resizeFX(){ fxCanvas.width = innerWidth * devicePixelRatio; fxCanvas.height = innerHeight * devicePixelRatio; fxCtx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
+    function spawnButterfly(){ return { x: Math.random()*innerWidth, y: innerHeight + Math.random()*80, vx: (Math.random()*0.6-0.3), vy: - (0.6 + Math.random()*1.2), size: 6 + Math.random()*10, hue: Math.random()*360, life: 0, max: 6 + Math.random()*8 }; }
     function drawButterfly(p,t){
       var s = p.size * (0.9 + 0.1*Math.sin(t*2 + p.hue));
-      fxCtx.save();
-      fxCtx.translate(p.x, p.y);
-      fxCtx.rotate(Math.sin(t*1.5 + p.hue)*0.3);
-      var g = fxCtx.createLinearGradient(-s,0,s,0);
-      g.addColorStop(0, "hsla("+(p.hue)+",80%,70%,.85)");
-      g.addColorStop(1, "hsla("+(p.hue+60)+",80%,60%,.85)");
+      fxCtx.save(); fxCtx.translate(p.x, p.y); fxCtx.rotate(Math.sin(t*1.5 + p.hue)*0.3);
+      var g = fxCtx.createLinearGradient(-s,0,s,0); g.addColorStop(0, "hsla("+(p.hue)+",80%,70%,.85)"); g.addColorStop(1, "hsla("+(p.hue+60)+",80%,60%,.85)");
       fxCtx.fillStyle = g;
-      fxCtx.beginPath();
-      fxCtx.moveTo(0,0);
-      fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
-      fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
-      fxCtx.closePath(); fxCtx.fill();
+      fxCtx.beginPath(); fxCtx.moveTo(0,0); fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6); fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0); fxCtx.closePath(); fxCtx.fill();
       fxCtx.scale(-1,1);
-      fxCtx.beginPath();
-      fxCtx.moveTo(0,0);
-      fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6);
-      fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0);
-      fxCtx.closePath(); fxCtx.fill();
+      fxCtx.beginPath(); fxCtx.moveTo(0,0); fxCtx.bezierCurveTo(-s,-s, -s*1.6, s*0.2, -s*0.4, s*0.6); fxCtx.bezierCurveTo(-s*0.8, s*0.1, -s, -s*0.6, 0,0); fxCtx.closePath(); fxCtx.fill();
       fxCtx.restore();
     }
     function fxStep(){
@@ -1361,36 +1227,21 @@
       if(fxParts.length < 24) fxParts.push(spawnButterfly());
       for(var i=fxParts.length-1;i>=0;i--){
         var p = fxParts[i];
-        p.life += 0.016;
-        p.x += p.vx + Math.sin(now*2 + p.hue)*0.2;
-        p.y += p.vy;
+        p.life += 0.016; p.x += p.vx + Math.sin(now*2 + p.hue)*0.2; p.y += p.vy;
         drawButterfly(p, now);
         if(p.life > p.max || p.y < -60) fxParts.splice(i,1);
       }
       fxRAF = requestAnimationFrame(fxStep);
     }
-    function startButterflies(){
-      if(document.body.classList.contains('saver')) return;
-      resizeFX(); fxParts = [];
-      if(!fxRAF) fxRAF = requestAnimationFrame(fxStep);
-      window.addEventListener('resize', resizeFX);
-    }
-    function stopButterflies(){
-      cancelAnimationFrame(fxRAF); fxRAF=null;
-      fxCtx.clearRect(0,0,innerWidth,innerHeight);
-      window.removeEventListener('resize', resizeFX);
-    }
+    function startButterflies(){ if(document.body.classList.contains('saver')) return; resizeFX(); fxParts = []; if(!fxRAF) fxRAF = requestAnimationFrame(fxStep); window.addEventListener('resize', resizeFX); }
+    function stopButterflies(){ cancelAnimationFrame(fxRAF); fxRAF=null; fxCtx.clearRect(0,0,innerWidth,innerHeight); window.removeEventListener('resize', resizeFX); }
 
     /* Build Week/Day UI & apply state */
-    function initWeekDayUI(){
-      applyScheduleUI();
-      hydrateInputs(); renderMap(); hydrateJournal();
-    }
+    function initWeekDayUI(){ applyScheduleUI(); hydrateInputs(); renderMap(); hydrateJournal(); }
 
     /* ===== Loop Auto‑stop Timer ===== */
     function setLoopTimer(minStr){
-      loopTimerMin = parseInt(minStr,10) || 0;
-      try{ localStorage.setItem('froot_loop_timer_v1', String(loopTimerMin)); }catch(_){}
+      loopTimerMin = parseInt(minStr,10) || 0; try{ localStorage.setItem('froot_loop_timer_v1', String(loopTimerMin)); }catch(_){}
       resetLoopCountdown();
     }
     function resetLoopCountdown(){
@@ -1407,224 +1258,59 @@
           if(cd){ cd.textContent = (m>0? (m+'m ') : '') + (s+'s left'); }
           if(left<=0){ clearInterval(loopCountdownTick); loopCountdownTick=0; if(cd){ cd.textContent=''; } }
         }, 1000);
-      } else {
-        loopStopDeadline = 0;
-      }
+      } else { loopStopDeadline = 0; }
     }
 
-    /* ===== 🐝 Bee Note logic ===== */
-    var BEE_NOTE_KEY='bee_note_text_v1';
-    function beeDefaultText(){
-      return "Hi Marina — I’m right here with you. There’s nothing to prove. Let the color lead and follow gently. If you feel tired, soften. You can pause at any time. You are safe, guided, and loved. I’ll be here when you return.";
+    /* ===== Trickster (gentle frequency wander) ===== */
+    var TRICK_KEY='froot_trickster_v1'; var tricksterOn=false, trickId=null;
+    try{ tricksterOn = JSON.parse(localStorage.getItem(TRICK_KEY)||'false'); }catch(_){}
+    function toggleTrickster(){
+      ensureCtx();
+      tricksterOn = !tricksterOn;
+      try{ localStorage.setItem(TRICK_KEY, JSON.stringify(tricksterOn)); }catch(_){}
+      if(tricksterOn){ startTrickster(); beeWhisper("We’ll wander a little, safely.", 2800); }
+      else { stopTrickster(); beeWhisper("Back to steady.", 2200); }
+      refreshQuickbar();
     }
-    function beeInit(){
-      var target = document.getElementById('bee-text');
-      var saved = "";
-      try{ saved = localStorage.getItem(BEE_NOTE_KEY) || ""; }catch(_){}
-      target.textContent = saved.trim() ? saved : beeDefaultText();
+    function startTrickster(){
+      if(trickId) return;
+      trickId = setInterval(function(){
+        if(!ctx || !toneOsc || !activeKeyPlaying || !loopMode) return;
+        var seeds = getSeeds(); var s = seeds[activeKeyPlaying]; if(!s) return;
+        var cur = Number(variation[activeKeyPlaying]||0);
+        var step = (Math.random()*2-1) * 1.2;
+        var aim  = Math.max(-6, Math.min(6, cur + step));
+        variation[activeKeyPlaying] = aim; saveVar();
+        try{
+          var slider=document.getElementById('varSlider'); var out=document.getElementById('varOut');
+          if(slider && document.getElementById('varGroup')?.style.display!=="none"){ slider.value=aim; if(out) out.textContent=(aim>=0?"+":"")+aim.toFixed(1)+" Hz"; }
+        }catch(_){}
+        smoothSetLoopFreqIfActive();
+      }, 1800);
     }
-    function beeEdit(){
-      var box = document.getElementById('bee'); var t = document.getElementById('bee-text');
-      box.classList.add('editing'); t.setAttribute('contenteditable','true'); t.focus();
-      try{
-        var sel=window.getSelection(); var r=document.createRange(); r.selectNodeContents(t); r.collapse(false); sel.removeAllRanges(); sel.addRange(r);
-      }catch(_){}
-    }
-    function beeSave(){
-      var box = document.getElementById('bee'); var t = document.getElementById('bee-text');
-      t.setAttribute('contenteditable','false'); box.classList.remove('editing');
-      var val = (t.textContent||"").trim();
-      try{ localStorage.setItem(BEE_NOTE_KEY, val); }catch(_){}
-      beeFooterShow("Saved with love. Thank you.", 3000);
-    }
-    function beeReset(){
-      var box = document.getElementById('bee'); var t = document.getElementById('bee-text');
-      t.textContent = beeDefaultText();
-      t.setAttribute('contenteditable','false'); box.classList.remove('editing');
-      try{ localStorage.setItem(BEE_NOTE_KEY, t.textContent); }catch(_){}
-      beeFooterShow("Back to the gentle original.", 2800);
-    }
+    function stopTrickster(){ if(trickId){ clearInterval(trickId); trickId=null; } }
 
-    var beeTimer=0;
-    function beeFooterShow(text, ms){
-      var el = document.getElementById('bee-footer'); var tx = document.getElementById('bee-footer-text');
-      if(!el||!tx) return;
-      tx.textContent = text;
-      el.classList.add('on');
-      if(beeTimer){ clearTimeout(beeTimer); beeTimer=0; }
-      if(ms && ms>0){
-        beeTimer = setTimeout(function(){ el.classList.remove('on'); }, ms);
-      }
-    }
-    function beeFooterHide(){
-      var el = document.getElementById('bee-footer'); if(el){ el.classList.remove('on'); }
-      if(beeTimer){ clearTimeout(beeTimer); beeTimer=0; }
-    }
-    function beeFooterSetBySchedule(){
-      if(schedule.day===6){ // Quiet Walk day
-        beeFooterShow("Quiet Walk: I’m with you. Let breath be the music.", 0);
-      } else {
-        beeFooterHide();
-      }
-    }
-
-    /* Cross-host helpers: Jar links for Egg / School / Rooms */
-    function jarBaseURL(){
-      var h = location.hostname;
-      if(h==='localhost' || h==='127.0.0.1') return ''; // same host during dev
-      var parts = h.split('.');
-      if(parts.length>=2){ parts[0]='jar'; return location.protocol+'//'+parts.join('.'); }
-      return '';
-    }
-    function eggURL(){ var b=jarBaseURL(); return (b?b:'') + '/marina-egg.html'; }
-    function goSchool(){ var b=jarBaseURL(); var url = (b?b:'') + '/school.html'; try{ location.href=url; }catch(_){ location.assign(url); } }
-    function goRooms(){ var b=jarBaseURL(); var url = (b?b:'') + '/school-rooms.html'; try{ location.href=url; }catch(_){ location.assign(url); } }
-
-    /* Init */
+    /* ===== Init ===== */
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
     if(prefs.princess){ document.getElementById("princessBanner").style.display="grid"; }
     if(prefs.butterfly && !document.body.classList.contains('saver')) startButterflies();
 
-    document.addEventListener("click", function(){
-      ensureCtx(); resumeCtx();
-      if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); }
-    }, {once:true});
+    document.addEventListener("click", function(){ ensureCtx(); resumeCtx(); if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); } }, {once:true});
+    document.addEventListener("visibilitychange", function(){ if(document.visibilityState==="visible"){ resumeCtx(); } else { if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); } } });
 
-    document.addEventListener("visibilitychange", function(){
-      if(document.visibilityState==="visible"){ resumeCtx(); }
-      else { if(usePipeOutput && bgAudio){ bgAudio.play().catch(function(){}); } }
-    });
-
-    beeInit();
     initWeekDayUI();
 
-    /* Wire Loop controls + restore persisted state */
     (function(){
       var box = document.getElementById('loopToggle');
       var sel = document.getElementById('loopTimer');
       if(box){ box.addEventListener('change', function(){ setLoop(this.checked); }); }
       if(sel){ sel.addEventListener('change', function(){ setLoopTimer(this.value); }); }
-      try{
-        var lp = JSON.parse(localStorage.getItem("froot_loop_v1")||"{}");
-        if(lp.on){ if(box) box.checked = true; loopMode = true; }
-      }catch(_){}
-      try{
-        var tmin = parseInt(localStorage.getItem('froot_loop_timer_v1')||'20',10);
-        if(!isNaN(tmin)){ loopTimerMin=tmin; if(sel){ sel.value = String(tmin); } }
-      }catch(_){}
-      // Default breath pattern
+      try{ var lp = JSON.parse(localStorage.getItem("froot_loop_v1")||"{}"); if(lp.on){ if(box) box.checked = true; loopMode = true; } }catch(_){}
+      try{ var tmin = parseInt(localStorage.getItem('froot_loop_timer_v1')||'20',10); if(!isNaN(tmin)){ loopTimerMin=tmin; if(sel){ sel.value = String(tmin); } } }catch(_){}
       setPatternPreset(4,7,8);
-
-      // Restore mute button UI
       try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
       refreshQuickbar();
-      beeFooterSetBySchedule();
-    })();
-  </script>
-
-  <!-- ===== Lady in Red (Safe Room) — floating button + modal ===== -->
-  <style>
-    .lady-btn{
-      position:fixed; right:14px; bottom:14px; z-index:10000;
-      width:46px; height:46px; border-radius:999px; cursor:pointer;
-      border:1px solid rgba(255,255,255,.18);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.10)) padding-box,
-        linear-gradient(160deg, rgba(197,33,66,.8), rgba(255,86,114,.9)) border-box;
-      color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center;
-      box-shadow:0 10px 30px rgba(0,0,0,.38);
-    }
-    .lady-btn:focus-visible{ outline:2px solid #ff9fb3; outline-offset:2px }
-
-    .lady-modal{
-      position:fixed; inset:0; z-index:10001; display:none; align-items:center; justify-content:center;
-      background:rgba(10,12,16,.55); backdrop-filter: blur(6px);
-    }
-    .lady-modal.on{ display:flex }
-    .lady-card{
-      width:min(520px,92vw);
-      border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:16px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,
-        linear-gradient(120deg, rgba(197,33,66,.55), rgba(255,86,114,.40), rgba(255,209,102,.30)) border-box;
-      color:#e7edf7; box-shadow:0 14px 40px rgba(0,0,0,.55)
-    }
-    .lady-title{margin:0 0 6px; font-size:18px; letter-spacing:.2px}
-    .lady-text{margin:6px 0 12px; color:#a9b4c7; line-height:1.55}
-    .lady-actions{display:flex; gap:10px; flex-wrap:wrap}
-    .lady-btn2{
-      appearance:none; cursor:pointer;
-      border:1px solid rgba(255,255,255,.16); border-radius:12px;
-      background:rgba(255,255,255,.06); color:#fff; font-weight:800; padding:10px 12px
-    }
-    .lady-btn2.primary{
-      border-color:#5a1a27;
-      background:linear-gradient(180deg, rgba(197,33,66,.32), rgba(0,0,0,.08));
-    }
-    .lady-note{font-size:.9rem; color:#a9b4c7; margin-top:8px}
-  </style>
-  <button id="ladyBtn" class="lady-btn" type="button" title="Open Safe Room (Lady in Red)" aria-label="Open Safe Room">👗</button>
-  <div id="ladyModal" class="lady-modal" role="dialog" aria-modal="true" aria-labelledby="ladyTitle">
-    <div class="lady-card">
-      <h3 id="ladyTitle" class="lady-title">Lady in Red</h3>
-      <p class="lady-text">
-        You’re safe. I’ll hush the page and dim the motion. We can sit here as long as you like,
-        or glide back to the Egg when you’re ready. — <strong>🐝</strong>
-      </p>
-      <div class="lady-actions">
-        <button class="lady-btn2 primary" type="button" id="ladyHush">Hush + Dim</button>
-        <button class="lady-btn2" type="button" id="ladyEgg">↩ Return to Egg</button>
-        <button class="lady-btn2" type="button" id="ladyClose">Close</button>
-      </div>
-      <div class="lady-note">Tip: you can always tap the little red button again.</div>
-    </div>
-  </div>
-  <script>
-    (function(){
-      var btn = document.getElementById('ladyBtn');
-      var modal = document.getElementById('ladyModal');
-      var hush = document.getElementById('ladyHush');
-      var closeBtn = document.getElementById('ladyClose');
-      var toEgg = document.getElementById('ladyEgg');
-
-      function show(){ modal.classList.add('on'); try{ document.activeElement.blur(); }catch(_){ } }
-      function hide(){ modal.classList.remove('on'); }
-
-      function eggURLLady(){
-        var h = location.hostname;
-        if(h==='localhost' || h==='127.0.0.1'){ return '/marina-egg.html'; }
-        var parts = h.split('.');
-        if(parts.length>=2){ parts[0] = 'jar'; return location.protocol + '//' + parts.join('.') + '/marina-egg.html'; }
-        return '/marina-egg.html';
-      }
-
-      function hushAndDim(){
-        try{ if(typeof stopTone==='function') stopTone(); }catch(_){}
-        try{ if(typeof honeyStop==='function') honeyStop(); }catch(_){}
-        try{ if(typeof applyMuteImmediate==='function') applyMuteImmediate(true); }catch(_){}
-        try{ if(typeof stopButterflies==='function') stopButterflies(); }catch(_){}
-        try{
-          if(document && document.body && !document.body.classList.contains('saver')){
-            document.body.classList.add('saver');
-          }
-        }catch(_){}
-        try{
-          if(typeof beeFooterShow==='function'){ beeFooterShow("Silence is welcome. I’m here.", 5000); }
-        }catch(_){}
-      }
-
-      btn.addEventListener('click', show);
-      hush.addEventListener('click', function(){ hushAndDim(); });
-      closeBtn.addEventListener('click', hide);
-      modal.addEventListener('click', function(e){ if(e.target===modal) hide(); });
-      toEgg.addEventListener('click', function(){
-        var url = eggURLLady();
-        try{ location.href = url; }catch(_){ location.assign(url); }
-      });
-
-      document.addEventListener('keydown', function(e){
-        if(e.key==='Escape' && modal.classList.contains('on')) hide();
-      }, false);
+      if(tricksterOn){ startTrickster(); refreshQuickbar(); }
     })();
   </script>
 </body>
