@@ -324,8 +324,10 @@
         <button class="ghost" type="button" onclick="bleSend()">Bluetooth</button>
         <button class="ghost" type="button" onclick="resetMap()">Reset</button>
         <button class="ghost" type="button" onclick="window.print()">Print</button>
-        <!-- Return to Egg Map (Jar) -->
-        <button class="ghost" type="button" onclick="location.href='/marina-egg.html'">↩ Egg Map</button>
+        <!-- Smart cross-host links -->
+        <button class="ghost" type="button" onclick="location.href=eggURL()">↩ Egg Map</button>
+        <button class="ghost" type="button" onclick="goSchool()">School</button>
+        <button class="ghost" type="button" onclick="goRooms()">Rooms</button>
       </div>
     </header>
 
@@ -665,7 +667,7 @@
         var b=document.createElement('button'); b.textContent="W"+i;
         if(i===schedule.week) b.classList.add("sel");
         (function(ii){
-          b.onclick=function(){ schedule.week=ii; saveSched(); applyScheduleUI(); };
+          b.onclick=function(){ schedule.week=ii; saveSched(); applyScheduleUI(); }
         })(i);
         host.appendChild(b);
       }
@@ -676,7 +678,7 @@
         var b=document.createElement('button'); b.textContent="Day "+i;
         if(i===schedule.day) b.classList.add("sel");
         (function(ii){
-          b.onclick=function(){ schedule.day=ii; saveSched(); applyScheduleUI(); };
+          b.onclick=function(){ schedule.day=ii; saveSched(); applyScheduleUI(); }
         })(i);
         host.appendChild(b);
       }
@@ -1386,7 +1388,6 @@
     }
 
     /* ===== Loop Auto‑stop Timer ===== */
-    var loopStopDeadline=0;
     function setLoopTimer(minStr){
       loopTimerMin = parseInt(minStr,10) || 0;
       try{ localStorage.setItem('froot_loop_timer_v1', String(loopTimerMin)); }catch(_){}
@@ -1463,10 +1464,21 @@
       if(schedule.day===6){ // Quiet Walk day
         beeFooterShow("Quiet Walk: I’m with you. Let breath be the music.", 0);
       } else {
-        // Only show when triggered by events; otherwise hide.
         beeFooterHide();
       }
     }
+
+    /* Cross-host helpers: Jar links for Egg / School / Rooms */
+    function jarBaseURL(){
+      var h = location.hostname;
+      if(h==='localhost' || h==='127.0.0.1') return ''; // same host during dev
+      var parts = h.split('.');
+      if(parts.length>=2){ parts[0]='jar'; return location.protocol+'//'+parts.join('.'); }
+      return '';
+    }
+    function eggURL(){ var b=jarBaseURL(); return (b?b:'') + '/marina-egg.html'; }
+    function goSchool(){ var b=jarBaseURL(); var url = (b?b:'') + '/school.html'; try{ location.href=url; }catch(_){ location.assign(url); } }
+    function goRooms(){ var b=jarBaseURL(); var url = (b?b:'') + '/school-rooms.html'; try{ location.href=url; }catch(_){ location.assign(url); } }
 
     /* Init */
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
@@ -1507,6 +1519,112 @@
       try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
       refreshQuickbar();
       beeFooterSetBySchedule();
+    })();
+  </script>
+
+  <!-- ===== Lady in Red (Safe Room) — floating button + modal ===== -->
+  <style>
+    .lady-btn{
+      position:fixed; right:14px; bottom:14px; z-index:10000;
+      width:46px; height:46px; border-radius:999px; cursor:pointer;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.10)) padding-box,
+        linear-gradient(160deg, rgba(197,33,66,.8), rgba(255,86,114,.9)) border-box;
+      color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.38);
+    }
+    .lady-btn:focus-visible{ outline:2px solid #ff9fb3; outline-offset:2px }
+
+    .lady-modal{
+      position:fixed; inset:0; z-index:10001; display:none; align-items:center; justify-content:center;
+      background:rgba(10,12,16,.55); backdrop-filter: blur(6px);
+    }
+    .lady-modal.on{ display:flex }
+    .lady-card{
+      width:min(520px,92vw);
+      border:1px solid rgba(255,255,255,.16); border-radius:16px; padding:16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.08)) padding-box,
+        linear-gradient(120deg, rgba(197,33,66,.55), rgba(255,86,114,.40), rgba(255,209,102,.30)) border-box;
+      color:#e7edf7; box-shadow:0 14px 40px rgba(0,0,0,.55)
+    }
+    .lady-title{margin:0 0 6px; font-size:18px; letter-spacing:.2px}
+    .lady-text{margin:6px 0 12px; color:#a9b4c7; line-height:1.55}
+    .lady-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .lady-btn2{
+      appearance:none; cursor:pointer;
+      border:1px solid rgba(255,255,255,.16); border-radius:12px;
+      background:rgba(255,255,255,.06); color:#fff; font-weight:800; padding:10px 12px
+    }
+    .lady-btn2.primary{
+      border-color:#5a1a27;
+      background:linear-gradient(180deg, rgba(197,33,66,.32), rgba(0,0,0,.08));
+    }
+    .lady-note{font-size:.9rem; color:#a9b4c7; margin-top:8px}
+  </style>
+  <button id="ladyBtn" class="lady-btn" type="button" title="Open Safe Room (Lady in Red)" aria-label="Open Safe Room">👗</button>
+  <div id="ladyModal" class="lady-modal" role="dialog" aria-modal="true" aria-labelledby="ladyTitle">
+    <div class="lady-card">
+      <h3 id="ladyTitle" class="lady-title">Lady in Red</h3>
+      <p class="lady-text">
+        You’re safe. I’ll hush the page and dim the motion. We can sit here as long as you like,
+        or glide back to the Egg when you’re ready. — <strong>🐝</strong>
+      </p>
+      <div class="lady-actions">
+        <button class="lady-btn2 primary" type="button" id="ladyHush">Hush + Dim</button>
+        <button class="lady-btn2" type="button" id="ladyEgg">↩ Return to Egg</button>
+        <button class="lady-btn2" type="button" id="ladyClose">Close</button>
+      </div>
+      <div class="lady-note">Tip: you can always tap the little red button again.</div>
+    </div>
+  </div>
+  <script>
+    (function(){
+      var btn = document.getElementById('ladyBtn');
+      var modal = document.getElementById('ladyModal');
+      var hush = document.getElementById('ladyHush');
+      var closeBtn = document.getElementById('ladyClose');
+      var toEgg = document.getElementById('ladyEgg');
+
+      function show(){ modal.classList.add('on'); try{ document.activeElement.blur(); }catch(_){ } }
+      function hide(){ modal.classList.remove('on'); }
+
+      function eggURLLady(){
+        var h = location.hostname;
+        if(h==='localhost' || h==='127.0.0.1'){ return '/marina-egg.html'; }
+        var parts = h.split('.');
+        if(parts.length>=2){ parts[0] = 'jar'; return location.protocol + '//' + parts.join('.') + '/marina-egg.html'; }
+        return '/marina-egg.html';
+      }
+
+      function hushAndDim(){
+        try{ if(typeof stopTone==='function') stopTone(); }catch(_){}
+        try{ if(typeof honeyStop==='function') honeyStop(); }catch(_){}
+        try{ if(typeof applyMuteImmediate==='function') applyMuteImmediate(true); }catch(_){}
+        try{ if(typeof stopButterflies==='function') stopButterflies(); }catch(_){}
+        try{
+          if(document && document.body && !document.body.classList.contains('saver')){
+            document.body.classList.add('saver');
+          }
+        }catch(_){}
+        try{
+          if(typeof beeFooterShow==='function'){ beeFooterShow("Silence is welcome. I’m here.", 5000); }
+        }catch(_){}
+      }
+
+      btn.addEventListener('click', show);
+      hush.addEventListener('click', function(){ hushAndDim(); });
+      closeBtn.addEventListener('click', hide);
+      modal.addEventListener('click', function(e){ if(e.target===modal) hide(); });
+      toEgg.addEventListener('click', function(){
+        var url = eggURLLady();
+        try{ location.href = url; }catch(_){ location.assign(url); }
+      });
+
+      document.addEventListener('keydown', function(e){
+        if(e.key==='Escape' && modal.classList.contains('on')) hide();
+      }, false);
     })();
   </script>
 </body>
