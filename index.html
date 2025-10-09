@@ -1,106 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <!-- Keep iOS media bar dark -->
-  <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#0b0d11">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Froot — Scenes · Moon · Honey · Bridge</title>
-  <meta name="description" content="A color-sense studio with Week/Day practice, Scenes presets, Moon rhythm breath pacing, Honey + MirrorHoney bed, gentle Flytrap gate, and a Liminal Bridge to Jar (School & Rooms). Headphones recommended." />
-  <style>
-    :root{
-      color-scheme: dark;
-      --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
-      --ring:#2c3444; --glow:#66e1ff;
-      --blue-1:#0b2e40; --blue-2:#2cc2ff;
-      --froot-1:#103018; --froot-2:#a4ff65;
-      --imm-1:#1b1030;  --imm-2:#b38bff;
-      --ad-1:#2b1016;   --ad-2:#ff6a9e;
-      --hh-1:#0f1e33;   --hh-2:#86c9ff;
-      --accent:#a4ff65;
-      --honey-a:#120e07; --honey-b:#3a2a0f; --honey-c:#d7aa3b; --honey-d:#f7d77a;
-    }
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b0d11">
+<title>Froot — Scenes · Moon · Honey · Bridge</title>
+<meta name="description" content="A color-sense studio with Week/Day practice, Scenes presets, Moon rhythm breath pacing, Honey + MirrorHoney bed, gentle Flytrap gate, and a Liminal Bridge to Jar (School & Rooms). Headphones recommended." />
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
+    --ring:#2c3444; --glow:#66e1ff;
+    --blue-1:#0b2e40; --blue-2:#2cc2ff;
+    --froot-1:#103018; --froot-2:#a4ff65;
+    --imm-1:#1b1030;  --imm-2:#b38bff;
+    --ad-1:#2b1016;   --ad-2:#ff6a9e;
+    --hh-1:#0f1e33;   --hh-2:#86c9ff;
+    --accent:#a4ff65;
+    --quickbar-safe: 0px; /* pushes content below the floating quickbar */
+  }
+  html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"SF Pro Text",Segoe UI,Roboto,Helvetica,Arial}
+  *{box-sizing:border-box}
+  button[disabled]{opacity:.5;cursor:not-allowed}
 
-    html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%}
-    body{margin:0; background:var(--bg); color:var(--ink);
-      font:16px/1.55 ui-sans-serif, system-ui, -apple-system, "SF Pro Text", Segoe UI, Roboto, Helvetica, Arial}
-    *{box-sizing:border-box}
-    button[disabled]{opacity:.5;cursor:not-allowed}
+  .wrap{max-width:1080px;margin:0 auto;padding:calc(28px + var(--quickbar-safe)) 18px 84px;position:relative;z-index:2}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+  h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
+  .tag{color:var(--muted);font-size:.95rem}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  button{
+    appearance:none;border:1px solid var(--edge);
+    background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
+    color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;
+    transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
+  }
+  button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
+  button:active{filter:brightness(1.05)}
+  .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02))}
+  .ghost{opacity:.92}
 
-    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 84px;position:relative;z-index:2}
-    header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
-    h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
-    .tag{color:var(--muted);font-size:.95rem}
-    .actions{display:flex;gap:10px;flex-wrap:wrap}
-    button{
-      appearance:none;border:1px solid var(--edge);
-      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
-      color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;
-      transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
-    }
-    button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
-    button:active{filter:brightness(1.05)}
-    .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02))}
+  .note{font-size:.95rem;color:var(--muted);margin-top:6px}
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)),var(--panel);
+    border:1px solid var(--edge);border-radius:18px;padding:18px
+  }
+  .row{display:grid;grid-template-columns:1fr;gap:12px}
+  .module{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
+  @media (max-width:920px){ .module{grid-template-columns:1fr} }
 
-    .note{font-size:.95rem;color:var(--muted);margin-top:6px}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px}
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)),var(--panel);
-      border:1px solid var(--edge);border-radius:18px;padding:18px
-    }
-    .row{display:grid;grid-template-columns:1fr;gap:12px}
-    .module{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
-    @media (max-width:920px){ .module{grid-template-columns:1fr} }
+  .swatch{
+    position:relative;border-radius:14px;border:1px solid var(--edge);overflow:hidden;isolation:isolate;min-height:180px;
+    background:linear-gradient(135deg, var(--c1), var(--c2));
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 30px -12px rgba(0,0,0,.5);
+  }
+  .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .tiny{font-size:.92rem;color:var(--muted)}
+  .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
+  .huebar{height:6px;border-radius:999px;background:linear-gradient(90deg,#2bc2ff,#a4ff65);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6)}
+  .input, textarea{width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:11px 12px;min-height:44px}
+  textarea{min-height:90px;resize:vertical}
 
-    .swatch{
-      position:relative;border-radius:14px;border:1px solid var(--edge);overflow:hidden;isolation:isolate;min-height:180px;
-      background:linear-gradient(135deg, var(--c1), var(--c2));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 30px -12px rgba(0,0,0,.5);
-    }
-    .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
-    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    .tiny{font-size:.92rem;color:var(--muted)}
-    .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-    .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
-    .huebar{height:6px;border-radius:999px;background:linear-gradient(90deg,#2bc2ff,#a4ff65);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6)}
-    .input, textarea{width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:11px 12px;min-height:44px}
-    textarea{min-height:90px;resize:vertical}
-    .legend{display:flex;flex-wrap:wrap;gap:10px}
-    .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
-    .foot{margin-top:24px;color:var(--muted);font-size:.9rem}
-    hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
-    :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px}
+  .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
+  .foot{margin-top:24px;color:var(--muted);font-size:.9rem}
+  hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
+  :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
 
-    /* Quickbar */
-    .quickbar{position:fixed; top:10px; right:10px; z-index:9999; display:flex; gap:8px; align-items:center; background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.15)); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px; box-shadow:0 10px 30px rgba(0,0,0,.35); backdrop-filter: blur(6px)}
-    .qbtn{appearance:none; cursor:pointer; border:1px solid rgba(255,255,255,.14); border-radius:10px; background:rgba(255,255,255,.06); color:#fff; font-weight:800; padding:8px 10px; min-width:40px}
-    .qbtn.on{ border-color:#3a5f44; background:linear-gradient(180deg, rgba(164,255,101,.18), rgba(0,0,0,.06)) }
-    .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)) }
-    .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px }
-    .moon{font-size:1.1rem}
+  /* Quickbar (always-on-top) */
+  .quickbar{
+    position:fixed; top:10px; right:10px; z-index:9999;
+    display:flex; gap:8px; align-items:center;
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.15));
+    border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35); backdrop-filter: blur(6px)
+  }
+  .qbtn{
+    appearance:none; cursor:pointer; border:1px solid rgba(255,255,255,.14); border-radius:10px;
+    background:rgba(255,255,255,.06); color:#fff; font-weight:800; padding:8px 10px; min-width:40px
+  }
+  .qbtn.on{ border-color:#3a5f44; background:linear-gradient(180deg, rgba(164,255,101,.18), rgba(0,0,0,.06)) }
+  .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)) }
+  .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px }
 
-    /* Breath HUD (inside active swatch) */
-    .fbrHUD{ position:absolute; inset:8%; border-radius:50%; pointer-events:none; }
-    .fbrHUD .arc{ position:absolute; inset:-6px; border-radius:50%; background: conic-gradient(var(--fbr-color,#22d) 0deg var(--fbr-arc, 0deg), transparent var(--fbr-arc, 0deg) 360deg); filter: drop-shadow(0 2px 8px rgba(0,0,0,.18)) }
-    .fbrHUD .edge{ position:absolute; inset:-6px; border-radius:50% }
-    .fbrHUD .label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size: clamp(22px, 4.8vw, 40px); letter-spacing:.10em; text-shadow:0 1px 2px rgba(0,0,0,.18); mix-blend-mode:hard-light; font-variant-caps:all-small-caps}
-    .fbr-in   .fbrHUD{ --fbr-color:#2ecc71 }
-    .fbr-hold .fbrHUD{ --fbr-color:#f1c40f }
-    .fbr-out  .fbrHUD{ --fbr-color:#e74c3c }
-    .edge.flash{ animation: edgeFlash 180ms ease-out }
-    @keyframes edgeFlash{ from{ box-shadow:0 0 0 14px rgba(255,255,255,.92)} to{ box-shadow:0 0 0 0 rgba(255,255,255,0)} }
+  /* Breath HUD inside swatch */
+  .fbrHUD{ position:absolute; inset:8%; border-radius:50%; pointer-events:none; }
+  .fbrHUD .arc{ position:absolute; inset:-6px; border-radius:50%; background: conic-gradient(var(--fbr-color,#22d) 0deg var(--fbr-arc, 0deg), transparent var(--fbr-arc, 0deg) 360deg); filter: drop-shadow(0 2px 8px rgba(0,0,0,.18)) }
+  .fbrHUD .edge{ position:absolute; inset:-6px; border-radius:50% }
+  .fbrHUD .label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size: clamp(22px, 4.8vw, 40px); letter-spacing:.10em; text-shadow:0 1px 2px rgba(0,0,0,.18); mix-blend-mode:hard-light; font-variant-caps:all-small-caps}
+  .fbr-in   .fbrHUD{ --fbr-color:#2ecc71 }
+  .fbr-hold .fbrHUD{ --fbr-color:#f1c40f }
+  .fbr-out  .fbrHUD{ --fbr-color:#e74c3c }
+  .edge.flash{ animation: edgeFlash 180ms ease-out }
+  @keyframes edgeFlash{ from{ box-shadow:0 0 0 14px rgba(255,255,255,.92)} to{ box-shadow:0 0 0 0 rgba(255,255,255,0)} }
 
-    /* Honey visuals */
-    body.honey{
-      background:
-        radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
-        radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
-        linear-gradient(180deg, var(--honey-a), var(--bg));
-    }
-  </style>
+  /* Honey visuals */
+  body.honey{
+    background:
+      radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
+      radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
+      linear-gradient(180deg, #120e07, var(--bg));
+  }
+</style>
 </head>
 <body>
   <!-- Quickbar -->
@@ -119,19 +123,21 @@
     <header>
       <div>
         <h1>Froot — <span style="opacity:.9">Scenes · Moon · Honey</span></h1>
-        <div class="tag">Breathe with color. One week, one hue; one day, one ritual. Now with <b>Scenes</b> presets, <b>Moon</b> rhythm, <b>MirrorHoney</b>, gentle <b>Flytrap</b>, and a Bridge to <b>Jar</b>.</div>
+        <div class="tag">Breathe with color. One week, one hue; one day, one ritual. The tone leads, the orb whispers <em>In / Hold / Out</em>, and you leave a single word like a breadcrumb back to yourself.</div>
       </div>
       <div class="actions">
+        <button class="ghost" type="button" id="openTunes">Tunes</button>
+        <button class="ghost" type="button" id="openSchool">Jar · School</button>
         <button class="primary" type="button" id="openBridge">Bridge</button>
         <button type="button" id="exportBtn">Export</button>
         <button type="button" id="printBtn">Print</button>
       </div>
     </header>
 
-    <!-- Intro / Bridge copy -->
+    <!-- Intro -->
     <section class="card" id="intro">
       <div class="titleline"><h3>Intro — be the bridge</h3><div class="huebar" aria-hidden="true"></div></div>
-      <p><b>Froot</b> is practice: tone, breath, one word. <b>Sine</b> is your tool shelf (Honey, MirrorHoney, Binaural); <b>Resonance</b> is for feeling alignment with tone + color + mic glow. When language wants to arrive, tap <b>Bridge</b> to open <b>Jar</b> — <b>School</b> (guides) or <b>Rooms</b> (prompts). Audio pauses as we cross; nothing is uploaded.</p>
+      <p><b>Froot</b> is practice: tone, breath, one word. <b>Sine</b> is your tool shelf (Honey, MirrorHoney, Binaural); <b>Resonance</b> is for alignment with tone + color + mic glow. When language wants to arrive, tap <b>Bridge</b> to open <b>Jar</b> — <b>School</b> (guides) or <b>Rooms</b> (prompts). Audio pauses as we cross; nothing is uploaded. :contentReference[oaicite:1]{index=1}</p>
     </section>
 
     <!-- Scenes + Moon -->
@@ -149,10 +155,10 @@
             <option>Doechii</option>
           </select>
         </label>
-        <span class="legend"><span class="pill">Sets vibe (Δfreq &amp; toggles)</span><span class="pill">Keeps your Week/Day</span></span>
+        <span class="legend"><span class="pill">Sets vibe (Δfreq &amp; toggles)</span><span class="pill">Keeps Week/Day</span></span>
       </div>
       <div class="controls">
-        <span class="pill">Moon <span id="moonEmoji" class="moon">🌗</span> <b id="moonName">Waning</b></span>
+        <span class="pill">Moon <span id="moonEmoji" style="font-size:1.1rem">🌗</span> <b id="moonName">Waning</b></span>
         <label>Breath
           <select id="moonMode">
             <option value="auto">Auto (Moon today)</option>
@@ -163,7 +169,7 @@
             <option value="custom">Custom</option>
           </select>
         </label>
-        <span class="tiny">Moon rhythm drives the breath HUD & looped tone. You can override anytime.</span>
+        <span class="tiny">Moon rhythm drives the breath HUD &amp; looped tone; override anytime.</span>
       </div>
     </section>
 
@@ -227,7 +233,7 @@
       <div class="titleline"><h3>Help · FAQs · Bridge</h3><div class="huebar" aria-hidden="true"></div></div>
       <details><summary>How do Scenes work here?</summary><p>Scenes are gentle presets (vibe). They don’t change your Week/Day; they set small defaults: a Δfreq hint, whether Loop/Honey/FX are on, and a suggested breath via Moon mode. Adjust by feel.</p></details>
       <details><summary>Moon rhythm?</summary><p>Auto reads today’s moon and maps it to breath pacing (New 4‑4‑4 · Waxing 4‑5‑6 · Full 4‑7‑8 · Waning 4‑6‑6). Switch to Custom to ignore Moon and keep your own pattern.</p></details>
-      <details><summary>Honey & MirrorHoney</summary><p>Honey is a warm 128 Hz bed. MirrorHoney adds a very slow stereo micro‑beat; it’s best on headphones. If it feels “phasey” on speakers, turn MirrorHoney off.</p></details>
+      <details><summary>Honey & MirrorHoney</summary><p>Honey is a warm 128 Hz bed. MirrorHoney adds a slow stereo micro‑beat; it’s best on headphones. If it feels “phasey” on speakers, turn MirrorHoney off.</p></details>
       <details><summary>Venus Flytrap?</summary><p>A soft “close–open” gate that periodically dips a looped tone to suggest ease. Toggle with 🪴. It’s gentle by design.</p></details>
       <details><summary>Jar · Tunes · School · Rooms</summary><p><b>Jar · Tunes</b> is where Honey/MirrorHoney live in story form; <b>School</b> holds guides; <b>Rooms</b> are rituals/prompts. Tap <b>Bridge</b> to cross — audio pauses; nothing is uploaded.</p></details>
       <details><summary>Where to get help</summary><p>Here in FAQs, on Froot’s Support card, or via the Bee guide in First‑Light. If anything feels uncomfortable, lower the volume or stop and rest in silence.</p></details>
@@ -337,7 +343,7 @@
     <footer class="note">Last touch: if the world feels loud, tap 🔊 to hush; tap 🔁 to return to the small steady thing that is your breath.</footer>
   </div>
 
-  <!-- Hidden audio pipe (iOS lock safety) -->
+  <!-- hidden pipe for iOS audio session -->
   <audio id="bgPipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
 
   <!-- Bridge modal -->
@@ -348,556 +354,550 @@
       <div class="controls">
         <button type="button" id="toSchool">↩ Jar · School</button>
         <button type="button" id="toRooms">↩ Jar · Rooms</button>
+        <button type="button" id="toTunes">↩ Tunes</button>
         <button type="button" id="toEgg">↩ Egg Map</button>
         <button type="button" id="bridgeClose" style="margin-left:auto">Stay in Froot</button>
       </div>
     </div>
   </div>
 
-  <!-- First‑Light (compact) -->
-  <div id="firstLight" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,12,16,.65);backdrop-filter:blur(8px);z-index:10010">
-    <div style="width:min(620px,94vw);border-radius:16px;border:1px solid rgba(255,255,255,.16);padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.12));color:#e7edf7;box-shadow:0 18px 50px rgba(0,0,0,.45)">
-      <h3 style="margin:0 0 6px">Welcome to Froot</h3>
-      <p style="margin:6px 0 12px;color:#a9b4c7">Six weeks hold the arc. Day 1 is <b>Signal</b>. Days 2–5: <b>Variation</b> (you can nudge Δfreq). Day 6: <b>Quiet Walk</b>. Day 7: <b>Integration</b>. Your map stays on this device.</p>
-      <div class="controls">
-        <label style="margin-right:auto;color:#a9b4c7"><input id="flRemember" type="checkbox" checked> Don’t show again</label>
-        <button type="button" id="flEgg">Visit Egg Map</button>
-        <button type="button" id="flBegin" class="primary">Just begin (W1 · Blue)</button>
-      </div>
-    </div>
-  </div>
+<script>
+/* ===== Safe area so header links never hide under the Quickbar ===== */
+function setQuickbarSafe(){
+  const qb=document.querySelector('.quickbar');
+  const px = qb ? Math.ceil(qb.getBoundingClientRect().height + 20) : 0;
+  document.documentElement.style.setProperty('--quickbar-safe', px+'px');
+}
+document.addEventListener('DOMContentLoaded', setQuickbarSafe);
+window.addEventListener('resize', setQuickbarSafe);
+window.addEventListener('orientationchange', setQuickbarSafe);
 
-  <script>
-    /* ===== Utilities & Bridge host ===== */
-    function jarBaseURL(){
-      var h=location.hostname;
-      if(h==='localhost'||h==='127.0.0.1') return '';
-      var p=h.split('.'); if(p.length>=2){ p[0]='jar'; return location.protocol+'//'+p.join('.'); }
-      return '';
-    }
-    function openBridge(){ stopTone(); honeyStop(); document.getElementById('bridgeModal').style.display='flex'; }
-    function closeBridge(){ document.getElementById('bridgeModal').style.display='none'; }
-    function bridgeTo(path){
-      stopTone(); honeyStop();
-      var base = jarBaseURL()||'';
-      var url = '/school.html';
-      if(path==='rooms') url='/school-rooms.html';
-      if(path==='egg')   url='/marina-egg.html';
-      location.assign(base+url);
-    }
+/* ===== Cross-host routing (absolute subdomains) ===== */
+const HOSTS={
+  froot:'https://froot.plnt.earth',
+  jar:'https://jar.plnt.earth',
+  tunes:'https://tunes.plnt.earth',
+  sine:'https://sine.plnt.earth',
+  mirrorhoney:'https://mirrorhoney.plnt.earth'
+};
+function goAbs(target){
+  try{ stopTone(); }catch(_){}
+  try{ honeyStop(); }catch(_){}
+  const q='?source=froot';
+  let url='';
+  if(target==='jar.school') url=HOSTS.jar+'/school.html'+q;
+  else if(target==='jar.rooms') url=HOSTS.jar+'/school-rooms.html'+q;
+  else if(target==='jar.egg') url=HOSTS.jar+'/marina-egg.html'+q;
+  else if(target==='tunes') url=HOSTS.tunes+'/'+q;
+  else if(target==='sine') url=HOSTS.sine+'/'+q;
+  else if(target==='sine.res') url=HOSTS.sine+'/resonance.html'+q;
+  else if(target==='mirrorhoney') url=HOSTS.mirrorhoney+'/'+q;
+  else url=HOSTS.jar+'/school.html'+q;
+  location.assign(url);
+}
 
-    /* ===== State (persisted) ===== */
-    const MUTE_KEY='froot_mute_v2', PREFS_KEY='froot_prefs_v4', MODE_KEY='froot_mode_v2',
-          MAP_KEY='froot_map_v2', VAR_KEY='froot_variation_v2', SCHED_KEY='froot_schedule_v2',
-          LOOP_KEY='froot_loop_v2', TIMER_KEY='froot_loop_timer_v2', FL_KEY='froot_firstlight_seen_v2',
-          FLY_KEY='froot_flytrap_v1', MIRROR_KEY='froot_mirrorhoney_v1';
-    let isMuted=false, mode='pro', loopMode=false, loopTimerMin=20, flytrapOn=false, mirrorHoney=false;
+/* ===== Bind header + bridge links ===== */
+document.getElementById('openTunes').onclick=()=>goAbs('tunes');
+document.getElementById('openSchool').onclick=()=>goAbs('jar.school');
+const bridgeModal=document.getElementById('bridgeModal');
+document.getElementById('openBridge').onclick=()=>{ try{stopTone()}catch(_){ } try{honeyStop()}catch(_){ } bridgeModal.style.display='flex'; };
+document.getElementById('bridgeChip').onclick=()=>bridgeModal.style.display='flex';
+document.getElementById('bridgeClose').onclick=()=>bridgeModal.style.display='none';
+document.getElementById('toSchool').onclick=()=>goAbs('jar.school');
+document.getElementById('toRooms').onclick=()=>goAbs('jar.rooms');
+document.getElementById('toEgg').onclick=()=>goAbs('jar.egg');
+document.getElementById('toTunes').onclick=()=>goAbs('tunes');
 
-    function load(k, fallback){ try{ const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
-    function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
+/* ===== State keys ===== */
+const MUTE_KEY='froot_mute_v2', PREFS_KEY='froot_prefs_v4', MODE_KEY='froot_mode_v2',
+      MAP_KEY='froot_map_v2', VAR_KEY='froot_variation_v2', SCHED_KEY='froot_schedule_v2',
+      LOOP_KEY='froot_loop_v2', TIMER_KEY='froot_loop_timer_v2', FL_KEY='froot_firstlight_seen_v2',
+      FLY_KEY='froot_flytrap_v1', MIRROR_KEY='froot_mirrorhoney_v1';
 
-    /* ===== Schedule (Week / Day) ===== */
-    const WEEK_KEYS={1:'blue',2:'froot',3:'immortal',4:'ancient',5:'heaven',6:'integration'};
-    let schedule = load(SCHED_KEY, {week:1, day:1});
-    function saveSched(){ save(SCHED_KEY, schedule); }
+/* ===== Utilities ===== */
+function load(k,fallback){ try{const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
+function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
 
-    /* ===== Map, Journal, Variation ===== */
-    let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
-    let variation = load(VAR_KEY, {blue:0,froot:0,immortal:0,ancient:0,heaven:0});
-    let journal = load('froot_journal_v2', {});
+/* ===== Schedule (Week / Day) ===== */
+const WEEK_KEYS={1:'blue',2:'froot',3:'immortal',4:'ancient',5:'heaven',6:'integration'};
+let schedule = load(SCHED_KEY, {week:1, day:1});
+function saveSched(){ save(SCHED_KEY, schedule); }
 
-    /* ===== Audio context & routing ===== */
-    let ctx=null, master=null, comp=null, dc=null, usePipe=false, bgDest=null, bgAudio=document.getElementById('bgPipe');
-    let toneOsc=null, toneGain=null, lfoOsc=null, lfoGain=null, activeKeyPlaying=null, retriggerGuard=false;
-    // Honey/MirrorHoney
-    let hOsc=null, hGain=null, hL=null, hR=null, hGL=null, hGR=null, hBeat=null;
+/* ===== Map, Journal, Variation ===== */
+let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
+let variation = load(VAR_KEY, {blue:0,froot:0,immortal:0,ancient:0,heaven:0});
+let journal = load('froot_journal_v2', {});
 
-    const MASTER_GAIN_TARGET = 0.85;
+/* ===== Audio context ===== */
+let ctx=null, master=null, comp=null, dc=null, usePipe=false, bgDest=null, bgAudio=document.getElementById('bgPipe');
+let toneOsc=null, toneGain=null, lfoOsc=null, lfoGain=null, activeKeyPlaying=null, retriggerGuard=false;
+let hOsc=null, hGain=null, hL=null, hR=null, hGL=null, hGR=null, hBeat=null; // Honey / MirrorHoney
+const MASTER_GAIN_TARGET=0.85;
+function ensureCtx(){
+  if(ctx) return ctx;
+  ctx=new (window.AudioContext||window.webkitAudioContext)({latencyHint:"interactive"});
+  master=ctx.createGain(); master.gain.value=MASTER_GAIN_TARGET;
+  comp=ctx.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=12; comp.ratio.value=2; comp.attack.value=.01; comp.release.value=.3;
+  dc=ctx.createBiquadFilter(); dc.type='highpass'; dc.frequency.value=18;
+  const iOS=/iP(hone|ad|od)/.test(navigator.userAgent||'');
+  if(iOS){
+    usePipe=true;
+    bgDest=ctx.createMediaStreamDestination();
+    master.connect(comp); comp.connect(dc); dc.connect(bgDest);
+    try{ bgAudio.srcObject=bgDest.stream; bgAudio.loop=true; }catch(_){}
+  } else {
+    master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
+  }
+  document.addEventListener('click', ()=>ctx.resume(), {once:true});
+  return ctx;
+}
+function resumeCtx(){ if(ctx && ctx.state==='suspended') ctx.resume(); if(usePipe && bgAudio && bgAudio.paused){ bgAudio.play().catch(()=>{}); } }
+function ramp(param,val,t=.15){ const now=ctx.currentTime; param.cancelScheduledValues(now); param.setValueAtTime(param.value, now); param.linearRampToValueAtTime(val, now+t); }
 
-    function ensureCtx(){
-      if(ctx) return ctx;
-      ctx = new (window.AudioContext||window.webkitAudioContext)({latencyHint:"interactive"});
-      master = ctx.createGain(); master.gain.value = MASTER_GAIN_TARGET;
-      comp   = ctx.createDynamicsCompressor();
-      comp.threshold.value=-18; comp.knee.value=12; comp.ratio.value=2; comp.attack.value=.01; comp.release.value=.3;
-      dc = ctx.createBiquadFilter(); dc.type='highpass'; dc.frequency.value=18;
-      // iOS pipe
-      usePipe = /iP(hone|ad|od)/.test(navigator.userAgent||'');
-      if(usePipe){
-        bgDest = ctx.createMediaStreamDestination();
-        master.connect(comp); comp.connect(dc); dc.connect(bgDest);
-        try{ bgAudio.srcObject=bgDest.stream; bgAudio.loop=true; }catch(_){}
-      }else{
-        master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
-      }
-      return ctx;
-    }
-    function resumeCtx(){ if(ctx && ctx.state==='suspended') ctx.resume(); if(usePipe && bgAudio && bgAudio.paused){ bgAudio.play().catch(()=>{}); } }
+/* ===== Quickbar bindings ===== */
+let isMuted=!!load(MUTE_KEY,false), loopMode=!!(load(LOOP_KEY,{on:false}).on), loopTimerMin=parseInt(load(TIMER_KEY,20),10)||0;
+let flytrapOn=!!load(FLY_KEY,false), mirrorHoney=!!load(MIRROR_KEY,false);
+function applyMuteImmediate(mute){
+  if(!ctx||!master) return;
+  const now=ctx.currentTime;
+  master.gain.cancelScheduledValues(now);
+  master.gain.setValueAtTime(master.gain.value, now);
+  master.gain.linearRampToValueAtTime(mute?0.0001:MASTER_GAIN_TARGET, now+.06);
+  const b=document.getElementById('qb-mute'); if(b){ b.classList.toggle('warn', mute); b.textContent=mute?'🔇':'🔊'; }
+}
+function refreshQuickbar(){
+  document.getElementById('qb-honey').classList.toggle('on', document.body.classList.contains('honey'));
+  document.getElementById('qb-loop').classList.toggle('on', loopMode);
+  document.getElementById('qb-trick').classList.toggle('on', tricksterOn);
+  document.getElementById('qb-flytrap').classList.toggle('on', flytrapOn);
+  const mb=document.getElementById('qb-mute'); mb.classList.toggle('warn', isMuted); mb.textContent=isMuted?'🔇':'🔊';
+  const md=document.getElementById('qb-mode'); md.textContent=(mode==='goddess'?'👑':'⚙️');
+}
+document.getElementById('qb-mute').onclick=()=>{ ensureCtx(); isMuted=!isMuted; save(MUTE_KEY,isMuted); applyMuteImmediate(isMuted); };
+document.getElementById('qb-honey').onclick=()=>{ document.body.classList.toggle('honey'); if(document.body.classList.contains('honey')) honeyStart(); else honeyStop(); };
+document.getElementById('qb-loop').onclick=()=>{ loopMode=!loopMode; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } refreshQuickbar(); };
+document.getElementById('qb-trick').onclick=()=>{ tricksterOn=!tricksterOn; save('froot_trickster_v1', tricksterOn); tricksterOn?startTrickster():stopTrickster(); refreshQuickbar(); };
+document.getElementById('qb-flytrap').onclick=()=>{ flytrapOn=!flytrapOn; save(FLY_KEY,flytrapOn); if(!flytrapOn) stopFlytrap(); else if(loopMode&&toneGain) startFlytrap(); refreshQuickbar(); };
+document.getElementById('qb-help').onclick=()=>openFirstLight();
 
-    /* ===== Quickbar ===== */
-    function applyMuteImmediate(mute){
-      if(!ctx||!master) return;
-      const now=ctx.currentTime;
-      master.gain.cancelScheduledValues(now);
-      master.gain.setValueAtTime(master.gain.value, now);
-      master.gain.linearRampToValueAtTime(mute?0.0001:MASTER_GAIN_TARGET, now+.06);
-      const b=document.getElementById('qb-mute');
-      if(b){ b.classList.toggle('warn', mute); b.textContent = mute ? '🔇' : '🔊'; }
-    }
-    function refreshQuickbar(){
-      document.getElementById('qb-honey').classList.toggle('on', document.body.classList.contains('honey'));
-      document.getElementById('qb-loop').classList.toggle('on', loopMode);
-      document.getElementById('qb-trick').classList.toggle('on', tricksterOn);
-      document.getElementById('qb-flytrap').classList.toggle('on', flytrapOn);
-      const mb=document.getElementById('qb-mute'); mb.classList.toggle('warn', isMuted); mb.textContent=isMuted?'🔇':'🔊';
-      const md=document.getElementById('qb-mode'); md.textContent = (mode==='goddess'?'👑':'⚙️');
-    }
+/* ===== Breath HUD driver ===== */
+const breathUI=(function(){
+  let host=null,hud=null,arc=null,edge=null,label=null,raf=0,t0=0,dur=1000;
+  function currentHost(){ const wk=WEEK_KEYS[schedule.week]; return document.getElementById('swatch-'+wk); }
+  function attach(){ const h=currentHost(); if(!h) return;
+    if(h.querySelector('.fbrHUD')){ hud=h.querySelector('.fbrHUD'); arc=hud.querySelector('.arc'); edge=hud.querySelector('.edge'); label=hud.querySelector('.label'); return; }
+    h.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="arc" style="--fbr-arc:0deg"></div><div class="edge"></div><div class="label">READY</div></div>');
+    hud=h.querySelector('.fbrHUD'); arc=hud.querySelector('.arc'); edge=hud.querySelector('.edge'); label=hud.querySelector('.label');
+  }
+  function progress(now){ const p=Math.min(1,(now-t0)/dur); arc.style.setProperty('--fbr-arc',(p*360)+'deg'); if(p<1){ raf=requestAnimationFrame(progress); } }
+  function flash(){ edge.classList.remove('flash'); void edge.offsetWidth; edge.classList.add('flash'); }
+  function phase(name,ms){
+    attach(); if(!hud) return;
+    const host=currentHost(); host.classList.remove('fbr-in','fbr-hold','fbr-out'); host.classList.add(name==='hold'?'fbr-hold':(name==='out'?'fbr-out':'fbr-in'));
+    label.textContent=(name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
+    cancelAnimationFrame(raf); t0=performance.now(); dur=Math.max(200,ms|0); arc.style.setProperty('--fbr-arc','0deg'); raf=requestAnimationFrame(progress);
+    try{ if(navigator.vibrate) navigator.vibrate(10); }catch(_){}
+  }
+  function ready(){ attach(); if(!hud) return; label.textContent='READY'; arc.style.setProperty('--fbr-arc','0deg'); const host=currentHost(); host&&host.classList.remove('fbr-in','fbr-hold','fbr-out'); }
+  return {phase,ready};
+})();
+const breathDriver=(function(){
+  let cfg={in:4000,hold:7000,out:8000},tid=0,running=false,seq=['in','hold','out'],idx=0;
+  function step(){ const name=seq[idx]; const ms=cfg[name]||1000; breathUI.phase(name,ms); syncLFO(name,ms); tid=setTimeout(()=>{ idx=(idx+1)%seq.length; step(); }, ms); }
+  function start(){ if(running) return; running=true; idx=0; step(); }
+  function stop(){ running=false; clearTimeout(tid); tid=0; breathUI.ready(); }
+  function setPattern(i,h,o){ cfg={in:i*1000, hold:h*1000, out:o*1000}; if(running){ stop(); start(); } }
+  return {start,stop,setPattern};
+})();
+function setPatternPreset(i,h,o){ breathDriver.setPattern(i,h,o); }
 
-    /* ===== Breath HUD driver ===== */
-    const breathUI=(function(){
-      let host=null,hud=null,arc=null,edge=null,label=null,raf=0,t0=0,dur=1000;
-      function currentHost(){ const wk=WEEK_KEYS[schedule.week]; return document.getElementById('swatch-'+wk); }
-      function attach(){ const h=currentHost(); if(!h) return;
-        if(h.querySelector('.fbrHUD')){ hud=h.querySelector('.fbrHUD'); arc=hud.querySelector('.arc'); edge=hud.querySelector('.edge'); label=hud.querySelector('.label'); return; }
-        h.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="arc" style="--fbr-arc:0deg"></div><div class="edge"></div><div class="label">READY</div></div>');
-        hud=h.querySelector('.fbrHUD'); arc=hud.querySelector('.arc'); edge=hud.querySelector('.edge'); label=hud.querySelector('.label');
-      }
-      function progress(now){ const p=Math.min(1,(now-t0)/dur); arc.style.setProperty('--fbr-arc',(p*360)+'deg'); if(p<1){ raf=requestAnimationFrame(progress); } }
-      function flash(){ edge.classList.remove('flash'); void edge.offsetWidth; edge.classList.add('flash'); }
-      function phase(name,ms){
-        attach(); if(!hud) return;
-        const host=currentHost(); host.classList.remove('fbr-in','fbr-hold','fbr-out'); host.classList.add(name==='hold'?'fbr-hold':(name==='out'?'fbr-out':'fbr-in'));
-        label.textContent=(name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
-        cancelAnimationFrame(raf); t0=performance.now(); dur=Math.max(200,ms|0); arc.style.setProperty('--fbr-arc','0deg'); raf=requestAnimationFrame(progress);
-        flash(); try{ if(navigator.vibrate) navigator.vibrate(10); }catch(_){}
-      }
-      function ready(){ attach(); if(!hud) return; label.textContent='READY'; arc.style.setProperty('--fbr-arc','0deg'); const host=currentHost(); host&&host.classList.remove('fbr-in','fbr-hold','fbr-out'); }
-      return {phase, ready};
-    })();
-    const breathDriver=(function(){
-      let cfg={in:4000,hold:7000,out:8000},tid=0,running=false,seq=['in','hold','out'],idx=0;
-      function step(){ const name=seq[idx]; const ms=cfg[name]||1000; breathUI.phase(name,ms); syncLFO(name,ms); tid=setTimeout(()=>{ idx=(idx+1)%seq.length; step(); }, ms); }
-      function start(){ if(running) return; running=true; idx=0; step(); }
-      function stop(){ running=false; clearTimeout(tid); tid=0; breathUI.ready(); }
-      function setPattern(i,h,o){ cfg={in:i*1000, hold:h*1000, out:o*1000}; if(running){ stop(); start(); } }
-      return {start,stop,setPattern};
-    })();
-    function setPatternPreset(i,h,o){ breathDriver.setPattern(i,h,o); }
+/* ===== Moon phase → breath ===== */
+function moonPhaseInfo(d=new Date()){
+  const lp=2551443; const ref=new Date(Date.UTC(2000,0,6,18,14));
+  const phase=((d-ref)/1000)%lp; const age=phase/(24*3600); const f=((age/29.530588)+1)%1;
+  if(f<0.03||f>0.97) return {name:'New',emoji:'🌑'};
+  if(f<0.21) return {name:'Waxing',emoji:'🌒'};
+  if(f<0.29) return {name:'First Quarter',emoji:'🌓'};
+  if(f<0.46) return {name:'Waxing',emoji:'🌔'};
+  if(f<0.54) return {name:'Full',emoji:'🌕'};
+  if(f<0.71) return {name:'Waning',emoji:'🌖'};
+  if(f<0.79) return {name:'Last Quarter',emoji:'🌗'};
+  return {name:'Waning',emoji:'🌘'};
+}
+function applyMoonBreath(){
+  const mode=document.getElementById('moonMode').value;
+  const info=moonPhaseInfo();
+  document.getElementById('moonEmoji').textContent=info.emoji;
+  document.getElementById('moonName').textContent=info.name;
+  let i=4,h=4,o=4;
+  if(mode==='auto'){
+    if(info.name==='New'){ i=4;h=4;o=4; }
+    else if(info.name==='Full'){ i=4;h=7;o=8; }
+    else if(info.name==='Waning'){ i=4;h=6;o=6; }
+    else { i=4;h=5;o=6; } // Waxing / quarters
+  }else if(mode==='new'){ i=4;h=4;o=4; }
+  else if(mode==='waxing'){ i=4;h=5;o=6; }
+  else if(mode==='full'){ i=4;h=7;o=8; }
+  else if(mode==='waning'){ i=4;h=6;o=6; }
+  if(mode!=='custom') setPatternPreset(i,h,o);
+}
+document.getElementById('moonMode').onchange=applyMoonBreath;
 
-    function syncLFO(phase, ms){
-      if(!ctx||!toneGain||!lfoOsc||!lfoGain) return;
-      const now=ctx.currentTime;
-      const depth = phase==='in'?0.055 : phase==='hold'?0.00 : 0.025;
-      const base  = phase==='in'?0.20  : phase==='hold'?0.18 : 0.16;
-      const rate  = phase==='in'?0.14  : phase==='hold'?0.06 : 0.10;
-      lfoGain.gain.cancelScheduledValues(now); lfoGain.gain.setValueAtTime(lfoGain.gain.value, now); lfoGain.gain.linearRampToValueAtTime(depth, now+.25);
-      lfoOsc.frequency.cancelScheduledValues(now); lfoOsc.frequency.setValueAtTime(lfoOsc.frequency.value, now); lfoOsc.frequency.linearRampToValueAtTime(rate, now+.25);
-      toneGain.gain.cancelScheduledValues(now); toneGain.gain.setValueAtTime(toneGain.gain.value, now); toneGain.gain.linearRampToValueAtTime(base, now+.30);
-    }
+/* ===== Scenes presets (vibe + Δfreq hints) ===== */
+const scenes={
+  "Hayley":       { delta:+0, loop:true,  honey:false, trick:false, mode:'pro',  moon:'waning' },
+  "Swift":        { delta:+2, loop:true,  honey:true,  trick:false, mode:'pro',  moon:'waxing' },
+  "Marina":       { delta:+0, loop:true,  honey:true,  trick:false, mode:'goddess', moon:'full' },
+  "Sabrina":      { delta:+4, loop:true,  honey:false, trick:false, mode:'pro',  moon:'waxing' },
+  "Ariana + Dua": { delta:+6, loop:true,  honey:true,  trick:false, mode:'goddess', moon:'full' },
+  "Doechii":      { delta:+1, loop:true,  honey:false, trick:true,  mode:'pro',  moon:'waning' }
+};
+document.getElementById('scene').onchange=(e)=>{
+  const v=e.target.value; if(!scenes[v]) return;
+  const s=scenes[v];
+  // breath via Moon preset (unless user set Custom)
+  const moonSel=document.getElementById('moonMode');
+  if(moonSel.value!=='custom'){ moonSel.value=s.moon; applyMoonBreath(); }
+  // toggles
+  if(!!s.honey !== document.body.classList.contains('honey')){ document.body.classList.toggle('honey', !!s.honey); !!s.honey ? honeyStart() : honeyStop(); }
+  if(!!s.loop  !== loopMode){ loopMode=!!s.loop; save(LOOP_KEY,{on:loopMode}); }
+  if(!!s.trick !== tricksterOn){ tricksterOn=!!s.trick; save('froot_trickster_v1',tricksterOn); tricksterOn?startTrickster():stopTrickster(); }
+  // Δfreq hint for current week (only applied on Variation days)
+  const k=WEEK_KEYS[schedule.week]; variation[k]=s.delta||0; save(VAR_KEY,variation);
+  if(document.getElementById('varGroup').style.display!=='none'){
+    const slider=document.getElementById('varSlider'), out=document.getElementById('varOut');
+    slider.value=variation[k]; out.textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz';
+    smoothSetLoopFreqIfActive();
+  }
+  refreshQuickbar();
+};
 
-    /* ===== Moon phase → breath ===== */
-    function moonPhaseInfo(d=new Date()){
-      const lp=2551443; const ref=new Date(Date.UTC(2000,0,6,18,14));
-      const phase=((d-ref)/1000)%lp; const age=phase/(24*3600); const f=((age/29.530588)+1)%1;
-      if(f<0.03||f>0.97) return {name:'New',emoji:'🌑'};
-      if(f<0.21) return {name:'Waxing',emoji:'🌒'};
-      if(f<0.29) return {name:'First Quarter',emoji:'🌓'};
-      if(f<0.46) return {name:'Waxing',emoji:'🌔'};
-      if(f<0.54) return {name:'Full',emoji:'🌕'};
-      if(f<0.71) return {name:'Waning',emoji:'🌖'};
-      if(f<0.79) return {name:'Last Quarter',emoji:'🌗'};
-      return {name:'Waning',emoji:'🌘'};
-    }
-    function applyMoonBreath(){
-      const mode=document.getElementById('moonMode').value;
-      const info=moonPhaseInfo();
-      document.getElementById('moonEmoji').textContent=info.emoji;
-      document.getElementById('moonName').textContent=info.name;
-      let i=4,h=4,o=4;
-      const m = mode==='auto' ? info.name.toLowerCase() : mode;
-      if(m==='new'){ i=4;h=4;o=4; }
-      else if(m==='full'){ i=4;h=7;o=8; }
-      else if(m==='waning'){ i=4;h=6;o=6; }
-      else if(m==='waxing'){ i=4;h=5;o=6; }
-      if(mode!=='custom') setPatternPreset(i,h,o);
-    }
+/* ===== Week/Day UI ===== */
+function renderWeekSeg(){
+  const host=document.getElementById('weekSeg'); host.innerHTML='';
+  for(let i=1;i<=6;i++){
+    const b=document.createElement('button'); b.textContent='W'+i; if(i===schedule.week) b.classList.add('primary');
+    b.onclick=()=>{ schedule.week=i; saveSched(); applyScheduleUI(); };
+    host.appendChild(b);
+  }
+}
+function renderDaySeg(){
+  const host=document.getElementById('daySeg'); host.innerHTML='';
+  for(let i=1;i<=7;i++){
+    const b=document.createElement('button'); b.textContent='Day '+i; if(i===schedule.day) b.classList.add('primary');
+    b.onclick=()=>{ schedule.day=i; saveSched(); applyScheduleUI(); };
+    host.appendChild(b);
+  }
+}
+function modeFor(s){
+  if(s.week===6) return {icon:'🧭',name:'Integration'};
+  if(s.day===1) return {icon:'🎯',name:'Signal'};
+  if(s.day>=2&&s.day<=5) return {icon:'🎚️',name:'Variation'};
+  if(s.day===6) return {icon:'🚶',name:'Quiet Walk'};
+  return {icon:'📜',name:'Integration'};
+}
+function applyScheduleUI(){
+  renderWeekSeg(); renderDaySeg();
+  const m=modeFor(schedule);
+  const badge=document.getElementById('modeBadge'); if(badge) badge.innerHTML = `<span class="pill">${m.icon} Mode: ${m.name}</span>`;
+  const cards=document.querySelectorAll('.module');
+  cards.forEach(card=>{
+    const wk=Number(card.getAttribute('data-week')); const k=card.getAttribute('data-key');
+    const dim=(wk!==schedule.week); card.style.opacity = dim?0.45:1;
+    const play=document.getElementById('play-'+k), stop=document.getElementById('stop-'+k);
+    if(play) play.disabled = dim || (schedule.day===6 && WEEK_KEYS[schedule.week]===k);
+    if(stop) stop.disabled = dim;
+  });
+  // Variation slider
+  const varGroup=document.getElementById('varGroup'); const slider=document.getElementById('varSlider'); const out=document.getElementById('varOut');
+  if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
+    varGroup.style.display='inline-flex';
+    const k=WEEK_KEYS[schedule.week]; slider.value=variation[k]||0; out.textContent=((variation[k]||0)>=0?'+':'')+(variation[k]||0)+' Hz';
+  }else{ varGroup.style.display='none'; }
+  hydrateJournal();
+}
 
-    /* ===== Scenes presets (vibe toggles + Δfreq hints) ===== */
-    const scenes={
-      "Hayley":       { delta:+0, loop:true,  honey:false, trick:false, mode:'pro',  moon:'waning' },
-      "Swift":        { delta:+2, loop:true,  honey:true,  trick:false, mode:'pro',  moon:'waxing' },
-      "Marina":       { delta:+0, loop:true,  honey:true,  trick:false, mode:'goddess', moon:'full' },
-      "Sabrina":      { delta:+4, loop:true,  honey:false, trick:false, mode:'pro',  moon:'waxing' },
-      "Ariana + Dua": { delta:+6, loop:true,  honey:true,  trick:false, mode:'goddess', moon:'full' },
-      "Doechii":      { delta:+1, loop:true,  honey:false, trick:true,  mode:'pro',  moon:'waning' }
-    };
+/* ===== Map & Journal ===== */
+function getSeeds(){
+  return {
+    blue:{name:'Blue — Ocean Neon', c1:'var(--blue-1)', c2:'var(--blue-2)', freq:329.63, id:'blue'},
+    froot:{name:'Froot — Electric Lime', c1:'var(--froot-1)', c2:'var(--froot-2)', freq:554.37, id:'froot'},
+    immortal:{name:'Immortal — Violet Dusk', c1:'var(--imm-1)', c2:'var(--imm-2)', freq:220.00, id:'immortal'},
+    ancient:{name:'Ancient Dreams — Rose Aurora', c1:'var(--ad-1)', c2:'var(--ad-2)', freq:349.23, id:'ancient'},
+    heaven:{name:'Handmade Heaven — Sky Bloom', c1:'var(--hh-1)', c2:'var(--hh-2)', freq:587.33, id:'heaven'}
+  };
+}
+function hydrateInputs(){
+  [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
+  .forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.value=mapData[k]||''; });
+}
+function renderMap(){
+  const host=document.getElementById('map'); host.innerHTML='';
+  const seeds=getSeeds();
+  Object.keys(seeds).forEach(k=>{
+    const s=seeds[k]; const word=(mapData[k]||'').trim();
+    const chip=document.createElement('div'); chip.className='card'; chip.style.setProperty('--c1', getComputedStyle(document.documentElement).getPropertyValue(s.c1.replace('var(','').replace(')','')).trim()); chip.style.setProperty('--c2', getComputedStyle(document.documentElement).getPropertyValue(s.c2.replace('var(','').replace(')','')).trim());
+    chip.innerHTML=`<div class="titleline"><h3>${s.name}</h3><div class="huebar"></div></div>${word?`<div class="tiny"><b>${word}</b></div>`:'<div class="tiny">—</div>'}`;
+    host.appendChild(chip);
+  });
+}
+function hydrateJournal(){
+  const w=schedule.week; const j=journal[w]||{note:'',poem:''};
+  const n=document.getElementById('j_note'), p=document.getElementById('j_poem');
+  if(n) n.value=j.note||''; if(p) p.value=j.poem||'';
+}
 
-    /* ===== Week/Day UI ===== */
-    function renderWeekSeg(){
-      const host=document.getElementById('weekSeg'); host.innerHTML='';
-      for(let i=1;i<=6;i++){
-        const b=document.createElement('button'); b.textContent='W'+i; if(i===schedule.week) b.classList.add('primary');
-        b.onclick=()=>{ schedule.week=i; saveSched(); applyScheduleUI(); };
-        host.appendChild(b);
-      }
-    }
-    function renderDaySeg(){
-      const host=document.getElementById('daySeg'); host.innerHTML='';
-      for(let i=1;i<=7;i++){
-        const b=document.createElement('button'); b.textContent='Day '+i; if(i===schedule.day) b.classList.add('primary');
-        b.onclick=()=>{ schedule.day=i; saveSched(); applyScheduleUI(); };
-        host.appendChild(b);
-      }
-    }
-    function modeFor(s){
-      if(s.week===6) return {icon:'🧭',name:'Integration'};
-      if(s.day===1) return {icon:'🎯',name:'Signal'};
-      if(s.day>=2&&s.day<=5) return {icon:'🎚️',name:'Variation'};
-      if(s.day===6) return {icon:'🚶',name:'Quiet Walk'};
-      return {icon:'📜',name:'Integration'};
-    }
-    function applyScheduleUI(){
-      renderWeekSeg(); renderDaySeg();
-      const m=modeFor(schedule);
-      const badge=document.getElementById('modeBadge'); if(badge) badge.innerHTML = `<span class="pill">${m.icon} Mode: ${m.name}</span>`;
-      const cards=document.querySelectorAll('.module');
-      cards.forEach(card=>{
-        const wk=Number(card.getAttribute('data-week')); const k=card.getAttribute('data-key');
-        const dim=(wk!==schedule.week); card.style.opacity = dim?0.45:1;
-        const play=document.getElementById('play-'+k), stop=document.getElementById('stop-'+k);
-        if(play) play.disabled = dim || (schedule.day===6 && WEEK_KEYS[schedule.week]===k);
-        if(stop) stop.disabled = dim;
-      });
-      // Variation slider
-      const varGroup=document.getElementById('varGroup'); const slider=document.getElementById('varSlider'); const out=document.getElementById('varOut');
-      if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
-        varGroup.style.display='inline-flex';
-        const k=WEEK_KEYS[schedule.week]; slider.value=variation[k]||0; out.textContent=((variation[k]||0)>=0?'+':'')+(variation[k]||0)+' Hz';
-      }else{ varGroup.style.display='none'; }
-      hydrateJournal();
-    }
+/* ===== Tone playback (loop or one-shot) ===== */
+let pulseTimer=0;
+function effectiveFreq(base, key){
+  if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
+    const d=variation[key]||0; return Math.min(18000, Math.max(20, base+d));
+  }
+  return base;
+}
+function killToneFast(now){
+  if(!toneOsc||!toneGain) return;
+  try{
+    const end=now+0.10;
+    toneGain.gain.cancelScheduledValues(now);
+    toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+    toneGain.gain.linearRampToValueAtTime(0.0005, end);
+    toneOsc.stop(end);
+  }catch(_){}
+  setTimeout(()=>{ try{toneOsc.disconnect()}catch(_){ } try{toneGain.disconnect()}catch(_){ } toneOsc=toneGain=null; }, 140);
+}
+function playTone(key){
+  ensureCtx();
+  const wkKey=WEEK_KEYS[schedule.week];
+  if(schedule.day===6 && key===wkKey) return; // quiet walk
+  const s=getSeeds()[key]; if(!s) return;
+  const now=ctx.currentTime;
+  if(toneOsc){ killToneFast(now); }
+  if(retriggerGuard) return; retriggerGuard=true; setTimeout(()=>retriggerGuard=false, 250);
 
-    /* ===== Map & Journal ===== */
-    function getSeeds(){
-      return {
-        blue:{name:'Blue — Ocean Neon', c1:'var(--blue-1)', c2:'var(--blue-2)', freq:329.63, id:'blue'},
-        froot:{name:'Froot — Electric Lime', c1:'var(--froot-1)', c2:'var(--froot-2)', freq:554.37, id:'froot'},
-        immortal:{name:'Immortal — Violet Dusk', c1:'var(--imm-1)', c2:'var(--imm-2)', freq:220.00, id:'immortal'},
-        ancient:{name:'Ancient Dreams — Rose Aurora', c1:'var(--ad-1)', c2:'var(--ad-2)', freq:349.23, id:'ancient'},
-        heaven:{name:'Handmade Heaven — Sky Bloom', c1:'var(--hh-1)', c2:'var(--hh-2)', freq:587.33, id:'heaven'}
-      };
-    }
-    function hydrateInputs(){
-      [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
-      .forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.value=mapData[k]||''; });
-    }
-    function renderMap(){
-      const host=document.getElementById('map'); host.innerHTML='';
-      const seeds=getSeeds();
-      Object.keys(seeds).forEach(k=>{
-        const s=seeds[k]; const word=(mapData[k]||'').trim();
-        const chip=document.createElement('div'); chip.className='card'; chip.style.setProperty('--c1', getComputedStyle(document.documentElement).getPropertyValue(s.c1.replace('var(','').replace(')','')).trim()); chip.style.setProperty('--c2', getComputedStyle(document.documentElement).getPropertyValue(s.c2.replace('var(','').replace(')','')).trim());
-        chip.innerHTML=`<div class="titleline"><h3>${s.name}</h3><div class="huebar"></div></div>${word?`<div class="tiny"><b>${word}</b></div>`:'<div class="tiny">—</div>'}`;
-        host.appendChild(chip);
-      });
-    }
-    function hydrateJournal(){
-      const w=schedule.week; const j=journal[w]||{note:'',poem:''};
-      const n=document.getElementById('j_note'), p=document.getElementById('j_poem');
-      if(n) n.value=j.note||''; if(p) p.value=j.poem||'';
-    }
+  toneOsc=ctx.createOscillator(); toneGain=ctx.createGain();
+  const freq=effectiveFreq(s.freq, key);
+  toneOsc.type='sine'; toneOsc.frequency.value=freq;
 
-    /* ===== Tone playback (loop or one-shot) ===== */
-    let pulseTimer=0;
-    function effectiveFreq(base, key){
-      if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
-        const d=variation[key]||0; return Math.min(18000, Math.max(20, base+d));
-      }
-      return base;
-    }
-    function killToneFast(now){
-      if(!toneOsc||!toneGain) return;
-      try{
-        const end=now+0.10;
-        toneGain.gain.cancelScheduledValues(now);
-        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
-        toneGain.gain.linearRampToValueAtTime(0.0005, end);
-        toneOsc.stop(end);
-      }catch(_){}
-      setTimeout(()=>{ try{toneOsc.disconnect()}catch(_){ } try{toneGain.disconnect()}catch(_){ } toneOsc=toneGain=null; }, 140);
-    }
-    function playTone(key){
-      ensureCtx();
-      const wkKey=WEEK_KEYS[schedule.week];
-      if(schedule.day===6 && key===wkKey) return; // quiet walk
-      const s=getSeeds()[key]; if(!s) return;
-      const now=ctx.currentTime;
-      if(toneOsc){ killToneFast(now); }
-      if(retriggerGuard) return; retriggerGuard=true; setTimeout(()=>retriggerGuard=false, 250);
+  if(!loopMode){
+    const atk=0.030, hold=0.25, rel=0.150, sus=0.16, tail=5.4;
+    toneGain.gain.setValueAtTime(0.0, now);
+    toneGain.gain.linearRampToValueAtTime(0.22, now+atk);
+    toneGain.gain.linearRampToValueAtTime(sus,  now+atk+hold);
+    toneGain.gain.setValueAtTime(sus, now+tail);
+    toneGain.gain.linearRampToValueAtTime(0.0005, now+tail+rel);
+    toneOsc.connect(toneGain); toneGain.connect(master);
+    toneOsc.start(now); toneOsc.stop(now+tail+rel+0.02);
+    activeKeyPlaying=key; pulseOn(key);
+    toneOsc.onended=()=>{ pulseOff(key); activeKeyPlaying=null; };
+  }else{
+    toneGain.gain.setValueAtTime(0.0, now);
+    toneGain.gain.linearRampToValueAtTime(0.18, now+0.18);
+    lfoOsc=ctx.createOscillator(); lfoGain=ctx.createGain();
+    lfoOsc.type='sine'; lfoOsc.frequency.setValueAtTime(0.12, now);
+    lfoGain.gain.setValueAtTime(0.03, now);
+    lfoOsc.connect(lfoGain); lfoGain.connect(toneGain.gain);
+    toneOsc.connect(toneGain); toneGain.connect(master);
+    toneOsc.start(now); lfoOsc.start(now);
+    activeKeyPlaying=key; pulseOn(key);
+    breathDriver.start(); resetLoopCountdown();
+    if(flytrapOn) startFlytrap();
+  }
+  resumeCtx();
+}
+function stopTone(){
+  if(!ctx) return;
+  const now=ctx.currentTime;
+  killToneFast(now);
+  if(lfoOsc){ try{ lfoOsc.stop(now+0.14) }catch(_){ } setTimeout(()=>{ try{lfoOsc.disconnect();lfoGain.disconnect()}catch(_){ } lfoOsc=lfoGain=null; }, 180); }
+  breathDriver.stop(); clearLoopTimers(); stopFlytrap();
+  if(activeKeyPlaying){ pulseOff(activeKeyPlaying); activeKeyPlaying=null; }
+}
+function pulseOn(key){
+  const el=document.getElementById('swatch-'+key); if(!el) return;
+  el.classList.add('pulse'); clearInterval(pulseTimer);
+  let t0=performance.now(); pulseTimer=setInterval(()=>{ const t=(performance.now()-t0)/1000; const deg=120+Math.sin(t*2)*10; el.style.background=`linear-gradient(${deg}deg, var(--c1), var(--c2))`; },60);
+  if(!el.querySelector('.fbrHUD')){ el.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="arc" style="--fbr-arc:0deg"></div><div class="edge"></div><div class="label">READY</div></div>'); }
+}
+function pulseOff(key){
+  const el=document.getElementById('swatch-'+key); if(!el) return;
+  el.classList.remove('pulse'); el.style.background='';
+  clearInterval(pulseTimer); pulseTimer=0;
+}
 
-      toneOsc=ctx.createOscillator(); toneGain=ctx.createGain();
-      const freq=effectiveFreq(s.freq, key);
-      toneOsc.type='sine'; toneOsc.frequency.setValueAtTime(freq, now);
+/* ===== Loop timer ===== */
+let loopTimerId=0, loopCountdownTick=0, loopDeadline=0;
+function resetLoopCountdown(){
+  clearLoopTimers();
+  const cd=document.getElementById('loopCountdown'); if(cd) cd.textContent='';
+  if(loopMode && activeKeyPlaying && loopTimerMin>0){
+    const ms=loopTimerMin*60000; loopDeadline=Date.now()+ms;
+    loopTimerId=setTimeout(()=>stopTone(), ms);
+    loopCountdownTick=setInterval(()=>{
+      const left=Math.max(0, loopDeadline - Date.now());
+      const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
+      if(cd) cd.textContent=(m>0? (m+'m ') : '')+(s+'s left');
+      if(left<=0){ clearLoopTimers(); if(cd) cd.textContent=''; }
+    },1000);
+  }
+}
+function clearLoopTimers(){ if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=0; } if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; } loopDeadline=0; }
 
-      if(!loopMode){
-        const atk=0.030, hold=0.25, rel=0.150, sus=0.16, tail=5.4;
-        toneGain.gain.setValueAtTime(0.0, now);
-        toneGain.gain.linearRampToValueAtTime(0.22, now+atk);
-        toneGain.gain.linearRampToValueAtTime(sus,  now+atk+hold);
-        toneGain.gain.setValueAtTime(sus, now+tail);
-        toneGain.gain.linearRampToValueAtTime(0.0005, now+tail+rel);
-        toneOsc.connect(toneGain); toneGain.connect(master);
-        toneOsc.start(now); toneOsc.stop(now+tail+rel+0.02);
-        activeKeyPlaying=key; pulseOn(key);
-        toneOsc.onended=()=>{ pulseOff(key); activeKeyPlaying=null; };
-      }else{
-        toneGain.gain.setValueAtTime(0.0, now);
-        toneGain.gain.linearRampToValueAtTime(0.18, now+0.18);
-        lfoOsc=ctx.createOscillator(); lfoGain=ctx.createGain();
-        lfoOsc.type='sine'; lfoOsc.frequency.setValueAtTime(0.12, now);
-        lfoGain.gain.setValueAtTime(0.03, now);
-        lfoOsc.connect(lfoGain); lfoGain.connect(toneGain.gain);
-        toneOsc.connect(toneGain); toneGain.connect(master);
-        toneOsc.start(now); lfoOsc.start(now);
-        activeKeyPlaying=key; pulseOn(key);
-        breathDriver.start(); resetLoopCountdown();
-        if(flytrapOn) startFlytrap();
-      }
-      resumeCtx();
-    }
-    function stopTone(){
-      if(!ctx) return;
-      const now=ctx.currentTime;
-      killToneFast(now);
-      if(lfoOsc){ try{ lfoOsc.stop(now+0.14) }catch(_){ } setTimeout(()=>{ try{lfoOsc.disconnect();lfoGain.disconnect()}catch(_){ } lfoOsc=lfoGain=null; }, 180); }
-      breathDriver.stop(); clearLoopTimers(); stopFlytrap();
-      if(activeKeyPlaying){ pulseOff(activeKeyPlaying); activeKeyPlaying=null; }
-    }
-    function pulseOn(key){
-      const el=document.getElementById('swatch-'+key); if(!el) return;
-      el.classList.add('pulse'); clearInterval(pulseTimer);
-      let t0=performance.now(); pulseTimer=setInterval(()=>{ const t=(performance.now()-t0)/1000; const deg=120+Math.sin(t*2)*10; el.style.background=`linear-gradient(${deg}deg, var(--c1), var(--c2))`; },60);
-      // Add HUD container if missing
-      if(!el.querySelector('.fbrHUD')){ el.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="arc" style="--fbr-arc:0deg"></div><div class="edge"></div><div class="label">READY</div></div>'); }
-    }
-    function pulseOff(key){
-      const el=document.getElementById('swatch-'+key); if(!el) return;
-      el.classList.remove('pulse'); el.style.background='';
-      clearInterval(pulseTimer); pulseTimer=0;
-    }
+/* ===== Honey + MirrorHoney ===== */
+document.getElementById('honeyMirror').checked = mirrorHoney;
+function honeyStart(){
+  ensureCtx();
+  if(mirrorHoney){
+    if(hL) return;
+    const now=ctx.currentTime;
+    hL=ctx.createOscillator(); hR=ctx.createOscillator();
+    hGL=ctx.createGain(); hGR=ctx.createGain();
+    hL.type='sine'; hR.type='sine'; hL.frequency.value=128; hR.frequency.value=128;
+    hGL.gain.value=0.0; hGR.gain.value=0.0;
+    const merger=ctx.createChannelMerger(2);
+    hL.connect(hGL); hR.connect(hGR);
+    hGL.connect(merger,0,0); hGR.connect(merger,0,1); merger.connect(master);
+    hL.start(now); hR.start(now);
+    // micro-beat
+    hBeat=ctx.createOscillator(); hBeat.frequency.value=0.25; const gL=ctx.createGain(), gR=ctx.createGain(); gL.gain.value=0.03; gR.gain.value=0.03;
+    hBeat.connect(gL); hBeat.connect(gR); gL.connect(hGL.gain); gR.connect(hGR.gain); hBeat.start(now);
+    ramp(hGL.gain, (Number(document.getElementById('honeyVol').value)||0)/100*0.30, .22);
+    ramp(hGR.gain, (Number(document.getElementById('honeyVol').value)||0)/100*0.30, .22);
+  }else{
+    if(hOsc) return;
+    const now=ctx.currentTime;
+    hOsc=ctx.createOscillator(); hGain=ctx.createGain();
+    hOsc.type='sine'; hOsc.frequency.value=128.0; hGain.gain.value=0.0;
+    hOsc.connect(hGain); hGain.connect(master); hOsc.start(now);
+    ramp(hGain.gain, (Number(document.getElementById('honeyVol').value)||0)/100*0.30, .22);
+  }
+  document.body.classList.add('honey'); refreshQuickbar(); resumeCtx();
+}
+function honeyStop(){
+  if(hOsc&&hGain){
+    ramp(hGain.gain,0.0005,.18); setTimeout(()=>{ try{hOsc.stop()}catch(_){ } hOsc.disconnect(); hGain.disconnect(); hOsc=hGain=null; },200);
+  }
+  if(hL||hR){
+    ramp(hGL.gain,0.0005,.18); ramp(hGR.gain,0.0005,.18);
+    setTimeout(()=>{ try{hL.stop();hR.stop()}catch(_){ } if(hBeat){ try{hBeat.stop()}catch(_){ } hBeat.disconnect(); hBeat=null; } hL.disconnect(); hR.disconnect(); hGL.disconnect(); hGR.disconnect(); hL=hR=hGL=hGR=null; },200);
+  }
+  document.body.classList.remove('honey'); refreshQuickbar();
+}
+function honeyVolume(val){
+  const g=(Math.max(0,Math.min(100,Number(val)||0))/100)*0.30;
+  if(hGain) ramp(hGain.gain, g, .06);
+  if(hGL) ramp(hGL.gain, g, .06);
+  if(hGR) ramp(hGR.gain, g, .06);
+}
+document.getElementById('honeyPlay').onclick=honeyStart;
+document.getElementById('honeyStop').onclick=honeyStop;
+document.getElementById('honeyVol').oninput=(e)=>honeyVolume(e.target.value);
+document.getElementById('honeyMirror').onchange=(e)=>{ mirrorHoney=e.target.checked; save(MIRROR_KEY, mirrorHoney); if(hOsc||hL){ honeyStop(); setTimeout(honeyStart,180); } };
 
-    /* ===== Loop timer ===== */
-    let loopTimerId=0, loopCountdownTick=0, loopDeadline=0;
-    function resetLoopCountdown(){
-      clearLoopTimers();
-      const cd=document.getElementById('loopCountdown'); if(cd) cd.textContent='';
-      if(loopMode && activeKeyPlaying && loopTimerMin>0){
-        const ms=loopTimerMin*60000; loopDeadline=Date.now()+ms;
-        loopTimerId=setTimeout(()=>stopTone(), ms);
-        loopCountdownTick=setInterval(()=>{
-          const left=Math.max(0, loopDeadline - Date.now());
-          const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
-          if(cd) cd.textContent=(m>0? (m+'m ') : '')+(s+'s left');
-          if(left<=0){ clearLoopTimers(); if(cd) cd.textContent=''; }
-        },1000);
-      }
-    }
-    function clearLoopTimers(){ if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=0; } if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; } loopDeadline=0; }
+/* ===== Venus Flytrap (gentle gate on loop) ===== */
+let trapId=0;
+function startFlytrap(){
+  if(trapId||!toneGain||!loopMode) return;
+  trapId=setInterval(()=>{
+    if(!toneGain) return;
+    const now=ctx.currentTime;
+    const base = (0.18); // target loop base
+    toneGain.gain.cancelScheduledValues(now);
+    toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+    toneGain.gain.linearRampToValueAtTime(base*0.35, now+0.08);
+    toneGain.gain.linearRampToValueAtTime(base, now+0.22);
+  }, 3200 + Math.random()*2400);
+}
+function stopFlytrap(){ if(trapId){ clearInterval(trapId); trapId=0; } }
 
-    /* ===== Honey + MirrorHoney ===== */
-    function honeyStart(){
-      ensureCtx();
-      if(mirrorHoney){
-        if(hL) return;
-        const now=ctx.currentTime;
-        hL=ctx.createOscillator(); hR=ctx.createOscillator();
-        hGL=ctx.createGain(); hGR=ctx.createGain();
-        hL.type='sine'; hR.type='sine'; hL.frequency.value=128; hR.frequency.value=128;
-        hGL.gain.value=0.0; hGR.gain.value=0.0;
-        const merger=ctx.createChannelMerger(2);
-        hL.connect(hGL); hR.connect(hGR);
-        hGL.connect(merger,0,0); hGR.connect(merger,0,1); merger.connect(master);
-        hL.start(now); hR.start(now);
-        // micro-beat
-        hBeat=ctx.createOscillator(); hBeat.frequency.value=0.25; const gL=ctx.createGain(), gR=ctx.createGain(); gL.gain.value=0.03; gR.gain.value=0.03;
-        hBeat.connect(gL); hBeat.connect(gR); gL.connect(hGL.gain); gR.connect(hGR.gain); hBeat.start(now);
-        ramp(hGL.gain, (Number(document.getElementById('honeyVol').value)||0)/100*0.30, .22);
-        ramp(hGR.gain, (Number(document.getElementById('honeyVol').value)||0)/100*0.30, .22);
-      }else{
-        if(hOsc) return;
-        const now=ctx.currentTime;
-        hOsc=ctx.createOscillator(); hGain=ctx.createGain();
-        hOsc.type='sine'; hOsc.frequency.value=128.0; hGain.gain.value=0.0;
-        hOsc.connect(hGain); hGain.connect(master); hOsc.start(now);
-        ramp(hGain.gain, (Number(document.getElementById('honeyVol').value)||0)/100*0.30, .22);
-      }
-      document.body.classList.add('honey'); refreshQuickbar(); resumeCtx();
-    }
-    function honeyStop(){
-      if(hOsc&&hGain){
-        ramp(hGain.gain,0.0005,.18); setTimeout(()=>{ try{hOsc.stop()}catch(_){ } hOsc.disconnect(); hGain.disconnect(); hOsc=hGain=null; },200);
-      }
-      if(hL||hR){
-        ramp(hGL.gain,0.0005,.18); ramp(hGR.gain,0.0005,.18);
-        setTimeout(()=>{ try{hL.stop();hR.stop()}catch(_){ } if(hBeat){ try{hBeat.stop()}catch(_){ } hBeat.disconnect(); hBeat=null; } hL.disconnect(); hR.disconnect(); hGL.disconnect(); hGR.disconnect(); hL=hR=hGL=hGR=null; },200);
-      }
-      document.body.classList.remove('honey'); refreshQuickbar();
-    }
-    function honeyVolume(val){
-      const g=(Math.max(0,Math.min(100,Number(val)||0))/100)*0.30;
-      if(hGain) ramp(hGain.gain, g, .06);
-      if(hGL) ramp(hGL.gain, g, .06);
-      if(hGR) ramp(hGR.gain, g, .06);
-    }
+/* ===== Trickster (gentle wander) ===== */
+let tricksterOn = load('froot_trickster_v1', false), trickId=0;
+function startTrickster(){
+  if(trickId) return;
+  trickId=setInterval(()=>{
+    if(!ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
+    const s=getSeeds()[activeKeyPlaying]; if(!s) return;
+    const cur=Number(variation[activeKeyPlaying]||0);
+    const step=(Math.random()*2-1)*1.2;
+    const aim=Math.max(-6,Math.min(6, cur+step));
+    variation[activeKeyPlaying]=aim; save(VAR_KEY,variation);
+    const slider=document.getElementById('varSlider'), out=document.getElementById('varOut'); if(slider&&document.getElementById('varGroup').style.display!=='none'){ slider.value=aim; out.textContent=(aim>=0?'+':'')+aim.toFixed(1)+' Hz'; }
+    smoothSetLoopFreqIfActive();
+  }, 1800);
+}
+function stopTrickster(){ if(trickId){ clearInterval(trickId); trickId=0; } }
 
-    /* ===== Venus Flytrap (gentle gate on loop) ===== */
-    let trapId=0;
-    function startFlytrap(){
-      if(trapId||!toneGain||!loopMode) return;
-      trapId=setInterval(()=>{
-        if(!toneGain) return;
-        const now=ctx.currentTime;
-        const base = (0.18); // target loop base
-        toneGain.gain.cancelScheduledValues(now);
-        toneGain.gain.setValueAtTime(toneGain.gain.value, now);
-        toneGain.gain.linearRampToValueAtTime(base*0.35, now+0.08);
-        toneGain.gain.linearRampToValueAtTime(base, now+0.22);
-      }, 3200 + Math.random()*2400);
-    }
-    function stopFlytrap(){ if(trapId){ clearInterval(trapId); trapId=0; } }
+/* ===== LFO sync to breath phases ===== */
+function syncLFO(name, ms){
+  if(!ctx||!toneGain||!lfoOsc||!lfoGain) return;
+  const now=ctx.currentTime;
+  const depth = name==='in'?0.055 : name==='hold'?0.00 : 0.025;
+  const base  = name==='in'?0.20  : name==='hold'?0.18 : 0.16;
+  const rate  = name==='in'?0.14  : name==='hold'?0.06 : 0.10;
+  lfoGain.gain.cancelScheduledValues(now); lfoGain.gain.setValueAtTime(lfoGain.gain.value, now); lfoGain.gain.linearRampToValueAtTime(depth, now+.25);
+  lfoOsc.frequency.cancelScheduledValues(now); lfoOsc.frequency.setValueAtTime(lfoOsc.frequency.value, now); lfoOsc.frequency.linearRampToValueAtTime(rate, now+.25);
+  toneGain.gain.cancelScheduledValues(now); toneGain.gain.setValueAtTime(toneGain.gain.value, now); toneGain.gain.linearRampToValueAtTime(base, now+.30);
+}
+function smoothSetLoopFreqIfActive(){
+  if(!ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
+  const s=getSeeds()[activeKeyPlaying]; if(!s) return;
+  const target=effectiveFreq(s.freq, activeKeyPlaying); const now=ctx.currentTime;
+  toneOsc.frequency.cancelScheduledValues(now); toneOsc.frequency.setValueAtTime(toneOsc.frequency.value, now); toneOsc.frequency.linearRampToValueAtTime(Math.max(1,target), now+.12);
+}
 
-    /* ===== Ramp helper ===== */
-    function ramp(param,val,t){ const now=ctx.currentTime; param.cancelScheduledValues(now); param.setValueAtTime(param.value, now); param.linearRampToValueAtTime(val, now+(t||.15)); }
+/* ===== Loop toggles & timers ===== */
+document.getElementById('loopToggle').onchange=(e)=>{ loopMode=!!e.target.checked; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } resetLoopCountdown(); refreshQuickbar(); };
+document.getElementById('loopTimer').onchange=(e)=>{ loopTimerMin=parseInt(e.target.value,10)||0; save(TIMER_KEY,loopTimerMin); resetLoopCountdown(); };
 
-    /* ===== Trickster (gentle wander during loop) ===== */
-    let tricksterOn = load('froot_trickster_v1', false), trickId=0;
-    function startTrickster(){
-      if(trickId) return;
-      trickId=setInterval(()=>{
-        if(!ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
-        const k=activeKeyPlaying, cur=(variation[k]||0), step=(Math.random()*2-1)*1.2, aim=Math.max(-6,Math.min(6,cur+step));
-        variation[k]=aim; save(VAR_KEY, variation);
-        const slider=document.getElementById('varSlider'), out=document.getElementById('varOut'); if(slider&&document.getElementById('varGroup').style.display!=='none'){ slider.value=aim; out.textContent=(aim>=0?'+':'')+aim.toFixed(1)+' Hz'; }
-        smoothSetLoopFreqIfActive();
-      }, 1800);
-    }
-    function stopTrickster(){ if(trickId){ clearInterval(trickId); trickId=0; } }
-    function smoothSetLoopFreqIfActive(){
-      if(!ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
-      const seeds=getSeeds(); const s=seeds[activeKeyPlaying]; if(!s) return;
-      const target=effectiveFreq(s.freq, activeKeyPlaying); const now=ctx.currentTime;
-      toneOsc.frequency.cancelScheduledValues(now); toneOsc.frequency.setValueAtTime(toneOsc.frequency.value, now); toneOsc.frequency.linearRampToValueAtTime(Math.max(1,target), now+.12);
-    }
+/* ===== Variation slider ===== */
+document.getElementById('varSlider').oninput=(e)=>{
+  const k=WEEK_KEYS[schedule.week]; variation[k]=Math.max(-50,Math.min(50, Number(e.target.value)||0)); save(VAR_KEY,variation);
+  document.getElementById('varOut').textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz'; smoothSetLoopFreqIfActive();
+};
 
-    /* ===== UI bindings ===== */
-    // Quickbar
-    document.getElementById('qb-mute').onclick=()=>{ ensureCtx(); isMuted=!isMuted; save(MUTE_KEY,isMuted); applyMuteImmediate(isMuted); };
-    document.getElementById('qb-honey').onclick=()=>{ document.body.classList.toggle('honey'); if(document.body.classList.contains('honey')) honeyStart(); else honeyStop(); };
-    document.getElementById('qb-loop').onclick=()=>{ loopMode=!loopMode; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } refreshQuickbar(); };
-    document.getElementById('qb-trick').onclick=()=>{ tricksterOn=!tricksterOn; save('froot_trickster_v1', tricksterOn); tricksterOn?startTrickster():stopTrickster(); refreshQuickbar(); };
-    document.getElementById('qb-flytrap').onclick=()=>{ flytrapOn=!flytrapOn; save(FLY_KEY,flytrapOn); if(!flytrapOn) stopFlytrap(); else if(loopMode&&toneGain) startFlytrap(); refreshQuickbar(); };
-    document.getElementById('qb-mode').onclick=()=>{ mode = (mode==='goddess'?'pro':'goddess'); save(MODE_KEY,mode); refreshQuickbar(); };
-    document.getElementById('qb-help').onclick=()=>{ document.getElementById('firstLight').style.display='flex'; };
+/* ===== Honey toggle via header is handled by Quickbar; this shows controls always */
+document.getElementById('honey-controls').style.display='block';
 
-    // Bridge
-    document.getElementById('openBridge').onclick=openBridge;
-    document.getElementById('bridgeChip').onclick=openBridge;
-    document.getElementById('bridgeClose').onclick=closeBridge;
-    document.getElementById('toSchool').onclick=()=>bridgeTo('school');
-    document.getElementById('toRooms').onclick=()=>bridgeTo('rooms');
-    document.getElementById('toEgg').onclick=()=>bridgeTo('egg');
+/* ===== Export & Print ===== */
+document.getElementById('exportBtn').onclick=()=>{
+  const payload={version:'3.0', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{mode, loop:loopMode, honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='froot_map.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+document.getElementById('printBtn').onclick=()=>window.print();
 
-    // First‑Light
-    document.getElementById('flBegin').onclick=()=>{
-      if(document.getElementById('flRemember').checked) save(FL_KEY,true);
-      document.getElementById('firstLight').style.display='none';
-      schedule.week=1; schedule.day=1; saveSched(); applyScheduleUI();
-      const sw=document.getElementById('swatch-blue'); sw&&sw.scrollIntoView({behavior:'smooth',block:'center'});
-    };
-    document.getElementById('flEgg').onclick=()=>bridgeTo('egg');
+/* ===== Words + Journal persistence ===== */
+[['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
+  .forEach(([k,id])=>{ const el=document.getElementById(id); if(el){ el.addEventListener('input', ()=>{ mapData[k]=(el.value||'').trim(); save(MAP_KEY,mapData); renderMap(); }); }});
+document.getElementById('j_note').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; save('froot_journal_v2', journal); });
+document.getElementById('j_poem').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; save('froot_journal_v2', journal); });
 
-    // Scenes
-    document.getElementById('scene').onchange=(e)=>{
-      const v=e.target.value; if(!scenes[v]) return;
-      const s=scenes[v];
-      // breath via Moon preset (unless user set Custom)
-      const moonSel=document.getElementById('moonMode');
-      if(moonSel.value!=='custom'){ moonSel.value=s.moon; applyMoonBreath(); }
-      // toggles
-      if(s.mode && s.mode!==mode){ mode=s.mode; save(MODE_KEY,mode); }
-      if(!!s.honey !== document.body.classList.contains('honey')){ document.body.classList.toggle('honey', !!s.honey); !!s.honey ? honeyStart() : honeyStop(); }
-      if(!!s.loop  !== loopMode){ loopMode=!!s.loop; save(LOOP_KEY,{on:loopMode}); }
-      if(!!s.trick !== tricksterOn){ tricksterOn=!!s.trick; save('froot_trickster_v1',tricksterOn); tricksterOn?startTrickster():stopTrickster(); }
-      refreshQuickbar();
-      // Δfreq hint for current week (only applied on Variation days)
-      const k=WEEK_KEYS[schedule.week]; variation[k]=s.delta||0; save(VAR_KEY,variation);
-      if(document.getElementById('varGroup').style.display!=='none'){
-        const slider=document.getElementById('varSlider'), out=document.getElementById('varOut');
-        slider.value=variation[k]; out.textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz';
-        smoothSetLoopFreqIfActive();
-      }
-    };
+/* ===== Play/Stop bindings ===== */
+[['blue'],['froot'],['immortal'],['ancient'],['heaven']].forEach(([k])=>{
+  const pb=document.getElementById('play-'+k), sb=document.getElementById('stop-'+k);
+  if(pb) pb.onclick=()=>playTone(k);
+  if(sb) sb.onclick=()=>stopTone();
+});
 
-    // Moon
-    document.getElementById('moonMode').onchange=applyMoonBreath;
+/* ===== First‑Light (compact) ===== */
+function openFirstLight(){ alert('Welcome to Froot — choose a Week & Day; tap Hear Tone; the orb guides your breath. Bridge to Jar when words want to arrive.'); }
 
-    // Week/Day / Variation
-    document.getElementById('varSlider').oninput=(e)=>{
-      const k=WEEK_KEYS[schedule.week]; variation[k]=Math.max(-50,Math.min(50, Number(e.target.value)||0)); save(VAR_KEY,variation);
-      document.getElementById('varOut').textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz'; smoothSetLoopFreqIfActive();
-    };
+/* ===== Mode ===== */
+const MODE_KEY='froot_mode_v2';
+function loadMode(){ try{ return localStorage.getItem(MODE_KEY)||'pro'; }catch(_){ return 'pro'; } }
+function saveMode(m){ try{ localStorage.setItem(MODE_KEY, m); }catch(_){ } }
+let mode = loadMode();
+function toggleMode(){ mode = (mode==='goddess' ? 'pro' : 'goddess'); saveMode(mode); refreshQuickbar(); }
 
-    // Loop toggles
-    document.getElementById('loopToggle').onchange=(e)=>{
-      loopMode=!!e.target.checked; save(LOOP_KEY,{on:loopMode});
-      if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); }
-      resetLoopCountdown(); refreshQuickbar();
-    };
-    document.getElementById('loopTimer').onchange=(e)=>{ loopTimerMin=parseInt(e.target.value,10)||0; save(TIMER_KEY,loopTimerMin); resetLoopCountdown(); };
+/* ===== Boot ===== */
+document.addEventListener('click', ()=>{ ensureCtx(); resumeCtx(); }, {once:true});
+applyScheduleUI(); hydrateInputs(); renderMap(); applyMoonBreath();
+document.getElementById('loopToggle').checked = loopMode; document.getElementById('loopTimer').value=String(loopTimerMin);
+refreshQuickbar();
+if(load('froot_trickster_v1', false)) startTrickster();
 
-    // Honey controls
-    document.getElementById('honeyPlay').onclick=honeyStart;
-    document.getElementById('honeyStop').onclick=honeyStop;
-    document.getElementById('honeyVol').oninput=(e)=>honeyVolume(e.target.value);
-    document.getElementById('honeyMirror').onchange=(e)=>{ mirrorHoney=e.target.checked; save(MIRROR_KEY, mirrorHoney); if(hOsc||hL){ honeyStop(); setTimeout(honeyStart,180); } };
-
-    // Export / Print
-    document.getElementById('exportBtn').onclick=()=>{
-      const payload={version:'3.0', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{mode, loop:loopMode, honey:document.body.classList.contains('honey')}, timestamp:new Date().toISOString()};
-      const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
-      const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='froot_map.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    };
-    document.getElementById('printBtn').onclick=()=>window.print();
-
-    // Words + Journal persistence
-    [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
-      .forEach(([k,id])=>{ const el=document.getElementById(id); if(el){ el.addEventListener('input', ()=>{ mapData[k]=(el.value||'').trim(); save(MAP_KEY,mapData); renderMap(); }); }});
-    document.getElementById('j_note').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; save('froot_journal_v2', journal); });
-    document.getElementById('j_poem').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; save('froot_journal_v2', journal); });
-
-    // Play/Stop bindings
-    [['blue'],['froot'],['immortal'],['ancient'],['heaven']].forEach(([k])=>{
-      const pb=document.getElementById('play-'+k), sb=document.getElementById('stop-'+k);
-      if(pb) pb.onclick=()=>playTone(k);
-      if(sb) sb.onclick=()=>stopTone();
-    });
-
-    /* ===== Boot ===== */
-    // Persisted prefs
-    isMuted = !!load(MUTE_KEY, false); mode = load(MODE_KEY,'pro'); loopMode = !!(load(LOOP_KEY,{on:false}).on); loopTimerMin = parseInt(load(TIMER_KEY,20),10)||0;
-    flytrapOn = !!load(FLY_KEY,false); mirrorHoney = !!load(MIRROR_KEY,false);
-    document.getElementById('honeyMirror').checked = mirrorHoney;
-
-    // Initial UI + patterns
-    applyScheduleUI(); hydrateInputs(); renderMap(); applyMoonBreath();
-    document.getElementById('loopToggle').checked = loopMode; document.getElementById('loopTimer').value=String(loopTimerMin);
-    refreshQuickbar();
-
-    // First‑Light on first visit
-    if(!load(FL_KEY,false)) setTimeout(()=>{ document.getElementById('firstLight').style.display='flex'; }, 600);
-
-    // Resume audio on first user gesture (mobile)
-    document.addEventListener('click', ()=>{ ensureCtx(); resumeCtx(); }, {once:true});
-  </script>
+/* ===== Init defaults ===== */
+setPatternPreset(4,7,8);
+</script>
 </body>
 </html>
