@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Froot — Marina Reflection Edition · Weeks + Honey + FX</title>
-  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Bee notes, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, Trickster micro-wander, and Liminal Bridge to Jar." />
+  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Bee notes, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, Trickster micro-wander, Pro ↔ Goddess modes, and a Liminal Bridge to Jar." />
   <style>
     :root{
       color-scheme: dark;
@@ -230,7 +230,14 @@
     .bridge-actions{display:flex;gap:10px;flex-wrap:wrap}
     .bridge-btn{appearance:none;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-weight:800;padding:10px 12px;cursor:pointer}
     .bridge-btn.primary{border-color:#28452e;background:linear-gradient(180deg, rgba(164,255,101,.22), rgba(0,0,0,.08))}
-    
+
+    /* ===== Mode toggles (Pro / Goddess) ===== */
+    body.mode-pro .aurora{ opacity:.40; filter: blur(16px) saturate(100%); }
+    body.mode-pro .card{ filter:saturate(96%) contrast(102%) }
+    body.mode-pro .muse .card{ border-radius:18px }
+
+    body.mode-goddess .aurora{ opacity:.70; filter: blur(18px) saturate(115%) }
+    body.mode-goddess .card{ filter:saturate(108%) contrast(104%) }
   </style>
 </head>
 <body>
@@ -241,6 +248,7 @@
     <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz" onclick="toggleHoneyFromQuick()">🍯</button>
     <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop" onclick="document.getElementById('loopToggle').click()">🔁</button>
     <button id="qb-trick" class="qbtn" type="button" title="Toggle Trickster (gentle drift)" onclick="toggleTrickster()">🃏</button>
+    <button id="qb-mode" class="qbtn" type="button" title="Toggle Mode: Pro ↔ Goddess" onclick="toggleMode()">👑</button>
   </div>
 
   <!-- Background FX layers -->
@@ -843,7 +851,8 @@
       var hb = document.getElementById('qb-honey'); if(hb){ hb.classList.toggle('on', document.body.classList.contains('honey')); }
       var lb = document.getElementById('qb-loop'); if(lb){ lb.classList.toggle('on', !!document.getElementById('loopToggle')?.checked); }
       var mb = document.getElementById('qb-mute'); if(mb){ mb.classList.toggle('warn', isMuted); mb.textContent = isMuted ? '🔇' : '🔊'; }
-      var tb = document.getElementById('qb-trick'); if(tb){ tb.classList.toggle('on', !!tricksterOn); }
+      var tb = document.getElementById('qb-trick'); if(tb && typeof tricksterOn!=='undefined'){ tb.classList.toggle('on', !!tricksterOn); }
+      var md = document.getElementById('qb-mode'); if(md){ md.textContent = (mode==='goddess' ? '👑' : '⚙️'); md.title = 'Mode: '+(mode==='goddess'?'Goddess':'Pro')+' (tap to switch)'; }
     }
     function toggleHoneyFromQuick(){ toggleHoney(); refreshQuickbar(); }
 
@@ -1150,7 +1159,7 @@
 
     /* Export + Share (auto-Princess on Week 6) */
     function buildMapBlob(){
-      var payload={version:"2.1",
+      var payload={version:"2.2",
         schedule:schedule,
         variation:variation,
         map:mapData,
@@ -1290,6 +1299,54 @@
     }
     function stopTrickster(){ if(trickId){ clearInterval(trickId); trickId=null; } }
 
+    /* ===== Pro/Goddess Mode ===== */
+    var MODE_KEY='froot_mode_v1';
+    function loadMode(){ try{ return localStorage.getItem(MODE_KEY)||'pro'; }catch(_){ return 'pro'; } }
+    function saveMode(m){ try{ localStorage.setItem(MODE_KEY, m); }catch(_){ } }
+    var mode = loadMode();
+
+    function ensureState(flag, on){
+      // Use togglers so dependent UI updates happen (e.g., Honey controls)
+      var has = document.body.classList.contains(flag);
+      if(on && !has){
+        if(flag==='honey') toggleHoney();
+        else if(flag==='fx-on') toggleButterfly();
+        else if(flag==='princess-on') togglePrincess();
+        else if(flag==='muse') toggleMuse();
+      } else if(!on && has){
+        if(flag==='honey') toggleHoney();
+        else if(flag==='fx-on') toggleButterfly();
+        else if(flag==='princess-on') togglePrincess();
+        else if(flag==='muse') toggleMuse();
+      }
+    }
+
+    function applyMode(m){
+      mode = (m==='goddess') ? 'goddess' : 'pro';
+      document.body.classList.remove('mode-pro','mode-goddess');
+      document.body.classList.add(mode==='goddess' ? 'mode-goddess' : 'mode-pro');
+
+      if(mode==='pro'){
+        ensureState('muse', true);
+        ensureState('honey', false);
+        ensureState('fx-on', false);
+        ensureState('princess-on', false);
+        if(loopMode) setLoop(false);
+        if(typeof tricksterOn!=='undefined' && tricksterOn){ toggleTrickster(); }
+        beeWhisper("Pro: steady, light, and fast.", 2600);
+      }else{
+        ensureState('muse', true);
+        ensureState('honey', true);
+        ensureState('fx-on', true);
+        // Princess is celebratory — auto-enable in Week 6
+        if(schedule.week===6) ensureState('princess-on', true);
+        try{ var hv=document.getElementById('honeyVol'); if(hv){ hv.value='22'; honeyVolume(22);} }catch(_){}
+        beeWhisper("Goddess: ceremony engaged. I’m with you.", 2800);
+      }
+      saveMode(mode);
+      refreshQuickbar();
+    }
+
     /* ===== Init ===== */
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
     if(prefs.princess){ document.getElementById("princessBanner").style.display="grid"; }
@@ -1309,6 +1366,8 @@
       try{ var tmin = parseInt(localStorage.getItem('froot_loop_timer_v1')||'20',10); if(!isNaN(tmin)){ loopTimerMin=tmin; if(sel){ sel.value = String(tmin); } } }catch(_){}
       setPatternPreset(4,7,8);
       try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
+      // Apply stored mode after everything is wired
+      applyMode(mode);
       refreshQuickbar();
       if(tricksterOn){ startTrickster(); refreshQuickbar(); }
     })();
