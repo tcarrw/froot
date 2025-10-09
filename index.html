@@ -234,7 +234,7 @@
     /* ===== Mode toggles (Pro / Goddess) ===== */
     body.mode-pro .aurora{ opacity:.40; filter: blur(16px) saturate(100%); }
     body.mode-pro .card{ filter:saturate(96%) contrast(102%) }
-    body.mode-pro .muse .card{ border-radius:18px }
+    .muse .card .details{ color: var(--muted); }
 
     body.mode-goddess .aurora{ opacity:.70; filter: blur(18px) saturate(115%) }
     body.mode-goddess .card{ filter:saturate(108%) contrast(104%) }
@@ -263,6 +263,31 @@
       100%{ box-shadow:0 0 0 0 rgba(164,255,101,.0) }
     }
   </style>
+
+  <!-- JSON-LD: basic FAQ rich results (keep in sync with visible content) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is Froot?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A tiny studio for color, tone, and breath. Pick a week/color, hear a tone, and leave one word. Your map stays on your device." }
+    },{
+      "@type": "Question",
+      "name": "What’s the 42‑day rhythm?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Day 1: Signal. Days 2–5: Variation (Δfreq). Day 6: Quiet Walk (no tone). Day 7: Integration. Week 6 gathers your words." }
+    },{
+      "@type": "Question",
+      "name": "Do you store my words or audio?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Your map remains on your device; export or share when you choose." }
+    },{
+      "@type": "Question",
+      "name": "Is this a medical tool?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. It’s a creative and reflective practice. Use moderate volume; stop if anything feels uncomfortable." }
+    }]
+  }
+  </script>
 </head>
 <body>
   <!-- Quickbar -->
@@ -274,6 +299,9 @@
     <button id="qb-trick" class="qbtn" type="button" title="Toggle Trickster (gentle drift)" onclick="toggleTrickster()">🃏</button>
     <button id="qb-mode" class="qbtn" type="button" title="Toggle Mode: Pro ↔ Goddess" onclick="toggleMode()">👑</button>
     <button id="qb-help" class="qbtn" type="button" title="What is this?" onclick="openFirstLight()">❓</button>
+    <!-- NEW: Quick link to the Support · FAQs card -->
+    <button id="qb-faq" class="qbtn" type="button" title="Support · FAQs" aria-label="Support · FAQs"
+            onclick="document.getElementById('support-faqs')?.scrollIntoView({behavior:'smooth', block:'start'})">❔</button>
   </div>
 
   <!-- Background FX layers -->
@@ -562,7 +590,59 @@
       <div class="foot">Export, share, or send via BLE when you want to carry your colors elsewhere. <button class="bridge-chip" type="button" onclick="openBridge()">🌉 Bridge</button></div>
     </section>
 
-    <footer class="note">Last touch: if the world feels loud, tap 🔊 to hush; tap 🔁 to return to the small steady thing that is your breath. — <b>🐝</b></footer>
+    <!-- NEW: Support · FAQs (site-specific, accessible) -->
+    <section class="card" id="support-faqs">
+      <div class="titleline"><h3>Support · FAQs</h3><div class="huebar" aria-hidden="true" style="--c1:#3a3f4a;--c2:#778199"></div></div>
+
+      <div class="row">
+        <div>
+          <div class="label">Quick links</div>
+          <p class="note">
+            <a href="#faq-start">Getting started</a> ·
+            <a href="#faq-audio">Audio &amp; devices</a> ·
+            <a href="#faq-res">Resonance</a> ·
+            <a href="#faq-privacy">Privacy</a> ·
+            <a href="#faq-safety">Safety</a>
+          </p>
+        </div>
+      </div>
+      <hr>
+
+      <div id="faq-start" class="row">
+        <div class="label">Getting started</div>
+        <details><summary>What is Froot?</summary><p>A tiny studio for color, tone, and breath. Pick a week/color, hear a tone, and leave one word. Your map stays on your device.</p></details>
+        <details><summary>What’s the 42‑day rhythm?</summary><p>Day 1: Signal · Days 2–5: Variation (Δfreq) · Day 6: Quiet Walk (no tone) · Day 7: Integration · Week 6 gathers your words.</p></details>
+      </div>
+
+      <div id="faq-audio" class="row">
+        <div class="label">Audio &amp; devices</div>
+        <details><summary>What is Honey (128 Hz)?</summary><p>A warm, low background bed you can layer under the main tone. Use softly.</p></details>
+        <details><summary>Headphones or speakers?</summary><p>Headphones are kinder; for binaural features on Sine, headphones are recommended. Keep volume moderate; stop if anything feels off.</p></details>
+        <details><summary>Can I change the pitch?</summary><p>On Variation days (2–5), use Δfreq. The tone glides between pitches (no clicks), including when looping.</p></details>
+      </div>
+
+      <div id="faq-res" class="row">
+        <div class="label">Resonance</div>
+        <details><summary>What is Resonance Mode?</summary><p>An alignment tool with a gentle tone (soft start/glide), a color &amp; complement view, <em>Mic Glow</em> to hum steadily, and a 1‑minute breath close. Open, feel, close.</p></details>
+        <p class="note">Explore: <a href="https://sine.plnt.earth/resonance.html" rel="noopener">Resonance Mode</a></p>
+      </div>
+
+      <div id="faq-privacy" class="row">
+        <div class="label">Privacy</div>
+        <details><summary>Do you store my words or audio?</summary><p>Your map lives on your device. Export/share only when you choose. Mic Glow shows steadiness live and does not save data.</p></details>
+        <details><summary>Can I use it offline?</summary><p>Most features run locally in your browser; exports/shares may need brief connectivity.</p></details>
+      </div>
+
+      <div id="faq-safety" class="row">
+        <div class="label">Safety</div>
+        <details><summary>Is this a medical tool?</summary><p>No. It’s a creative/reflective practice. Use moderate volume; if you feel dizzy or uncomfortable, stop and rest.</p></details>
+      </div>
+    </section>
+
+    <footer class="note">
+      Last touch: if the world feels loud, tap 🔊 to hush; tap 🔁 to return to the small steady thing that is your breath. — <b>🐝</b>
+      &nbsp;·&nbsp;<a href="#support-faqs">Support · FAQs</a>
+    </footer>
   </div>
 
   <!-- Hidden audio element that keeps iOS audio session alive while locked -->
@@ -610,6 +690,8 @@
           <label class="fl-remember"><input id="flRemember2" type="checkbox" checked> Don’t show this again</label>
           <button class="fl-btn" type="button" onclick="flGo(1)">Back</button>
           <button class="fl-btn" type="button" onclick="flGo(3)">Next</button>
+          <!-- NEW: jump to FAQs -->
+          <button class="fl-btn" type="button" onclick="flOpenFAQ()">Read FAQs</button>
         </div>
       </div>
 
@@ -1447,6 +1529,15 @@
         if(sw){ sw.scrollIntoView({behavior:'smooth', block:'center'}); sw.classList.add('focus-pulse'); setTimeout(function(){ sw.classList.remove('focus-pulse'); }, 1800); }
       }catch(_){}
       beeWhisper("Start with Blue — one word is enough.", 3600);
+    }
+
+    // NEW: Close First Light and scroll to Support · FAQs
+    function flOpenFAQ(){
+      closeFirstLight();
+      setTimeout(function(){
+        var t=document.getElementById('support-faqs');
+        if(t){ t.scrollIntoView({behavior:'smooth', block:'start'}); t.classList.add('focus-pulse'); setTimeout(()=>t.classList.remove('focus-pulse'), 1800); }
+      }, 120);
     }
 
     // Boot onboarding on first visit or with ?help=1
