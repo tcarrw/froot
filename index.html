@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Froot — Marina Reflection Edition · Weeks + Honey + FX</title>
-  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Bee notes, Muse skin (night), Honey 128 Hz background, Share/BLE, aurora & butterfly FX, Trickster micro-wander, Pro ↔ Goddess modes, and a Liminal Bridge to Jar." />
+  <meta name="description" content="A Marina-inspired color-sense studio with Week/Day practice, Bee notes, Muse skin (night), Honey 128 Hz background, Export/Share/BLE, aurora & butterfly FX, Trickster micro-wander, Pro ↔ Goddess modes, and a Liminal Bridge to Jar." />
   <style>
     :root{
       color-scheme: dark;
@@ -238,17 +238,42 @@
 
     body.mode-goddess .aurora{ opacity:.70; filter: blur(18px) saturate(115%) }
     body.mode-goddess .card{ filter:saturate(108%) contrast(104%) }
+
+    /* ===== First Light Guide (onboarding) ===== */
+    .firstlight{position:fixed;inset:0;z-index:10010;display:none;align-items:center;justify-content:center;background:rgba(10,12,16,.65);backdrop-filter:blur(8px)}
+    .firstlight.on{display:flex}
+    .fl-card{width:min(620px,94vw);border-radius:16px;border:1px solid rgba(255,255,255,.16);padding:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.12)) padding-box,
+                 linear-gradient(120deg, rgba(164,255,101,.45), rgba(134,201,255,.40), rgba(255,209,102,.35)) border-box;
+      color:#e7edf7;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+    .fl-title{margin:0 0 6px;font-size:18px;letter-spacing:.2px}
+    .fl-text{margin:6px 0 12px;color:#a9b4c7}
+    .fl-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:10px}
+    .fl-btn{appearance:none;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-weight:800;padding:10px 12px;cursor:pointer}
+    .fl-btn.primary{border-color:#28452e;background:linear-gradient(180deg, rgba(164,255,101,.22), rgba(0,0,0,.08))}
+    .fl-remember{margin-right:auto;display:flex;align-items:center;gap:6px;color:#a9b4c7;font-size:.9rem}
+    .fl-step{display:none}
+    .fl-step.on{display:block}
+
+    /* Highlight the target module when we “Just begin” */
+    .focus-pulse{animation:focusPulse 1.6s ease-out 1}
+    @keyframes focusPulse{
+      0%{ box-shadow:0 0 0 0 rgba(164,255,101,.0) }
+      50%{ box-shadow:0 0 0 6px rgba(164,255,101,.25) }
+      100%{ box-shadow:0 0 0 0 rgba(164,255,101,.0) }
+    }
   </style>
 </head>
 <body>
   <!-- Quickbar -->
-  <div class="quickbar" role="toolbar" aria-label="Quick audio controls">
+  <div class="quickbar" role="toolbar" aria-label="Quick controls">
     <button id="qb-mute" class="qbtn" type="button" title="Mute / Unmute" onclick="toggleMute()">🔊</button>
     <div class="qsep" aria-hidden="true"></div>
     <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz" onclick="toggleHoneyFromQuick()">🍯</button>
     <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop" onclick="document.getElementById('loopToggle').click()">🔁</button>
     <button id="qb-trick" class="qbtn" type="button" title="Toggle Trickster (gentle drift)" onclick="toggleTrickster()">🃏</button>
     <button id="qb-mode" class="qbtn" type="button" title="Toggle Mode: Pro ↔ Goddess" onclick="toggleMode()">👑</button>
+    <button id="qb-help" class="qbtn" type="button" title="What is this?" onclick="openFirstLight()">❓</button>
   </div>
 
   <!-- Background FX layers -->
@@ -291,6 +316,7 @@
         <button type="button" class="bee-btn" onclick="beeEdit()">Edit</button>
         <button type="button" class="bee-btn" onclick="beeSave()">Save</button>
         <button type="button" class="bee-btn" onclick="beeReset()">Reset</button>
+        <button type="button" class="bee-btn" onclick="openFirstLight()">❓ Guide</button>
         <button type="button" class="bee-btn" onclick="openBridge()">🌉 Bridge</button>
       </div>
     </section>
@@ -559,6 +585,56 @@
     </div>
   </div>
 
+  <!-- ❓ First Light Guide (3 steps, Bee voice) -->
+  <div id="firstLight" class="firstlight" role="dialog" aria-modal="true" aria-labelledby="fl1title">
+    <div class="fl-card">
+
+      <!-- Step 1 -->
+      <div id="flStep1" class="fl-step on">
+        <h3 id="fl1title" class="fl-title">Welcome to Froot</h3>
+        <p class="fl-text">One week, one hue; one minute to breathe; one word to keep. I’ll guide you. — <b>🐝</b></p>
+        <div class="fl-actions">
+          <label class="fl-remember"><input id="flRemember1" type="checkbox" checked> Don’t show this again</label>
+          <button class="fl-btn" type="button" onclick="flGo(2)">Tell me more</button>
+          <button class="fl-btn primary" type="button" onclick="flBegin()">Just begin (W1 · Blue)</button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="flStep2" class="fl-step">
+        <h3 class="fl-title">How the 42‑day spiral works</h3>
+        <p class="fl-text">
+          Six weeks hold the arc. Day 1 is <b>Signal</b>. Days 2–5 are <b>Variation</b> (you can nudge Δfreq). Day 6 is <b>Quiet Walk</b> (no tone). Day 7 is <b>Integration</b>. In Week 6 we gather your words into a map.
+        </p>
+        <div class="fl-actions">
+          <label class="fl-remember"><input id="flRemember2" type="checkbox" checked> Don’t show this again</label>
+          <button class="fl-btn" type="button" onclick="flGo(1)">Back</button>
+          <button class="fl-btn" type="button" onclick="flGo(3)">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="flStep3" class="fl-step">
+        <h3 class="fl-title">Jar, Egg, and your Map</h3>
+        <p class="fl-text">
+          <b>Froot</b> is practice (tone, breath, word). <b>Jar</b> is reflection (School &amp; Rooms). The <b>Egg</b> is the origin story that made this studio.
+          Your Map stays on your device; export whenever you wish. Curious? I can take you to the Egg.
+        </p>
+        <p class="fl-text" style="font-size:.9rem;opacity:.95">
+          Symbols: “Princess of Power” marks integration/celebration. The “Lady in Red” is our Trickster cameo —
+          a gentle invitation to step just outside the loop, safely.
+        </p>
+        <div class="fl-actions">
+          <label class="fl-remember"><input id="flRemember3" type="checkbox" checked> Don’t show this again</label>
+          <button class="fl-btn" type="button" onclick="flGo(2)">Back</button>
+          <button class="fl-btn" type="button" onclick="bridgeTo('jar.egg')">Visit Egg Map</button>
+          <button class="fl-btn primary" type="button" onclick="flBegin()">Start practicing</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     /* ===== Cross-host helpers (Froot ⇄ Jar) ===== */
     function jarBaseURL(){
@@ -807,8 +883,7 @@
         comp.attack.value    = 0.010; comp.release.value = 0.300;
         dc = ctx.createBiquadFilter(); dc.type = "highpass"; dc.frequency.value = 18;
 
-        // Choose a single output path:
-        usePipeOutput = isIOS(); // iOS → route ONLY to media element to keep session stable while locked
+        usePipeOutput = isIOS();
         if(usePipeOutput){
           bgDest = ctx.createMediaStreamDestination();
           bgAudio = document.getElementById('bgPipe');
@@ -818,7 +893,6 @@
           master.connect(comp); comp.connect(dc); dc.connect(ctx.destination);
         }
 
-        // Restore mute state
         try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
         applyMuteImmediate(isMuted);
         refreshQuickbar();
@@ -1159,7 +1233,7 @@
 
     /* Export + Share (auto-Princess on Week 6) */
     function buildMapBlob(){
-      var payload={version:"2.2",
+      var payload={version:"2.3",
         schedule:schedule,
         variation:variation,
         map:mapData,
@@ -1306,7 +1380,6 @@
     var mode = loadMode();
 
     function ensureState(flag, on){
-      // Use togglers so dependent UI updates happen (e.g., Honey controls)
       var has = document.body.classList.contains(flag);
       if(on && !has){
         if(flag==='honey') toggleHoney();
@@ -1338,7 +1411,6 @@
         ensureState('muse', true);
         ensureState('honey', true);
         ensureState('fx-on', true);
-        // Princess is celebratory — auto-enable in Week 6
         if(schedule.week===6) ensureState('princess-on', true);
         try{ var hv=document.getElementById('honeyVol'); if(hv){ hv.value='22'; honeyVolume(22);} }catch(_){}
         beeWhisper("Goddess: ceremony engaged. I’m with you.", 2800);
@@ -1346,6 +1418,43 @@
       saveMode(mode);
       refreshQuickbar();
     }
+
+    /* ===== First Light Guide ===== */
+    var FL_KEY='froot_firstlight_seen_v1';
+    function flSeen(){ try{ return localStorage.getItem(FL_KEY)==='1'; }catch(_){ return false; } }
+    function setFlSeen(on){ try{ localStorage.setItem(FL_KEY, on?'1':'0'); }catch(_){ } }
+
+    function openFirstLight(){ var el=document.getElementById('firstLight'); if(!el) return; el.classList.add('on'); flGo(1); }
+    function closeFirstLight(){
+      var el=document.getElementById('firstLight'); if(!el) return;
+      el.classList.remove('on');
+      var remember = document.querySelector('#firstLight input[type=checkbox]:checked');
+      if(remember){ setFlSeen(true); }
+    }
+    function flGo(n){
+      ['flStep1','flStep2','flStep3'].forEach(function(id,i){
+        var el=document.getElementById(id); if(el){ el.classList.toggle('on', (i===n-1)); }
+      });
+    }
+    function flBegin(){
+      var r1=document.getElementById('flRemember1'), r2=document.getElementById('flRemember2'), r3=document.getElementById('flRemember3');
+      if((r1&&r1.checked)||(r2&&r2.checked)||(r3&&r3.checked)) setFlSeen(true);
+      closeFirstLight();
+
+      schedule.week=1; schedule.day=1; saveSched(); applyScheduleUI();
+      try{
+        var sw=document.getElementById('swatch-blue');
+        if(sw){ sw.scrollIntoView({behavior:'smooth', block:'center'}); sw.classList.add('focus-pulse'); setTimeout(function(){ sw.classList.remove('focus-pulse'); }, 1800); }
+      }catch(_){}
+      beeWhisper("Start with Blue — one word is enough.", 3600);
+    }
+
+    // Boot onboarding on first visit or with ?help=1
+    (function firstLightBoot(){
+      var params=new URLSearchParams(location.search);
+      if(params.get('help')==='1'){ openFirstLight(); return; }
+      if(!flSeen()){ setTimeout(function(){ openFirstLight(); }, 600); }
+    })();
 
     /* ===== Init ===== */
     if(prefs.honey){ document.getElementById("honey-controls").style.display="block"; }
@@ -1366,7 +1475,6 @@
       try{ var tmin = parseInt(localStorage.getItem('froot_loop_timer_v1')||'20',10); if(!isNaN(tmin)){ loopTimerMin=tmin; if(sel){ sel.value = String(tmin); } } }catch(_){}
       setPatternPreset(4,7,8);
       try{ isMuted = JSON.parse(localStorage.getItem(MUTE_KEY)||'false'); }catch(_){}
-      // Apply stored mode after everything is wired
       applyMode(mode);
       refreshQuickbar();
       if(tricksterOn){ startTrickster(); refreshQuickbar(); }
