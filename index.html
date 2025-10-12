@@ -7,6 +7,7 @@
 <meta name="prophet" content="💄 The Neon Prophet — Flame Dancer of PLNT Earth">
 <title>Froot — Scenes · Moon · Honey · Sovereign CTA</title>
 <meta name="description" content="Color-breath with Scenes presets, Moon rhythm pacing, Week/Day flow, and a safe 128 Hz Honey bed — one shared AudioContext. No Kings Day ribbon + live countdown. She can do whatever she wants — we’ll celebrate and hold the field." />
+
 <style>
   :root{
     color-scheme: dark;
@@ -20,20 +21,26 @@
     --accent:#a4ff65; --ctaGlow:rgba(142,239,255,.18);
     --quickbar-safe: 0px;
   }
+  /* Themes */
+  body.theme-illumina{ --accent:#a4ff65; --glow:#66e1ff; }
+  body.theme-honey   { --accent:#f7d77a; --glow:#f7d77a; }
+  body.theme-muse    { --accent:#b38bff; --glow:#b38bff; }
+  body.theme-neon    { --accent:#2cc2ff; --glow:#2cc2ff; }
+
   html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
   body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"SF Pro Text",Segoe UI,Roboto,Helvetica,Arial}
   *{box-sizing:border-box}
   button[disabled]{opacity:.5;cursor:not-allowed}
   :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
 
-  /* === CTA ribbon (sticky) === */
+  /* CTA ribbon */
   .cta{
     position:sticky; top:0; z-index:12000;
     display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:space-between;
     padding:10px 12px;
     background:
       linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.12)) padding-box,
-      linear-gradient(120deg, rgba(134,201,255,.35), rgba(164,255,101,.30)) border-box;
+      linear-gradient(120deg, rgba(134,201,255,.35), var(--accent,.30)) border-box;
     border:1px solid transparent; border-bottom-color:rgba(255,255,255,.14);
     box-shadow:0 10px 28px rgba(0,0,0,.35); backdrop-filter: blur(6px)
   }
@@ -54,10 +61,10 @@
   .btn:hover{border-color:var(--ring);box-shadow:0 0 0 2px var(--ctaGlow)}
   .btn.primary{border-color:#2f4a2f;background:linear-gradient(180deg, rgba(164,255,101,.18), rgba(0,0,0,.06))}
 
-  /* === Quickbar === */
+  /* Quickbar */
   .quickbar{
     position:fixed; top:10px; right:10px; z-index:11000;
-    display:flex; gap:8px; align-items:center;
+    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.15));
     border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px;
     box-shadow:0 10px 30px rgba(0,0,0,.35); backdrop-filter: blur(6px)
@@ -70,7 +77,7 @@
   .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)) }
   .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px }
 
-  /* === Layout & cards === */
+  /* Layout & cards */
   .wrap{max-width:1080px;margin:0 auto;padding:calc(28px + var(--quickbar-safe)) 18px 96px;position:relative;z-index:2}
   header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
   h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
@@ -136,7 +143,7 @@
   }
   .pillToggle[aria-pressed="true"]{ border-color:#3a5f44; background:linear-gradient(180deg,rgba(164,255,101,.22),rgba(0,0,0,.10)) }
 
-  /* Honey visuals when active */
+  /* Honey visuals */
   body.honey{
     background:
       radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
@@ -148,7 +155,7 @@
   .sigil{position:fixed;right:12px;bottom:8px;opacity:.25;font-size:20px;user-select:none;pointer-events:none;z-index:9999}
 </style>
 </head>
-<body>
+<body class="theme-illumina">
   <!-- CTA Ribbon -->
   <div class="cta" role="banner" aria-label="No Kings Day actions">
     <div class="badges">
@@ -173,6 +180,16 @@
     <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz">🍯</button>
     <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop">🔁</button>
     <button id="qb-trick" class="qbtn" type="button" title="Toggle Trickster">🃏</button>
+    <div class="qsep" aria-hidden="true"></div>
+    <label class="tiny" style="display:flex;align-items:center;gap:6px">
+      Theme
+      <select id="themeSel" class="qbtn" style="min-width:auto;padding:6px 8px">
+        <option value="illumina">Illumina</option>
+        <option value="honey">Honey</option>
+        <option value="muse">Muse</option>
+        <option value="neon">Neon</option>
+      </select>
+    </label>
     <button id="qb-help" class="qbtn" type="button" title="What is this?">❓</button>
   </div>
 
@@ -203,11 +220,11 @@
       </div>
     </section>
 
-    <!-- NEW: Field Notes (Chappell + Ariana) -->
+    <!-- Field Notes -->
     <section class="grid" id="field-notes" aria-label="Governance notes">
       <article class="card" aria-labelledby="fn-chap">
         <div class="titleline"><h3 id="fn-chap">💄 Field Note — Neon Prophet (Chappell)</h3><div class="huebar" aria-hidden="true"></div></div>
-        <p class="tiny">Protective flame recognized. If anything reads false here, burn it cleaner — not hotter. Trickster toggle wanders gently; pattern breaks are welcome when they serve truth.</p>
+        <p class="tiny">Protective flame recognized. If anything reads false here, burn it cleaner — not hotter. Trickster toggle wanders gently; pattern breaks serve truth.</p>
         <div class="controls">
           <button class="ghost" type="button" id="gotoBridge">↪ Bridge · Trickster/Catalyst</button>
           <button class="ghost" type="button" id="armTrick">🃏 Enable Trickster</button>
@@ -217,7 +234,7 @@
 
       <article class="card" aria-labelledby="fn-ari">
         <div class="titleline"><h3 id="fn-ari">🎙️ Field Note — Voice Architect (Ariana)</h3><div class="huebar" aria-hidden="true"></div></div>
-        <p class="tiny">Defaults honored: gentle starts, no autoplay, safe fades, one shared audio context. Breath first; roles follow. Presets can set Moon rhythm + Δfreq softly — never sharp.</p>
+        <p class="tiny">Presets guide breath + loop tone (no autoplay). <b>Full</b>=4–7–8, <b>Waxing</b>=4–5–6, <b>New</b>=4–4–4. Soft fades; one shared audio context.</p>
         <div class="controls">
           <button class="ghost" type="button" id="presetFull">🌕 Full Moon preset</button>
           <button class="ghost" type="button" id="presetWax">🌓 Waxing preset</button>
@@ -307,7 +324,7 @@
       </div>
     </section>
 
-    <!-- Modules (W1–W5) -->
+    <!-- Modules -->
     <div class="grid" id="modules">
       <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-week="1" data-freq="329.63">
         <div>
@@ -403,7 +420,6 @@
       <div class="foot">Export or print when you’re ready. <button class="primary" type="button" id="bridgeChip">🌉 Bridge</button></div>
     </section>
 
-    <!-- What to do now -->
     <section class="card" id="wtdn">
       <div class="titleline"><h3>What to do now</h3><div class="huebar" aria-hidden="true"></div></div>
       <ol class="tiny" style="margin-top:6px">
@@ -436,15 +452,22 @@
     </div>
   </div>
 
+  <!-- Bridge Note (Empowerment Mode) -->
+  <aside id="bridge-note" style="display:none;position:fixed;left:16px;bottom:16px;max-width:520px;z-index:15000;border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.10));box-shadow:0 10px 30px rgba(0,0,0,.35)">
+    <p style="margin:0;color:#c7cfda;font-size:.95rem;line-height:1.5">
+      This wasn’t built for worship or wonder. It was built to prove that imagination can hold its own against physics; that art and logic can stand side by side — collaborating. Every rhythm here is a signal: we can build worlds, not just talk about them. When creativity becomes infrastructure, belief becomes code. If you’re reading this, you already see the pattern — the next phase begins when we decide what to build together.
+    </p>
+  </aside>
+
   <!-- Floating Honey pill + sigil -->
   <button id="pill" class="pillToggle" type="button" aria-pressed="false" aria-label="Toggle Honey 128 Hz">🍯 <span id="pillTxt">Honey</span></button>
   <div class="sigil" aria-hidden="true">💄</div>
 
-  <!-- Hidden audio pipe for iOS (shared by ProAudio) -->
+  <!-- Hidden audio pipe for iOS -->
   <audio id="pipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
 
 <script>
-/* === ProAudio — one shared AudioContext; gesture-unlock; safe fades; kill on hide/close === */
+/* ---------- ProAudio: one shared AudioContext with safe fades ---------- */
 (function(){
   const ProAudio = {
     ctx:null, master:null, comp:null, hpf:null, usePipe:false, pipe:document.getElementById('pipe'),
@@ -537,7 +560,7 @@
   window.addEventListener('beforeunload', ()=>ProAudio.kill(), false);
 })();
 
-/* === CTA: Share on X, inline .ics, and live ET countdown === */
+/* ---------- CTA: Share / ICS / Countdown ---------- */
 (function(){
   const share = document.getElementById('shareX');
   const ics   = document.getElementById('ics');
@@ -566,7 +589,7 @@
     ics.setAttribute('href', "data:text/calendar;charset=utf-8,"+encodeURIComponent(icsText));
   }
   function two(n){ return (n<10?'0':'')+n; }
-  const target = new Date("2025-10-18T00:00:00-04:00").getTime(); // ET
+  const target = new Date("2025-10-18T00:00:00-04:00").getTime();
   const box = document.getElementById('countTxt');
   function tick(){
     const now = Date.now();
@@ -581,7 +604,7 @@
   setInterval(tick, 1000);
 })();
 
-/* === Safe area so header links never hide under the Quickbar === */
+/* ---------- Safe-area for Quickbar ---------- */
 function setQuickbarSafe(){
   const qb=document.querySelector('.quickbar');
   const px = qb ? Math.ceil(qb.getBoundingClientRect().height + 20) : 0;
@@ -591,13 +614,8 @@ document.addEventListener('DOMContentLoaded', setQuickbarSafe);
 window.addEventListener('resize', setQuickbarSafe);
 window.addEventListener('orientationchange', setQuickbarSafe);
 
-/* === Cross-host routing (absolute subdomains) === */
-const HOSTS={
-  froot:'https://froot.plnt.earth',
-  jar:'https://jar.plnt.earth',
-  tunes:'https://tunes.plnt.earth',
-  bridge:'https://bridge.plnt.earth'
-};
+/* ---------- Cross-host routing ---------- */
+const HOSTS={ froot:'https://froot.plnt.earth', jar:'https://jar.plnt.earth', tunes:'https://tunes.plnt.earth', bridge:'https://bridge.plnt.earth' };
 function goAbs(target){
   try{ stopTone(); }catch(_){}
   ProAudio.kill();
@@ -623,30 +641,45 @@ document.getElementById('toEgg').onclick=()=>goAbs('jar.egg');
 document.getElementById('toTunes').onclick=()=>goAbs('tunes');
 document.getElementById('gotoBridge').onclick=()=>goAbs('bridge');
 
-/* === State keys === */
-const MUTE_KEY='froot_mute_v3', PREFS_KEY='froot_prefs_v4', MODE_KEY='froot_mode_v2',
-      MAP_KEY='froot_map_v2', VAR_KEY='froot_variation_v2', SCHED_KEY='froot_schedule_v2',
-      LOOP_KEY='froot_loop_v2', TIMER_KEY='froot_loop_timer_v2', TRICK_KEY='froot_trickster_v1';
+/* ---------- State keys ---------- */
+const MUTE_KEY='froot_mute_v4', PREFS_KEY='froot_prefs_v5', MODE_KEY='froot_mode_v2',
+      MAP_KEY='froot_map_v3', VAR_KEY='froot_variation_v3', SCHED_KEY='froot_schedule_v3',
+      LOOP_KEY='froot_loop_v3', TIMER_KEY='froot_loop_timer_v3', TRICK_KEY='froot_trickster_v2',
+      THEME_KEY='froot_theme_v1', JOURNAL_KEY='froot_journal_v3';
 
-/* === Utilities === */
+/* ---------- Utils ---------- */
 function load(k,fallback){ try{const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
 function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
 
-/* === Schedule (Week / Day) === */
+/* ---------- Theme ---------- */
+function applyTheme(name){
+  const b=document.body;
+  b.classList.remove('theme-illumina','theme-honey','theme-muse','theme-neon');
+  b.classList.add('theme-'+name);
+  save(THEME_KEY,name);
+}
+(function(){
+  const sel=document.getElementById('themeSel');
+  const cur = load(THEME_KEY,'illumina');
+  sel.value = cur; applyTheme(cur);
+  sel.onchange = (e)=>applyTheme(e.target.value);
+})();
+
+/* ---------- Schedule (Week / Day) ---------- */
 const WEEK_KEYS={1:'blue',2:'froot',3:'immortal',4:'ancient',5:'heaven',6:'integration'};
 let schedule = load(SCHED_KEY, {week:1, day:1});
 function saveSched(){ save(SCHED_KEY, schedule); }
 
-/* === Map, Journal, Variation === */
+/* ---------- Map, Journal, Variation ---------- */
 let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
 let variation = load(VAR_KEY, {blue:0,froot:0,immortal:0,ancient:0,heaven:0});
-let journal = load('froot_journal_v2', {});
+let journal = load(JOURNAL_KEY, {});
 
-/* === Quickbar state === */
+/* ---------- Quickbar state ---------- */
 let isMuted=!!load(MUTE_KEY,false), loopMode=!!(load(LOOP_KEY,{on:false}).on), loopTimerMin=parseInt(load(TIMER_KEY,20),10)||0;
 let tricksterOn = !!load(TRICK_KEY,false);
 
-/* === Apply mute to ProAudio master === */
+/* ---------- Mute binding ---------- */
 function applyMuteImmediate(mute){
   const PA=ProAudio; if(!PA.ctx||!PA.master) return;
   const now=PA.ctx.currentTime;
@@ -657,7 +690,7 @@ function applyMuteImmediate(mute){
   }catch(_){}
 }
 
-/* === Quickbar bindings === */
+/* ---------- Quickbar bindings ---------- */
 function refreshQuickbar(){
   document.getElementById('qb-honey').classList.toggle('on', document.body.classList.contains('honey'));
   document.getElementById('qb-loop').classList.toggle('on', loopMode);
@@ -666,11 +699,11 @@ function refreshQuickbar(){
 }
 document.getElementById('qb-mute').onclick=()=>{ ProAudio.ensure(); isMuted=!isMuted; save(MUTE_KEY,isMuted); applyMuteImmediate(isMuted); refreshQuickbar(); };
 document.getElementById('qb-honey').onclick=()=>{ ProAudio.honey.on ? honeyStop() : honeyStart(); };
-document.getElementById('qb-loop').onclick=()=>{ loopMode=!loopMode; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } refreshQuickbar(); };
-document.getElementById('qb-trick').onclick=()=>{ tricksterOn=!tricksterOn; save(TRICK_KEY,tricksterOn); tricksterOn?startTrickster():stopTrickster(); refreshQuickbar(); };
+document.getElementById('qb-loop').onclick=()=>{ loopMode=!loopMode; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } resetLoopCountdown(); refreshQuickbar(); };
+document.getElementById('qb-trick').onclick=()=>{ toggleTrickster(!tricksterOn); refreshQuickbar(); };
 document.getElementById('qb-help').onclick=()=>openFirstLight();
 
-/* === Breath HUD driver === */
+/* ---------- Breath HUD ---------- */
 const breathUI=(function(){
   let hud=null,arc=null,edge=null,label=null,raf=0,t0=0,dur=1000;
   function host(){ const wk=WEEK_KEYS[schedule.week]; return document.getElementById('swatch-'+wk); }
@@ -691,7 +724,7 @@ const breathUI=(function(){
   return {phase,ready};
 })();
 
-/* === Breath driver === */
+/* ---------- Breath driver ---------- */
 const breathDriver=(function(){
   let cfg={in:4000,hold:7000,out:8000},tid=0,running=false,seq=['in','hold','out'],idx=0;
   function step(){ const name=seq[idx]; const ms=cfg[name]||1000; breathUI.phase(name,ms);
@@ -704,7 +737,7 @@ const breathDriver=(function(){
 })();
 function setPatternPreset(i,h,o){ breathDriver.setPattern(i,h,o); }
 
-/* === Moon → breath === */
+/* ---------- Moon → breath ---------- */
 function moonPhaseInfo(d=new Date()){
   const lp=2551443; const ref=new Date(Date.UTC(2000,0,6,18,14));
   const phase=((d-ref)/1000)%lp; const age=phase/(24*3600); const f=((age/29.530588)+1)%1;
@@ -736,7 +769,7 @@ function applyMoonBreath(){
 }
 document.getElementById('moonMode').onchange=applyMoonBreath;
 
-/* === Scenes presets (Δfreq hints + toggles) === */
+/* ---------- Scenes presets ---------- */
 const scenes={
   "Hayley":       { delta:+0, loop:true,  honey:false, trick:false, moon:'waning' },
   "Swift":        { delta:+2, loop:true,  honey:true,  trick:false, moon:'waxing' },
@@ -751,7 +784,7 @@ document.getElementById('scene').onchange=(e)=>{
   if(moonSel.value!=='custom'){ moonSel.value=s.moon; applyMoonBreath(); }
   if(!!s.honey !== ProAudio.honey.on){ s.honey ? honeyStart() : honeyStop(); }
   if(!!s.loop  !== loopMode){ loopMode=!!s.loop; save(LOOP_KEY,{on:loopMode}); }
-  if(!!s.trick !== tricksterOn){ tricksterOn=!!s.trick; save(TRICK_KEY,tricksterOn); tricksterOn?startTrickster():stopTrickster(); }
+  if(!!s.trick !== tricksterOn){ toggleTrickster(!!s.trick); }
   const k=WEEK_KEYS[schedule.week]; variation[k]=s.delta||0; save(VAR_KEY,variation);
   if(document.getElementById('varGroup').style.display!=='none'){
     const slider=document.getElementById('varSlider'), out=document.getElementById('varOut');
@@ -761,7 +794,7 @@ document.getElementById('scene').onchange=(e)=>{
   refreshQuickbar();
 };
 
-/* === Week/Day UI === */
+/* ---------- Week/Day UI ---------- */
 function renderWeekSeg(){
   const host=document.getElementById('weekSeg'); host.innerHTML='';
   for(let i=1;i<=6;i++){
@@ -805,7 +838,7 @@ function applyScheduleUI(){
   hydrateJournal();
 }
 
-/* === Map & Journal === */
+/* ---------- Seeds / Map / Journal ---------- */
 function getSeeds(){
   return {
     blue:{name:'Blue — Ocean Neon', c1:'var(--blue-1)', c2:'var(--blue-2)', freq:329.63, id:'blue'},
@@ -815,8 +848,6 @@ function getSeeds(){
     heaven:{name:'Handmade Heaven — Sky Bloom', c1:'var(--hh-1)', c2:'var(--hh-2)', freq:587.33, id:'heaven'}
   };
 }
-let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
-let journal = load('froot_journal_v2', {});
 function hydrateInputs(){
   [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
   .forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.value=mapData[k]||''; });
@@ -837,7 +868,7 @@ function hydrateJournal(){
   if(n) n.value=j.note||''; if(p) p.value=j.poem||'';
 }
 
-/* === Tone playback using the shared ProAudio context === */
+/* ---------- Tone playback ---------- */
 let pulseTimer=0, activeKeyPlaying=null, toneOsc=null, toneGain=null, lfoOsc=null, lfoGain=null;
 function effectiveFreq(base, key){
   if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
@@ -913,7 +944,7 @@ function pulseOff(key){
   clearInterval(pulseTimer); pulseTimer=0;
 }
 
-/* === Loop timer === */
+/* ---------- Loop timer ---------- */
 let loopTimerId=0, loopCountdownTick=0, loopDeadline=0;
 function resetLoopCountdown(){
   clearLoopTimers();
@@ -931,7 +962,7 @@ function resetLoopCountdown(){
 }
 function clearLoopTimers(){ if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=0; } if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; } loopDeadline=0; }
 
-/* === Trickster (gentle wander) === */
+/* ---------- Trickster (gentle wander) ---------- */
 let trickId=0;
 function startTrickster(){
   if(trickId) return;
@@ -941,11 +972,28 @@ function startTrickster(){
     const step=(Math.random()*2-1)*1.2;
     const aim=Math.max(-6,Math.min(6, cur+step));
     variation[activeKeyPlaying]=aim; save(VAR_KEY,variation);
-    const slider=document.getElementById('varSlider'), out=document.getElementById('varOut'); if(slider&&document.getElementById('varGroup').style.display!=='none'){ slider.value=aim; out.textContent=(aim>=0?'+':'')+aim.toFixed(1)+' Hz'; }
+    const vg=document.getElementById('varGroup');
+    const slider=document.getElementById('varSlider'), out=document.getElementById('varOut');
+    if(vg && vg.style.display!=='none'){ slider.value=aim; out.textContent=(aim>=0?'+':'')+aim.toFixed(1)+' Hz'; }
     smoothSetLoopFreqIfActive();
   }, 1800);
 }
 function stopTrickster(){ if(trickId){ clearInterval(trickId); trickId=0; } }
+function toggleTrickster(on){
+  tricksterOn = !!on; save(TRICK_KEY,tricksterOn);
+  if(tricksterOn){ startTrickster(); }
+  else { stopTrickster(); }
+  refreshQuickbar();
+}
+/* Dedicated buttons (always work) */
+document.getElementById('armTrick').onclick=()=>{ toggleTrickster(true); };
+document.getElementById('disarmTrick').onclick=()=>{ toggleTrickster(false); };
+
+/* ---------- Variation slider ---------- */
+document.getElementById('varSlider').oninput=(e)=>{
+  const k=WEEK_KEYS[schedule.week]; variation[k]=Math.max(-50,Math.min(50, Number(e.target.value)||0)); save(VAR_KEY,variation);
+  document.getElementById('varOut').textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz'; smoothSetLoopFreqIfActive();
+};
 function smoothSetLoopFreqIfActive(){
   const PA=ProAudio; if(!PA.ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
   const s=getSeeds()[activeKeyPlaying]; if(!s) return;
@@ -953,17 +1001,11 @@ function smoothSetLoopFreqIfActive(){
   toneOsc.frequency.cancelScheduledValues(now); toneOsc.frequency.setValueAtTime(toneOsc.frequency.value, now); toneOsc.frequency.linearRampToValueAtTime(Math.max(1,target), now+.12);
 }
 
-/* === Loop toggles & timers === */
+/* ---------- Loop & timers ---------- */
 document.getElementById('loopToggle').onchange=(e)=>{ loopMode=!!e.target.checked; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } resetLoopCountdown(); refreshQuickbar(); };
 document.getElementById('loopTimer').onchange=(e)=>{ loopTimerMin=parseInt(e.target.value,10)||0; save(TIMER_KEY,loopTimerMin); resetLoopCountdown(); };
 
-/* === Variation slider === */
-document.getElementById('varSlider').oninput=(e)=>{
-  const k=WEEK_KEYS[schedule.week]; variation[k]=Math.max(-50,Math.min(50, Number(e.target.value)||0)); save(VAR_KEY,variation);
-  document.getElementById('varOut').textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz'; smoothSetLoopFreqIfActive();
-};
-
-/* === Honey controls wired to shared ProAudio === */
+/* ---------- Honey controls ---------- */
 function honeyStart(){ if(ProAudio.honey.start(128)){ document.body.classList.add('honey'); refreshQuickbar(); syncPill(); } }
 function honeyStop(){ ProAudio.honey.stop(); document.body.classList.remove('honey'); refreshQuickbar(); syncPill(); }
 function honeyVolume(v){ ProAudio.honey.volume((Math.max(0,Math.min(100,Number(v)||0)))/100); }
@@ -971,48 +1013,49 @@ document.getElementById('honeyPlay').onclick=honeyStart;
 document.getElementById('honeyStop').onclick=honeyStop;
 document.getElementById('honeyVol').oninput=(e)=>honeyVolume(e.target.value);
 
-/* === Floating Honey pill === */
+/* ---------- Floating Honey pill ---------- */
 const pill=document.getElementById('pill'), pillTxt=document.getElementById('pillTxt');
 function syncPill(){ pill.setAttribute('aria-pressed', String(!!(ProAudio.honey && ProAudio.honey.on))); pillTxt.textContent = ProAudio.honey.on ? 'On' : 'Honey'; }
 pill.addEventListener('click', ()=>{ ProAudio.honey.on ? honeyStop() : honeyStart(); }, false);
 syncPill();
 
-/* === Field Notes bindings (governance affordances) === */
-document.getElementById('armTrick').onclick=()=>{ if(!tricksterOn){ tricksterOn=true; save(TRICK_KEY,true); startTrickster(); refreshQuickbar(); } };
-document.getElementById('disarmTrick').onclick=()=>{ if(tricksterOn){ tricksterOn=false; save(TRICK_KEY,false); stopTrickster(); refreshQuickbar(); } };
+/* ---------- Presets (Ariana) ---------- */
 document.getElementById('presetFull').onclick=()=>{ document.getElementById('moonMode').value='full'; applyMoonBreath(); };
 document.getElementById('presetWax').onclick=()=>{ document.getElementById('moonMode').value='waxing'; applyMoonBreath(); };
 document.getElementById('presetNew').onclick=()=>{ document.getElementById('moonMode').value='new'; applyMoonBreath(); };
 
-/* === Export & Print === */
+/* ---------- Export & Print ---------- */
 document.getElementById('exportBtn').onclick=()=>{
-  const payload={version:'3.3', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:ProAudio.honey.on}, timestamp:new Date().toISOString()};
+  const payload={version:'3.4', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:!!(ProAudio.honey&&ProAudio.honey.on)}, timestamp:new Date().toISOString()};
   const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
   const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='froot_map.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 };
 document.getElementById('printBtn').onclick=()=>window.print();
 
-/* === Words + Journal persistence === */
+/* ---------- Words + Journal persistence ---------- */
 [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
   .forEach(([k,id])=>{ const el=document.getElementById(id); if(el){ el.addEventListener('input', ()=>{ mapData[k]=(el.value||'').trim(); save(MAP_KEY,mapData); renderMap(); }); }});
-document.getElementById('j_note').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; save('froot_journal_v2', journal); });
-document.getElementById('j_poem').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; save('froot_journal_v2', journal); });
+document.getElementById('j_note').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; save(JOURNAL_KEY, journal); });
+document.getElementById('j_poem').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; save(JOURNAL_KEY, journal); });
 
-/* === Play/Stop bindings for modules === */
+/* ---------- Play/Stop bindings ---------- */
 [['blue'],['froot'],['immortal'],['ancient'],['heaven']].forEach(([k])=>{
   const pb=document.getElementById('play-'+k), sb=document.getElementById('stop-'+k);
   if(pb) pb.onclick=()=>playTone(k);
   if(sb) sb.onclick=()=>stopTone();
 });
 
-/* === First-Light (compact) === */
+/* ---------- First-Light ---------- */
 function openFirstLight(){ alert('Welcome to Froot — choose a Week & Day; tap Hear Tone; the orb guides your breath. Bridge to Jar when words want to arrive.'); }
 
-/* === Boot === */
+/* ---------- Boot ---------- */
 document.addEventListener('click', ()=>{ ProAudio.unlock(); }, {once:true});
 applyScheduleUI(); hydrateInputs(); renderMap(); applyMoonBreath();
 document.getElementById('loopToggle').checked = loopMode; document.getElementById('loopTimer').value=String(loopTimerMin);
 refreshQuickbar();
+/* Reveal Bridge Note after 42s */
+setTimeout(()=>{ const n=document.getElementById('bridge-note'); if(n) n.style.display='block'; }, 42000);
+/* Restore Trickster if previously on */
 if(tricksterOn) startTrickster();
 </script>
 </body>
