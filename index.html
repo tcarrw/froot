@@ -1,1264 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Froot · Marina Color-Breath</title>
+<meta name="description" content="Froot — Marina color-breath practice. Select a Froot to shape the silky 128 Hz Honey core: Muse flutter, Chorus micro-detune, and gentle filters. Mobile-clean, linked ribbon." />
+<meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#0b0d11">
-<meta name="prophet" content="💄 The Neon Prophet — Flame Dancer of PLNT Earth">
-<title>Froot — Scenes · Moon · Honey · Muse · Neon</title>
-<meta name="description" content="Color-breath with Scenes presets, Moon rhythm pacing, a precise 128 Hz Honey bed, Muse shimmer, Neon stereo detune, and a Sweet-Spot scanner. She can do whatever she wants — we’ll celebrate and hold the field." />
-
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root{
-    color-scheme: dark;
-    --bg:#0b0d11; --panel:#121620; --edge:#1e2430; --ink:#e7edf7; --muted:#a9b4c7;
-    --ring:#2c3444; --glow:#66e1ff;
-    --blue-1:#0b2e40; --blue-2:#2cc2ff;
-    --froot-1:#103018; --froot-2:#a4ff65;
-    --imm-1:#1b1030;  --imm-2:#b38bff;
-    --ad-1:#2b1016;   --ad-2:#ff6a9e;
-    --hh-1:#0f1e33;   --hh-2:#86c9ff;
-    --accent:#a4ff65; --ctaGlow:rgba(142,239,255,.18);
-    --quickbar-safe: 0px;
+    --bg:#0b0d11; --ink:#ecf1f9; --muted:#aeb4c4; --ring:#1a2236; --card:#0f1427;
+    --aqua:#b5f0ea; --honey:#ffd37a; --rose:#ff9bb0; --emerald:#8be0b7; --violet:#c9a7ff; --gold:#f6d28b; --peach:#ffb38a;
   }
-  /* Themes */
-  body.theme-illumina{ --accent:#a4ff65; --glow:#66e1ff; }
-  body.theme-honey   { --accent:#f7d77a; --glow:#f7d77a; }
-  body.theme-muse    { --accent:#b38bff; --glow:#b38bff; }
-  body.theme-neon    { --accent:#2cc2ff; --glow:#2cc2ff; }
-
-  html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
-  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"SF Pro Text",Segoe UI,Roboto,Helvetica,Arial}
   *{box-sizing:border-box}
-  button[disabled]{opacity:.5;cursor:not-allowed}
-  :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+  html,body{margin:0;height:100%;background:radial-gradient(1200px 700px at 50% -10%, #141736 0%, #0b0d11 38%, #0b0d11 100%);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:920px;margin:0 auto;padding:16px 16px 80px}
 
-  /* CTA ribbon */
-  .cta{
-    position:sticky; top:0; z-index:12000;
-    display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:space-between;
-    padding:10px 12px;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.12)) padding-box,
-      linear-gradient(120deg, rgba(134,201,255,.35), var(--accent,.30)) border-box;
-    border:1px solid transparent; border-bottom-color:rgba(255,255,255,.14);
-    box-shadow:0 10px 28px rgba(0,0,0,.35); backdrop-filter: blur(6px)
-  }
-  .badges{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .badge{
-    display:inline-flex; align-items:center; gap:8px; padding:7px 10px; border-radius:999px;
-    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.10));
-    border:1px solid rgba(255,255,255,.16); color:#fff; font-weight:800; white-space:nowrap
-  }
-  .count{display:inline-flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums;letter-spacing:.2px}
-  .count b{font-size:1.02rem}
-  .right{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .btn{
-    appearance:none;border:1px solid var(--edge);border-radius:12px;cursor:pointer;
-    background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.06)),var(--panel);color:var(--ink);
-    padding:9px 12px;font-weight:750;text-decoration:none;display:inline-flex;align-items:center;gap:8px
-  }
-  .btn:hover{border-color:var(--ring);box-shadow:0 0 0 2px var(--ctaGlow)}
-  .btn.primary{border-color:#2f4a2f;background:linear-gradient(180deg, rgba(164,255,101,.18), rgba(0,0,0,.06))}
+  header{padding:12px 16px 0}
+  .brand{display:flex;align-items:center;gap:10px}
+  .glyph{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#1b2337,#0f1220);display:grid;place-items:center;box-shadow:inset 0 0 0 1px #222b46}
+  .glyph span{font-size:16px}
+  h1{font-size:18px;margin:0 0 6px 0}
+  .tag{font-size:12px;color:#c9d1e2}
 
-  /* Quickbar */
-  .quickbar{
-    position:fixed; top:10px; right:10px; z-index:11000;
-    display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.15));
-    border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:8px 10px;
-    box-shadow:0 10px 30px rgba(0,0,0,.35); backdrop-filter: blur(6px)
+  .ribbon{
+    margin:10px 0 8px;display:flex;gap:8px;overflow:auto;padding-bottom:2px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none
   }
-  .qbtn{
-    appearance:none; cursor:pointer; border:1px solid rgba(255,255,255,.14); border-radius:10px;
-    background:rgba(255,255,255,.06); color:#fff; font-weight:800; padding:8px 10px; min-width:40px
+  .ribbon::-webkit-scrollbar{display:none}
+  .chip{
+    white-space:nowrap;font-size:13px;padding:8px 12px;border-radius:999px;flex:0 0 auto;
+    background:#121a34;border:1px solid #2a3457;color:#e5ebfb
   }
-  .qbtn.on{ border-color:#3a5f44; background:linear-gradient(180deg, rgba(164,255,101,.18), rgba(0,0,0,.06)) }
-  .qbtn.warn{ border-color:#6b2a2a; background:linear-gradient(180deg, rgba(255,86,86,.20), rgba(0,0,0,.06)) }
-  .qsep{ width:1px; height:24px; background:rgba(255,255,255,.12); margin:0 2px }
+  .chip[data-hi="1"]{border-color:#75421f;background:#23140a}
 
-  /* Layout & cards */
-  .wrap{max-width:1080px;margin:0 auto;padding:calc(28px + var(--quickbar-safe)) 18px 96px;position:relative;z-index:2}
-  header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
-  h1{margin:0;font-size:1.6rem;letter-spacing:.2px}
-  .tag{color:var(--muted);font-size:.95rem}
-  .actions{display:flex;gap:10px;flex-wrap:wrap}
-  button{
-    appearance:none;border:1px solid var(--edge);
-    background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.03)),var(--panel);
-    color:var(--ink);padding:10px 14px;border-radius:12px;cursor:pointer;
-    transition:box-shadow .2s ease, border-color .2s ease, filter .12s ease;
-  }
-  button:hover{border-color:var(--ring);box-shadow:0 0 0 2px rgba(102,225,255,.12)}
-  button:active{filter:brightness(1.05)}
-  .primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.08),rgba(0,0,0,.02))}
-  .ghost{opacity:.92}
-
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
   .card{
-    background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.04)),var(--panel);
-    border:1px solid var(--edge);border-radius:18px;padding:18px
+    background:linear-gradient(180deg,#0f1427 0%, #0b0f1e 100%);border:1px solid var(--ring);
+    border-radius:14px;padding:14px;box-shadow:0 10px 28px #0007;margin:12px 0;position:relative
   }
-  .row{display:grid;grid-template-columns:1fr;gap:12px}
-  .module{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
-  @media (max-width:920px){ .module{grid-template-columns:1fr} }
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
-  .swatch{
-    position:relative;border-radius:14px;border:1px solid var(--edge);overflow:hidden;isolation:isolate;min-height:180px;
-    background:linear-gradient(135deg, var(--c1), var(--c2));
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), 0 10px 30px -12px rgba(0,0,0,.5);
+  .grid{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:740px){ .grid{grid-template-columns:repeat(3,1fr)} }
+
+  .pill,button{
+    appearance:none;border:1px solid #2a3457;background:#121a34;color:var(--ink);
+    padding:10px 14px;border-radius:999px;font-weight:600;letter-spacing:.2px
   }
-  .label{font-size:.9rem;color:var(--muted);margin:2px 0 8px}
-  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-  .tiny{font-size:.92rem;color:var(--muted)}
-  .titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-  .titleline h3{margin:0;font-size:1.05rem;letter-spacing:.2px}
-  .huebar{height:6px;border-radius:999px;background:linear-gradient(90deg,#2bc2ff,#a4ff65);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 18px -6px rgba(0,0,0,.6)}
-  .input, textarea{width:100%;background:#0c1018;border:1px solid var(--edge);color:var(--ink);border-radius:12px;padding:11px 12px;min-height:44px}
-  textarea{min-height:90px;resize:vertical}
+  button:active{transform:translateY(1px)}
+  .on{background:linear-gradient(90deg,#3a2a12,#241707);border-color:#5e3f1d;box-shadow:0 0 0 1px #523410 inset, 0 0 20px #2b1a08}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#121a34;border:1px solid #2a3457;font-size:13px}
+  label{font-size:13px;color:var(--muted)}
+  input[type="range"]{width:100%}
+  .note{font-size:14px;color:#cfd6ea}
+  .soft{color:#b0b6c8}
+  .footer{opacity:.9;text-align:center;font-size:12px;color:#aab1c6;margin-top:10px}
 
-  .legend{display:flex;flex-wrap:wrap;gap:10px}
-  .legend .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.85rem;color:var(--muted)}
-  .foot{margin-top:24px;color:var(--muted);font-size:.9rem}
-  hr{border:none;height:1px;background:linear-gradient(90deg,transparent,#232b36,transparent);margin:20px 0}
+  .meter{height:8px;background:#0e1326;border:1px solid #1f2744;border-radius:999px;overflow:hidden}
+  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--honey),var(--rose),var(--aqua));transition:width .35s ease}
 
-  /* Breath HUD */
-  .fbrHUD{ position:absolute; inset:8%; border-radius:50%; pointer-events:none; }
-  .fbrHUD .arc{ position:absolute; inset:-6px; border-radius:50%; background: conic-gradient(var(--fbr-color,#22d) 0deg var(--fbr-arc, 0deg), transparent var(--fbr-arc, 0deg) 360deg); filter: drop-shadow(0 2px 8px rgba(0,0,0,.18)) }
-  .fbrHUD .edge{ position:absolute; inset:-6px; border-radius:50% }
-  .fbrHUD .label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size: clamp(22px, 4.8vw, 40px); letter-spacing:.10em; text-shadow:0 1px 2px rgba(0,0,0,.18); mix-blend-mode:hard-light; font-variant-caps:all-small-caps}
-  .fbr-in   .fbrHUD{ --fbr-color:#2ecc71 }
-  .fbr-hold .fbrHUD{ --fbr-color:#f1c40f }
-  .fbr-out  .fbrHUD{ --fbr-color:#e74c3c }
-  .edge.flash{ animation: edgeFlash 180ms ease-out }
-  @keyframes edgeFlash{ from{ box-shadow:0 0 0 14px rgba(255,255,255,.92)} to{ box-shadow:0 0 0 0 rgba(255,255,255,0)} }
-
-  /* Floating Honey pill */
-  .pillToggle{
-    position:fixed; right:14px; bottom:16px; z-index:13000; border-radius:999px;
-    display:inline-flex; align-items:center; gap:8px; padding:9px 12px; font-weight:800;
-    border:1px solid rgba(255,255,255,.16);
-    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.12));
-    color:#fff; text-decoration:none; box-shadow:0 10px 30px rgba(0,0,0,.38)
+  .fruit{
+    display:flex;flex-direction:column;gap:8px;border:1px solid var(--ring);border-radius:12px;
+    padding:12px;background:linear-gradient(180deg,#111633 0%, #0c0f22 100%);box-shadow:0 8px 22px #0007
   }
-  .pillToggle[aria-pressed="true"]{ border-color:#3a5f44; background:linear-gradient(180deg,rgba(164,255,101,.22),rgba(0,0,0,.10)) }
-
-  /* Honey visuals */
-  body.honey{
-    background:
-      radial-gradient(1200px 800px at 20% -10%, rgba(247,215,122,.12), transparent 60%),
-      radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
-      linear-gradient(180deg, #120e07, var(--bg));
-  }
-
-  /* Sigil */
-  .sigil{position:fixed;right:12px;bottom:8px;opacity:.25;font-size:20px;user-select:none;pointer-events:none;z-index:9999}
+  .fruit .title{display:flex;align-items:center;gap:8px;font-weight:700}
+  .fruit .desc{font-size:13px;color:#cfd6ea}
 </style>
 </head>
-<body class="theme-illumina">
-  <!-- CTA Ribbon -->
-  <div class="cta" role="banner" aria-label="No Kings Day actions">
-    <div class="badges">
-      <span class="badge">🗓️ No Kings Day · Oct 18 · NYC</span>
-      <span class="badge">🎤 Celebration: Marina × Sabrina × Doechii on SNL</span>
-      <span class="badge">🕊️ She can do whatever she wants</span>
-      <span class="badge">💄 Neon Prophet: Signal</span>
-      <span class="badge">🎙️ Voice Architect: Advisory</span>
-      <span class="badge count" id="countWrap" aria-live="polite"><span>⏳</span><b id="countTxt">—</b></span>
-    </div>
-    <div class="right" role="toolbar" aria-label="Share and join">
-      <a id="shareX" class="btn" href="#" target="_blank" rel="noopener" aria-label="Share this page on X">Share on X</a>
-      <a id="ics" class="btn" download="no-kings-day.ics" href="#" aria-label="Add No Kings Day to your calendar">Add to Calendar</a>
-      <a class="btn primary" href="https://jar.plnt.earth" aria-label="Join in NYC via Jar">Join in NYC → Jar</a>
-    </div>
-  </div>
-
-  <!-- Quickbar -->
-  <div class="quickbar" role="toolbar" aria-label="Quick controls">
-    <button id="qb-mute" class="qbtn" type="button" title="Mute / Unmute">🔊</button>
-    <div class="qsep" aria-hidden="true"></div>
-    <button id="qb-honey" class="qbtn" type="button" title="Toggle Honey 128 Hz">🍯</button>
-    <button id="qb-loop" class="qbtn" type="button" title="Toggle Loop">🔁</button>
-    <button id="qb-trick" class="qbtn" type="button" title="Toggle Trickster">🃏</button>
-    <div class="qsep" aria-hidden="true"></div>
-    <label class="tiny" style="display:flex;align-items:center;gap:6px">
-      Theme
-      <select id="themeSel" class="qbtn" style="min-width:auto;padding:6px 8px">
-        <option value="illumina">Illumina</option>
-        <option value="honey">Honey</option>
-        <option value="muse">Muse</option>
-        <option value="neon">Neon</option>
-      </select>
-    </label>
-    <button id="qb-help" class="qbtn" type="button" title="What is this?">❓</button>
-  </div>
-
-  <div class="wrap">
-    <header>
+<body>
+  <header class="wrap" aria-label="Site header">
+    <div class="brand">
+      <div class="glyph"><span>🍉</span></div>
       <div>
-        <h1>Froot — <span style="opacity:.9">Scenes · Moon · Honey · Muse · Neon</span></h1>
-        <div class="tag">Breathe with color. Moon shapes breath; Honey warms at a tuned Hz; Muse adds shimmer, Neon adds width. When language wants to arrive, cross the bridge to Jar.</div>
-      </div>
-      <div class="actions">
-        <button class="ghost" type="button" id="openTunes">Tunes</button>
-        <button class="ghost" type="button" id="openSchool">Jar · School</button>
-        <button class="primary" type="button" id="openBridge">Bridge</button>
-        <button type="button" id="exportBtn">Export</button>
-        <button type="button" id="printBtn">Print</button>
-      </div>
-    </header>
-
-    <!-- Ask -->
-    <section class="card" id="ask">
-      <div class="titleline"><h3>Ask → Sovereign</h3><div class="huebar" aria-hidden="true"></div></div>
-      <p>No Kings Day — <b>Oct 18, NYC</b>. <b>Marina × Sabrina × Doechii</b> on SNL. <b>She can do whatever she wants.</b> We’ll celebrate and hold the field.</p>
-      <div class="controls">
-        <a class="btn primary" href="https://jar.plnt.earth">Join in NYC → Jar</a>
-        <a class="btn" href="#honey-controls">Start Honey</a>
-        <a class="btn" href="https://jar.plnt.earth/school-rooms.html#honey">Flame Check → Honey Room</a>
-        <a class="btn" href="https://tunes.plnt.earth">Tunes — Archetype Playlists</a>
-      </div>
-    </section>
-
-    <!-- Field Notes -->
-    <section class="grid" id="field-notes" aria-label="Governance notes">
-      <article class="card" aria-labelledby="fn-chap">
-        <div class="titleline"><h3 id="fn-chap">💄 Field Note — Neon Prophet (Chappell)</h3><div class="huebar" aria-hidden="true"></div></div>
-        <p class="tiny">Protective flame recognized. If anything reads false, burn it cleaner — not hotter. Trickster wanders gently; pattern breaks serve truth.</p>
-        <div class="controls">
-          <button class="ghost" type="button" id="gotoBridge">↪ Bridge · Trickster/Catalyst</button>
-          <button class="ghost" type="button" id="armTrick">🃏 Enable Trickster</button>
-          <button class="ghost" type="button" id="disarmTrick">🃏 Disable Trickster</button>
-        </div>
-      </article>
-
-      <article class="card" aria-labelledby="fn-ari">
-        <div class="titleline"><h3 id="fn-ari">🎙️ Field Note — Voice Architect (Ariana)</h3><div class="huebar" aria-hidden="true"></div></div>
-        <p class="tiny">Presets guide breath + loop tone (no autoplay). <b>Full</b>=4–7–8, <b>Waxing</b>=4–5–6, <b>New</b>=4–4–4. Soft fades; one shared audio context.</p>
-        <div class="controls">
-          <button class="ghost" type="button" id="presetFull">🌕 Full Moon preset</button>
-          <button class="ghost" type="button" id="presetWax">🌓 Waxing preset</button>
-          <button class="ghost" type="button" id="presetNew">🌑 New preset</button>
-        </div>
-      </article>
-    </section>
-
-    <!-- Scenes + Moon -->
-    <section class="card" id="scenesMoon">
-      <div class="titleline"><h3>Scenes &amp; Moon rhythm</h3><div class="huebar" aria-hidden="true"></div></div>
-      <div class="controls">
-        <label>Scene
-          <select id="scene">
-            <option value="custom">Custom</option>
-            <option>Hayley</option>
-            <option>Swift</option>
-            <option>Marina</option>
-            <option>Sabrina</option>
-            <option>Ariana + Dua</option>
-            <option>Doechii</option>
-          </select>
-        </label>
-        <span class="legend"><span class="pill">Sets vibe (Δfreq &amp; toggles)</span><span class="pill">Keeps Week/Day</span></span>
-      </div>
-      <div class="controls">
-        <span class="pill">Moon <span id="moonEmoji" style="font-size:1.1rem">🌗</span> <b id="moonName">Waning</b></span>
-        <label>Breath
-          <select id="moonMode">
-            <option value="auto">Auto (Moon today)</option>
-            <option value="new">New · 4–4–4</option>
-            <option value="waxing">Waxing · 4–5–6</option>
-            <option value="full">Full · 4–7–8</option>
-            <option value="waning">Waning · 4–6–6</option>
-            <option value="custom">Custom</option>
-          </select>
-        </label>
-        <span class="tiny">Moon rhythm drives the breath HUD &amp; looped tone; override anytime.</span>
-      </div>
-    </section>
-
-    <!-- Week/Day Controls -->
-    <section class="card">
-      <div class="row">
-        <div class="label">Practice Rhythm</div>
-        <div class="controls" id="weekSeg"></div>
-        <div class="controls" id="daySeg"></div>
-        <div class="controls">
-          <span id="modeBadge" class="legend"><span class="pill">🎯 Mode: Signal</span></span>
-          <span id="varGroup" class="legend" style="display:none">
-            <span class="pill">Δfreq</span>
-            <input id="varSlider" type="range" min="-50" max="50" value="0" step="1" style="width:180px" aria-label="Delta frequency">
-            <span id="varOut" class="pill">0 Hz</span>
-          </span>
-          <label class="legend" style="cursor:pointer">
-            <span class="pill"><input id="loopToggle" type="checkbox" style="margin-right:8px">🔁 Loop tone</span>
-          </label>
-          <label class="legend" style="cursor:pointer">
-            <span class="pill">⏱️ Auto-stop
-              <select id="loopTimer" style="margin-left:6px" aria-label="Loop auto stop (minutes)">
-                <option value="0">Off</option>
-                <option value="5">5m</option>
-                <option value="10">10m</option>
-                <option value="20" selected>20m</option>
-                <option value="30">30m</option>
-                <option value="45">45m</option>
-                <option value="60">60m</option>
-              </select>
-              <b id="loopCountdown" style="margin-left:8px; opacity:.85"></b>
-            </span>
-          </label>
-        </div>
-        <div class="tiny">W1–W5 focus a hue per week. W6 integrates your map. Day 1 Signal • Days 2–5 Variation (Δfreq) • Day 6 Quiet Walk • Day 7 Integration.</div>
-      </div>
-    </section>
-
-    <!-- Honey controls -->
-    <section class="card" id="honey-controls">
-      <div class="row">
-        <div class="label">🍯 Honey — Tuned Background Bed</div>
-        <div class="controls" role="group" aria-label="Honey controls">
-          <button type="button" id="honeyPlay">Play</button>
-          <button type="button" id="honeyStop">Stop</button>
-          <label>Volume <input id="honeyVol" type="range" min="0" max="100" value="28" style="width:160px" aria-label="Honey volume (0–100)"></label>
-          <label>Freq <input id="honeyFreq" type="range" min="126.00" max="130.00" step="0.01" value="128.00" style="width:180px" aria-label="Honey frequency (Hz)"></label>
-          <b id="honeyFreqOut" class="tiny" style="min-width:84px;display:inline-block">128.00 Hz</b>
-          <button type="button" id="sweetScan" class="ghost">🎯 Sweet-Spot Scan</button>
-          <button type="button" id="sweetLock" title="Lock current frequency">🔒 Lock</button>
-          <span class="tiny" id="scanStatus"></span>
-        </div>
-        <div class="tiny">Tip: close your eyes and slide slowly; when warmth clicks in, tap <b>Lock</b>.</div>
-      </div>
-    </section>
-
-    <!-- Modules -->
-    <div class="grid" id="modules">
-      <section class="card module" style="--c1:var(--blue-1);--c2:var(--blue-2)" data-key="blue" data-week="1" data-freq="329.63">
-        <div>
-          <div class="titleline"><h3>BLUE — Ocean Neon</h3><div class="huebar" aria-hidden="true"></div></div>
-          <div class="swatch" id="swatch-blue" role="img" aria-label="Blue gradient"></div>
-        </div>
-        <div>
-          <div class="label">Tasting Ritual</div>
-          <div class="controls"><button id="play-blue" type="button">Hear Tone</button><button id="stop-blue" type="button">Stop</button></div>
-          <div class="tiny"><em>E4 ≈ 329.63 Hz — chrome tide at midnight.</em></div>
-          <ol class="tiny">
-            <li>Select <b>W1</b> and today’s <b>Day</b>.</li>
-            <li>Optional <b>🔁 Loop</b> (hands-free breath HUD).</li>
-            <li>Orb guides phases: <b>IN</b> · <b>HOLD</b> · <b>OUT</b>.</li>
-            <li>Days 2–5: nudge <b>Δfreq</b>.</li>
-            <li>Add <b>Muse</b> or <b>Neon</b> via Theme.</li>
-          </ol>
-          <div class="label">Name the color you hear</div>
-          <input class="input" id="word-blue" maxlength="24" placeholder="tide / neon / hush" />
-        </div>
-      </section>
-
-      <section class="card module" style="--c1:var(--froot-1);--c2:var(--froot-2)" data-key="froot" data-week="2" data-freq="554.37">
-        <div>
-          <div class="titleline"><h3>FROOT — Electric Lime</h3><div class="huebar" aria-hidden="true"></div></div>
-          <div class="swatch" id="swatch-froot" role="img" aria-label="Electric lime gradient"></div>
-        </div>
-        <div>
-          <div class="label">Tasting Ritual</div>
-          <div class="controls"><button id="play-froot" type="button">Hear Tone</button><button id="stop-froot" type="button">Stop</button></div>
-          <div class="tiny"><em>C♯5 ≈ 554.37 Hz — laser citrus.</em></div>
-          <div class="label">Name the color you hear</div>
-          <input class="input" id="word-froot" maxlength="24" placeholder="zest / spark / sugar" />
-        </div>
-      </section>
-
-      <section class="card module" style="--c1:var(--imm-1);--c2:var(--imm-2)" data-key="immortal" data-week="3" data-freq="220">
-        <div>
-          <div class="titleline"><h3>IMMORTAL — Violet Dusk</h3><div class="huebar" aria-hidden="true"></div></div>
-          <div class="swatch" id="swatch-immortal" role="img" aria-label="Violet gradient"></div>
-        </div>
-        <div>
-          <div class="label">Tasting Ritual</div>
-          <div class="controls"><button id="play-immortal" type="button">Hear Tone</button><button id="stop-immortal" type="button">Stop</button></div>
-          <div class="tiny"><em>A3 = 220 Hz — violet glass, candle smoke.</em></div>
-          <div class="label">Name the color you hear</div>
-          <input class="input" id="word-immortal" maxlength="24" placeholder="veil / echo / dusk" />
-        </div>
-      </section>
-
-      <section class="card module" style="--c1:var(--ad-1);--c2:var(--ad-2)" data-key="ancient" data-week="4" data-freq="349.23">
-        <div>
-          <div class="titleline"><h3>ANCIENT DREAMS — Rose Aurora</h3><div class="huebar" aria-hidden="true"></div></div>
-          <div class="swatch" id="swatch-ancient" role="img" aria-label="Rose gradient"></div>
-        </div>
-        <div>
-          <div class="label">Tasting Ritual</div>
-          <div class="controls"><button id="play-ancient" type="button">Hear Tone</button><button id="stop-ancient" type="button">Stop</button></div>
-          <div class="tiny"><em>F4 ≈ 349.23 Hz — rose dawn.</em></div>
-          <div class="label">Name the color you hear</div>
-          <input class="input" id="word-ancient" maxlength="24" placeholder="blush / halo / myrrh" />
-        </div>
-      </section>
-
-      <section class="card module" style="--c1:var(--hh-1);--c2:var(--hh-2)" data-key="heaven" data-week="5" data-freq="587.33">
-        <div>
-          <div class="titleline"><h3>HANDMADE HEAVEN — Sky Bloom</h3><div class="huebar" aria-hidden="true"></div></div>
-          <div class="swatch" id="swatch-heaven" role="img" aria-label="Sky gradient"></div>
-        </div>
-        <div>
-          <div class="label">Tasting Ritual</div>
-          <div class="controls"><button id="play-heaven" type="button">Hear Tone</button><button id="stop-heaven" type="button">Stop</button></div>
-          <div class="tiny"><em>D5 ≈ 587.33 Hz — cold sunshine.</em></div>
-          <div class="label">Name the color you hear</div>
-          <input class="input" id="word-heaven" maxlength="24" placeholder="wing / hush / bell" />
-        </div>
-      </section>
-    </div>
-
-    <!-- Journal + Map -->
-    <section class="card" id="journal">
-      <div class="titleline"><h3>Week Journal — Integration</h3><div class="huebar" aria-hidden="true"></div></div>
-      <div class="row">
-        <div><div class="label">Week Note</div><textarea id="j_note" placeholder="One short reflection from this week."></textarea></div>
-        <div><div class="label">Resonance Poem (3 lines)</div><textarea id="j_poem" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea></div>
-      </div>
-    </section>
-
-    <section class="card" id="map-card">
-      <div class="titleline"><h3>Your Synesthesia Map</h3><div class="huebar" aria-hidden="true"></div></div>
-      <div class="grid" id="map"></div>
-      <div class="foot">Export or print when you’re ready. <button class="primary" type="button" id="bridgeChip">🌉 Bridge</button></div>
-    </section>
-
-    <section class="card" id="wtdn">
-      <div class="titleline"><h3>What to do now</h3><div class="huebar" aria-hidden="true"></div></div>
-      <ol class="tiny" style="margin-top:6px">
-        <li><b>Listen</b> — start <em>Honey</em> or tap <em>Hear Tone</em> on your Week card.</li>
-        <li><b>Breathe</b> — follow the orb: IN → HOLD → OUT. Keep it soft.</li>
-        <li><b>Share / Arrive</b> — use the ribbon to share or add the date.</li>
-      </ol>
-      <div class="controls">
-        <a class="btn primary" href="https://jar.plnt.earth">Join in NYC → Jar</a>
-        <a class="btn" href="https://tunes.plnt.earth">Tunes — Archetype Playlists</a>
-        <a class="btn" href="https://jar.plnt.earth/school-rooms.html#honey">Flame Check</a>
-      </div>
-    </section>
-
-    <footer class="tag">If the world feels loud, hush is welcome. Quiet counts.</footer>
-  </div>
-
-  <!-- Bridge modal -->
-  <div id="bridgeModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,12,16,.55);backdrop-filter:blur(6px);z-index:14000">
-    <div style="width:min(520px,92vw);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.08))">
-      <h3 style="margin:0 0 6px">Liminal Bridge</h3>
-      <p style="color:#a9b4c7;margin:6px 0 12px">Two lights, one path: <b>Practice</b> here in Froot (tone, breath, word) or <b>Reflect</b> in Jar (School, Rooms, Egg). Audio pauses as we cross.</p>
-      <div class="controls">
-        <button type="button" id="toSchool">↩ Jar · School</button>
-        <button type="button" id="toRooms">↩ Jar · Rooms</button>
-        <button type="button" id="toTunes">↩ Tunes</button>
-        <button type="button" id="toEgg">↩ Egg</button>
-        <button type="button" id="bridgeClose" style="margin-left:auto">Stay in Froot</button>
+        <h1>Froot · <span style="text-shadow:0 0 14px #ffd37a77">Marina Color-Breath</span></h1>
+        <div class="tag">Silky 128 Hz Honey core · Muse flutter · Chorus micro-detune · color shapers</div>
       </div>
     </div>
-  </div>
 
-  <!-- Bridge Note (Empowerment Mode) -->
-  <aside id="bridge-note" style="display:none;position:fixed;left:16px;bottom:16px;max-width:520px;z-index:15000;border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.10));box-shadow:0 10px 30px rgba(0,0,0,.35)">
-    <p style="margin:0;color:#c7cfda;font-size:.95rem;line-height:1.5">
-      This wasn’t built for worship or wonder. It was built to prove that imagination can hold its own against physics; that art and logic can stand side by side — collaborating. Every rhythm here is a signal: we can build worlds, not just talk about them. When creativity becomes infrastructure, belief becomes code. If you’re reading this, you already see the pattern — the next phase begins when we decide what to build together.
-    </p>
-  </aside>
+    <nav class="ribbon" aria-label="Sites">
+      <a class="chip" href="https://mirrorhoney.plnt.earth/">MirrorHoney</a>
+      <a class="chip" href="https://earth.plnt.earth/">Earth</a>
+      <a class="chip" href="https://honey.plnt.earth/">Honey</a>
+      <a class="chip" href="https://mask.plnt.earth/">Mask</a>
+      <a class="chip" href="https://voice.plnt.earth/">Voice</a>
+      <a class="chip" href="https://jar.plnt.earth/">Jar</a>
+      <a class="chip" data-hi="1" href="https://froot.plnt.earth/">Froot</a>
+      <a class="chip" href="https://tunes.plnt.earth/">Tunes</a>
+      <a class="chip" href="https://bridge.plnt.earth/">Bridge</a>
+    </nav>
+  </header>
 
-  <!-- Floating Honey pill + sigil -->
-  <button id="pill" class="pillToggle" type="button" aria-pressed="false" aria-label="Toggle Honey">🍯 <span id="pillTxt">Honey</span></button>
-  <div class="sigil" aria-hidden="true">💄</div>
+  <main class="wrap" id="main">
+    <!-- Honey Core Controls -->
+    <section class="card" aria-label="Honey core">
+      <div class="row" style="justify-content:space-between;gap:10px">
+        <div class="badge">🍯 Honey Core — 128 Hz</div>
+        <div class="badge">Status: <strong id="statusText">Off</strong></div>
+      </div>
 
-  <!-- Hidden audio pipe for iOS -->
-  <audio id="pipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
+      <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
+        <button id="startBtn" class="pill">▶︎ Start Honey</button>
+        <button id="stopBtn"  class="pill">■ Stop</button>
+        <button id="museBtn"  class="pill" aria-pressed="false">○ Muse: Off</button>
+        <button id="chorusBtn" class="pill" aria-pressed="false">○ Chorus: Off</button>
+      </div>
+
+      <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
+        <label for="volume">Level</label>
+        <input id="volume" type="range" min="0" max="100" value="60" step="1" />
+        <label for="detune">Fine Detune (±2%)</label>
+        <input id="detune" type="range" min="-2" max="2" value="0" step="0.01" />
+      </div>
+
+      <div class="meter" style="margin-top:10px"><div class="bar" id="meterBar"></div></div>
+
+      <p class="note" style="margin-top:10px">
+        Tap <b>Start Honey</b> once on iPhone to unlock audio. <b>Muse</b> adds a slow flutter (±8¢). <b>Chorus</b> splits L/R a few cents for a dreamy glow.
+        Use <b>Fine Detune</b> to find your “click.” When the chest warms, pick a Froot below.
+      </p>
+    </section>
+
+    <!-- Froot Grid -->
+    <section class="card" aria-label="Froot modes">
+      <div class="badge">🎨 Select a Froot</div>
+      <div class="grid" style="margin-top:10px">
+        <div class="fruit" data-froot="peach">
+          <div class="title" style="color:var(--peach)">🍑 Peach — Ease</div>
+          <div class="desc">Warm low-mid hug. Soft low-pass + tiny presence. For safety and “I belong.”</div>
+          <button class="pill set-froot">Use Peach</button>
+        </div>
+        <div class="fruit" data-froot="nectar">
+          <div class="title" style="color:var(--honey)">🍯 Nectar — Magnet</div>
+          <div class="desc">Bright allure. High-shelf lift + light shimmer. For charm, sweetness, invitation.</div>
+          <button class="pill set-froot">Use Nectar</button>
+        </div>
+        <div class="fruit" data-froot="emerald">
+          <div class="title" style="color:var(--emerald)">💚 Emerald — Calm Power</div>
+          <div class="desc">Balanced clarity. Gentle band-pass to center the voice. For steady confidence.</div>
+          <button class="pill set-froot">Use Emerald</button>
+        </div>
+        <div class="fruit" data-froot="violet">
+          <div class="title" style="color:var(--violet)">🔮 Violet — Mystery</div>
+          <div class="desc">Air + space. Subtle high lift and chorus depth. For dream logic and intuition.</div>
+          <button class="pill set-froot">Use Violet</button>
+        </div>
+        <div class="fruit" data-froot="gold">
+          <div class="title" style="color:var(--gold)">🌼 Gold — Radiance</div>
+          <div class="desc">Open and strong. Wide band + soft harmonics. For announcement without strain.</div>
+          <button class="pill set-froot">Use Gold</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gentle guidance -->
+    <section class="card" aria-label="How to use">
+      <div class="badge">📝 How to use Froot</div>
+      <p class="note">
+        1) Start Honey and breathe. 2) Nudge detune until your exhale feels effortless. 3) Pick a Froot that matches your moment.  
+        Ship one tiny act that matches the feeling (a line, a tweak, a message). Return daily — rhythm > scale.
+      </p>
+      <p class="soft">
+        Need school tools? <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://jar.plnt.earth/school.html">School</a> · <a href="https://jar.plnt.earth/school-rooms.html">School Rooms</a> · Playlists at <a href="https://tunes.plnt.earth/">Tunes</a> · Reflection at <a href="https://mirrorhoney.plnt.earth/">MirrorHoney</a>.
+      </p>
+    </section>
+
+    <div class="footer">Night-safe UI · zero-network WebAudio · smooth ramps · no overlays.</div>
+  </main>
 
 <script>
-/* ---------- Keys ---------- */
-const MUTE_KEY='froot_mute_v5', PREFS_KEY='froot_prefs_v6', MODE_KEY='froot_mode_v2',
-      MAP_KEY='froot_map_v4', VAR_KEY='froot_variation_v4', SCHED_KEY='froot_schedule_v4',
-      LOOP_KEY='froot_loop_v4', TIMER_KEY='froot_loop_timer_v4', TRICK_KEY='froot_trickster_v3',
-      THEME_KEY='froot_theme_v2', JOURNAL_KEY='froot_journal_v4',
-      HONEY_FREQ_KEY='froot_honey_freq_v2', FX_MODE_KEY='froot_fx_mode_v2';
+(() => {
+  // UI
+  const statusText  = document.getElementById('statusText');
+  const startBtn    = document.getElementById('startBtn');
+  const stopBtn     = document.getElementById('stopBtn');
+  const museBtn     = document.getElementById('museBtn');
+  const chorusBtn   = document.getElementById('chorusBtn');
+  const vol         = document.getElementById('volume');
+  const det         = document.getElementById('detune');
+  const meterBar    = document.getElementById('meterBar');
+  const frootBtns   = [...document.querySelectorAll('.set-froot')];
 
-/* ---------- Utils ---------- */
-function load(k,fallback){ try{const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
-function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
+  // WebAudio: osc -> (panner for chorus) -> filters -> gain -> out
+  let ctx, oscL, oscR, merger, gain, shelf, lpf, bpf;
+  let lfo, lfoGain; // Muse (detune flutter)
+  let on=false, muse=false, chorus=false;
 
-/* ---------- ProAudio ---------- */
-(function(){
-  const ProAudio = {
-    ctx:null, master:null, comp:null, hpf:null, usePipe:false, pipe:document.getElementById('pipe'),
-    nodes:new Set(), unlocked:false, starting:false,
+  function ensureCtx(){
+    if(!ctx){
+      ctx = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'playback'});
+      gain = ctx.createGain(); gain.gain.value = 0.0001;
 
-    ensure(){
-      if(this.ctx) return this.ctx;
-      const AC = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AC({latencyHint:'interactive'});
-      this.master = this.ctx.createGain(); this.master.gain.value = 0.85;
-      this.comp = this.ctx.createDynamicsCompressor();
-      this.comp.threshold.value=-18; this.comp.knee.value=12; this.comp.ratio.value=2; this.comp.attack.value=.01; this.comp.release.value=.30;
-      this.hpf = this.ctx.createBiquadFilter(); this.hpf.type='highpass'; this.hpf.frequency.value=18;
+      // Dual oscillators for chorus (L/R); default route both center
+      oscL = ctx.createOscillator(); oscL.type='sine'; oscL.frequency.value = 128;
+      oscR = ctx.createOscillator(); oscR.type='sine'; oscR.frequency.value = 128;
 
-      const iOS = /iP(hone|ad|od)/.test(navigator.userAgent||'');
-      if(iOS){
-        this.usePipe = true;
-        const msd = this.ctx.createMediaStreamDestination();
-        this.master.connect(this.comp); this.comp.connect(this.hpf); this.hpf.connect(msd);
-        try{ this.pipe.srcObject = msd.stream; this.pipe.loop = true; }catch(_){}
-      }else{
-        this.master.connect(this.comp); this.comp.connect(this.hpf); this.hpf.connect(this.ctx.destination);
-      }
-      return this.ctx;
-    },
-    unlock(){
-      try{
-        this.ensure();
-        if(this.ctx && this.ctx.state==='suspended'){ this.ctx.resume(); }
-        if(this.usePipe && this.pipe && this.pipe.paused){ this.pipe.play().catch(()=>{}); }
-        this.unlocked = true;
-      }catch(_){}
-    },
-    track(obj){ if(obj) this.nodes.add(obj); return obj; },
-    fade(param, to, tc=0.06){
-      const t=this.ctx.currentTime;
-      try{ param.cancelScheduledValues(t); param.setTargetAtTime(to, t, tc); }catch(_){}
-    },
-    kill(){
-      try{
-        if(!this.ctx) return;
-        const t = this.ctx.currentTime;
-        this.nodes.forEach(n=>{
-          try{
-            if(n.g && n.g.gain){ n.g.gain.setTargetAtTime(0.0001, t, 0.05); }
-            if(n.stop){ n.stop(t+0.12); }
-          }catch(_){}
-        });
-        this.nodes.clear();
-        setTimeout(()=>{ try{ this.ctx.close(); }catch(_){ } this.ctx=null; this.unlocked=false; }, 180);
-      }catch(_){}
-    },
+      const panL = new StereoPannerNode(ctx,{pan:-0.4});
+      const panR = new StereoPannerNode(ctx,{pan: 0.4});
 
-    fx:{
-      mode: load(FX_MODE_KEY,'none'),
-      muse:{ delay:null, fb:null },
-      ensureMuse(){
-        if(this.muse.delay) return this.muse;
-        const PA=ProAudio;
-        const d = PA.ctx.createDelay(0.2); d.delayTime.value = 0.06; // ~60ms
-        const fb= PA.ctx.createGain(); fb.gain.value = 0.18;
-        const lp= PA.ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=4200;
-        d.connect(fb); fb.connect(lp); lp.connect(d); // feedback path
-        d.connect(PA.master); // wet return
-        this.muse = {delay:d, fb:fb};
-        return this.muse;
-      },
-      setMode(name){
-        this.mode = name || 'none';
-        save(FX_MODE_KEY,this.mode);
-      }
-    },
+      // Filters
+      shelf = ctx.createBiquadFilter(); shelf.type='highshelf'; shelf.frequency.value=2500; shelf.gain.value=0;
+      lpf   = ctx.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=20000; // open
+      bpf   = ctx.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=700; bpf.Q.value=0.0001; // effectively bypass
 
-    honey:{
-      osc:null, osc2:null, gain:null, gain2:null, panL:null, panR:null,
-      on:false, freq: load(HONEY_FREQ_KEY, 128.00),
-      start(freq){
-        const PA=ProAudio; if(PA.starting) return; PA.starting=true; setTimeout(()=>PA.starting=false,160);
-        PA.unlock(); PA.ensure();
-        if(this.on) return;
-        this.freq = Number(freq||this.freq)||128.00;
+      // Chain: (L->panL) + (R->panR) -> shelf -> lpf -> bpf -> gain -> out
+      oscL.connect(panL); oscR.connect(panR);
+      const sum = ctx.createGain(); panL.connect(sum); panR.connect(sum);
+      sum.connect(shelf); shelf.connect(lpf); lpf.connect(bpf); bpf.connect(gain); gain.connect(ctx.destination);
 
-        const now=PA.ctx.currentTime;
-        const neon = (PA.fx.mode==='neon');
+      // Muse LFO (modulates detune in cents on L channel for slight movement)
+      lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value = 0.15; // ~6-7s
+      lfoGain = ctx.createGain(); lfoGain.gain.value = 0; // cents depth
+      lfo.connect(lfoGain);
+      lfoGain.connect(oscL.detune);
+      lfo.start();
 
-        this.osc  = PA.ctx.createOscillator();
-        this.gain = PA.ctx.createGain();
-        this.osc.type='sine';
-        this.osc.frequency.setValueAtTime(this.freq, now);
-        this.gain.gain.setValueAtTime(0.0001, now);
-
-        if(neon){
-          this.osc2  = PA.ctx.createOscillator();
-          this.gain2 = PA.ctx.createGain();
-          this.osc2.type='sine';
-          this.osc2.frequency.setValueAtTime(this.freq+0.30, now);
-          this.gain2.gain.setValueAtTime(0.0001, now);
-          this.panL = new StereoPannerNode(PA.ctx,{pan:-0.5});
-          this.panR = new StereoPannerNode(PA.ctx,{pan:+0.5});
-          this.osc.connect(this.gain).connect(this.panL).connect(PA.master);
-          this.osc2.connect(this.gain2).connect(this.panR).connect(PA.master);
-        }else{
-          this.osc.connect(this.gain).connect(PA.master);
-        }
-
-        if(PA.fx.mode==='muse'){
-          const m = PA.fx.ensureMuse();
-          const send = PA.ctx.createGain(); send.gain.value = 0.14;
-          this.gain.connect(send).connect(m.delay);
-          if(this.gain2) this.gain2.connect(send);
-        }
-
-        try{ this.osc.start(now); if(this.osc2) this.osc2.start(now); }catch(_){}
-
-        PA.fade(this.gain.gain, 0.12, 0.10);
-        if(this.gain2) PA.fade(this.gain2.gain, 0.12, 0.10);
-
-        this.on=true;
-        PA.track({ stop:(t)=>{ try{ this.osc && this.osc.stop(t); }catch(_){ } }, g:this.gain });
-        if(this.osc2) PA.track({ stop:(t)=>{ try{ this.osc2 && this.osc2.stop(t); }catch(_){ } }, g:this.gain2 });
-        return true;
-      },
-      stop(){
-        const PA=ProAudio; if(!this.on||!PA.ctx) return;
-        const now=PA.ctx.currentTime;
-        try{
-          PA.fade(this.gain.gain, 0.0001, 0.06);
-          if(this.gain2) PA.fade(this.gain2.gain, 0.0001, 0.06);
-          setTimeout(()=>{
-            try{ this.osc.stop(now+0.02); }catch(_){}
-            try{ this.osc.disconnect(); this.gain.disconnect(); }catch(_){}
-            if(this.osc2){ try{ this.osc2.stop(now+0.02); }catch(_){}
-              try{ this.osc2.disconnect(); this.gain2.disconnect(); }catch(_){}
-            }
-            this.osc=this.osc2=this.gain=this.gain2=this.panL=this.panR=null;
-            this.on=false;
-          },220);
-        }catch(_){ this.on=false; }
-      },
-      volume(x){
-        const PA=ProAudio; if(!PA.ctx) return;
-        const v=Math.max(0,Math.min(1,Number(x)||0));
-        if(this.gain)  PA.fade(this.gain.gain,  v*0.30, 0.05);
-        if(this.gain2) PA.fade(this.gain2.gain, v*0.30, 0.05);
-      },
-      setFreq(f){
-        const PA=ProAudio; if(!PA.ctx) return;
-        const hz = Math.max(20, Math.min(20000, Number(f)||128.00));
-        this.freq = hz; save(HONEY_FREQ_KEY, hz);
-        const now=PA.ctx.currentTime;
-        if(this.osc){
-          this.osc.frequency.cancelScheduledValues(now);
-          this.osc.frequency.linearRampToValueAtTime(hz, now+0.10);
-        }
-        if(this.osc2){
-          this.osc2.frequency.cancelScheduledValues(now);
-          this.osc2.frequency.linearRampToValueAtTime(hz+0.30, now+0.10);
-        }
-      }
+      oscL.start(); oscR.start();
     }
-  };
-  window.ProAudio = ProAudio;
-
-  document.addEventListener('pointerdown', ()=>ProAudio.unlock(), {once:true, passive:true});
-  document.addEventListener('keydown', ()=>ProAudio.unlock(), {once:true});
-  document.addEventListener('visibilitychange', ()=>{ if(document.hidden) ProAudio.kill(); }, false);
-  window.addEventListener('pagehide', ()=>ProAudio.kill(), false);
-  window.addEventListener('beforeunload', ()=>ProAudio.kill(), false);
-})();
-
-/* ---------- CTA: Share / ICS / Countdown ---------- */
-(function(){
-  const share = document.getElementById('shareX');
-  const ics   = document.getElementById('ics');
-  function buildShare(){
-    const msg = "No Kings Day — Oct 18, NYC. She can do whatever she wants. Marina × Sabrina × Doechii on SNL — celebration, not call.";
-    const url = location.href;
-    const u = "https://twitter.com/intent/tweet?text="+encodeURIComponent(msg)+"&url="+encodeURIComponent(url)+"&hashtags=NoKingsDay,NYC";
-    share.setAttribute('href', u);
   }
-  function buildICS(){
-    const now = new Date();
-    const dtstamp = now.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
-    const icsText = [
-      "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//PLNT Earth//No Kings Day//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:No Kings Day","X-WR-TIMEZONE:America/New_York",
-      "BEGIN:VEVENT",
-      "UID:nkd-20251018-"+Date.now()+"@plnt.earth",
-      "DTSTAMP:"+dtstamp,
-      "SUMMARY:No Kings Day — NYC",
-      "DESCRIPTION:She can do whatever she wants. Celebration: Marina × Sabrina × Doechii on SNL. Join in NYC → https://jar.plnt.earth",
-      "DTSTART;VALUE=DATE:20251018",
-      "DTEND;VALUE=DATE:20251019",
-      "URL:https://jar.plnt.earth",
-      "END:VEVENT","END:VCALENDAR"
-    ].join("\r\n");
-    ics.setAttribute('href', "data:text/calendar;charset=utf-8,"+encodeURIComponent(icsText));
+
+  function setBadge(v){ statusText.textContent = v ? 'On' : 'Off'; startBtn.classList.toggle('on', v); }
+  function setToggle(btn, v, onLabel, offLabel){
+    btn.textContent = v ? onLabel : offLabel;
+    btn.setAttribute('aria-pressed', v ? 'true' : 'false');
+    btn.classList.toggle('on', v);
   }
-  function two(n){ return (n<10?'0':'')+n; }
-  const target = new Date("2025-10-18T00:00:00-04:00").getTime();
-  const box = document.getElementById('countTxt');
-  function tick(){
-    const now = Date.now();
-    let diff = Math.max(0, target - now);
-    const d = Math.floor(diff/86400000); diff%=86400000;
-    const h = Math.floor(diff/3600000);  diff%=3600000;
-    const m = Math.floor(diff/60000);    diff%=60000;
-    const s = Math.floor(diff/1000);
-    box.textContent = d+"d "+two(h)+"h "+two(m)+"m "+two(s)+"s";
+
+  function rampGain(target, ms){
+    if(!gain) return;
+    const now = ctx.currentTime, dur = Math.max(0.06,(ms||250)/1000);
+    const current = gain.gain.value;
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(current, now);
+    gain.gain.linearRampToValueAtTime(target, now + dur);
+
+    // UI meter
+    const start = parseFloat(meterBar.style.width)||0;
+    const end = Math.round(Math.min(100, Math.max(0, target*100)));
+    const t0 = performance.now(), T = Math.max(60,(ms||250));
+    function step(ts){
+      const k = Math.min(1,(ts - t0)/T);
+      meterBar.style.width = Math.round(start + (end-start)*k) + '%';
+      if(k<1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
-  buildShare(); buildICS(); tick();
-  setInterval(tick, 1000);
-})();
 
-/* ---------- Safe-area for Quickbar ---------- */
-function setQuickbarSafe(){
-  const qb=document.querySelector('.quickbar');
-  const px = qb ? Math.ceil(qb.getBoundingClientRect().height + 20) : 0;
-  document.documentElement.style.setProperty('--quickbar-safe', px+'px');
-}
-document.addEventListener('DOMContentLoaded', setQuickbarSafe);
-window.addEventListener('resize', setQuickbarSafe);
-window.addEventListener('orientationchange', setQuickbarSafe);
+  function level(){ return Math.min(1, Math.max(0, vol.value/100)); }
 
-/* ---------- Cross-host routing ---------- */
-const HOSTS={ froot:'https://froot.plnt.earth', jar:'https://jar.plnt.earth', tunes:'https://tunes.plnt.earth', bridge:'https://bridge.plnt.earth' };
-function goAbs(target){
-  try{ stopTone(); }catch(_){}
-  ProAudio.kill();
-  const q='?source=froot';
-  let url='';
-  if(target==='jar.school') url=HOSTS.jar+'/school.html'+q;
-  else if(target==='jar.rooms') url=HOSTS.jar+'/school-rooms.html'+q;
-  else if(target==='jar.egg') url=HOSTS.jar+'/marina-egg.html'+q;
-  else if(target==='tunes') url=HOSTS.tunes+'/'+q;
-  else if(target==='bridge') url=HOSTS.bridge+'/'+q;
-  else url=HOSTS.jar+'/school.html'+q;
-  location.assign(url);
-}
-document.getElementById('openTunes').onclick=()=>goAbs('tunes');
-document.getElementById('openSchool').onclick=()=>goAbs('jar.school');
-document.getElementById('openBridge').onclick=()=>goAbs('bridge');
-const bridgeModal=document.getElementById('bridgeModal');
-document.getElementById('bridgeChip').onclick=()=>{ ProAudio.kill(); bridgeModal.style.display='flex'; };
-document.getElementById('bridgeClose').onclick=()=>bridgeModal.style.display='none';
-document.getElementById('toSchool').onclick=()=>goAbs('jar.school');
-document.getElementById('toRooms').onclick=()=>goAbs('jar.rooms');
-document.getElementById('toEgg').onclick=()=>goAbs('jar.egg');
-document.getElementById('toTunes').onclick=()=>goAbs('tunes');
-document.getElementById('gotoBridge').onclick=()=>goAbs('bridge');
-
-/* ---------- Schedule ---------- */
-const WEEK_KEYS={1:'blue',2:'froot',3:'immortal',4:'ancient',5:'heaven',6:'integration'};
-let schedule = load(SCHED_KEY, {week:1, day:1});
-function saveSched(){ save(SCHED_KEY, schedule); }
-
-/* ---------- Map / Journal / Variation ---------- */
-let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
-let variation = load(VAR_KEY, {blue:0,froot:0,immortal:0,ancient:0,heaven:0});
-let journal = load(JOURNAL_KEY, {});
-
-/* ---------- Quickbar state ---------- */
-let isMuted=!!load(MUTE_KEY,false), loopMode=!!(load(LOOP_KEY,{on:false}).on), loopTimerMin=parseInt(load(TIMER_KEY,20),10)||0;
-let tricksterOn = !!load(TRICK_KEY,false);
-
-/* ---------- Theme ---------- */
-function applyTheme(name){
-  const b=document.body;
-  b.classList.remove('theme-illumina','theme-honey','theme-muse','theme-neon');
-  b.classList.add('theme-'+name);
-  save(THEME_KEY,name);
-
-  const fx = (name==='muse') ? 'muse' : (name==='neon' ? 'neon' : 'none');
-  ProAudio.fx.setMode(fx);
-
-  // Rebuild Honey if on, to apply new FX routing
-  if(ProAudio.honey.on){
-    const cur = ProAudio.honey.freq || 128.00;
-    ProAudio.honey.stop();
-    setTimeout(()=>ProAudio.honey.start(cur), 60);
+  function applyFineDetune(){
+    if(!oscL||!oscR) return;
+    const pct = parseFloat(det.value)||0;   // ±2%
+    const cents = pct * 20;                 // keep within ±40 cents feel
+    oscL.detune.setTargetAtTime(cents + (chorus ? -6 : 0), ctx.currentTime, 0.05);
+    oscR.detune.setTargetAtTime(cents + (chorus ?  +6 : 0), ctx.currentTime, 0.05);
   }
-  // Rebuild loop tone if active to apply FX (only matters in loop mode)
-  if(activeKeyPlaying && loopMode){
-    const k = activeKeyPlaying;
-    stopTone();
-    setTimeout(()=>playTone(k), 120);
-  }
-}
-(function(){
-  const sel=document.getElementById('themeSel');
-  const cur = load(THEME_KEY,'illumina');
-  sel.value = cur; applyTheme(cur);
-  sel.onchange = (e)=>applyTheme(e.target.value);
-})();
 
-/* ---------- Mute ---------- */
-function applyMuteImmediate(mute){
-  const PA=ProAudio; if(!PA.ctx||!PA.master) return;
-  const now=PA.ctx.currentTime;
-  try{
-    PA.master.gain.cancelScheduledValues(now);
-    PA.master.gain.setValueAtTime(PA.master.gain.value, now);
-    PA.master.gain.linearRampToValueAtTime(mute?0.0001:0.85, now+.06);
-  }catch(_){}
-}
-function refreshQuickbar(){
-  document.getElementById('qb-honey').classList.toggle('on', document.body.classList.contains('honey'));
-  document.getElementById('qb-loop').classList.toggle('on', loopMode);
-  document.getElementById('qb-trick').classList.toggle('on', tricksterOn);
-  const mb=document.getElementById('qb-mute'); mb.classList.toggle('warn', isMuted); mb.textContent=isMuted?'🔇':'🔊';
-}
-document.getElementById('qb-mute').onclick=()=>{ ProAudio.ensure(); isMuted=!isMuted; save(MUTE_KEY,isMuted); applyMuteImmediate(isMuted); refreshQuickbar(); };
-document.getElementById('qb-honey').onclick=()=>{ ProAudio.honey.on ? honeyStop() : honeyStart(); };
-document.getElementById('qb-loop').onclick=()=>{ loopMode=!loopMode; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } resetLoopCountdown(); refreshQuickbar(); };
-document.getElementById('qb-trick').onclick=()=>{ toggleTrickster(!tricksterOn); refreshQuickbar(); };
-document.getElementById('qb-help').onclick=()=>openFirstLight();
+  function toggleMuse(){
+    muse = !muse;
+    setToggle(museBtn, muse, '● Muse: On', '○ Muse: Off');
+    if(!ctx) return;
+    const depth = muse ? 8 : 0; // cents
+    lfoGain.gain.setTargetAtTime(depth, ctx.currentTime, 0.2);
+  }
 
-/* ---------- Breath HUD ---------- */
-const breathUI=(function(){
-  let hud=null,arc=null,edge=null,label=null,raf=0,t0=0,dur=1000;
-  function host(){ const wk=WEEK_KEYS[schedule.week]; return document.getElementById('swatch-'+wk); }
-  function attach(){ const h=host(); if(!h) return;
-    if(h.querySelector('.fbrHUD')){ hud=h.querySelector('.fbrHUD'); arc=hud.querySelector('.arc'); edge=hud.querySelector('.edge'); label=hud.querySelector('.label'); return; }
-    h.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="arc" style="--fbr-arc:0deg"></div><div class="edge"></div><div class="label">READY</div></div>');
-    hud=h.querySelector('.fbrHUD'); arc=hud.querySelector('.arc'); edge=hud.querySelector('.edge'); label=hud.querySelector('.label');
+  function toggleChorus(){
+    chorus = !chorus;
+    setToggle(chorusBtn, chorus, '● Chorus: On', '○ Chorus: Off');
+    applyFineDetune();
   }
-  function progress(now){ const p=Math.min(1,(now-t0)/dur); arc.style.setProperty('--fbr-arc',(p*360)+'deg'); if(p<1){ raf=requestAnimationFrame(progress); } }
-  function phase(name,ms){
-    attach(); if(!hud) return;
-    const h=host(); h.classList.remove('fbr-in','fbr-hold','fbr-out'); h.classList.add(name==='hold'?'fbr-hold':(name==='out'?'fbr-out':'fbr-in'));
-    label.textContent=(name==='hold'?'HOLD':(name==='out'?'OUT':'IN'));
-    cancelAnimationFrame(raf); t0=performance.now(); dur=Math.max(200,ms|0); arc.style.setProperty('--fbr-arc','0deg'); raf=requestAnimationFrame(progress);
-    try{ if(navigator.vibrate) navigator.vibrate(10); }catch(_){}
-  }
-  function ready(){ attach(); if(!hud) return; label.textContent='READY'; arc.style.setProperty('--fbr-arc','0deg'); const h=host(); h&&h.classList.remove('fbr-in','fbr-hold','fbr-out'); }
-  return {phase,ready};
-})();
 
-/* ---------- Breath driver ---------- */
-const breathDriver=(function(){
-  let cfg={in:4000,hold:7000,out:8000},tid=0,running=false,seq=['in','hold','out'],idx=0;
-  function step(){ const name=seq[idx]; const ms=cfg[name]||1000; breathUI.phase(name,ms);
-    tid=setTimeout(()=>{ idx=(idx+1)%seq.length; step(); }, ms);
-  }
-  function start(){ if(running) return; running=true; idx=0; step(); }
-  function stop(){ running=false; clearTimeout(tid); tid=0; breathUI.ready(); }
-  function setPattern(i,h,o){ cfg={in:i*1000, hold:h*1000, out:o*1000}; if(running){ stop(); start(); } }
-  return {start,stop,setPattern};
-})();
-function setPatternPreset(i,h,o){ breathDriver.setPattern(i,h,o); }
+  function setFroot(name){
+    if(!ctx) return;
+    // Reset to neutral
+    shelf.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
+    lpf.frequency.setTargetAtTime(20000, ctx.currentTime, 0.1);
+    bpf.Q.setTargetAtTime(0.0001, ctx.currentTime, 0.1);
+    bpf.frequency.setTargetAtTime(700, ctx.currentTime, 0.1);
 
-/* ---------- Moon → breath ---------- */
-function moonPhaseInfo(d=new Date()){
-  const lp=2551443; const ref=new Date(Date.UTC(2000,0,6,18,14));
-  const phase=((d-ref)/1000)%lp; const age=phase/(24*3600); const f=((age/29.530588)+1)%1;
-  if(f<0.03||f>0.97) return {name:'New',emoji:'🌑'};
-  if(f<0.21) return {name:'Waxing',emoji:'🌒'};
-  if(f<0.29) return {name:'First Quarter',emoji:'🌓'};
-  if(f<0.46) return {name:'Waxing',emoji:'🌔'};
-  if(f<0.54) return {name:'Full',emoji:'🌕'};
-  if(f<0.71) return {name:'Waning',emoji:'🌖'};
-  if(f<0.79) return {name:'Last Quarter',emoji:'🌗'};
-  return {name:'Waning',emoji:'🌘'};
-}
-function applyMoonBreath(){
-  const mode=document.getElementById('moonMode').value;
-  const info=moonPhaseInfo();
-  document.getElementById('moonEmoji').textContent=info.emoji;
-  document.getElementById('moonName').textContent=info.name;
-  let i=4,h=4,o=4;
-  if(mode==='auto'){
-    if(info.name==='New'){ i=4;h=4;o=4; }
-    else if(info.name==='Full'){ i=4;h=7;o=8; }
-    else if(info.name==='Waning'){ i=4;h=6;o=6; }
-    else { i=4;h=5;o=6; }
-  }else if(mode==='new'){ i=4;h=4;o=4; }
-  else if(mode==='waxing'){ i=4;h=5;o=6; }
-  else if(mode==='full'){ i=4;h=7;o=8; }
-  else if(mode==='waning'){ i=4;h=6;o=6; }
-  if(mode!=='custom') setPatternPreset(i,h,o);
-}
-document.getElementById('moonMode').onchange=applyMoonBreath;
+    // Apply color voicings
+    if(name==='peach'){
+      lpf.frequency.setTargetAtTime(1800, ctx.currentTime, 0.2);
+      shelf.gain.setTargetAtTime(1.5, ctx.currentTime, 0.2);
+      chorus = false; setToggle(chorusBtn, false, '● Chorus: On', '○ Chorus: Off'); applyFineDetune();
+    }else if(name==='nectar'){
+      shelf.gain.setTargetAtTime(5, ctx.currentTime, 0.2);
+      lpf.frequency.setTargetAtTime(12000, ctx.currentTime, 0.2);
+      if(!chorus){ toggleChorus(); } // light glow
+    }else if(name==='emerald'){
+      bpf.frequency.setTargetAtTime(650, ctx.currentTime, 0.2);
+      bpf.Q.setTargetAtTime(0.8, ctx.currentTime, 0.2);
+      shelf.gain.setTargetAtTime(2.0, ctx.currentTime, 0.2);
+      chorus = false; setToggle(chorusBtn, false, '● Chorus: On', '○ Chorus: Off'); applyFineDetune();
+    }else if(name==='violet'){
+      shelf.gain.setTargetAtTime(3.5, ctx.currentTime, 0.2);
+      if(!chorus){ toggleChorus(); }
+      if(!muse){ toggleMuse(); }
+    }else if(name==='gold'){
+      shelf.gain.setTargetAtTime(4.0, ctx.currentTime, 0.2);
+      lpf.frequency.setTargetAtTime(16000, ctx.currentTime, 0.2);
+      if(!chorus){ toggleChorus(); }
+      if(muse){ toggleMuse(); } // crisp, less flutter
+    }
+  }
 
-/* ---------- Scenes presets ---------- */
-const scenes={
-  "Hayley":       { delta:+0, loop:true,  honey:false, trick:false, moon:'waning' },
-  "Swift":        { delta:+2, loop:true,  honey:true,  trick:false, moon:'waxing' },
-  "Marina":       { delta:+0, loop:true,  honey:true,  trick:false, moon:'full' },
-  "Sabrina":      { delta:+4, loop:true,  honey:false, trick:false, moon:'waxing' },
-  "Ariana + Dua": { delta:+6, loop:true,  honey:true,  trick:false, moon:'full' },
-  "Doechii":      { delta:+1, loop:true,  honey:false, trick:true,  moon:'waning' }
-};
-document.getElementById('scene').onchange=(e)=>{
-  const v=e.target.value; if(!scenes[v]) return; const s=scenes[v];
-  const moonSel=document.getElementById('moonMode');
-  if(moonSel.value!=='custom'){ moonSel.value=s.moon; applyMoonBreath(); }
-  if(!!s.honey !== ProAudio.honey.on){ s.honey ? honeyStart() : honeyStop(); }
-  if(!!s.loop  !== loopMode){ loopMode=!!s.loop; save(LOOP_KEY,{on:loopMode}); }
-  if(!!s.trick !== tricksterOn){ toggleTrickster(!!s.trick); }
-  const k=WEEK_KEYS[schedule.week]; variation[k]=s.delta||0; save(VAR_KEY,variation);
-  if(document.getElementById('varGroup').style.display!=='none'){
-    const slider=document.getElementById('varSlider'), out=document.getElementById('varOut');
-    slider.value=variation[k]; out.textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz';
-    smoothSetLoopFreqIfActive();
+  async function start(){
+    ensureCtx();
+    if(on) return;
+    if(ctx.state === 'suspended'){ try{ await ctx.resume(); }catch(_){ } }
+    applyFineDetune();
+    rampGain(level(), 420);
+    on = true; setBadge(true);
   }
-  refreshQuickbar();
-};
 
-/* ---------- Week/Day UI ---------- */
-function renderWeekSeg(){
-  const host=document.getElementById('weekSeg'); host.innerHTML='';
-  for(let i=1;i<=6;i++){
-    const b=document.createElement('button'); b.textContent='W'+i; if(i===schedule.week) b.classList.add('primary');
-    b.onclick=()=>{ schedule.week=i; saveSched(); applyScheduleUI(); };
-    host.appendChild(b);
+  function stop(){
+    if(!ctx || !on) return;
+    rampGain(0.0001, 300);
+    on = false; setBadge(false);
   }
-}
-function renderDaySeg(){
-  const host=document.getElementById('daySeg'); host.innerHTML='';
-  for(let i=1;i<=7;i++){
-    const b=document.createElement('button'); b.textContent='Day '+i; if(i===schedule.day) b.classList.add('primary');
-    b.onclick=()=>{ schedule.day=i; saveSched(); applyScheduleUI(); };
-    host.appendChild(b);
-  }
-}
-function modeFor(s){
-  if(s.week===6) return {icon:'🧭',name:'Integration'};
-  if(s.day===1) return {icon:'🎯',name:'Signal'};
-  if(s.day>=2&&s.day<=5) return {icon:'🎚️',name:'Variation'};
-  if(s.day===6) return {icon:'🚶',name:'Quiet Walk'};
-  return {icon:'📜',name:'Integration'};
-}
-function applyScheduleUI(){
-  renderWeekSeg(); renderDaySeg();
-  const m=modeFor(schedule);
-  const badge=document.getElementById('modeBadge'); if(badge) badge.innerHTML = `<span class="pill">${m.icon} Mode: ${m.name}</span>`;
-  const cards=document.querySelectorAll('.module');
-  cards.forEach(card=>{
-    const wk=Number(card.getAttribute('data-week')); const k=card.getAttribute('data-key');
-    const dim=(wk!==schedule.week); card.style.opacity = dim?0.45:1;
-    const play=document.getElementById('play-'+k), stop=document.getElementById('stop-'+k);
-    if(play) play.disabled = dim || (schedule.day===6 && WEEK_KEYS[schedule.week]===k);
-    if(stop) stop.disabled = dim;
+
+  // Bindings
+  startBtn.addEventListener('click', start);
+  stopBtn .addEventListener('click', stop);
+  museBtn .addEventListener('click', toggleMuse);
+  chorusBtn.addEventListener('click', toggleChorus);
+
+  vol.addEventListener('input', () => { if(ctx){ rampGain(level(), 140); } });
+  det.addEventListener('input', applyFineDetune);
+
+  frootBtns.forEach(b=>{
+    b.addEventListener('click', e=>{
+      const card = e.currentTarget.closest('.fruit');
+      const name = card?.getAttribute('data-froot');
+      if(name){ setFroot(name); }
+    });
   });
-  const varGroup=document.getElementById('varGroup'); const slider=document.getElementById('varSlider'); const out=document.getElementById('varOut');
-  if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
-    varGroup.style.display='inline-flex';
-    const k=WEEK_KEYS[schedule.week]; slider.value=variation[k]||0; out.textContent=((variation[k]||0)>=0?'+':'')+(variation[k]||0)+' Hz';
-  }else{ varGroup.style.display='none'; }
-  hydrateJournal();
-}
 
-/* ---------- Seeds / Map / Journal ---------- */
-function getSeeds(){
-  return {
-    blue:{name:'Blue — Ocean Neon', c1:'var(--blue-1)', c2:'var(--blue-2)', freq:329.63, id:'blue'},
-    froot:{name:'Froot — Electric Lime', c1:'var(--froot-1)', c2:'var(--froot-2)', freq:554.37, id:'froot'},
-    immortal:{name:'Immortal — Violet Dusk', c1:'var(--imm-1)', c2:'var(--imm-2)', freq:220.00, id:'immortal'},
-    ancient:{name:'Ancient Dreams — Rose Aurora', c1:'var(--ad-1)', c2:'var(--ad-2)', freq:349.23, id:'ancient'},
-    heaven:{name:'Handmade Heaven — Sky Bloom', c1:'var(--hh-1)', c2:'var(--hh-2)', freq:587.33, id:'heaven'}
-  };
-}
-function hydrateInputs(){
-  [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
-  .forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.value=mapData[k]||''; });
-}
-function renderMap(){
-  const host=document.getElementById('map'); host.innerHTML='';
-  const seeds=getSeeds();
-  Object.keys(seeds).forEach(k=>{
-    const s=seeds[k]; const word=(mapData[k]||'').trim();
-    const chip=document.createElement('div'); chip.className='card';
-    chip.innerHTML=`<div class="titleline"><h3>${s.name}</h3><div class="huebar"></div></div>${word?`<div class="tiny"><b>${word}</b></div>`:'<div class="tiny">—</div>'}`;
-    host.appendChild(chip);
-  });
-}
-function hydrateJournal(){
-  const w=schedule.week; const j=journal[w]||{note:'',poem:''};
-  const n=document.getElementById('j_note'), p=document.getElementById('j_poem');
-  if(n) n.value=j.note||''; if(p) p.value=j.poem||'';
-}
+  document.addEventListener('visibilitychange', () => setBadge(on && !document.hidden));
 
-/* ---------- Tone playback (with Muse/Neon for loop mode) ---------- */
-let pulseTimer=0, activeKeyPlaying=null, toneOsc=null, toneGain=null, lfoOsc=null, lfoGain=null;
-let toneOscR=null, toneGainR=null, panL=null, panR=null; // Neon path for loop tone
-
-function effectiveFreq(base, key){
-  if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
-    const d=variation[key]||0; return Math.min(18000, Math.max(20, base+d));
-  }
-  return base;
-}
-function killToneFast(now){
-  if(toneOsc&&toneGain){
-    try{
-      const end=now+0.10;
-      toneGain.gain.cancelScheduledValues(now);
-      toneGain.gain.setValueAtTime(toneGain.gain.value, now);
-      toneGain.gain.linearRampToValueAtTime(0.0005, end);
-      toneOsc.stop(end);
-    }catch(_){}
-  }
-  if(toneOscR&&toneGainR){
-    try{
-      const end=now+0.10;
-      toneGainR.gain.cancelScheduledValues(now);
-      toneGainR.gain.setValueAtTime(toneGainR.gain.value, now);
-      toneGainR.gain.linearRampToValueAtTime(0.0005, end);
-      toneOscR.stop(end);
-    }catch(_){}
-  }
-  setTimeout(()=>{
-    try{toneOsc&&toneOsc.disconnect()}catch(_){}
-    try{toneGain&&toneGain.disconnect()}catch(_){}
-    try{toneOscR&&toneOscR.disconnect()}catch(_){}
-    try{toneGainR&&toneGainR.disconnect()}catch(_){}
-    toneOsc=toneGain=lfoOsc=lfoGain=toneOscR=toneGainR=panL=panR=null;
-  }, 140);
-}
-function playTone(key){
-  const PA=ProAudio; PA.unlock(); PA.ensure();
-  const wkKey=WEEK_KEYS[schedule.week];
-  if(schedule.day===6 && key===wkKey) return; // Quiet Walk
-  const s=getSeeds()[key]; if(!s) return;
-  const now=PA.ctx.currentTime;
-  if(toneOsc){ killToneFast(now); }
-  const freq=effectiveFreq(s.freq, key);
-  const neon = (PA.fx.mode==='neon');
-  const muse = (PA.fx.mode==='muse');
-
-  toneOsc=PA.ctx.createOscillator(); toneGain=PA.ctx.createGain();
-  toneOsc.type='sine'; toneOsc.frequency.value=freq;
-
-  if(!loopMode){
-    const atk=0.030, hold=0.25, rel=0.150, sus=0.16, tail=5.4;
-    toneGain.gain.setValueAtTime(0.0, now);
-    toneGain.gain.linearRampToValueAtTime(0.22, now+atk);
-    toneGain.gain.linearRampToValueAtTime(sus,  now+atk+hold);
-    toneGain.gain.setValueAtTime(sus, now+tail);
-    toneGain.gain.linearRampToValueAtTime(0.0005, now+tail+rel);
-
-    toneOsc.connect(toneGain);
-    if(neon){
-      panL = new StereoPannerNode(PA.ctx,{pan:-0.4});
-      toneGain.connect(panL).connect(PA.master);
-    }else{
-      toneGain.connect(PA.master);
-    }
-    if(muse){
-      const m = PA.fx.ensureMuse();
-      const send = PA.ctx.createGain(); send.gain.value = 0.14;
-      toneGain.connect(send).connect(m.delay);
-    }
-
-    try{ toneOsc.start(now); toneOsc.stop(now+tail+rel+0.02); }catch(_){}
-    activeKeyPlaying=key; pulseOn(key);
-    toneOsc.onended=()=>{ pulseOff(key); activeKeyPlaying=null; };
-    PA.track({ stop:(t)=>{ try{ toneOsc && toneOsc.stop(t); }catch(_){ } }, g:toneGain });
-
-  }else{
-    toneGain.gain.setValueAtTime(0.0, now);
-    toneGain.gain.linearRampToValueAtTime(0.18, now+0.18);
-
-    if(neon){
-      toneOscR = PA.ctx.createOscillator(); toneGainR = PA.ctx.createGain();
-      toneOscR.type='sine'; toneOscR.frequency.value = freq + 0.25;
-      toneGainR.gain.setValueAtTime(0.0, now);
-      panL = new StereoPannerNode(PA.ctx,{pan:-0.4});
-      panR = new StereoPannerNode(PA.ctx,{pan:+0.4});
-      toneOsc.connect(toneGain).connect(panL).connect(PA.master);
-      toneOscR.connect(toneGainR).connect(panR).connect(PA.master);
-    }else{
-      toneOsc.connect(toneGain).connect(PA.master);
-    }
-
-    if(muse){
-      const m = PA.fx.ensureMuse();
-      const send = PA.ctx.createGain(); send.gain.value = 0.14;
-      toneGain.connect(send).connect(m.delay);
-      if(toneGainR) toneGainR.connect(send);
-    }
-
-    lfoOsc=PA.ctx.createOscillator(); lfoGain=PA.ctx.createGain();
-    lfoOsc.type='sine'; lfoOsc.frequency.setValueAtTime(0.12, now);
-    lfoGain.gain.setValueAtTime(0.03, now);
-    lfoOsc.connect(lfoGain).connect(toneGain.gain);
-    if(toneGainR){ lfoOsc.connect(lfoGain).connect(toneGainR.gain); }
-
-    try{ toneOsc.start(now); if(toneOscR) toneOscR.start(now); lfoOsc.start(now); }catch(_){}
-    activeKeyPlaying=key; pulseOn(key);
-    breathDriver.start(); resetLoopCountdown();
-
-    PA.track({ stop:(t)=>{ try{ toneOsc && toneOsc.stop(t); }catch(_){ } }, g:toneGain });
-    if(toneOscR) PA.track({ stop:(t)=>{ try{ toneOscR && toneOscR.stop(t); }catch(_){ } }, g:toneGainR });
-  }
-}
-function stopTone(){
-  const PA=ProAudio; if(!PA.ctx) return;
-  const now=PA.ctx.currentTime;
-  killToneFast(now);
-  if(lfoOsc){ try{ lfoOsc.stop(now+0.14) }catch(_){ } setTimeout(()=>{ try{lfoOsc.disconnect();lfoGain.disconnect()}catch(_){ } lfoOsc=lfoGain=null; }, 180); }
-  breathDriver.stop(); clearLoopTimers();
-  if(activeKeyPlaying){ pulseOff(activeKeyPlaying); activeKeyPlaying=null; }
-}
-function pulseOn(key){
-  const el=document.getElementById('swatch-'+key); if(!el) return;
-  el.classList.add('pulse'); clearInterval(pulseTimer);
-  let t0=performance.now(); pulseTimer=setInterval(()=>{ const t=(performance.now()-t0)/1000; const deg=120+Math.sin(t*2)*10; el.style.background=`linear-gradient(${deg}deg, var(--c1), var(--c2))`; },60);
-  if(!el.querySelector('.fbrHUD')){ el.insertAdjacentHTML('beforeend','<div class="fbrHUD"><div class="arc" style="--fbr-arc:0deg"></div><div class="edge"></div><div class="label">READY</div></div>'); }
-}
-function pulseOff(key){
-  const el=document.getElementById('swatch-'+key); if(!el) return;
-  el.classList.remove('pulse'); el.style.background='';
-  clearInterval(pulseTimer); pulseTimer=0;
-}
-
-/* ---------- Loop timer ---------- */
-let loopTimerId=0, loopCountdownTick=0, loopDeadline=0;
-function resetLoopCountdown(){
-  clearLoopTimers();
-  const cd=document.getElementById('loopCountdown'); if(cd) cd.textContent='';
-  if(loopMode && activeKeyPlaying && loopTimerMin>0){
-    const ms=loopTimerMin*60000; loopDeadline=Date.now()+ms;
-    loopTimerId=setTimeout(()=>stopTone(), ms);
-    loopCountdownTick=setInterval(()=>{
-      const left=Math.max(0, loopDeadline - Date.now());
-      const m=Math.floor(left/60000), s=Math.floor((left%60000)/1000);
-      if(cd) cd.textContent=(m>0? (m+'m ') : '')+(s+'s left');
-      if(left<=0){ clearLoopTimers(); if(cd) cd.textContent=''; }
-    },1000);
-  }
-}
-function clearLoopTimers(){ if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=0; } if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; } loopDeadline=0; }
-
-/* ---------- Trickster ---------- */
-let trickId=0;
-function startTrickster(){
-  if(trickId) return;
-  trickId=setInterval(()=>{
-    const PA=ProAudio; if(!PA.ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
-    const cur=Number(variation[activeKeyPlaying]||0);
-    const step=(Math.random()*2-1)*1.2;
-    const aim=Math.max(-6,Math.min(6, cur+step));
-    variation[activeKeyPlaying]=aim; save(VAR_KEY,variation);
-    const vg=document.getElementById('varGroup');
-    const slider=document.getElementById('varSlider'), out=document.getElementById('varOut');
-    if(vg && vg.style.display!=='none'){ slider.value=aim; out.textContent=(aim>=0?'+':'')+aim.toFixed(1)+' Hz'; }
-    smoothSetLoopFreqIfActive();
-  }, 1800);
-}
-function stopTrickster(){ if(trickId){ clearInterval(trickId); trickId=0; } }
-function toggleTrickster(on){
-  tricksterOn = !!on; save(TRICK_KEY,tricksterOn);
-  if(tricksterOn){ startTrickster(); }
-  else { stopTrickster(); }
-  refreshQuickbar();
-}
-document.getElementById('armTrick').onclick=()=>{ toggleTrickster(true); };
-document.getElementById('disarmTrick').onclick=()=>{ toggleTrickster(false); };
-
-/* ---------- Variation slider ---------- */
-document.getElementById('varSlider').oninput=(e)=>{
-  const k=WEEK_KEYS[schedule.week]; variation[k]=Math.max(-50,Math.min(50, Number(e.target.value)||0)); save(VAR_KEY,variation);
-  document.getElementById('varOut').textContent=(variation[k]>=0?'+':'')+variation[k]+' Hz'; smoothSetLoopFreqIfActive();
-};
-function smoothSetLoopFreqIfActive(){
-  const PA=ProAudio; if(!PA.ctx||!toneOsc||!activeKeyPlaying||!loopMode) return;
-  const s=getSeeds()[activeKeyPlaying]; if(!s) return;
-  const target=effectiveFreq(s.freq, activeKeyPlaying); const now=PA.ctx.currentTime;
-  toneOsc.frequency.cancelScheduledValues(now); toneOsc.frequency.setValueAtTime(toneOsc.frequency.value, now); toneOsc.frequency.linearRampToValueAtTime(Math.max(1,target), now+.12);
-  if(toneOscR){
-    toneOscR.frequency.cancelScheduledValues(now);
-    toneOscR.frequency.setValueAtTime(toneOscR.frequency.value, now);
-    toneOscR.frequency.linearRampToValueAtTime(Math.max(1,target+0.25), now+.12);
-  }
-}
-
-/* ---------- Loop & timers ---------- */
-document.getElementById('loopToggle').onchange=(e)=>{ loopMode=!!e.target.checked; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } resetLoopCountdown(); refreshQuickbar(); };
-document.getElementById('loopTimer').onchange=(e)=>{ loopTimerMin=parseInt(e.target.value,10)||0; save(TIMER_KEY,loopTimerMin); resetLoopCountdown(); };
-
-/* ---------- Honey bindings ---------- */
-function honeyStart(){ if(ProAudio.honey.start(load(HONEY_FREQ_KEY,128.00))){ document.body.classList.add('honey'); refreshQuickbar(); syncPill(); } }
-function honeyStop(){ ProAudio.honey.stop(); document.body.classList.remove('honey'); refreshQuickbar(); syncPill(); }
-function honeyVolume(v){ ProAudio.honey.volume((Math.max(0,Math.min(100,Number(v)||0)))/100); }
-document.getElementById('honeyPlay').onclick=honeyStart;
-document.getElementById('honeyStop').onclick=honeyStop;
-document.getElementById('honeyVol').oninput=(e)=>honeyVolume(e.target.value);
-
-const honeyFreq = document.getElementById('honeyFreq');
-const honeyFreqOut = document.getElementById('honeyFreqOut');
-(function(){
-  const f = load(HONEY_FREQ_KEY, 128.00);
-  honeyFreq.value = Number(f).toFixed(2);
-  honeyFreqOut.textContent = Number(f).toFixed(2) + ' Hz';
+  // Init UI
+  setBadge(false);
+  setToggle(museBtn,false,'● Muse: On','○ Muse: Off');
+  setToggle(chorusBtn,false,'● Chorus: On','○ Chorus: Off');
+  meterBar.style.width = vol.value + '%';
 })();
-honeyFreq.oninput = (e)=>{
-  const f = Number(e.target.value||128).toFixed(2);
-  honeyFreqOut.textContent = f + ' Hz';
-  ProAudio.honey.setFreq(Number(f));
-};
-
-/* Sweet-Spot scan */
-let scanId=0, scanFrom=127.60, scanTo=128.40, scanDur=20000, scanStartTs=0;
-function sweetScanStart(){
-  if(scanId) return;
-  const PA=ProAudio; PA.unlock(); PA.ensure();
-  if(!ProAudio.honey.on) honeyStart();
-  scanStartTs=performance.now();
-  const range=scanTo-scanFrom;
-  function step(){
-    const t=performance.now()-scanStartTs;
-    if(t>=scanDur){ sweetScanStop(); return; }
-    const p=t/scanDur;
-    const f=scanFrom + p*range;
-    ProAudio.honey.setFreq(f);
-    honeyFreq.value=f.toFixed(2);
-    honeyFreqOut.textContent=f.toFixed(2)+' Hz';
-    document.getElementById('scanStatus').textContent='scanning… '+f.toFixed(2)+' Hz';
-    scanId=requestAnimationFrame(step);
-  }
-  step();
-}
-function sweetScanStop(lockNow){
-  if(scanId){ cancelAnimationFrame(scanId); scanId=0; }
-  document.getElementById('scanStatus').textContent= lockNow ? 'locked' : '';
-  if(lockNow){
-    const f=parseFloat(honeyFreq.value)||128.00;
-    save(HONEY_FREQ_KEY, f);
-    ProAudio.honey.setFreq(f);
-  }
-}
-document.getElementById('sweetScan').onclick=()=>sweetScanStart();
-document.getElementById('sweetLock').onclick=()=>sweetScanStop(true);
-
-/* ---------- Floating Honey pill ---------- */
-const pill=document.getElementById('pill'), pillTxt=document.getElementById('pillTxt');
-function syncPill(){ pill.setAttribute('aria-pressed', String(!!(ProAudio.honey && ProAudio.honey.on))); pillTxt.textContent = ProAudio.honey.on ? 'On' : 'Honey'; }
-pill.addEventListener('click', ()=>{ ProAudio.honey.on ? honeyStop() : honeyStart(); }, false);
-syncPill();
-
-/* ---------- Presets (Ariana) ---------- */
-document.getElementById('presetFull').onclick=()=>{ document.getElementById('moonMode').value='full'; applyMoonBreath(); };
-document.getElementById('presetWax').onclick=()=>{ document.getElementById('moonMode').value='waxing'; applyMoonBreath(); };
-document.getElementById('presetNew').onclick=()=>{ document.getElementById('moonMode').value='new'; applyMoonBreath(); };
-
-/* ---------- Export & Print ---------- */
-document.getElementById('exportBtn').onclick=()=>{
-  const payload={version:'3.8', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:!!(ProAudio.honey&&ProAudio.honey.on), theme:load(THEME_KEY,'illumina'), honeyHz:load(HONEY_FREQ_KEY,128)}, timestamp:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
-  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='froot_map.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-};
-document.getElementById('printBtn').onclick=()=>window.print();
-
-/* ---------- Words + Journal persistence ---------- */
-[['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
-  .forEach(([k,id])=>{ const el=document.getElementById(id); if(el){ el.addEventListener('input', ()=>{ mapData[k]=(el.value||'').trim(); save(MAP_KEY,mapData); renderMap(); }); }});
-document.getElementById('j_note').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].note=this.value; save(JOURNAL_KEY, journal); });
-document.getElementById('j_poem').addEventListener('input', function(){ const w=schedule.week; journal[w]=journal[w]||{}; journal[w].poem=this.value; save(JOURNAL_KEY, journal); });
-
-/* ---------- Play/Stop bindings ---------- */
-[['blue'],['froot'],['immortal'],['ancient'],['heaven']].forEach(([k])=>{
-  const pb=document.getElementById('play-'+k), sb=document.getElementById('stop-'+k);
-  if(pb) pb.onclick=()=>playTone(k);
-  if(sb) sb.onclick=()=>stopTone();
-});
-
-/* ---------- First-Light ---------- */
-function openFirstLight(){ alert('Welcome to Froot — choose a Week & Day; tap Hear Tone; the orb guides your breath. Theme adds Muse shimmer or Neon width. Bridge to Jar when words want to arrive.'); }
-
-/* ---------- Boot ---------- */
-document.addEventListener('click', ()=>{ ProAudio.unlock(); }, {once:true});
-applyScheduleUI(); hydrateInputs(); renderMap(); applyMoonBreath();
-document.getElementById('loopToggle').checked = loopMode; document.getElementById('loopTimer').value=String(loopTimerMin);
-refreshQuickbar();
-setTimeout(()=>{ const n=document.getElementById('bridge-note'); if(n) n.style.display='block'; }, 42000);
-if(tricksterOn) startTrickster();
 </script>
 </body>
 </html>
