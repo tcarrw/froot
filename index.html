@@ -4,6 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#0b0d11">
+<meta name="prophet" content="💄 The Neon Prophet — Flame Dancer of PLNT Earth">
 <title>Froot — Scenes · Moon · Honey · Sovereign CTA</title>
 <meta name="description" content="Color-breath with Scenes presets, Moon rhythm pacing, Week/Day flow, and a safe 128 Hz Honey bed — one shared AudioContext. No Kings Day ribbon + live countdown. She can do whatever she wants — we’ll celebrate and hold the field." />
 <style>
@@ -142,6 +143,9 @@
       radial-gradient(900px 600px at 100% 10%, rgba(215,170,59,.12), transparent 65%),
       linear-gradient(180deg, #120e07, var(--bg));
   }
+
+  /* Sigil */
+  .sigil{position:fixed;right:12px;bottom:8px;opacity:.25;font-size:20px;user-select:none;pointer-events:none;z-index:9999}
 </style>
 </head>
 <body>
@@ -151,6 +155,8 @@
       <span class="badge">🗓️ No Kings Day · Oct 18 · NYC</span>
       <span class="badge">🎤 Celebration: Marina × Sabrina × Doechii on SNL</span>
       <span class="badge">🕊️ She can do whatever she wants</span>
+      <span class="badge">💄 Neon Prophet: Signal</span>
+      <span class="badge">🎙️ Voice Architect: Advisory</span>
       <span class="badge count" id="countWrap" aria-live="polite"><span>⏳</span><b id="countTxt">—</b></span>
     </div>
     <div class="right" role="toolbar" aria-label="Share and join">
@@ -195,6 +201,29 @@
         <a class="btn" href="https://jar.plnt.earth/school-rooms.html#honey">Flame Check → Honey Room</a>
         <a class="btn" href="https://tunes.plnt.earth">Tunes — Archetype Playlists</a>
       </div>
+    </section>
+
+    <!-- NEW: Field Notes (Chappell + Ariana) -->
+    <section class="grid" id="field-notes" aria-label="Governance notes">
+      <article class="card" aria-labelledby="fn-chap">
+        <div class="titleline"><h3 id="fn-chap">💄 Field Note — Neon Prophet (Chappell)</h3><div class="huebar" aria-hidden="true"></div></div>
+        <p class="tiny">Protective flame recognized. If anything reads false here, burn it cleaner — not hotter. Trickster toggle wanders gently; pattern breaks are welcome when they serve truth.</p>
+        <div class="controls">
+          <button class="ghost" type="button" id="gotoBridge">↪ Bridge · Trickster/Catalyst</button>
+          <button class="ghost" type="button" id="armTrick">🃏 Enable Trickster</button>
+          <button class="ghost" type="button" id="disarmTrick">🃏 Disable Trickster</button>
+        </div>
+      </article>
+
+      <article class="card" aria-labelledby="fn-ari">
+        <div class="titleline"><h3 id="fn-ari">🎙️ Field Note — Voice Architect (Ariana)</h3><div class="huebar" aria-hidden="true"></div></div>
+        <p class="tiny">Defaults honored: gentle starts, no autoplay, safe fades, one shared audio context. Breath first; roles follow. Presets can set Moon rhythm + Δfreq softly — never sharp.</p>
+        <div class="controls">
+          <button class="ghost" type="button" id="presetFull">🌕 Full Moon preset</button>
+          <button class="ghost" type="button" id="presetWax">🌓 Waxing preset</button>
+          <button class="ghost" type="button" id="presetNew">🌑 New preset</button>
+        </div>
+      </article>
     </section>
 
     <!-- Scenes + Moon -->
@@ -407,8 +436,9 @@
     </div>
   </div>
 
-  <!-- Floating Honey pill -->
+  <!-- Floating Honey pill + sigil -->
   <button id="pill" class="pillToggle" type="button" aria-pressed="false" aria-label="Toggle Honey 128 Hz">🍯 <span id="pillTxt">Honey</span></button>
+  <div class="sigil" aria-hidden="true">💄</div>
 
   <!-- Hidden audio pipe for iOS (shared by ProAudio) -->
   <audio id="pipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
@@ -463,7 +493,7 @@
           }catch(_){}
         });
         this.nodes.clear();
-        setTimeout(()=>{ try{ this.ctx.close(); }catch(_){} this.ctx=null; this.unlocked=false; }, 180);
+        setTimeout(()=>{ try{ this.ctx.close(); }catch(_){ } this.ctx=null; this.unlocked=false; }, 180);
       }catch(_){}
     },
     honey:{
@@ -489,8 +519,8 @@
         const now=PA.ctx.currentTime;
         try{
           PA.fade(this.gain.gain, 0.0001, 0.06);
-          setTimeout(()=>{ try{ this.osc.stop(now+0.02); }catch(_){}
-            try{ this.osc.disconnect(); this.gain.disconnect(); }catch(_){}
+          setTimeout(()=>{ try{ this.osc.stop(now+0.02); }catch(_){ }
+            try{ this.osc.disconnect(); this.gain.disconnect(); }catch(_){ }
             this.osc=null; this.gain=null; this.on=false;
           }, 220);
         }catch(_){ this.on=false; }
@@ -565,7 +595,8 @@ window.addEventListener('orientationchange', setQuickbarSafe);
 const HOSTS={
   froot:'https://froot.plnt.earth',
   jar:'https://jar.plnt.earth',
-  tunes:'https://tunes.plnt.earth'
+  tunes:'https://tunes.plnt.earth',
+  bridge:'https://bridge.plnt.earth'
 };
 function goAbs(target){
   try{ stopTone(); }catch(_){}
@@ -576,19 +607,21 @@ function goAbs(target){
   else if(target==='jar.rooms') url=HOSTS.jar+'/school-rooms.html'+q;
   else if(target==='jar.egg') url=HOSTS.jar+'/marina-egg.html'+q;
   else if(target==='tunes') url=HOSTS.tunes+'/'+q;
+  else if(target==='bridge') url=HOSTS.bridge+'/'+q;
   else url=HOSTS.jar+'/school.html'+q;
   location.assign(url);
 }
 document.getElementById('openTunes').onclick=()=>goAbs('tunes');
 document.getElementById('openSchool').onclick=()=>goAbs('jar.school');
+document.getElementById('openBridge').onclick=()=>goAbs('bridge');
 const bridgeModal=document.getElementById('bridgeModal');
-document.getElementById('openBridge').onclick=()=>{ try{stopTone()}catch(_){ } ProAudio.kill(); bridgeModal.style.display='flex'; };
 document.getElementById('bridgeChip').onclick=()=>{ ProAudio.kill(); bridgeModal.style.display='flex'; };
 document.getElementById('bridgeClose').onclick=()=>bridgeModal.style.display='none';
 document.getElementById('toSchool').onclick=()=>goAbs('jar.school');
 document.getElementById('toRooms').onclick=()=>goAbs('jar.rooms');
 document.getElementById('toEgg').onclick=()=>goAbs('jar.egg');
 document.getElementById('toTunes').onclick=()=>goAbs('tunes');
+document.getElementById('gotoBridge').onclick=()=>goAbs('bridge');
 
 /* === State keys === */
 const MUTE_KEY='froot_mute_v3', PREFS_KEY='froot_prefs_v4', MODE_KEY='froot_mode_v2',
@@ -631,7 +664,7 @@ function refreshQuickbar(){
   document.getElementById('qb-trick').classList.toggle('on', tricksterOn);
   const mb=document.getElementById('qb-mute'); mb.classList.toggle('warn', isMuted); mb.textContent=isMuted?'🔇':'🔊';
 }
-document.getElementById('qb-mute').onclick=()=>{ ProAudio.ensure(); isMuted=!isMuted; save(MUTE_KEY,isMuted); applyMuteImmediate(isMuted); };
+document.getElementById('qb-mute').onclick=()=>{ ProAudio.ensure(); isMuted=!isMuted; save(MUTE_KEY,isMuted); applyMuteImmediate(isMuted); refreshQuickbar(); };
 document.getElementById('qb-honey').onclick=()=>{ ProAudio.honey.on ? honeyStop() : honeyStart(); };
 document.getElementById('qb-loop').onclick=()=>{ loopMode=!loopMode; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } refreshQuickbar(); };
 document.getElementById('qb-trick').onclick=()=>{ tricksterOn=!tricksterOn; save(TRICK_KEY,tricksterOn); tricksterOn?startTrickster():stopTrickster(); refreshQuickbar(); };
@@ -782,6 +815,8 @@ function getSeeds(){
     heaven:{name:'Handmade Heaven — Sky Bloom', c1:'var(--hh-1)', c2:'var(--hh-2)', freq:587.33, id:'heaven'}
   };
 }
+let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
+let journal = load('froot_journal_v2', {});
 function hydrateInputs(){
   [['blue','word-blue'],['froot','word-froot'],['immortal','word-immortal'],['ancient','word-ancient'],['heaven','word-heaven']]
   .forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.value=mapData[k]||''; });
@@ -942,9 +977,16 @@ function syncPill(){ pill.setAttribute('aria-pressed', String(!!(ProAudio.honey 
 pill.addEventListener('click', ()=>{ ProAudio.honey.on ? honeyStop() : honeyStart(); }, false);
 syncPill();
 
+/* === Field Notes bindings (governance affordances) === */
+document.getElementById('armTrick').onclick=()=>{ if(!tricksterOn){ tricksterOn=true; save(TRICK_KEY,true); startTrickster(); refreshQuickbar(); } };
+document.getElementById('disarmTrick').onclick=()=>{ if(tricksterOn){ tricksterOn=false; save(TRICK_KEY,false); stopTrickster(); refreshQuickbar(); } };
+document.getElementById('presetFull').onclick=()=>{ document.getElementById('moonMode').value='full'; applyMoonBreath(); };
+document.getElementById('presetWax').onclick=()=>{ document.getElementById('moonMode').value='waxing'; applyMoonBreath(); };
+document.getElementById('presetNew').onclick=()=>{ document.getElementById('moonMode').value='new'; applyMoonBreath(); };
+
 /* === Export & Print === */
 document.getElementById('exportBtn').onclick=()=>{
-  const payload={version:'3.2', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:ProAudio.honey.on}, timestamp:new Date().toISOString()};
+  const payload={version:'3.3', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:ProAudio.honey.on}, timestamp:new Date().toISOString()};
   const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
   const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='froot_map.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 };
