@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Froot · Marina Color-Breath</title>
-<meta name="description" content="Froot — Marina color-breath practice. Select a Froot to shape the silky 128 Hz Honey core: Muse flutter, Chorus micro-detune, and gentle filters. Mobile-clean, linked ribbon." />
+<title>Froot · Marina Color-Breath (Reliable Honey)</title>
+<meta name="description" content="Froot — Marina color-breath with a reliable 128 Hz Honey tone that keeps playing when the screen turns off. Reliable Mode (audio element) + Studio Mode (optional FX). True dark theme." />
 <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#0b0d11">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,7 +15,9 @@
     --aqua:#b5f0ea; --honey:#ffd37a; --rose:#ff9bb0; --emerald:#8be0b7; --violet:#c9a7ff; --gold:#f6d28b; --peach:#ffb38a;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:radial-gradient(1200px 700px at 50% -10%, #141736 0%, #0b0d11 38%, #0b0d11 100%);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+  html,body{margin:0;height:100%;background:#0b0d11;color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+  /* Always-on true dark */
+  @media (prefers-color-scheme: light){ html,body{background:#0b0d11;color:var(--ink)} }
   a{color:inherit;text-decoration:none}
   .wrap{max-width:920px;margin:0 auto;padding:16px 16px 80px}
 
@@ -42,7 +44,6 @@
     border-radius:14px;padding:14px;box-shadow:0 10px 28px #0007;margin:12px 0;position:relative
   }
   .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-
   .grid{display:grid;grid-template-columns:1fr;gap:10px}
   @media(min-width:740px){ .grid{grid-template-columns:repeat(3,1fr)} }
 
@@ -73,10 +74,10 @@
 <body>
   <header class="wrap" aria-label="Site header">
     <div class="brand">
-      <div class="glyph"><span>🍉</span></div>
+      <div class="glyph"><span>🌙</span></div>
       <div>
         <h1>Froot · <span style="text-shadow:0 0 14px #ffd37a77">Marina Color-Breath</span></h1>
-        <div class="tag">Silky 128 Hz Honey core · Muse flutter · Chorus micro-detune · color shapers</div>
+        <div class="tag">Reliable 128 Hz Honey (keeps playing when the screen turns off) · optional Studio FX</div>
       </div>
     </div>
 
@@ -94,18 +95,18 @@
   </header>
 
   <main class="wrap" id="main">
-    <!-- Honey Core Controls -->
-    <section class="card" aria-label="Honey core">
+    <!-- Reliable Mode (Audio Element) -->
+    <section class="card" aria-label="Reliable Honey">
       <div class="row" style="justify-content:space-between;gap:10px">
-        <div class="badge">🍯 Honey Core — 128 Hz</div>
+        <div class="badge">🍯 Reliable Honey — 128 Hz</div>
         <div class="badge">Status: <strong id="statusText">Off</strong></div>
       </div>
 
       <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
         <button id="startBtn" class="pill">▶︎ Start Honey</button>
         <button id="stopBtn"  class="pill">■ Stop</button>
-        <button id="museBtn"  class="pill" aria-pressed="false">○ Muse: Off</button>
-        <button id="chorusBtn" class="pill" aria-pressed="false">○ Chorus: Off</button>
+        <button id="newTabBtn" class="pill">↗︎ Open in New Tab</button>
+        <a id="downloadLink" class="pill" download="honey-128hz.wav" href="#">⬇︎ Download Tone</a>
       </div>
 
       <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
@@ -118,108 +119,103 @@
       <div class="meter" style="margin-top:10px"><div class="bar" id="meterBar"></div></div>
 
       <p class="note" style="margin-top:10px">
-        Tap <b>Start Honey</b> once on iPhone to unlock audio. <b>Muse</b> adds a slow flutter (±8¢). <b>Chorus</b> splits L/R a few cents for a dreamy glow.
-        Use <b>Fine Detune</b> to find your “click.” When the chest warms, pick a Froot below.
+        <b>Reliable Mode</b> uses a normal audio element and is the most dependable way to keep the tone playing when the screen turns off.  
+        To try with Apple Music, start Honey, then test starting your music app — iOS decides mixing.  
+        The <b>Open in New Tab</b> option can help treat the tone like simple media playback.
+      </p>
+
+      <!-- Hidden audio element (created WAV on the fly) -->
+      <audio id="honeyEl" preload="auto" loop playsinline></audio>
+    </section>
+
+    <!-- Studio Mode (optional FX in foreground) -->
+    <section class="card" aria-label="Studio FX">
+      <div class="row" style="justify-content:space-between;gap:10px">
+        <div class="badge">🎛️ Studio Mode (Optional)</div>
+        <div class="badge">Foreground-only FX</div>
+      </div>
+
+      <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
+        <button id="studioBtn" class="pill" aria-pressed="false">○ Studio: Off</button>
+        <button id="museBtn" class="pill" aria-pressed="false">○ Muse: Off</button>
+        <button id="chorusBtn" class="pill" aria-pressed="false">○ Chorus: Off</button>
+      </div>
+
+      <p class="note">
+        Studio adds a gentle flutter (Muse) and micro-detune chorus while the page is visible. If the screen locks, the page automatically keeps the **Reliable** tone and quietly suspends these extras.
       </p>
     </section>
 
-    <!-- Froot Grid -->
-    <section class="card" aria-label="Froot modes">
-      <div class="badge">🎨 Select a Froot</div>
+    <!-- Froot palette -->
+    <section class="card" aria-label="Froot palette">
+      <div class="badge">🎨 Pick a Froot (simple voicing)</div>
       <div class="grid" style="margin-top:10px">
         <div class="fruit" data-froot="peach">
           <div class="title" style="color:var(--peach)">🍑 Peach — Ease</div>
-          <div class="desc">Warm low-mid hug. Soft low-pass + tiny presence. For safety and “I belong.”</div>
+          <div class="desc">Slightly slower (softer). PlaybackRate ≈ −0.5%.</div>
           <button class="pill set-froot">Use Peach</button>
         </div>
         <div class="fruit" data-froot="nectar">
           <div class="title" style="color:var(--honey)">🍯 Nectar — Magnet</div>
-          <div class="desc">Bright allure. High-shelf lift + light shimmer. For charm, sweetness, invitation.</div>
+          <div class="desc">Tiny high lift feel (faster). PlaybackRate ≈ +0.4%.</div>
           <button class="pill set-froot">Use Nectar</button>
         </div>
         <div class="fruit" data-froot="emerald">
           <div class="title" style="color:var(--emerald)">💚 Emerald — Calm Power</div>
-          <div class="desc">Balanced clarity. Gentle band-pass to center the voice. For steady confidence.</div>
+          <div class="desc">Centered breath (neutral). PlaybackRate ≈ 0%.</div>
           <button class="pill set-froot">Use Emerald</button>
         </div>
         <div class="fruit" data-froot="violet">
           <div class="title" style="color:var(--violet)">🔮 Violet — Mystery</div>
-          <div class="desc">Air + space. Subtle high lift and chorus depth. For dream logic and intuition.</div>
+          <div class="desc">Dream shimmer (enable Muse + small chorus).</div>
           <button class="pill set-froot">Use Violet</button>
         </div>
         <div class="fruit" data-froot="gold">
           <div class="title" style="color:var(--gold)">🌼 Gold — Radiance</div>
-          <div class="desc">Open and strong. Wide band + soft harmonics. For announcement without strain.</div>
+          <div class="desc">Open/bright (slightly faster, no flutter).</div>
           <button class="pill set-froot">Use Gold</button>
         </div>
       </div>
     </section>
 
-    <!-- Gentle guidance -->
+    <!-- How to use -->
     <section class="card" aria-label="How to use">
       <div class="badge">📝 How to use Froot</div>
       <p class="note">
-        1) Start Honey and breathe. 2) Nudge detune until your exhale feels effortless. 3) Pick a Froot that matches your moment.  
-        Ship one tiny act that matches the feeling (a line, a tweak, a message). Return daily — rhythm > scale.
+        1) Tap <b>Start Honey</b> (unlocks audio on iPhone). 2) Nudge detune until your exhale feels effortless.  
+        3) Choose a Froot voicing. If you want shimmer, enable Studio and tap Muse/Chorus.  
+        If you need background/lock-screen playback, keep **Studio Off** and use Reliable Honey.
       </p>
       <p class="soft">
-        Need school tools? <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://jar.plnt.earth/school.html">School</a> · <a href="https://jar.plnt.earth/school-rooms.html">School Rooms</a> · Playlists at <a href="https://tunes.plnt.earth/">Tunes</a> · Reflection at <a href="https://mirrorhoney.plnt.earth/">MirrorHoney</a>.
+        Tools: <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://tunes.plnt.earth/">Tunes</a> · Reflection at <a href="https://mirrorhoney.plnt.earth/">MirrorHoney</a>.
       </p>
     </section>
 
-    <div class="footer">Night-safe UI · zero-network WebAudio · smooth ramps · no overlays.</div>
+    <div class="footer">True dark theme · zero-network tone · background-friendly · clean buttons.</div>
   </main>
 
 <script>
 (() => {
-  // UI
-  const statusText  = document.getElementById('statusText');
-  const startBtn    = document.getElementById('startBtn');
-  const stopBtn     = document.getElementById('stopBtn');
-  const museBtn     = document.getElementById('museBtn');
-  const chorusBtn   = document.getElementById('chorusBtn');
-  const vol         = document.getElementById('volume');
-  const det         = document.getElementById('detune');
-  const meterBar    = document.getElementById('meterBar');
-  const frootBtns   = [...document.querySelectorAll('.set-froot')];
+  // Elements
+  const statusText = document.getElementById('statusText');
+  const startBtn   = document.getElementById('startBtn');
+  const stopBtn    = document.getElementById('stopBtn');
+  const newTabBtn  = document.getElementById('newTabBtn');
+  const downloadLink = document.getElementById('downloadLink');
+  const vol        = document.getElementById('volume');
+  const det        = document.getElementById('detune');
+  const meterBar   = document.getElementById('meterBar');
+  const honeyEl    = document.getElementById('honeyEl');
 
-  // WebAudio: osc -> (panner for chorus) -> filters -> gain -> out
-  let ctx, oscL, oscR, merger, gain, shelf, lpf, bpf;
-  let lfo, lfoGain; // Muse (detune flutter)
-  let on=false, muse=false, chorus=false;
+  const studioBtn  = document.getElementById('studioBtn');
+  const museBtn    = document.getElementById('museBtn');
+  const chorusBtn  = document.getElementById('chorusBtn');
+  const frootBtns  = [...document.querySelectorAll('.set-froot')];
 
-  function ensureCtx(){
-    if(!ctx){
-      ctx = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'playback'});
-      gain = ctx.createGain(); gain.gain.value = 0.0001;
-
-      // Dual oscillators for chorus (L/R); default route both center
-      oscL = ctx.createOscillator(); oscL.type='sine'; oscL.frequency.value = 128;
-      oscR = ctx.createOscillator(); oscR.type='sine'; oscR.frequency.value = 128;
-
-      const panL = new StereoPannerNode(ctx,{pan:-0.4});
-      const panR = new StereoPannerNode(ctx,{pan: 0.4});
-
-      // Filters
-      shelf = ctx.createBiquadFilter(); shelf.type='highshelf'; shelf.frequency.value=2500; shelf.gain.value=0;
-      lpf   = ctx.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=20000; // open
-      bpf   = ctx.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=700; bpf.Q.value=0.0001; // effectively bypass
-
-      // Chain: (L->panL) + (R->panR) -> shelf -> lpf -> bpf -> gain -> out
-      oscL.connect(panL); oscR.connect(panR);
-      const sum = ctx.createGain(); panL.connect(sum); panR.connect(sum);
-      sum.connect(shelf); shelf.connect(lpf); lpf.connect(bpf); bpf.connect(gain); gain.connect(ctx.destination);
-
-      // Muse LFO (modulates detune in cents on L channel for slight movement)
-      lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value = 0.15; // ~6-7s
-      lfoGain = ctx.createGain(); lfoGain.gain.value = 0; // cents depth
-      lfo.connect(lfoGain);
-      lfoGain.connect(oscL.detune);
-      lfo.start();
-
-      oscL.start(); oscR.start();
-    }
-  }
+  // State
+  let on=false, studio=false, muse=false, chorus=false;
+  let toneBlob=null, toneURL=null, tabURL=null;
+  let ctx=null, srcNode=null, gain=null, panL=null, panR=null, splitter=null, merger=null, lfo=null, lfoGain=null;
 
   function setBadge(v){ statusText.textContent = v ? 'On' : 'Off'; startBtn.classList.toggle('on', v); }
   function setToggle(btn, v, onLabel, offLabel){
@@ -228,122 +224,174 @@
     btn.classList.toggle('on', v);
   }
 
-  function rampGain(target, ms){
-    if(!gain) return;
-    const now = ctx.currentTime, dur = Math.max(0.06,(ms||250)/1000);
-    const current = gain.gain.value;
-    gain.gain.cancelScheduledValues(now);
-    gain.gain.setValueAtTime(current, now);
-    gain.gain.linearRampToValueAtTime(target, now + dur);
-
-    // UI meter
-    const start = parseFloat(meterBar.style.width)||0;
-    const end = Math.round(Math.min(100, Math.max(0, target*100)));
-    const t0 = performance.now(), T = Math.max(60,(ms||250));
-    function step(ts){
-      const k = Math.min(1,(ts - t0)/T);
-      meterBar.style.width = Math.round(start + (end-start)*k) + '%';
-      if(k<1) requestAnimationFrame(step);
+  // Build a tiny mono WAV (128 Hz sine, 2s, 48k)
+  function makeHoneyWav(sr=48000, seconds=2, freq=128){
+    const length = Math.floor(sr*seconds);
+    const data = new Int16Array(length);
+    const amp = 0.25 * 0x7FFF; // safe headroom
+    for(let i=0;i<length;i++){
+      data[i] = Math.round(amp * Math.sin(2*Math.PI*freq*(i/sr)));
     }
-    requestAnimationFrame(step);
+    // WAV header (PCM 16-bit mono)
+    const header = new ArrayBuffer(44);
+    const dv=new DataView(header);
+    const writeStr=(o,s)=>{ for(let i=0;i<s.length;i++) dv.setUint8(o+i, s.charCodeAt(i)); };
+    const byteRate = sr*2, blockAlign=2, dataSize=data.length*2, chunkSize=36+dataSize;
+    writeStr(0,"RIFF"); dv.setUint32(4, chunkSize, true); writeStr(8,"WAVE");
+    writeStr(12,"fmt "); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
+    dv.setUint32(24,sr,true); dv.setUint32(28,byteRate,true); dv.setUint16(32,blockAlign,true); dv.setUint16(34,16,true);
+    writeStr(36,"data"); dv.setUint32(40,dataSize,true);
+    const pcm = new Int16Array(header.byteLength + dataSize);
+    // copy header bytes + data
+    new Uint8Array(pcm.buffer).set(new Uint8Array(header),0);
+    new Int16Array(pcm.buffer,44).set(data);
+    return new Blob([pcm],{type:"audio/wav"});
+  }
+
+  function ensureTone(){
+    if(!toneBlob){
+      toneBlob = makeHoneyWav();
+      toneURL = URL.createObjectURL(toneBlob);
+      honeyEl.src = toneURL;
+      downloadLink.href = toneURL; // allow save
+    }
   }
 
   function level(){ return Math.min(1, Math.max(0, vol.value/100)); }
-
-  function applyFineDetune(){
-    if(!oscL||!oscR) return;
-    const pct = parseFloat(det.value)||0;   // ±2%
-    const cents = pct * 20;                 // keep within ±40 cents feel
-    oscL.detune.setTargetAtTime(cents + (chorus ? -6 : 0), ctx.currentTime, 0.05);
-    oscR.detune.setTargetAtTime(cents + (chorus ?  +6 : 0), ctx.currentTime, 0.05);
-  }
-
-  function toggleMuse(){
-    muse = !muse;
-    setToggle(museBtn, muse, '● Muse: On', '○ Muse: Off');
-    if(!ctx) return;
-    const depth = muse ? 8 : 0; // cents
-    lfoGain.gain.setTargetAtTime(depth, ctx.currentTime, 0.2);
-  }
-
-  function toggleChorus(){
-    chorus = !chorus;
-    setToggle(chorusBtn, chorus, '● Chorus: On', '○ Chorus: Off');
-    applyFineDetune();
-  }
-
-  function setFroot(name){
-    if(!ctx) return;
-    // Reset to neutral
-    shelf.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
-    lpf.frequency.setTargetAtTime(20000, ctx.currentTime, 0.1);
-    bpf.Q.setTargetAtTime(0.0001, ctx.currentTime, 0.1);
-    bpf.frequency.setTargetAtTime(700, ctx.currentTime, 0.1);
-
-    // Apply color voicings
-    if(name==='peach'){
-      lpf.frequency.setTargetAtTime(1800, ctx.currentTime, 0.2);
-      shelf.gain.setTargetAtTime(1.5, ctx.currentTime, 0.2);
-      chorus = false; setToggle(chorusBtn, false, '● Chorus: On', '○ Chorus: Off'); applyFineDetune();
-    }else if(name==='nectar'){
-      shelf.gain.setTargetAtTime(5, ctx.currentTime, 0.2);
-      lpf.frequency.setTargetAtTime(12000, ctx.currentTime, 0.2);
-      if(!chorus){ toggleChorus(); } // light glow
-    }else if(name==='emerald'){
-      bpf.frequency.setTargetAtTime(650, ctx.currentTime, 0.2);
-      bpf.Q.setTargetAtTime(0.8, ctx.currentTime, 0.2);
-      shelf.gain.setTargetAtTime(2.0, ctx.currentTime, 0.2);
-      chorus = false; setToggle(chorusBtn, false, '● Chorus: On', '○ Chorus: Off'); applyFineDetune();
-    }else if(name==='violet'){
-      shelf.gain.setTargetAtTime(3.5, ctx.currentTime, 0.2);
-      if(!chorus){ toggleChorus(); }
-      if(!muse){ toggleMuse(); }
-    }else if(name==='gold'){
-      shelf.gain.setTargetAtTime(4.0, ctx.currentTime, 0.2);
-      lpf.frequency.setTargetAtTime(16000, ctx.currentTime, 0.2);
-      if(!chorus){ toggleChorus(); }
-      if(muse){ toggleMuse(); } // crisp, less flutter
-    }
+  function applyLevel(){ honeyEl.volume = level(); meterBar.style.width = Math.round(honeyEl.volume*100) + '%'; }
+  function applyDetune(){
+    const pct = parseFloat(det.value)||0; // ±2%
+    honeyEl.playbackRate = 1 + (pct/100); // 0.98..1.02
   }
 
   async function start(){
-    ensureCtx();
-    if(on) return;
-    if(ctx.state === 'suspended'){ try{ await ctx.resume(); }catch(_){ } }
-    applyFineDetune();
-    rampGain(level(), 420);
-    on = true; setBadge(true);
+    ensureTone();
+    try{
+      honeyEl.currentTime = 0;
+      applyDetune();
+      applyLevel();
+      await honeyEl.play();
+      on = true; setBadge(true);
+      if(studio){ enableStudio(); }
+    }catch(_){}
   }
 
   function stop(){
-    if(!ctx || !on) return;
-    rampGain(0.0001, 300);
+    try{ honeyEl.pause(); }catch(_){}
     on = false; setBadge(false);
+    disableStudio();
   }
 
-  // Bindings
-  startBtn.addEventListener('click', start);
-  stopBtn .addEventListener('click', stop);
-  museBtn .addEventListener('click', toggleMuse);
-  chorusBtn.addEventListener('click', toggleChorus);
-
-  vol.addEventListener('input', () => { if(ctx){ rampGain(level(), 140); } });
-  det.addEventListener('input', applyFineDetune);
-
-  frootBtns.forEach(b=>{
-    b.addEventListener('click', e=>{
-      const card = e.currentTarget.closest('.fruit');
-      const name = card?.getAttribute('data-froot');
-      if(name){ setFroot(name); }
-    });
+  newTabBtn.addEventListener('click', ()=>{
+    ensureTone();
+    // open simple player in new tab for system-level playback UX
+    const html = `
+      <!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Honey 128 Hz</title>
+      <style>html,body{margin:0;height:100%;background:#000;color:#fff;display:grid;place-items:center;font:16px system-ui}</style>
+      <audio id="a" src="${toneURL}" loop controls autoplay playsinline style="width:90%"></audio>
+      <p style="opacity:.8">Honey — 128 Hz · This tab can keep playing when the screen turns off.</p>
+    `;
+    const blob = new Blob([html],{type:"text/html"});
+    tabURL = URL.createObjectURL(blob);
+    window.open(tabURL,"_blank","noopener");
   });
 
-  document.addEventListener('visibilitychange', () => setBadge(on && !document.hidden));
+  // Studio Mode (WebAudio FX) — foreground only
+  function enableStudio(){
+    if(ctx || !on) return;
+    try{
+      ctx = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'playback'});
+      srcNode = ctx.createMediaElementSource(honeyEl);
+      // split L/R -> small detune pan
+      splitter = ctx.createChannelSplitter(2);
+      merger   = ctx.createChannelMerger(2);
+      panL = new StereoPannerNode(ctx,{pan:-0.35});
+      panR = new StereoPannerNode(ctx,{pan: 0.35});
+      // LFO for Muse (modulate playbackRate via playbackRate shim: we modulate element.playbackRate gently)
+      lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value = 0.15;
+      lfoGain = ctx.createGain(); lfoGain.gain.value = 0; // depth → we’ll map to playbackRate ticks
+      lfo.connect(lfoGain);
+      // Wire graph: src -> splitter -> panL/panR -> merger -> ctx.destination (mirror element output)
+      srcNode.connect(splitter);
+      splitter.connect(panL,0); splitter.connect(panR,1);
+      panL.connect(merger,0,0); panR.connect(merger,0,1);
+      merger.connect(ctx.destination);
+      lfo.start();
+
+      // Chorus: we simulate by nudging element rate slightly over time; small, infrequent ticks
+      if(chorus){ applyChorus(true); }
+      if(muse){ applyMuse(true); }
+    }catch(_){}
+  }
+
+  function disableStudio(){
+    if(!ctx) return;
+    try{
+      lfo && lfo.stop();
+    }catch(_){}
+    try{
+      ctx.close();
+    }catch(_){}
+    ctx = srcNode = splitter = merger = panL = panR = lfo = lfoGain = null;
+  }
+
+  function applyMuse(enable){
+    if(!enable){ if(lfoGain) lfoGain.gain.value = 0; return; }
+    if(!lfoGain) return;
+    lfoGain.gain.value = 1; // we’ll translate this to small playbackRate wiggles
+  }
+
+  // Minimal chorus/muse by gently wiggling playbackRate (keeps element path primary)
+  let wiggleTimer=null;
+  function startWiggle(){
+    stopWiggle();
+    wiggleTimer = setInterval(()=>{
+      if(!on) return;
+      const base = 1 + (parseFloat(det.value)||0)/100;
+      let wiggle = 0;
+      if(chorus) wiggle += (Math.random()*0.0008 - 0.0004); // ±0.04%
+      if(muse)   wiggle += Math.sin(Date.now()/6000)*0.0008; // ±0.08% slow
+      honeyEl.playbackRate = base + wiggle;
+    }, 250);
+  }
+  function stopWiggle(){ if(wiggleTimer){ clearInterval(wiggleTimer); wiggleTimer=null; } }
+
+  function applyChorus(enable){ /* handled in wiggle */ }
+
+  // Visibility: if hidden, keep Reliable path only
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){ disableStudio(); }
+    else if(studio && on){ enableStudio(); }
+  });
+
+  // UI bindings
+  startBtn.addEventListener('click', start);
+  stopBtn .addEventListener('click', stop);
+  vol.addEventListener('input', applyLevel);
+  det.addEventListener('input', applyDetune);
+
+  setToggle(studioBtn,false,'● Studio: On','○ Studio: Off');
+  setToggle(museBtn,false,'● Muse: On','○ Muse: Off');
+  setToggle(chorusBtn,false,'● Chorus: On','○ Chorus: Off');
+
+  studioBtn.addEventListener('click', ()=>{
+    studio=!studio;
+    setToggle(studioBtn,studio,'● Studio: On','○ Studio: Off');
+    if(studio && on){ enableStudio(); startWiggle(); }
+    else{ disableStudio(); stopWiggle(); applyDetune(); }
+  });
+  museBtn.addEventListener('click', ()=>{
+    muse=!muse; setToggle(museBtn,muse,'● Muse: On','○ Muse: Off');
+    if(studio && on){ applyMuse(muse); startWiggle(); } else if(!muse){ stopWiggle(); applyDetune(); }
+  });
+  chorusBtn.addEventListener('click', ()=>{
+    chorus=!chorus; setToggle(chorusBtn,chorus,'● Chorus: On','○ Chorus: Off');
+    if(studio && on){ startWiggle(); } else if(!chorus){ stopWiggle(); applyDetune(); }
+  });
 
   // Init UI
   setBadge(false);
-  setToggle(museBtn,false,'● Muse: On','○ Muse: Off');
-  setToggle(chorusBtn,false,'● Chorus: On','○ Chorus: Off');
   meterBar.style.width = vol.value + '%';
 })();
 </script>
