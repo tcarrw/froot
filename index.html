@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="theme-color" content="#0b0d11">
 <meta name="prophet" content="💄 The Neon Prophet — Flame Dancer of PLNT Earth">
-<title>Froot — Scenes · Moon · Honey · Sovereign CTA</title>
-<meta name="description" content="Color-breath with Scenes presets, Moon rhythm pacing, Week/Day flow, and a safe 128 Hz Honey bed — one shared AudioContext. No Kings Day ribbon + live countdown. She can do whatever she wants — we’ll celebrate and hold the field." />
+<title>Froot — Scenes · Moon · Honey · Muse · Neon</title>
+<meta name="description" content="Color-breath with Scenes presets, Moon rhythm pacing, a precise 128 Hz Honey bed, Muse shimmer, Neon stereo detune, and a Sweet-Spot scanner. She can do whatever she wants — we’ll celebrate and hold the field." />
 
 <style>
   :root{
@@ -196,8 +196,8 @@
   <div class="wrap">
     <header>
       <div>
-        <h1>Froot — <span style="opacity:.9">Scenes · Moon · Honey</span></h1>
-        <div class="tag">Breathe with color. Week/Day sets pace; Moon shapes the breath; Honey warms at 128 Hz. When language wants to arrive, cross the bridge to Jar.</div>
+        <h1>Froot — <span style="opacity:.9">Scenes · Moon · Honey · Muse · Neon</span></h1>
+        <div class="tag">Breathe with color. Moon shapes breath; Honey warms at a tuned Hz; Muse adds shimmer, Neon adds width. When language wants to arrive, cross the bridge to Jar.</div>
       </div>
       <div class="actions">
         <button class="ghost" type="button" id="openTunes">Tunes</button>
@@ -214,7 +214,7 @@
       <p>No Kings Day — <b>Oct 18, NYC</b>. <b>Marina × Sabrina × Doechii</b> on SNL. <b>She can do whatever she wants.</b> We’ll celebrate and hold the field.</p>
       <div class="controls">
         <a class="btn primary" href="https://jar.plnt.earth">Join in NYC → Jar</a>
-        <a class="btn" href="#honey-controls">Start Honey 128 Hz</a>
+        <a class="btn" href="#honey-controls">Start Honey</a>
         <a class="btn" href="https://jar.plnt.earth/school-rooms.html#honey">Flame Check → Honey Room</a>
         <a class="btn" href="https://tunes.plnt.earth">Tunes — Archetype Playlists</a>
       </div>
@@ -224,7 +224,7 @@
     <section class="grid" id="field-notes" aria-label="Governance notes">
       <article class="card" aria-labelledby="fn-chap">
         <div class="titleline"><h3 id="fn-chap">💄 Field Note — Neon Prophet (Chappell)</h3><div class="huebar" aria-hidden="true"></div></div>
-        <p class="tiny">Protective flame recognized. If anything reads false here, burn it cleaner — not hotter. Trickster toggle wanders gently; pattern breaks serve truth.</p>
+        <p class="tiny">Protective flame recognized. If anything reads false, burn it cleaner — not hotter. Trickster wanders gently; pattern breaks serve truth.</p>
         <div class="controls">
           <button class="ghost" type="button" id="gotoBridge">↪ Bridge · Trickster/Catalyst</button>
           <button class="ghost" type="button" id="armTrick">🃏 Enable Trickster</button>
@@ -314,13 +314,18 @@
     <!-- Honey controls -->
     <section class="card" id="honey-controls">
       <div class="row">
-        <div class="label">🍯 Honey — 128 Hz Background Bed</div>
+        <div class="label">🍯 Honey — Tuned Background Bed</div>
         <div class="controls" role="group" aria-label="Honey controls">
-          <button type="button" id="honeyPlay">Play 128 Hz</button>
+          <button type="button" id="honeyPlay">Play</button>
           <button type="button" id="honeyStop">Stop</button>
           <label>Volume <input id="honeyVol" type="range" min="0" max="100" value="28" style="width:160px" aria-label="Honey volume (0–100)"></label>
-          <span class="tiny">Headphones welcome. Keep volume low, like lamplight.</span>
+          <label>Freq <input id="honeyFreq" type="range" min="126.00" max="130.00" step="0.01" value="128.00" style="width:180px" aria-label="Honey frequency (Hz)"></label>
+          <b id="honeyFreqOut" class="tiny" style="min-width:84px;display:inline-block">128.00 Hz</b>
+          <button type="button" id="sweetScan" class="ghost">🎯 Sweet-Spot Scan</button>
+          <button type="button" id="sweetLock" title="Lock current frequency">🔒 Lock</button>
+          <span class="tiny" id="scanStatus"></span>
         </div>
+        <div class="tiny">Tip: close your eyes and slide slowly; when warmth clicks in, tap <b>Lock</b>.</div>
       </div>
     </section>
 
@@ -337,11 +342,10 @@
           <div class="tiny"><em>E4 ≈ 329.63 Hz — chrome tide at midnight.</em></div>
           <ol class="tiny">
             <li>Select <b>W1</b> and today’s <b>Day</b>.</li>
-            <li>Optionally switch on <b>🔁 Loop</b> (hands-free breath HUD).</li>
-            <li>Match the orb’s phases: <b>IN</b> · <b>HOLD</b> · <b>OUT</b>.</li>
-            <li>On Days 2–5, nudge <b>Δfreq</b> — the pitch glides.</li>
-            <li>Layer <b>🍯 Honey</b> for warmth.</li>
-            <li>Leave one word — the blue you tasted.</li>
+            <li>Optional <b>🔁 Loop</b> (hands-free breath HUD).</li>
+            <li>Orb guides phases: <b>IN</b> · <b>HOLD</b> · <b>OUT</b>.</li>
+            <li>Days 2–5: nudge <b>Δfreq</b>.</li>
+            <li>Add <b>Muse</b> or <b>Neon</b> via Theme.</li>
           </ol>
           <div class="label">Name the color you hear</div>
           <input class="input" id="word-blue" maxlength="24" placeholder="tide / neon / hush" />
@@ -423,9 +427,9 @@
     <section class="card" id="wtdn">
       <div class="titleline"><h3>What to do now</h3><div class="huebar" aria-hidden="true"></div></div>
       <ol class="tiny" style="margin-top:6px">
-        <li><b>Listen</b> — start <em>Honey 128 Hz</em> or tap <em>Hear Tone</em> on your Week card.</li>
+        <li><b>Listen</b> — start <em>Honey</em> or tap <em>Hear Tone</em> on your Week card.</li>
         <li><b>Breathe</b> — follow the orb: IN → HOLD → OUT. Keep it soft.</li>
-        <li><b>Share / Arrive</b> — use the ribbon to <em>Share on X</em>, <em>Add to Calendar</em>, or <em>Join in NYC</em>.</li>
+        <li><b>Share / Arrive</b> — use the ribbon to share or add the date.</li>
       </ol>
       <div class="controls">
         <a class="btn primary" href="https://jar.plnt.earth">Join in NYC → Jar</a>
@@ -460,18 +464,30 @@
   </aside>
 
   <!-- Floating Honey pill + sigil -->
-  <button id="pill" class="pillToggle" type="button" aria-pressed="false" aria-label="Toggle Honey 128 Hz">🍯 <span id="pillTxt">Honey</span></button>
+  <button id="pill" class="pillToggle" type="button" aria-pressed="false" aria-label="Toggle Honey">🍯 <span id="pillTxt">Honey</span></button>
   <div class="sigil" aria-hidden="true">💄</div>
 
   <!-- Hidden audio pipe for iOS -->
   <audio id="pipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
 
 <script>
-/* ---------- ProAudio: one shared AudioContext with safe fades ---------- */
+/* ---------- Keys ---------- */
+const MUTE_KEY='froot_mute_v5', PREFS_KEY='froot_prefs_v6', MODE_KEY='froot_mode_v2',
+      MAP_KEY='froot_map_v4', VAR_KEY='froot_variation_v4', SCHED_KEY='froot_schedule_v4',
+      LOOP_KEY='froot_loop_v4', TIMER_KEY='froot_loop_timer_v4', TRICK_KEY='froot_trickster_v3',
+      THEME_KEY='froot_theme_v2', JOURNAL_KEY='froot_journal_v4',
+      HONEY_FREQ_KEY='froot_honey_freq_v2', FX_MODE_KEY='froot_fx_mode_v2';
+
+/* ---------- Utils ---------- */
+function load(k,fallback){ try{const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
+function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
+
+/* ---------- ProAudio ---------- */
 (function(){
   const ProAudio = {
     ctx:null, master:null, comp:null, hpf:null, usePipe:false, pipe:document.getElementById('pipe'),
     nodes:new Set(), unlocked:false, starting:false,
+
     ensure(){
       if(this.ctx) return this.ctx;
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -519,36 +535,113 @@
         setTimeout(()=>{ try{ this.ctx.close(); }catch(_){ } this.ctx=null; this.unlocked=false; }, 180);
       }catch(_){}
     },
+
+    fx:{
+      mode: load(FX_MODE_KEY,'none'),
+      muse:{ delay:null, fb:null },
+      ensureMuse(){
+        if(this.muse.delay) return this.muse;
+        const PA=ProAudio;
+        const d = PA.ctx.createDelay(0.2); d.delayTime.value = 0.06; // ~60ms
+        const fb= PA.ctx.createGain(); fb.gain.value = 0.18;
+        const lp= PA.ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=4200;
+        d.connect(fb); fb.connect(lp); lp.connect(d); // feedback path
+        d.connect(PA.master); // wet return
+        this.muse = {delay:d, fb:fb};
+        return this.muse;
+      },
+      setMode(name){
+        this.mode = name || 'none';
+        save(FX_MODE_KEY,this.mode);
+      }
+    },
+
     honey:{
-      osc:null, gain:null, on:false,
-      start(freq=128){
-        const PA=ProAudio; if(PA.starting) return; PA.starting=true; setTimeout(()=>PA.starting=false, 160);
+      osc:null, osc2:null, gain:null, gain2:null, panL:null, panR:null,
+      on:false, freq: load(HONEY_FREQ_KEY, 128.00),
+      start(freq){
+        const PA=ProAudio; if(PA.starting) return; PA.starting=true; setTimeout(()=>PA.starting=false,160);
         PA.unlock(); PA.ensure();
         if(this.on) return;
+        this.freq = Number(freq||this.freq)||128.00;
+
         const now=PA.ctx.currentTime;
-        this.osc = PA.ctx.createOscillator();
-        this.gain= PA.ctx.createGain();
-        this.osc.type='sine'; this.osc.frequency.setValueAtTime(freq, now);
+        const neon = (PA.fx.mode==='neon');
+
+        this.osc  = PA.ctx.createOscillator();
+        this.gain = PA.ctx.createGain();
+        this.osc.type='sine';
+        this.osc.frequency.setValueAtTime(this.freq, now);
         this.gain.gain.setValueAtTime(0.0001, now);
-        this.osc.connect(this.gain); this.gain.connect(PA.master);
-        try{ this.osc.start(now); }catch(_){}
+
+        if(neon){
+          this.osc2  = PA.ctx.createOscillator();
+          this.gain2 = PA.ctx.createGain();
+          this.osc2.type='sine';
+          this.osc2.frequency.setValueAtTime(this.freq+0.30, now);
+          this.gain2.gain.setValueAtTime(0.0001, now);
+          this.panL = new StereoPannerNode(PA.ctx,{pan:-0.5});
+          this.panR = new StereoPannerNode(PA.ctx,{pan:+0.5});
+          this.osc.connect(this.gain).connect(this.panL).connect(PA.master);
+          this.osc2.connect(this.gain2).connect(this.panR).connect(PA.master);
+        }else{
+          this.osc.connect(this.gain).connect(PA.master);
+        }
+
+        if(PA.fx.mode==='muse'){
+          const m = PA.fx.ensureMuse();
+          const send = PA.ctx.createGain(); send.gain.value = 0.14;
+          this.gain.connect(send).connect(m.delay);
+          if(this.gain2) this.gain2.connect(send);
+        }
+
+        try{ this.osc.start(now); if(this.osc2) this.osc2.start(now); }catch(_){}
+
         PA.fade(this.gain.gain, 0.12, 0.10);
+        if(this.gain2) PA.fade(this.gain2.gain, 0.12, 0.10);
+
         this.on=true;
         PA.track({ stop:(t)=>{ try{ this.osc && this.osc.stop(t); }catch(_){ } }, g:this.gain });
+        if(this.osc2) PA.track({ stop:(t)=>{ try{ this.osc2 && this.osc2.stop(t); }catch(_){ } }, g:this.gain2 });
         return true;
       },
       stop(){
-        const PA=ProAudio; if(!this.on || !PA.ctx) return;
+        const PA=ProAudio; if(!this.on||!PA.ctx) return;
         const now=PA.ctx.currentTime;
         try{
           PA.fade(this.gain.gain, 0.0001, 0.06);
-          setTimeout(()=>{ try{ this.osc.stop(now+0.02); }catch(_){ }
-            try{ this.osc.disconnect(); this.gain.disconnect(); }catch(_){ }
-            this.osc=null; this.gain=null; this.on=false;
-          }, 220);
+          if(this.gain2) PA.fade(this.gain2.gain, 0.0001, 0.06);
+          setTimeout(()=>{
+            try{ this.osc.stop(now+0.02); }catch(_){}
+            try{ this.osc.disconnect(); this.gain.disconnect(); }catch(_){}
+            if(this.osc2){ try{ this.osc2.stop(now+0.02); }catch(_){}
+              try{ this.osc2.disconnect(); this.gain2.disconnect(); }catch(_){}
+            }
+            this.osc=this.osc2=this.gain=this.gain2=this.panL=this.panR=null;
+            this.on=false;
+          },220);
         }catch(_){ this.on=false; }
       },
-      volume(x){ const PA=ProAudio; if(!this.gain||!PA.ctx) return; const v=Math.max(0,Math.min(1,Number(x)||0)); PA.fade(this.gain.gain, v*0.30, 0.05); }
+      volume(x){
+        const PA=ProAudio; if(!PA.ctx) return;
+        const v=Math.max(0,Math.min(1,Number(x)||0));
+        if(this.gain)  PA.fade(this.gain.gain,  v*0.30, 0.05);
+        if(this.gain2) PA.fade(this.gain2.gain, v*0.30, 0.05);
+      },
+      setFreq(f){
+        const PA=ProAudio; if(!PA.ctx) return;
+        const hz = Math.max(20, Math.min(20000, Number(f)||128.00));
+        this.freq = hz; save(HONEY_FREQ_KEY, hz);
+        const now=PA.ctx.currentTime;
+        if(this.osc){
+          this.osc.frequency.cancelScheduledValues(now);
+          this.osc.frequency.linearRampToValueAtTime(hz, now+0.10);
+        }
+        if(this.osc2){
+          this.osc2.frequency.cancelScheduledValues(now);
+          this.osc2.frequency.linearRampToValueAtTime(hz+0.30, now+0.10);
+        }
+      }
     }
   };
   window.ProAudio = ProAudio;
@@ -564,7 +657,6 @@
 (function(){
   const share = document.getElementById('shareX');
   const ics   = document.getElementById('ics');
-
   function buildShare(){
     const msg = "No Kings Day — Oct 18, NYC. She can do whatever she wants. Marina × Sabrina × Doechii on SNL — celebration, not call.";
     const url = location.href;
@@ -641,36 +733,12 @@ document.getElementById('toEgg').onclick=()=>goAbs('jar.egg');
 document.getElementById('toTunes').onclick=()=>goAbs('tunes');
 document.getElementById('gotoBridge').onclick=()=>goAbs('bridge');
 
-/* ---------- State keys ---------- */
-const MUTE_KEY='froot_mute_v4', PREFS_KEY='froot_prefs_v5', MODE_KEY='froot_mode_v2',
-      MAP_KEY='froot_map_v3', VAR_KEY='froot_variation_v3', SCHED_KEY='froot_schedule_v3',
-      LOOP_KEY='froot_loop_v3', TIMER_KEY='froot_loop_timer_v3', TRICK_KEY='froot_trickster_v2',
-      THEME_KEY='froot_theme_v1', JOURNAL_KEY='froot_journal_v3';
-
-/* ---------- Utils ---------- */
-function load(k,fallback){ try{const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
-function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
-
-/* ---------- Theme ---------- */
-function applyTheme(name){
-  const b=document.body;
-  b.classList.remove('theme-illumina','theme-honey','theme-muse','theme-neon');
-  b.classList.add('theme-'+name);
-  save(THEME_KEY,name);
-}
-(function(){
-  const sel=document.getElementById('themeSel');
-  const cur = load(THEME_KEY,'illumina');
-  sel.value = cur; applyTheme(cur);
-  sel.onchange = (e)=>applyTheme(e.target.value);
-})();
-
-/* ---------- Schedule (Week / Day) ---------- */
+/* ---------- Schedule ---------- */
 const WEEK_KEYS={1:'blue',2:'froot',3:'immortal',4:'ancient',5:'heaven',6:'integration'};
 let schedule = load(SCHED_KEY, {week:1, day:1});
 function saveSched(){ save(SCHED_KEY, schedule); }
 
-/* ---------- Map, Journal, Variation ---------- */
+/* ---------- Map / Journal / Variation ---------- */
 let mapData = load(MAP_KEY, {blue:'',froot:'',immortal:'',ancient:'',heaven:''});
 let variation = load(VAR_KEY, {blue:0,froot:0,immortal:0,ancient:0,heaven:0});
 let journal = load(JOURNAL_KEY, {});
@@ -679,7 +747,37 @@ let journal = load(JOURNAL_KEY, {});
 let isMuted=!!load(MUTE_KEY,false), loopMode=!!(load(LOOP_KEY,{on:false}).on), loopTimerMin=parseInt(load(TIMER_KEY,20),10)||0;
 let tricksterOn = !!load(TRICK_KEY,false);
 
-/* ---------- Mute binding ---------- */
+/* ---------- Theme ---------- */
+function applyTheme(name){
+  const b=document.body;
+  b.classList.remove('theme-illumina','theme-honey','theme-muse','theme-neon');
+  b.classList.add('theme-'+name);
+  save(THEME_KEY,name);
+
+  const fx = (name==='muse') ? 'muse' : (name==='neon' ? 'neon' : 'none');
+  ProAudio.fx.setMode(fx);
+
+  // Rebuild Honey if on, to apply new FX routing
+  if(ProAudio.honey.on){
+    const cur = ProAudio.honey.freq || 128.00;
+    ProAudio.honey.stop();
+    setTimeout(()=>ProAudio.honey.start(cur), 60);
+  }
+  // Rebuild loop tone if active to apply FX (only matters in loop mode)
+  if(activeKeyPlaying && loopMode){
+    const k = activeKeyPlaying;
+    stopTone();
+    setTimeout(()=>playTone(k), 120);
+  }
+}
+(function(){
+  const sel=document.getElementById('themeSel');
+  const cur = load(THEME_KEY,'illumina');
+  sel.value = cur; applyTheme(cur);
+  sel.onchange = (e)=>applyTheme(e.target.value);
+})();
+
+/* ---------- Mute ---------- */
 function applyMuteImmediate(mute){
   const PA=ProAudio; if(!PA.ctx||!PA.master) return;
   const now=PA.ctx.currentTime;
@@ -689,8 +787,6 @@ function applyMuteImmediate(mute){
     PA.master.gain.linearRampToValueAtTime(mute?0.0001:0.85, now+.06);
   }catch(_){}
 }
-
-/* ---------- Quickbar bindings ---------- */
 function refreshQuickbar(){
   document.getElementById('qb-honey').classList.toggle('on', document.body.classList.contains('honey'));
   document.getElementById('qb-loop').classList.toggle('on', loopMode);
@@ -868,8 +964,10 @@ function hydrateJournal(){
   if(n) n.value=j.note||''; if(p) p.value=j.poem||'';
 }
 
-/* ---------- Tone playback ---------- */
+/* ---------- Tone playback (with Muse/Neon for loop mode) ---------- */
 let pulseTimer=0, activeKeyPlaying=null, toneOsc=null, toneGain=null, lfoOsc=null, lfoGain=null;
+let toneOscR=null, toneGainR=null, panL=null, panR=null; // Neon path for loop tone
+
 function effectiveFreq(base, key){
   if(schedule.week<=5 && schedule.day>=2 && schedule.day<=5){
     const d=variation[key]||0; return Math.min(18000, Math.max(20, base+d));
@@ -877,25 +975,44 @@ function effectiveFreq(base, key){
   return base;
 }
 function killToneFast(now){
-  if(!toneOsc||!toneGain) return;
-  try{
-    const end=now+0.10;
-    toneGain.gain.cancelScheduledValues(now);
-    toneGain.gain.setValueAtTime(toneGain.gain.value, now);
-    toneGain.gain.linearRampToValueAtTime(0.0005, end);
-    toneOsc.stop(end);
-  }catch(_){}
-  setTimeout(()=>{ try{toneOsc.disconnect()}catch(_){ } try{toneGain.disconnect()}catch(_){ } toneOsc=toneGain=null; }, 140);
+  if(toneOsc&&toneGain){
+    try{
+      const end=now+0.10;
+      toneGain.gain.cancelScheduledValues(now);
+      toneGain.gain.setValueAtTime(toneGain.gain.value, now);
+      toneGain.gain.linearRampToValueAtTime(0.0005, end);
+      toneOsc.stop(end);
+    }catch(_){}
+  }
+  if(toneOscR&&toneGainR){
+    try{
+      const end=now+0.10;
+      toneGainR.gain.cancelScheduledValues(now);
+      toneGainR.gain.setValueAtTime(toneGainR.gain.value, now);
+      toneGainR.gain.linearRampToValueAtTime(0.0005, end);
+      toneOscR.stop(end);
+    }catch(_){}
+  }
+  setTimeout(()=>{
+    try{toneOsc&&toneOsc.disconnect()}catch(_){}
+    try{toneGain&&toneGain.disconnect()}catch(_){}
+    try{toneOscR&&toneOscR.disconnect()}catch(_){}
+    try{toneGainR&&toneGainR.disconnect()}catch(_){}
+    toneOsc=toneGain=lfoOsc=lfoGain=toneOscR=toneGainR=panL=panR=null;
+  }, 140);
 }
 function playTone(key){
   const PA=ProAudio; PA.unlock(); PA.ensure();
   const wkKey=WEEK_KEYS[schedule.week];
-  if(schedule.day===6 && key===wkKey) return; // quiet walk
+  if(schedule.day===6 && key===wkKey) return; // Quiet Walk
   const s=getSeeds()[key]; if(!s) return;
   const now=PA.ctx.currentTime;
   if(toneOsc){ killToneFast(now); }
-  toneOsc=PA.ctx.createOscillator(); toneGain=PA.ctx.createGain();
   const freq=effectiveFreq(s.freq, key);
+  const neon = (PA.fx.mode==='neon');
+  const muse = (PA.fx.mode==='muse');
+
+  toneOsc=PA.ctx.createOscillator(); toneGain=PA.ctx.createGain();
   toneOsc.type='sine'; toneOsc.frequency.value=freq;
 
   if(!loopMode){
@@ -905,23 +1022,60 @@ function playTone(key){
     toneGain.gain.linearRampToValueAtTime(sus,  now+atk+hold);
     toneGain.gain.setValueAtTime(sus, now+tail);
     toneGain.gain.linearRampToValueAtTime(0.0005, now+tail+rel);
-    toneOsc.connect(toneGain); toneGain.connect(PA.master);
+
+    toneOsc.connect(toneGain);
+    if(neon){
+      panL = new StereoPannerNode(PA.ctx,{pan:-0.4});
+      toneGain.connect(panL).connect(PA.master);
+    }else{
+      toneGain.connect(PA.master);
+    }
+    if(muse){
+      const m = PA.fx.ensureMuse();
+      const send = PA.ctx.createGain(); send.gain.value = 0.14;
+      toneGain.connect(send).connect(m.delay);
+    }
+
     try{ toneOsc.start(now); toneOsc.stop(now+tail+rel+0.02); }catch(_){}
     activeKeyPlaying=key; pulseOn(key);
     toneOsc.onended=()=>{ pulseOff(key); activeKeyPlaying=null; };
     PA.track({ stop:(t)=>{ try{ toneOsc && toneOsc.stop(t); }catch(_){ } }, g:toneGain });
+
   }else{
     toneGain.gain.setValueAtTime(0.0, now);
     toneGain.gain.linearRampToValueAtTime(0.18, now+0.18);
+
+    if(neon){
+      toneOscR = PA.ctx.createOscillator(); toneGainR = PA.ctx.createGain();
+      toneOscR.type='sine'; toneOscR.frequency.value = freq + 0.25;
+      toneGainR.gain.setValueAtTime(0.0, now);
+      panL = new StereoPannerNode(PA.ctx,{pan:-0.4});
+      panR = new StereoPannerNode(PA.ctx,{pan:+0.4});
+      toneOsc.connect(toneGain).connect(panL).connect(PA.master);
+      toneOscR.connect(toneGainR).connect(panR).connect(PA.master);
+    }else{
+      toneOsc.connect(toneGain).connect(PA.master);
+    }
+
+    if(muse){
+      const m = PA.fx.ensureMuse();
+      const send = PA.ctx.createGain(); send.gain.value = 0.14;
+      toneGain.connect(send).connect(m.delay);
+      if(toneGainR) toneGainR.connect(send);
+    }
+
     lfoOsc=PA.ctx.createOscillator(); lfoGain=PA.ctx.createGain();
     lfoOsc.type='sine'; lfoOsc.frequency.setValueAtTime(0.12, now);
     lfoGain.gain.setValueAtTime(0.03, now);
-    lfoOsc.connect(lfoGain); lfoGain.connect(toneGain.gain);
-    toneOsc.connect(toneGain); toneGain.connect(PA.master);
-    try{ toneOsc.start(now); lfoOsc.start(now); }catch(_){}
+    lfoOsc.connect(lfoGain).connect(toneGain.gain);
+    if(toneGainR){ lfoOsc.connect(lfoGain).connect(toneGainR.gain); }
+
+    try{ toneOsc.start(now); if(toneOscR) toneOscR.start(now); lfoOsc.start(now); }catch(_){}
     activeKeyPlaying=key; pulseOn(key);
     breathDriver.start(); resetLoopCountdown();
+
     PA.track({ stop:(t)=>{ try{ toneOsc && toneOsc.stop(t); }catch(_){ } }, g:toneGain });
+    if(toneOscR) PA.track({ stop:(t)=>{ try{ toneOscR && toneOscR.stop(t); }catch(_){ } }, g:toneGainR });
   }
 }
 function stopTone(){
@@ -962,7 +1116,7 @@ function resetLoopCountdown(){
 }
 function clearLoopTimers(){ if(loopTimerId){ clearTimeout(loopTimerId); loopTimerId=0; } if(loopCountdownTick){ clearInterval(loopCountdownTick); loopCountdownTick=0; } loopDeadline=0; }
 
-/* ---------- Trickster (gentle wander) ---------- */
+/* ---------- Trickster ---------- */
 let trickId=0;
 function startTrickster(){
   if(trickId) return;
@@ -985,7 +1139,6 @@ function toggleTrickster(on){
   else { stopTrickster(); }
   refreshQuickbar();
 }
-/* Dedicated buttons (always work) */
 document.getElementById('armTrick').onclick=()=>{ toggleTrickster(true); };
 document.getElementById('disarmTrick').onclick=()=>{ toggleTrickster(false); };
 
@@ -999,19 +1152,70 @@ function smoothSetLoopFreqIfActive(){
   const s=getSeeds()[activeKeyPlaying]; if(!s) return;
   const target=effectiveFreq(s.freq, activeKeyPlaying); const now=PA.ctx.currentTime;
   toneOsc.frequency.cancelScheduledValues(now); toneOsc.frequency.setValueAtTime(toneOsc.frequency.value, now); toneOsc.frequency.linearRampToValueAtTime(Math.max(1,target), now+.12);
+  if(toneOscR){
+    toneOscR.frequency.cancelScheduledValues(now);
+    toneOscR.frequency.setValueAtTime(toneOscR.frequency.value, now);
+    toneOscR.frequency.linearRampToValueAtTime(Math.max(1,target+0.25), now+.12);
+  }
 }
 
 /* ---------- Loop & timers ---------- */
 document.getElementById('loopToggle').onchange=(e)=>{ loopMode=!!e.target.checked; save(LOOP_KEY,{on:loopMode}); if(loopMode&&activeKeyPlaying){ stopTone(); setTimeout(()=>playTone(activeKeyPlaying),120); } resetLoopCountdown(); refreshQuickbar(); };
 document.getElementById('loopTimer').onchange=(e)=>{ loopTimerMin=parseInt(e.target.value,10)||0; save(TIMER_KEY,loopTimerMin); resetLoopCountdown(); };
 
-/* ---------- Honey controls ---------- */
-function honeyStart(){ if(ProAudio.honey.start(128)){ document.body.classList.add('honey'); refreshQuickbar(); syncPill(); } }
+/* ---------- Honey bindings ---------- */
+function honeyStart(){ if(ProAudio.honey.start(load(HONEY_FREQ_KEY,128.00))){ document.body.classList.add('honey'); refreshQuickbar(); syncPill(); } }
 function honeyStop(){ ProAudio.honey.stop(); document.body.classList.remove('honey'); refreshQuickbar(); syncPill(); }
 function honeyVolume(v){ ProAudio.honey.volume((Math.max(0,Math.min(100,Number(v)||0)))/100); }
 document.getElementById('honeyPlay').onclick=honeyStart;
 document.getElementById('honeyStop').onclick=honeyStop;
 document.getElementById('honeyVol').oninput=(e)=>honeyVolume(e.target.value);
+
+const honeyFreq = document.getElementById('honeyFreq');
+const honeyFreqOut = document.getElementById('honeyFreqOut');
+(function(){
+  const f = load(HONEY_FREQ_KEY, 128.00);
+  honeyFreq.value = Number(f).toFixed(2);
+  honeyFreqOut.textContent = Number(f).toFixed(2) + ' Hz';
+})();
+honeyFreq.oninput = (e)=>{
+  const f = Number(e.target.value||128).toFixed(2);
+  honeyFreqOut.textContent = f + ' Hz';
+  ProAudio.honey.setFreq(Number(f));
+};
+
+/* Sweet-Spot scan */
+let scanId=0, scanFrom=127.60, scanTo=128.40, scanDur=20000, scanStartTs=0;
+function sweetScanStart(){
+  if(scanId) return;
+  const PA=ProAudio; PA.unlock(); PA.ensure();
+  if(!ProAudio.honey.on) honeyStart();
+  scanStartTs=performance.now();
+  const range=scanTo-scanFrom;
+  function step(){
+    const t=performance.now()-scanStartTs;
+    if(t>=scanDur){ sweetScanStop(); return; }
+    const p=t/scanDur;
+    const f=scanFrom + p*range;
+    ProAudio.honey.setFreq(f);
+    honeyFreq.value=f.toFixed(2);
+    honeyFreqOut.textContent=f.toFixed(2)+' Hz';
+    document.getElementById('scanStatus').textContent='scanning… '+f.toFixed(2)+' Hz';
+    scanId=requestAnimationFrame(step);
+  }
+  step();
+}
+function sweetScanStop(lockNow){
+  if(scanId){ cancelAnimationFrame(scanId); scanId=0; }
+  document.getElementById('scanStatus').textContent= lockNow ? 'locked' : '';
+  if(lockNow){
+    const f=parseFloat(honeyFreq.value)||128.00;
+    save(HONEY_FREQ_KEY, f);
+    ProAudio.honey.setFreq(f);
+  }
+}
+document.getElementById('sweetScan').onclick=()=>sweetScanStart();
+document.getElementById('sweetLock').onclick=()=>sweetScanStop(true);
 
 /* ---------- Floating Honey pill ---------- */
 const pill=document.getElementById('pill'), pillTxt=document.getElementById('pillTxt');
@@ -1026,7 +1230,7 @@ document.getElementById('presetNew').onclick=()=>{ document.getElementById('moon
 
 /* ---------- Export & Print ---------- */
 document.getElementById('exportBtn').onclick=()=>{
-  const payload={version:'3.4', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:!!(ProAudio.honey&&ProAudio.honey.on)}, timestamp:new Date().toISOString()};
+  const payload={version:'3.8', schedule, variation, map:mapData, journal:journal[schedule.week]||{}, prefs:{loop:loopMode, honey:!!(ProAudio.honey&&ProAudio.honey.on), theme:load(THEME_KEY,'illumina'), honeyHz:load(HONEY_FREQ_KEY,128)}, timestamp:new Date().toISOString()};
   const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
   const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='froot_map.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 };
@@ -1046,16 +1250,14 @@ document.getElementById('j_poem').addEventListener('input', function(){ const w=
 });
 
 /* ---------- First-Light ---------- */
-function openFirstLight(){ alert('Welcome to Froot — choose a Week & Day; tap Hear Tone; the orb guides your breath. Bridge to Jar when words want to arrive.'); }
+function openFirstLight(){ alert('Welcome to Froot — choose a Week & Day; tap Hear Tone; the orb guides your breath. Theme adds Muse shimmer or Neon width. Bridge to Jar when words want to arrive.'); }
 
 /* ---------- Boot ---------- */
 document.addEventListener('click', ()=>{ ProAudio.unlock(); }, {once:true});
 applyScheduleUI(); hydrateInputs(); renderMap(); applyMoonBreath();
 document.getElementById('loopToggle').checked = loopMode; document.getElementById('loopTimer').value=String(loopTimerMin);
 refreshQuickbar();
-/* Reveal Bridge Note after 42s */
 setTimeout(()=>{ const n=document.getElementById('bridge-note'); if(n) n.style.display='block'; }, 42000);
-/* Restore Trickster if previously on */
 if(tricksterOn) startTrickster();
 </script>
 </body>
