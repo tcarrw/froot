@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#0b0d11">
+<title>Warmth Test — Honey Sweet Spot</title>
+<meta name="description" content="Find your Honey sweet spot between 127.60–128.40 Hz. Step, sweep, and lock when it clicks. Saves to localStorage and sets your Honey default."/>
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0b0d11; --panel:#111624; --edge:#1d2532; --ink:#e7edf7; --muted:#a9b4c7; --accent:#a4ff65; --glow:#66e1ff;
+  }
+  html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-sans-serif,system-ui,-apple-system,"SF Pro Text",Segoe UI,Roboto,Helvetica,Arial}
+  *{box-sizing:border-box}
+  :focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 16px 80px}
+  header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+  h1{margin:0;font-size:1.35rem}
+  .tag{color:var(--muted);font-size:.95rem}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.05)),var(--panel);border:1px solid var(--edge);border-radius:16px;padding:16px;margin-top:14px}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .btn{appearance:none;border:1px solid var(--edge);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.06));color:var(--ink);padding:10px 14px;font-weight:750;cursor:pointer}
+  .btn.primary{border-color:#28452e;background:linear-gradient(180deg,rgba(164,255,101,.18),rgba(0,0,0,.06))}
+  .btn.warn{border-color:#5a2a2a;background:linear-gradient(180deg,rgba(255,86,86,.20),rgba(0,0,0,.06))}
+  .pill{border:1px solid var(--edge);border-radius:999px;padding:6px 10px;font-size:.9rem;color:var(--muted);display:inline-flex;gap:8px;align-items:center}
+  .big{font-size:2.2rem;font-weight:900;letter-spacing:.5px}
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+  .row{display:grid;grid-template-columns:1fr;gap:10px}
+  .meter{height:8px;border-radius:999px;background:linear-gradient(90deg,#2cc2ff,#a4ff65);box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+  .small{font-size:.92rem;color:var(--muted)}
+  .caps{font-variant-caps:all-small-caps;letter-spacing:.08em}
+  .val{display:inline-block;min-width:88px;text-align:right}
+  .table{width:100%;border-collapse:collapse}
+  .table th,.table td{border-bottom:1px solid #1b2230;padding:8px 6px;font-size:.95rem}
+  .right{display:flex;gap:8px;align-items:center}
+  .hint{color:#9fb3d0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Warmth Test — Honey Sweet Spot</h1>
+      <div class="tag">Step through <b>127.60–128.40 Hz</b>. When the warmth “clicks,” tap <b>That’s it</b>. You can also sweep slowly. Your picks save and set the Honey default.</div>
+    </div>
+    <div class="right">
+      <button class="btn" id="openFroot" title="Back to Froot">↩ Froot</button>
+    </div>
+  </header>
+
+  <!-- Status -->
+  <section class="card">
+    <div class="controls" style="justify-content:space-between">
+      <div>
+        <div class="caps small">Current</div>
+        <div class="big"><span id="curHz">128.00</span> Hz</div>
+      </div>
+      <div class="right">
+        <span class="pill"><span class="caps">Mode</span><select id="modeSel" class="btn" style="padding:6px 10px">
+          <option value="clean">Clean</option>
+          <option value="muse">Muse (shimmer)</option>
+          <option value="neon">Neon (stereo)</option>
+        </select></span>
+        <span class="pill"><label><input id="autopan" type="checkbox" /> gentle autopan</label></span>
+      </div>
+    </div>
+    <div class="meter" aria-hidden="true"></div>
+    <div class="small hint" id="hint">Tip: close your eyes and breathe 4-7-8 while stepping. The sweet spot feels like the wobble disappears.</div>
+  </section>
+
+  <!-- Controls -->
+  <section class="card">
+    <div class="controls">
+      <button class="btn" id="play">▶︎ Play</button>
+      <button class="btn" id="stop">■ Stop</button>
+      <button class="btn" id="prev">◀︎ Prev</button>
+      <button class="btn" id="next">Next ▶︎</button>
+      <button class="btn" id="auto">↻ Auto Cycle</button>
+      <span class="pill"><span class="caps">Step</span>
+        <select id="stepSel" class="btn" style="padding:6px 10px">
+          <option value="0.10">0.10 Hz</option>
+          <option value="0.05">0.05 Hz</option>
+          <option value="0.02" selected>0.02 Hz</option>
+        </select>
+      </span>
+      <span class="pill"><span class="caps">Sweep</span>
+        <select id="sweepSel" class="btn" style="padding:6px 10px">
+          <option value="10">10 s</option>
+          <option value="20" selected>20 s</option>
+          <option value="30">30 s</option>
+        </select>
+        <button class="btn" id="sweep">~ Sweep</button>
+      </span>
+      <button class="btn primary" id="mark">🎯 That’s it</button>
+      <button class="btn" id="lock">🔒 Set as default</button>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="card">
+    <div class="grid">
+      <div class="row">
+        <div class="small caps">Your picks</div>
+        <table class="table" id="picksTbl" aria-label="Chosen sweet spots">
+          <thead><tr><th>#</th><th>Hz</th><th>Time</th></tr></thead>
+          <tbody id="picksBody"></tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="small caps">Summary</div>
+        <div class="controls">
+          <span class="pill">Count: <b id="count" class="val">0</b></span>
+          <span class="pill">Average: <b id="avg" class="val">—</b></span>
+          <span class="pill">Median: <b id="med" class="val">—</b></span>
+          <span class="pill">Default: <b id="def" class="val">128.00 Hz</b></span>
+          <button class="btn" id="export">⬇︎ Export JSON</button>
+          <button class="btn warn" id="clear">✕ Clear</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Hidden audio element for iOS media graph -->
+<audio id="pipe" preload="auto" playsinline style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0"></audio>
+
+<script>
+/* --- Storage keys (align with Froot) --- */
+const HONEY_FREQ_KEY='froot_honey_freq_v2';
+const WARMTH_PICKS_KEY='froot_warmth_picks_v1';
+const FX_MODE_KEY='froot_fx_mode_v2';
+
+/* --- Utilities --- */
+function load(k,fallback){ try{const v=localStorage.getItem(k); return v? JSON.parse(v) : fallback }catch(_){ return fallback } }
+function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)) }catch(_){} }
+function two(n){ return (n<10?'0':'')+n; }
+function fmt(t){
+  const d = new Date(t);
+  return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+' '+two(d.getHours())+':'+two(d.getMinutes());
+}
+
+/* --- Audio Engine --- */
+const Engine=(function(){
+  let ctx=null, master=null, comp=null, hpf=null, usePipe=false, pipe=document.getElementById('pipe');
+  let leftOsc=null, rightOsc=null, leftGain=null, rightGain=null, panL=null, panR=null;
+  let museDelay=null, museFb=null, museLP=null, museSendL=null, museSendR=null;
+  let autopan=null, autopanGain=null, autopanTick=0, raf=0;
+  let currentHz=128.0, mode='clean', isOn=false;
+
+  function ensure(){
+    if(ctx) return;
+    const AC=window.AudioContext||window.webkitAudioContext;
+    ctx=new AC({latencyHint:'interactive'});
+    master=ctx.createGain(); master.gain.value=0.85;
+    comp=ctx.createDynamicsCompressor();
+    comp.threshold.value=-18; comp.knee.value=12; comp.ratio.value=2; comp.attack.value=.01; comp.release.value=.30;
+    hpf=ctx.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=18;
+    const ios=/iP(hone|ad|od)/.test(navigator.userAgent||'');
+    if(ios){
+      usePipe=true;
+      const msd=ctx.createMediaStreamDestination();
+      master.connect(comp); comp.connect(hpf); hpf.connect(msd);
+      try{ pipe.srcObject=msd.stream; pipe.loop=true; }catch(_){}
+    }else{
+      master.connect(comp); comp.connect(hpf); hpf.connect(ctx.destination);
+    }
+  }
+  function unlock(){
+    try{
+      ensure();
+      if(ctx.state==='suspended') ctx.resume();
+      if(usePipe && pipe.paused) pipe.play().catch(()=>{});
+    }catch(_){}
+  }
+  function setMode(m){
+    mode=m||'clean';
+    // rebuild signal if on
+    if(isOn){ stop(); start(currentHz); }
+    save(FX_MODE_KEY, mode);
+  }
+  function start(hz){
+    unlock(); ensure();
+    currentHz = Number(hz)||128.0;
+    if(isOn) return;
+    const now=ctx.currentTime;
+
+    // base left
+    leftOsc=ctx.createOscillator(); leftOsc.type='sine';
+    leftGain=ctx.createGain(); leftGain.gain.setValueAtTime(0.0001, now);
+    leftOsc.frequency.setValueAtTime(currentHz, now);
+
+    // routing
+    let leftOut = leftGain;
+    // neon: add right osc slightly detuned and panned
+    if(mode==='neon'){
+      rightOsc=ctx.createOscillator(); rightOsc.type='sine';
+      rightGain=ctx.createGain(); rightGain.gain.setValueAtTime(0.0001, now);
+      rightOsc.frequency.setValueAtTime(currentHz+0.30, now);
+      panL=new StereoPannerNode(ctx,{pan:-0.5});
+      panR=new StereoPannerNode(ctx,{pan:+0.5});
+      leftOsc.connect(leftGain).connect(panL).connect(master);
+      rightOsc.connect(rightGain).connect(panR).connect(master);
+    }else{
+      leftOsc.connect(leftGain).connect(master);
+    }
+
+    // muse: add short feedback delay return
+    if(mode==='muse'){
+      museDelay=ctx.createDelay(0.2); museDelay.delayTime.value=0.06;
+      museFb   =ctx.createGain(); museFb.gain.value=0.18;
+      museLP   =ctx.createBiquadFilter(); museLP.type='lowpass'; museLP.frequency.value=4200;
+      museDelay.connect(museFb); museFb.connect(museLP); museLP.connect(museDelay);
+      museDelay.connect(master);
+      museSendL=ctx.createGain(); museSendL.gain.value=0.14;
+      leftGain.connect(museSendL).connect(museDelay);
+      if(rightGain){ museSendR=ctx.createGain(); museSendR.gain.value=0.14; rightGain.connect(museSendR).connect(museDelay); }
+    }
+
+    // autopan (optional gentle)
+    const ap=document.getElementById('autopan');
+    if(ap&&ap.checked){
+      autopan=new OscillatorNode(ctx,{type:'sine',frequency:.06});
+      autopanGain=new GainNode(ctx,{gain:.15});
+      const panNodeL=new StereoPannerNode(ctx); const panNodeR=new StereoPannerNode(ctx);
+      autopan.connect(autopanGain);
+      // apply to gains (modulate their pan via two panners)
+      leftGain.disconnect(); leftGain.connect(panNodeL).connect(master);
+      if(rightGain){ rightGain.disconnect(); rightGain.connect(panNodeR).connect(master); }
+      // animation: map LFO to pan values
+      function apTick(){
+        const t=ctx.currentTime;
+        const s = Math.sin(t*.38);
+        panNodeL.pan.setTargetAtTime(-0.25*s, t, .15);
+        if(panNodeR) panNodeR.pan.setTargetAtTime(+0.25*s, t, .15);
+        raf=requestAnimationFrame(apTick);
+      }
+      apTick();
+      try{ autopan.start(now); }catch(_){}
+    }
+
+    try{ leftOsc.start(now); if(rightOsc) rightOsc.start(now); }catch(_){}
+    fade(leftGain.gain, 0.16, 0.10); if(rightGain) fade(rightGain.gain, 0.16, 0.10);
+    isOn=true;
+  }
+  function stop(){
+    if(!ctx || !isOn) return;
+    const now=ctx.currentTime;
+    try{
+      if(leftGain) fade(leftGain.gain, 0.0001, 0.06);
+      if(rightGain) fade(rightGain.gain, 0.0001, 0.06);
+      setTimeout(()=>{
+        try{ leftOsc&&leftOsc.stop(now+0.02); }catch(_){}
+        try{ rightOsc&&rightOsc.stop(now+0.02); }catch(_){}
+        cleanup();
+      }, 220);
+    }catch(_){ cleanup(); }
+  }
+  function cleanup(){
+    try{ cancelAnimationFrame(raf); }catch(_){}
+    [leftOsc,rightOsc,leftGain,rightGain,panL,panR,museDelay,museFb,museLP,museSendL,museSendR,autopan,autopanGain].forEach(n=>{
+      try{ n&&n.disconnect(); }catch(_){}
+    });
+    leftOsc=rightOsc=leftGain=rightGain=panL=panR=museDelay=museFb=museLP=museSendL=museSendR=autopan=autopanGain=null;
+    isOn=false;
+  }
+  function fade(param,to,tc){ const t=ctx.currentTime; try{ param.cancelScheduledValues(t); param.setTargetAtTime(to,t,tc);}catch(_){} }
+  function setHz(hz){
+    if(!ctx) return;
+    currentHz = Math.max(20, Math.min(20000, Number(hz)||128));
+    const now=ctx.currentTime;
+    if(leftOsc){ try{ leftOsc.frequency.cancelScheduledValues(now); leftOsc.frequency.linearRampToValueAtTime(currentHz, now+0.10);}catch(_){} }
+    if(rightOsc){ try{ rightOsc.frequency.cancelScheduledValues(now); rightOsc.frequency.linearRampToValueAtTime(currentHz+0.30, now+0.10);}catch(_){} }
+  }
+  function current(){ return currentHz; }
+
+  document.addEventListener('pointerdown', unlock, {once:true, passive:true});
+  document.addEventListener('keydown', unlock, {once:true});
+  document.addEventListener('visibilitychange', ()=>{ if(document.hidden) stop(); }, false);
+  window.addEventListener('pagehide', ()=>stop(), false);
+
+  return {start,stop,setHz,current,setMode};
+})();
+
+/* --- Range / stepping --- */
+const MIN=127.60, MAX=128.40;
+let step=parseFloat(document.getElementById('stepSel').value);
+let cur=load(HONEY_FREQ_KEY, 128.00);
+cur = Math.min(MAX, Math.max(MIN, Number(cur)||128.00));
+let autoId=0, sweepId=0, sweepStart=0;
+
+function updateReadout(){
+  document.getElementById('curHz').textContent = Number(cur).toFixed(2);
+}
+function snap(val){
+  const s=step;
+  const snaps = Math.round((val-MIN)/s);
+  return +(MIN + snaps*s).toFixed(2);
+}
+function next(){ cur = snap(Math.min(MAX, cur+step)); Engine.setHz(cur); updateReadout(); }
+function prev(){ cur = snap(Math.max(MIN, cur-step)); Engine.setHz(cur); updateReadout(); }
+
+/* --- UI wiring --- */
+document.getElementById('openFroot').onclick=()=>{ location.assign('https://froot.plnt.earth/?source=warmth'); };
+document.getElementById('play').onclick=()=>{ Engine.start(cur); updateReadout(); };
+document.getElementById('stop').onclick=()=>{ Engine.stop(); };
+document.getElementById('next').onclick=next;
+document.getElementById('prev').onclick=prev;
+document.getElementById('stepSel').onchange=(e)=>{ step=parseFloat(e.target.value)||0.02; cur=snap(cur); updateReadout(); if(document.getElementById('auto').classList.contains('on')){ autoStop(); autoStart(); } };
+
+/* Auto Cycle */
+function autoStart(){
+  if(autoId) return;
+  document.getElementById('auto').classList.add('on');
+  Engine.start(cur);
+  autoId=setInterval(()=>{
+    cur = (cur+step>MAX)? MIN : snap(cur+step);
+    Engine.setHz(cur); updateReadout();
+  }, 1800);
+}
+function autoStop(){ if(autoId){ clearInterval(autoId); autoId=0; document.getElementById('auto').classList.remove('on'); } }
+document.getElementById('auto').onclick=()=>{ autoId?autoStop():autoStart(); };
+
+/* Sweep */
+document.getElementById('sweep').onclick=()=>{
+  const dur=parseInt(document.getElementById('sweepSel').value,10)||20;
+  if(sweepId){ cancelAnimationFrame(sweepId); sweepId=0; document.getElementById('hint').textContent='Sweep stopped.'; return; }
+  Engine.start(MIN); cur=MIN; updateReadout();
+  sweepStart=performance.now();
+  const range=MAX-MIN, total=dur*1000;
+  function tick(){
+    const t=performance.now()-sweepStart;
+    if(t>=total){ sweepId=0; document.getElementById('hint').textContent='Sweep done — step gently and find the click.'; return; }
+    const p=t/total;
+    const f=MIN + p*range;
+    cur=+f.toFixed(2);
+    Engine.setHz(cur); updateReadout();
+    sweepId=requestAnimationFrame(tick);
+  }
+  document.getElementById('hint').textContent='Sweeping… listen for the wobble to disappear.';
+  tick();
+};
+
+/* Mode + autopan */
+(function(){
+  const m=load(FX_MODE_KEY,'clean');
+  document.getElementById('modeSel').value = m==='muse'||m==='neon'? m : 'clean';
+  Engine.setMode(document.getElementById('modeSel').value);
+})();
+document.getElementById('modeSel').onchange=(e)=>Engine.setMode(e.target.value);
+
+/* Mark & save */
+function renderPicks(){
+  const rows = load(WARMTH_PICKS_KEY, []);
+  const body=document.getElementById('picksBody'); body.innerHTML='';
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>'+(i+1)+'</td><td>'+r.hz.toFixed(2)+' Hz</td><td>'+fmt(r.ts)+'</td>';
+    body.appendChild(tr);
+  });
+  document.getElementById('count').textContent=rows.length||0;
+  const vals = rows.map(r=>r.hz).sort((a,b)=>a-b);
+  const avg = vals.length? (vals.reduce((a,b)=>a+b,0)/vals.length) : NaN;
+  const med = vals.length? (vals.length%2? vals[(vals.length-1)/2] : (vals[vals.length/2-1]+vals[vals.length/2])/2) : NaN;
+  document.getElementById('avg').textContent = isNaN(avg)? '—' : avg.toFixed(2)+' Hz';
+  document.getElementById('med').textContent = isNaN(med)? '—' : med.toFixed(2)+' Hz';
+  const def = load(HONEY_FREQ_KEY,128.00);
+  document.getElementById('def').textContent = Number(def).toFixed(2)+' Hz';
+}
+document.getElementById('mark').onclick=()=>{
+  const rows = load(WARMTH_PICKS_KEY, []);
+  rows.push({hz: Number(cur), ts: Date.now()});
+  save(WARMTH_PICKS_KEY, rows); renderPicks();
+};
+document.getElementById('lock').onclick=()=>{
+  save(HONEY_FREQ_KEY, Number(cur));
+  renderPicks();
+  const b=document.getElementById('lock'); b.textContent='🔒 Locked'; setTimeout(()=>b.textContent='🔒 Set as default', 1000);
+};
+document.getElementById('export').onclick=()=>{
+  const payload = { picks: load(WARMTH_PICKS_KEY, []), defaultHz: load(HONEY_FREQ_KEY,128.00), version:'1.0', exportedAt:new Date().toISOString() };
+  const blob=new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='honey_warmth_picks.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+document.getElementById('clear').onclick=()=>{
+  save(WARMTH_PICKS_KEY, []); renderPicks();
+};
+
+renderPicks();
+updateReadout();
+</script>
+</body>
+</html>
