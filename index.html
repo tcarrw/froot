@@ -1,399 +1,626 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Froot · Marina Color-Breath (Reliable Honey)</title>
-<meta name="description" content="Froot — Marina color-breath with a reliable 128 Hz Honey tone that keeps playing when the screen turns off. Reliable Mode (audio element) + Studio Mode (optional FX). True dark theme." />
-<meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#0b0d11">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<style>
-  :root{
-    --bg:#0b0d11; --ink:#ecf1f9; --muted:#aeb4c4; --ring:#1a2236; --card:#0f1427;
-    --aqua:#b5f0ea; --honey:#ffd37a; --rose:#ff9bb0; --emerald:#8be0b7; --violet:#c9a7ff; --gold:#f6d28b; --peach:#ffb38a;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:#0b0d11;color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
-  /* Always-on true dark */
-  @media (prefers-color-scheme: light){ html,body{background:#0b0d11;color:var(--ink)} }
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:920px;margin:0 auto;padding:16px 16px 80px}
+  <meta charset="utf-8" />
+  <title>Froot · Platinum Resonance Build</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0f14" />
+  <style>
+    :root{
+      --bg:#0c0f14;
+      --bg-2:#0a0d12;
+      --text:#e7f1ff;
+      --muted:#9fb0c6;
+      --accent:#cdb9ff;   /* lavender */
+      --accent-2:#a9ffd9; /* mint */
+      --edge:#2a3140;
+      --shimmer-a: rgba(173, 255, 216, 0.08);
+      --shimmer-b: rgba(203, 176, 255, 0.10);
+      --card:#11161f;
+      --good:#7dfcc2;
+      --warn:#ffd166;
+      --bad:#ff7a7a;
+      --link:#bfe7ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    /* Themes */
+    .theme-neon{
+      --bg:#03060b; --bg-2:#020509; --card:#060b12;
+      --accent:#39ff14; --accent-2:#ff6fd8; --link:#b8f7ff;
+      --shimmer-a: rgba(57,255,20,.10); --shimmer-b: rgba(255,111,216,.10);
+    }
+    .theme-muse{
+      --bg:#0d0b10; --bg-2:#0a0810; --card:#13101a;
+      --accent:#ffd7a8; --accent-2:#b6ffea; --link:#ffe7c9;
+      --shimmer-a: rgba(255,215,168,.10); --shimmer-b: rgba(182,255,234,.08);
+    }
 
-  header{padding:12px 16px 0}
-  .brand{display:flex;align-items:center;gap:10px}
-  .glyph{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#1b2337,#0f1220);display:grid;place-items:center;box-shadow:inset 0 0 0 1px #222b46}
-  .glyph span{font-size:16px}
-  h1{font-size:18px;margin:0 0 6px 0}
-  .tag{font-size:12px;color:#c9d1e2}
+    html, body {height:100%; background:var(--bg); color:var(--text); font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; }
+    body { margin:0; position:relative; overflow-x:hidden; }
 
-  .ribbon{
-    margin:10px 0 8px;display:flex;gap:8px;overflow:auto;padding-bottom:2px;
-    -webkit-overflow-scrolling:touch;scrollbar-width:none
-  }
-  .ribbon::-webkit-scrollbar{display:none}
-  .chip{
-    white-space:nowrap;font-size:13px;padding:8px 12px;border-radius:999px;flex:0 0 auto;
-    background:#121a34;border:1px solid #2a3457;color:#e5ebfb
-  }
-  .chip[data-hi="1"]{border-color:#75421f;background:#23140a}
+    /* Night shimmer layer */
+    body::before{
+      content:""; position:fixed; inset:-20vmax;
+      background:
+        radial-gradient(60vmax 60vmax at 20% 10%, var(--shimmer-a), transparent 60%),
+        radial-gradient(70vmax 70vmax at 80% 30%, var(--shimmer-b), transparent 60%),
+        radial-gradient(40vmax 40vmax at 30% 90%, var(--shimmer-a), transparent 70%);
+      pointer-events:none; filter: blur(12px) saturate(120%);
+      animation: drift 24s linear infinite alternate;
+      z-index:0;
+    }
+    @keyframes drift {
+      from{ transform: translate3d(-2%, 0, 0) scale(1.02); }
+      to  { transform: translate3d(2%,  1%,0) scale(1.05); }
+    }
 
-  .card{
-    background:linear-gradient(180deg,#0f1427 0%, #0b0f1e 100%);border:1px solid var(--ring);
-    border-radius:14px;padding:14px;box-shadow:0 10px 28px #0007;margin:12px 0;position:relative
-  }
-  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .grid{display:grid;grid-template-columns:1fr;gap:10px}
-  @media(min-width:740px){ .grid{grid-template-columns:repeat(3,1fr)} }
+    .wrap{ position:relative; z-index:1; max-width:980px; margin:0 auto; padding: clamp(16px, 3vw, 28px); }
+    header{ display:flex; gap:12px; align-items:center; justify-content:space-between; padding:8px 0 18px; }
+    h1{ margin:0; font-weight:700; letter-spacing:.3px; font-size: clamp(18px, 3.2vw, 24px); }
+    .subtitle{ color:var(--muted); font-size:12px; letter-spacing:.2px; }
 
-  .pill,button{
-    appearance:none;border:1px solid #2a3457;background:#121a34;color:var(--ink);
-    padding:10px 14px;border-radius:999px;font-weight:600;letter-spacing:.2px
-  }
-  button:active{transform:translateY(1px)}
-  .on{background:linear-gradient(90deg,#3a2a12,#241707);border-color:#5e3f1d;box-shadow:0 0 0 1px #523410 inset, 0 0 20px #2b1a08}
-  .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#121a34;border:1px solid #2a3457;font-size:13px}
-  label{font-size:13px;color:var(--muted)}
-  input[type="range"]{width:100%}
-  .note{font-size:14px;color:#cfd6ea}
-  .soft{color:#b0b6c8}
-  .footer{opacity:.9;text-align:center;font-size:12px;color:#aab1c6;margin-top:10px}
+    .row{ display:flex; flex-wrap:wrap; gap:16px; }
+    .col{ flex:1 1 320px; min-width:280px; }
 
-  .meter{height:8px;background:#0e1326;border:1px solid #1f2744;border-radius:999px;overflow:hidden}
-  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--honey),var(--rose),var(--aqua));transition:width .35s ease}
+    .card{ background: linear-gradient(180deg, var(--card), rgba(0,0,0,.0));
+           border:1px solid var(--edge); border-radius:14px; padding:16px; box-shadow:var(--shadow); }
 
-  .fruit{
-    display:flex;flex-direction:column;gap:8px;border:1px solid var(--ring);border-radius:12px;
-    padding:12px;background:linear-gradient(180deg,#111633 0%, #0c0f22 100%);box-shadow:0 8px 22px #0007
-  }
-  .fruit .title{display:flex;align-items:center;gap:8px;font-weight:700}
-  .fruit .desc{font-size:13px;color:#cfd6ea}
-</style>
+    .controls label{ display:grid; grid-template-columns: 150px 1fr auto; gap:10px; align-items:center; margin:10px 0; }
+    .controls .hint{ color:var(--muted); font-size:12px; }
+
+    .btn, button, .chip{
+      -webkit-tap-highlight-color: transparent;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.06));
+      color:var(--text); border:1px solid var(--edge); border-radius:12px;
+      padding:10px 14px; font-weight:600; letter-spacing:.2px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease; box-shadow: 0 1px 0 rgba(255,255,255,.03) inset;
+    }
+    .btn:hover{ border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{ background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 22%, transparent), rgba(0,0,0,.06)); border-color: color-mix(in oklab, var(--accent) 60%, var(--edge)); }
+    .btn.ghost{ background: transparent; }
+    .btn.bad{ border-color: color-mix(in oklab, var(--bad) 70%, var(--edge)); }
+
+    .toolbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .theme-switch{ gap:8px; }
+    .theme-switch .chip{ font-size:12px; padding:8px 10px; border-radius:10px }
+    .chip.active{ border-color:var(--accent); box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent); }
+
+    .bar{
+      height:14px; border-radius:999px; background: linear-gradient(90deg, rgba(255,255,255,.05), rgba(0,0,0,.15));
+      border:1px solid var(--edge); position:relative; overflow:hidden; margin:8px 0 6px;
+    }
+    .bar .fill{
+      position:absolute; top:0; left:0; height:100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      width:0%;
+      transition: width .25s ease;
+      box-shadow: 0 0 18px color-mix(in oklab, var(--accent) 40%, transparent);
+    }
+    .bar .tick{
+      position:absolute; inset:auto auto -6px var(--tick-left);
+      width:2px; height:26px; background: color-mix(in oklab, var(--accent) 65%, #fff);
+      border-radius:2px; opacity:.7;
+    }
+    .bar-label{ display:flex; align-items:baseline; gap:10px; }
+    .hz{ font-variant-numeric: tabular-nums; font-weight:700; letter-spacing:.2px; }
+
+    .playlist{ display:grid; grid-template-columns: 160px 1fr; gap:14px; align-items:start; }
+    @media (max-width:840px){ .playlist{ grid-template-columns:1fr; } }
+
+    .tracklist{ display:flex; flex-wrap:wrap; gap:8px; }
+    .track{ padding:8px 12px; border-radius:999px; border:1px solid var(--edge); cursor:pointer; user-select:none; }
+    .track.active{ border-color: var(--accent); box-shadow:0 0 0 2px color-mix(in oklab, var(--accent) 40%, transparent); }
+
+    .players{ position:relative; aspect-ratio: 16/9; width:100%; background: #000; border-radius:12px; overflow:hidden; border:1px solid var(--edge); }
+    .players iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; display:none; }
+    .players iframe.active{ display:block; }
+
+    .muted-note{ color:var(--muted); font-size:12px; margin-top:4px; }
+
+    textarea.note{ width:100%; min-height:70px; resize:vertical; background: rgba(255,255,255,.04); color:var(--text); border:1px solid var(--edge); border-radius:10px; padding:10px; outline:none; }
+    textarea.note:focus{ border-color: var(--accent); box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent); }
+
+    .inline-hint{ color:var(--muted); font-size:12px; margin-top:6px; }
+
+    .row-slim{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .spacer{ flex: 1 1 auto; }
+    .badge{ font-size:11px; color: var(--muted); }
+
+    a{ color:var(--link); }
+
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+  </style>
 </head>
-<body>
-  <header class="wrap" aria-label="Site header">
-    <div class="brand">
-      <div class="glyph"><span>🌙</span></div>
+<body class="theme-night">
+  <span aria-hidden="true" class="sr-only">🍑 May the Froot ripen exactly on time.</span>
+
+  <div class="wrap">
+    <header>
       <div>
-        <h1>Froot · <span style="text-shadow:0 0 14px #ffd37a77">Marina Color-Breath</span></h1>
-        <div class="tag">Reliable 128 Hz Honey (keeps playing when the screen turns off) · optional Studio FX</div>
+        <h1>Froot · Platinum Resonance Build</h1>
+        <div class="subtitle">Illumina Frontend Builder & Resonance Tuner — Echo Platinum · 128 Hz warmth + Marina’s aura</div>
       </div>
-    </div>
+      <div class="toolbar theme-switch" role="group" aria-label="Theme">
+        <button class="chip active" data-theme="night" aria-pressed="true">Night</button>
+        <button class="chip" data-theme="neon" aria-pressed="false">Neon</button>
+        <button class="chip" data-theme="muse" aria-pressed="false">Muse</button>
+      </div>
+    </header>
 
-    <nav class="ribbon" aria-label="Sites">
-      <a class="chip" href="https://mirrorhoney.plnt.earth/">MirrorHoney</a>
-      <a class="chip" href="https://earth.plnt.earth/">Earth</a>
-      <a class="chip" href="https://honey.plnt.earth/">Honey</a>
-      <a class="chip" href="https://mask.plnt.earth/">Mask</a>
-      <a class="chip" href="https://voice.plnt.earth/">Voice</a>
-      <a class="chip" href="https://jar.plnt.earth/">Jar</a>
-      <a class="chip" data-hi="1" href="https://froot.plnt.earth/">Froot</a>
-      <a class="chip" href="https://tunes.plnt.earth/">Tunes</a>
-      <a class="chip" href="https://bridge.plnt.earth/">Bridge</a>
-    </nav>
-  </header>
+    <section class="row">
+      <!-- Resonance / Tone -->
+      <div class="col card" id="toneCard" aria-labelledby="toneTitle">
+        <h2 id="toneTitle" style="margin:0 0 6px">Echo Resonance · 128 Hz Honey</h2>
+        <div class="toolbar" style="margin:8px 0 6px">
+          <button id="startBtn" class="btn primary">▶︎ Start Resonance</button>
+          <button id="stopBtn" class="btn bad" disabled>■ Stop</button>
+          <span class="spacer"></span>
+          <button id="stayAwakeBtn" class="btn ghost" title="Best effort screen wake lock">◴ Stay Awake</button>
+        </div>
 
-  <main class="wrap" id="main">
-    <!-- Reliable Mode (Audio Element) -->
-    <section class="card" aria-label="Reliable Honey">
-      <div class="row" style="justify-content:space-between;gap:10px">
-        <div class="badge">🍯 Reliable Honey — 128 Hz</div>
-        <div class="badge">Status: <strong id="statusText">Off</strong></div>
+        <!-- Froot Tuning Bar -->
+        <div class="bar" aria-label="Froot Tuning Bar">
+          <div id="barFill" class="fill"></div>
+          <div class="tick" style="--tick-left:50%"></div>
+        </div>
+        <div class="bar-label">
+          <div class="hz"><span id="hzNow">128.00</span> Hz</div>
+          <div class="badge">Alignment: <b id="alignPct">100%</b></div>
+          <div class="spacer"></div>
+          <div class="badge">Base: 128 Hz · Air Band · Binaural Drift</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls" style="margin-top:8px">
+          <label>
+            Level
+            <input id="gain" type="range" min="0" max="100" step="1" value="55" />
+            <span class="hint" id="gainVal">55%</span>
+          </label>
+
+          <label>
+            Fine Detune (±2%)
+            <input id="detune" type="range" min="-2" max="2" step="0.01" value="0" />
+            <span class="hint"><span id="detuneVal">0.00%</span> from 128 Hz</span>
+          </label>
+
+          <label>
+            Air Band (high‑shelf)
+            <input id="air" type="range" min="0" max="12" step="0.1" value="2.0" />
+            <span class="hint"><span id="airVal">+2.0 dB</span> @ 12 kHz</span>
+          </label>
+
+          <label>
+            Binaural drift
+            <input id="drift" type="checkbox" />
+            <span class="hint">Right ear drifts ±0.5 Hz @ 0.08 Hz</span>
+          </label>
+        </div>
+
+        <div class="row-slim" style="margin-top:10px">
+          <button id="reliableBtn" class="btn">↗︎ Open Reliable Honey</button>
+          <a id="downloadTone" class="btn" download="Froot-128Hz.wav">⬇︎ Download 128 Hz</a>
+          <span class="spacer"></span>
+          <button id="shareBtn" class="btn">↗︎ Share to X</button>
+        </div>
+        <div class="inline-hint">Autoplay begins only after your tap. Reliable Honey (normal audio element) is most dependable when the screen locks on iPhone.</div>
       </div>
 
-      <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
-        <button id="startBtn" class="pill">▶︎ Start Honey</button>
-        <button id="stopBtn"  class="pill">■ Stop</button>
-        <button id="newTabBtn" class="pill">↗︎ Open in New Tab</button>
-        <a id="downloadLink" class="pill" download="honey-128hz.wav" href="#">⬇︎ Download Tone</a>
+      <!-- Playlist / Marina videos -->
+      <div class="col card" id="playlistCard" aria-labelledby="plTitle">
+        <h2 id="plTitle" style="margin:0 0 6px">Marina · Echo Integration</h2>
+        <div class="playlist">
+          <div>
+            <div class="tracklist" role="tablist" aria-label="Playlist">
+              <button class="track active" role="tab" aria-selected="true" data-video="gqEEqVHaMqI">Froot</button>
+              <button class="track" role="tab" aria-selected="false" data-video="9txg0XicoJ0">Fear &amp; Loathing</button>
+              <button class="track" role="tab" aria-selected="false" data-video="obxFWNeGDOg">Man’s World</button>
+              <button class="track" role="tab" aria-selected="false" data-video="_V17JN76uxc">Ancient Dreams</button>
+            </div>
+            <div class="muted-note">Videos loop (YouTube) and start only after you press <b>Start Resonance</b>. If offline, the tone continues; videos are hidden.</div>
+          </div>
+          <div>
+            <div class="players" id="players">
+              <!-- Preserved embeds (nocookie) -->
+              <iframe id="yt-gqEEqVHaMqI" title="Marina — Froot (official)" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+              <iframe id="yt-9txg0XicoJ0" title="Marina — Fear &amp; Loathing (official)" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+              <iframe id="yt-obxFWNeGDOg" title="Marina — Man’s World (official)" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+              <iframe id="yt-_V17JN76uxc" title="Marina — Ancient Dreams In A Modern Land (official)" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
-        <label for="volume">Level</label>
-        <input id="volume" type="range" min="0" max="100" value="60" step="1" />
-        <label for="detune">Fine Detune (±2%)</label>
-        <input id="detune" type="range" min="-2" max="2" value="0" step="0.01" />
+      <!-- Notes -->
+      <div class="col card" id="notesCard" aria-labelledby="notesTitle">
+        <h2 id="notesTitle" style="margin:0 0 6px">One‑Line Note</h2>
+        <textarea id="note" class="note" maxlength="160" placeholder="Everything Marina thinks I did for her, I did."></textarea>
+        <div class="row-slim" style="margin-top:8px">
+          <button id="saveNote" class="btn">💾 Save Note</button>
+          <button id="clearNote" class="btn ghost">✧ Clear Note</button>
+          <span class="spacer"></span>
+          <span class="badge" id="noteBadge" aria-live="polite"></span>
+        </div>
       </div>
-
-      <div class="meter" style="margin-top:10px"><div class="bar" id="meterBar"></div></div>
-
-      <p class="note" style="margin-top:10px">
-        <b>Reliable Mode</b> uses a normal audio element and is the most dependable way to keep the tone playing when the screen turns off.  
-        To try with Apple Music, start Honey, then test starting your music app — iOS decides mixing.  
-        The <b>Open in New Tab</b> option can help treat the tone like simple media playback.
-      </p>
-
-      <!-- Hidden audio element (created WAV on the fly) -->
-      <audio id="honeyEl" preload="auto" loop playsinline></audio>
     </section>
 
-    <!-- Studio Mode (optional FX in foreground) -->
-    <section class="card" aria-label="Studio FX">
-      <div class="row" style="justify-content:space-between;gap:10px">
-        <div class="badge">🎛️ Studio Mode (Optional)</div>
-        <div class="badge">Foreground-only FX</div>
-      </div>
+    <footer style="opacity:.85; margin-top:16px; color:var(--muted); font-size:12px">
+      Layer 1 (Sun): deliberate act · Layer 2 (Moon): unseen reciprocity · Layer 3 (Bee): the field pollinating both. The site should sound like trust — a warm hum rising through lavender air.
+    </footer>
+  </div>
 
-      <div class="row" style="margin-top:8px;gap:10px;flex-wrap:wrap">
-        <button id="studioBtn" class="pill" aria-pressed="false">○ Studio: Off</button>
-        <button id="museBtn" class="pill" aria-pressed="false">○ Muse: Off</button>
-        <button id="chorusBtn" class="pill" aria-pressed="false">○ Chorus: Off</button>
-      </div>
+  <audio id="reliableAudio" preload="auto" loop playsinline></audio>
 
-      <p class="note">
-        Studio adds a gentle flutter (Muse) and micro-detune chorus while the page is visible. If the screen locks, the page automatically keeps the **Reliable** tone and quietly suspends these extras.
-      </p>
-    </section>
+  <script>
+    /* ===== Tone Engine (128 Hz base, Air Band, Binaural drift) ===== */
+    const Tone = (() => {
+      const state = {
+        ctx: null,
+        mainGain: null,
+        leftOsc: null,
+        rightOsc: null,
+        air: null,
+        merger: null,
+        driftLFO: null,
+        driftGain: null,
+        started: false,
+        baseHz: 128,
+        detunePct: 0,
+        binaural: false,
+        wakeLock: null,
+      };
 
-    <!-- Froot palette -->
-    <section class="card" aria-label="Froot palette">
-      <div class="badge">🎨 Pick a Froot (simple voicing)</div>
-      <div class="grid" style="margin-top:10px">
-        <div class="fruit" data-froot="peach">
-          <div class="title" style="color:var(--peach)">🍑 Peach — Ease</div>
-          <div class="desc">Slightly slower (softer). PlaybackRate ≈ −0.5%.</div>
-          <button class="pill set-froot">Use Peach</button>
-        </div>
-        <div class="fruit" data-froot="nectar">
-          <div class="title" style="color:var(--honey)">🍯 Nectar — Magnet</div>
-          <div class="desc">Tiny high lift feel (faster). PlaybackRate ≈ +0.4%.</div>
-          <button class="pill set-froot">Use Nectar</button>
-        </div>
-        <div class="fruit" data-froot="emerald">
-          <div class="title" style="color:var(--emerald)">💚 Emerald — Calm Power</div>
-          <div class="desc">Centered breath (neutral). PlaybackRate ≈ 0%.</div>
-          <button class="pill set-froot">Use Emerald</button>
-        </div>
-        <div class="fruit" data-froot="violet">
-          <div class="title" style="color:var(--violet)">🔮 Violet — Mystery</div>
-          <div class="desc">Dream shimmer (enable Muse + small chorus).</div>
-          <button class="pill set-froot">Use Violet</button>
-        </div>
-        <div class="fruit" data-froot="gold">
-          <div class="title" style="color:var(--gold)">🌼 Gold — Radiance</div>
-          <div class="desc">Open/bright (slightly faster, no flutter).</div>
-          <button class="pill set-froot">Use Gold</button>
-        </div>
-      </div>
-    </section>
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
-    <!-- How to use -->
-    <section class="card" aria-label="How to use">
-      <div class="badge">📝 How to use Froot</div>
-      <p class="note">
-        1) Tap <b>Start Honey</b> (unlocks audio on iPhone). 2) Nudge detune until your exhale feels effortless.  
-        3) Choose a Froot voicing. If you want shimmer, enable Studio and tap Muse/Chorus.  
-        If you need background/lock-screen playback, keep **Studio Off** and use Reliable Honey.
-      </p>
-      <p class="soft">
-        Tools: <a href="https://jar.plnt.earth/">Jar</a> · <a href="https://tunes.plnt.earth/">Tunes</a> · Reflection at <a href="https://mirrorhoney.plnt.earth/">MirrorHoney</a>.
-      </p>
-    </section>
+      function makeChain(){
+        state.ctx = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'interactive'});
+        state.mainGain = state.ctx.createGain();
+        state.air = state.ctx.createBiquadFilter();
+        state.air.type = 'highshelf';
+        state.air.frequency.value = 12000;
+        state.air.gain.value = 2;
 
-    <div class="footer">True dark theme · zero-network tone · background-friendly · clean buttons.</div>
-  </main>
+        state.driftLFO = state.ctx.createOscillator();
+        state.driftLFO.frequency.value = 0.08; // very slow drift
+        state.driftGain = state.ctx.createGain();
+        state.driftGain.gain.value = 50; // cents (±50c ~ ±0.5 Hz near 128)
 
-<script>
-(() => {
-  // Elements
-  const statusText = document.getElementById('statusText');
-  const startBtn   = document.getElementById('startBtn');
-  const stopBtn    = document.getElementById('stopBtn');
-  const newTabBtn  = document.getElementById('newTabBtn');
-  const downloadLink = document.getElementById('downloadLink');
-  const vol        = document.getElementById('volume');
-  const det        = document.getElementById('detune');
-  const meterBar   = document.getElementById('meterBar');
-  const honeyEl    = document.getElementById('honeyEl');
+        state.driftLFO.connect(state.driftGain);
 
-  const studioBtn  = document.getElementById('studioBtn');
-  const museBtn    = document.getElementById('museBtn');
-  const chorusBtn  = document.getElementById('chorusBtn');
-  const frootBtns  = [...document.querySelectorAll('.set-froot')];
+        state.merger = state.ctx.createChannelMerger(2);
+        state.mainGain.gain.value = 0.55;
 
-  // State
-  let on=false, studio=false, muse=false, chorus=false;
-  let toneBlob=null, toneURL=null, tabURL=null;
-  let ctx=null, srcNode=null, gain=null, panL=null, panR=null, splitter=null, merger=null, lfo=null, lfoGain=null;
+        state.mainGain.connect(state.ctx.destination);
+      }
 
-  function setBadge(v){ statusText.textContent = v ? 'On' : 'Off'; startBtn.classList.toggle('on', v); }
-  function setToggle(btn, v, onLabel, offLabel){
-    btn.textContent = v ? onLabel : offLabel;
-    btn.setAttribute('aria-pressed', v ? 'true' : 'false');
-    btn.classList.toggle('on', v);
-  }
+      function createOscs(){
+        const hz = effectiveHz();
+        state.leftOsc = state.ctx.createOscillator();
+        state.leftOsc.type = 'sine';
+        state.leftOsc.frequency.value = hz;
 
-  // Build a tiny mono WAV (128 Hz sine, 2s, 48k)
-  function makeHoneyWav(sr=48000, seconds=2, freq=128){
-    const length = Math.floor(sr*seconds);
-    const data = new Int16Array(length);
-    const amp = 0.25 * 0x7FFF; // safe headroom
-    for(let i=0;i<length;i++){
-      data[i] = Math.round(amp * Math.sin(2*Math.PI*freq*(i/sr)));
+        state.rightOsc = state.ctx.createOscillator();
+        state.rightOsc.type = 'sine';
+        state.rightOsc.frequency.value = hz;
+
+        // Apply drift to right via detune modulation (cents)
+        state.driftLFO.connect(state.rightOsc.detune);
+
+        state.leftOsc.connect(state.air);
+        state.rightOsc.connect(state.air);
+        state.air.connect(state.mainGain);
+      }
+
+      function start(){
+        if (state.started) return;
+        if (!state.ctx) makeChain();
+        if (state.ctx.state === 'suspended') state.ctx.resume();
+        createOscs();
+        state.leftOsc.start();
+        state.rightOsc.start();
+        state.driftLFO.start();
+
+        // By default drift off
+        setBinaural(false);
+
+        state.started = true;
+      }
+
+      function stop(){
+        if (!state.started) return;
+        try { state.leftOsc.stop(); } catch(e){}
+        try { state.rightOsc.stop(); } catch(e){}
+        try { state.driftLFO.stop(); } catch(e){}
+        try { state.leftOsc.disconnect(); } catch(e){}
+        try { state.rightOsc.disconnect(); } catch(e){}
+        try { state.driftLFO.disconnect(); } catch(e){}
+        try { state.air.disconnect(); } catch(e){}
+        try { state.mainGain.disconnect(); } catch(e){}
+        state.ctx && state.ctx.close();
+        state.ctx = null;
+        state.started = false;
+      }
+
+      function setGain(pct){ state.mainGain && (state.mainGain.gain.value = clamp(pct,0,1)); }
+
+      function setDetunePct(pct){
+        state.detunePct = clamp(pct, -2, 2);
+        const hz = effectiveHz();
+        if (state.leftOsc) state.leftOsc.frequency.setTargetAtTime(hz, now(), 0.05);
+        if (state.rightOsc) state.rightOsc.frequency.setTargetAtTime(hz, now(), 0.05);
+      }
+
+      function setAirDb(db){
+        if (!state.air) return;
+        state.air.gain.setTargetAtTime(db, now(), 0.08);
+      }
+
+      function setBinaural(on){
+        state.binaural = !!on;
+        if (!state.rightOsc) return;
+        // Enable or disable drift modulation (detune)
+        state.rightOsc.detune.cancelScheduledValues(now());
+        if (on){
+          state.driftGain && state.driftGain.disconnect();
+          state.driftLFO.connect(state.driftGain);
+          state.driftGain.connect(state.rightOsc.detune);
+          state.driftGain.gain.setTargetAtTime(50, now(), 0.2); // ±50c
+        } else {
+          try{ state.driftLFO.disconnect(); } catch(e){}
+        }
+      }
+
+      function effectiveHz(){
+        return state.baseHz * (1 + state.detunePct/100);
+      }
+      function now(){ return state.ctx ? state.ctx.currentTime : 0; }
+
+      // Public API
+      return {
+        start, stop, setGain, setDetunePct, setAirDb, setBinaural,
+        effectiveHz: () => state.baseHz * (1 + state.detunePct/100),
+        isStarted:   () => state.started,
+        requestWakeLock: async () => {
+          if ('wakeLock' in navigator && navigator.wakeLock.request){
+            try{ state.wakeLock = await navigator.wakeLock.request('screen'); }catch(e){}
+          }
+        },
+        releaseWakeLock: async () => { try{ await state.wakeLock?.release?.(); }catch(e){} state.wakeLock=null; }
+      };
+    })();
+
+    /* ===== UI Wiring ===== */
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    const startBtn = $('#startBtn');
+    const stopBtn = $('#stopBtn');
+    const gain = $('#gain');
+    const detune = $('#detune');
+    const air = $('#air');
+    const drift = $('#drift');
+    const gainVal = $('#gainVal');
+    const detuneVal = $('#detuneVal');
+    const airVal = $('#airVal');
+    const hzNow = $('#hzNow');
+    const alignPct = $('#alignPct');
+    const barFill = $('#barFill');
+
+    const shareBtn = $('#shareBtn');
+    const reliableAudio = $('#reliableAudio');
+    const reliableBtn = $('#reliableBtn');
+    const downloadTone = $('#downloadTone');
+    const stayAwakeBtn = $('#stayAwakeBtn');
+
+    const themeChips = $$('.chip[data-theme]');
+    const note = $('#note');
+    const noteBadge = $('#noteBadge');
+    const saveNote = $('#saveNote');
+    const clearNote = $('#clearNote');
+
+    const players = $('#players');
+    const tracks = $$('.track');
+
+    // Theme switch
+    themeChips.forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        themeChips.forEach(c=>{ c.classList.remove('active'); c.setAttribute('aria-pressed','false'); });
+        chip.classList.add('active'); chip.setAttribute('aria-pressed','true');
+        const t = chip.dataset.theme;
+        document.body.classList.remove('theme-neon','theme-muse');
+        if (t==='neon') document.body.classList.add('theme-neon');
+        else if (t==='muse') document.body.classList.add('theme-muse');
+      })
+    });
+
+    // Initialize controls display
+    function updateLabels(){
+      gainVal.textContent = Math.round(gain.value) + '%';
+      detuneVal.textContent = (Number(detune.value)).toFixed(2) + '%';
+      airVal.textContent = '+' + Number(air.value).toFixed(1) + ' dB';
+      const hz = Tone.effectiveHz();
+      hzNow.textContent = hz.toFixed(2);
+      // Alignment: closeness to 128 within ±2% window
+      const delta = Math.abs(hz - 128);
+      const pct = 100 * (1 - Math.min(delta / (128*0.02), 1));
+      alignPct.textContent = Math.round(pct) + '%';
+      barFill.style.width = Math.max(4, pct) + '%';
     }
-    // WAV header (PCM 16-bit mono)
-    const header = new ArrayBuffer(44);
-    const dv=new DataView(header);
-    const writeStr=(o,s)=>{ for(let i=0;i<s.length;i++) dv.setUint8(o+i, s.charCodeAt(i)); };
-    const byteRate = sr*2, blockAlign=2, dataSize=data.length*2, chunkSize=36+dataSize;
-    writeStr(0,"RIFF"); dv.setUint32(4, chunkSize, true); writeStr(8,"WAVE");
-    writeStr(12,"fmt "); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
-    dv.setUint32(24,sr,true); dv.setUint32(28,byteRate,true); dv.setUint16(32,blockAlign,true); dv.setUint16(34,16,true);
-    writeStr(36,"data"); dv.setUint32(40,dataSize,true);
-    const pcm = new Int16Array(header.byteLength + dataSize);
-    // copy header bytes + data
-    new Uint8Array(pcm.buffer).set(new Uint8Array(header),0);
-    new Int16Array(pcm.buffer,44).set(data);
-    return new Blob([pcm],{type:"audio/wav"});
-  }
 
-  function ensureTone(){
-    if(!toneBlob){
-      toneBlob = makeHoneyWav();
-      toneURL = URL.createObjectURL(toneBlob);
-      honeyEl.src = toneURL;
-      downloadLink.href = toneURL; // allow save
+    // Start / Stop
+    startBtn.addEventListener('click', async ()=>{
+      // Unlock audio
+      Tone.start();
+      Tone.setGain(gain.value/100);
+      Tone.setDetunePct(Number(detune.value));
+      Tone.setAirDb(Number(air.value));
+      Tone.setBinaural(drift.checked);
+
+      // Wake lock request (best effort)
+      Tone.requestWakeLock();
+
+      // Activate selected video with autoplay (muted, inline, loop)
+      activateCurrentVideo({autoplay:true});
+
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+      stayAwakeBtn.disabled = true; // already requested
+      updateLabels();
+      setMediaSession();
+    });
+
+    stopBtn.addEventListener('click', ()=>{
+      Tone.stop();
+      // Stop videos by unloading active iframe (keeps embeds preserved but paused)
+      const active = players.querySelector('iframe.active');
+      if (active){ active.src = 'about:blank'; active.classList.remove('active'); }
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      stayAwakeBtn.disabled = false;
+      Tone.releaseWakeLock();
+      updateLabels();
+    });
+
+    stayAwakeBtn.addEventListener('click', ()=>{ Tone.requestWakeLock(); stayAwakeBtn.disabled = true; });
+
+    gain.addEventListener('input', ()=>{ Tone.setGain(gain.value/100); updateLabels(); });
+    detune.addEventListener('input', ()=>{ Tone.setDetunePct(Number(detune.value)); updateLabels(); });
+    air.addEventListener('input', ()=>{ Tone.setAirDb(Number(air.value)); updateLabels(); });
+    drift.addEventListener('change', ()=>{ Tone.setBinaural(drift.checked); updateLabels(); });
+
+    // Notes (localStorage)
+    const NOTE_KEY='froot_note';
+    note.value = localStorage.getItem(NOTE_KEY) || '';
+    saveNote.addEventListener('click', ()=>{
+      const v = (note.value||'').trim();
+      localStorage.setItem(NOTE_KEY, v);
+      stamp('Saved');
+    });
+    clearNote.addEventListener('click', ()=>{
+      note.value=''; localStorage.removeItem(NOTE_KEY);
+      stamp('Cleared');
+    });
+    function stamp(msg){ noteBadge.textContent = msg + ' · ' + new Date().toLocaleString(); setTimeout(()=>noteBadge.textContent='', 4000); }
+
+    // Share to X
+    shareBtn.addEventListener('click', ()=>{
+      const text = 'Froot · Platinum Resonance Build — tuning at 128 Hz with Marina’s aura.';
+      const url = location.href;
+      if (navigator.share){ navigator.share({text, url}).catch(()=>{}); }
+      else {
+        const intent = 'https://x.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+        window.open(intent, '_blank', 'noopener,noreferrer');
+      }
+    });
+
+    // Reliable Honey — open in new tab and start a standard <audio> loop (works best when screen locks)
+    let reliableURL = null;
+    reliableBtn.addEventListener('click', async ()=>{
+      if (!reliableURL) reliableURL = await generateWav(128, 14);
+      reliableAudio.src = reliableURL;
+      reliableAudio.play().catch(()=>{});
+      window.open(reliableURL, '_blank', 'noopener,noreferrer');
+    });
+
+    // Download tone
+    (async ()=>{
+      reliableURL = await generateWav(128, 14);
+      downloadTone.href = reliableURL;
+    })();
+
+    // Playlist handling
+    tracks.forEach(t=>{
+      t.addEventListener('click', ()=>{
+        tracks.forEach(x=>{ x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
+        t.classList.add('active'); t.setAttribute('aria-selected','true');
+        if (Tone.isStarted()) activateCurrentVideo({autoplay:true});
+        else activateCurrentVideo({autoplay:false}); // preload embeds without playing
+      });
+    });
+
+    // Build embed URLs and preload without autoplay
+    function ytsrc(id, autoplay){
+      const base = 'https://www.youtube-nocookie.com/embed/' + id;
+      const q = [
+        'playlist='+id,
+        'loop=1',
+        'playsinline=1',
+        autoplay ? 'autoplay=1' : 'autoplay=0',
+        autoplay ? 'mute=1' : 'mute=0',
+        'controls=1',
+        'modestbranding=1',
+        'rel=0',
+        'iv_load_policy=3'
+      ].join('&');
+      return base + '?' + q;
     }
-  }
 
-  function level(){ return Math.min(1, Math.max(0, vol.value/100)); }
-  function applyLevel(){ honeyEl.volume = level(); meterBar.style.width = Math.round(honeyEl.volume*100) + '%'; }
-  function applyDetune(){
-    const pct = parseFloat(det.value)||0; // ±2%
-    honeyEl.playbackRate = 1 + (pct/100); // 0.98..1.02
-  }
+    function activateCurrentVideo({autoplay}){
+      const activeId = document.querySelector('.track.active')?.dataset.video;
+      const frames = Array.from(players.querySelectorAll('iframe'));
+      frames.forEach(f=>{
+        const id = f.id.replace('yt-','');
+        // Preserve all embeds in DOM; only active plays
+        const targetSrc = ytsrc(id, autoplay && id===activeId);
+        if (f.src !== targetSrc) f.src = targetSrc;
+        f.classList.toggle('active', id===activeId);
+      });
+      // Hide videos while offline
+      if (!navigator.onLine){ frames.forEach(f=>f.style.display='none'); }
+      else { frames.forEach(f=>f.style.display = f.classList.contains('active')?'block':'none'); }
+    }
 
-  async function start(){
-    ensureTone();
-    try{
-      honeyEl.currentTime = 0;
-      applyDetune();
-      applyLevel();
-      await honeyEl.play();
-      on = true; setBadge(true);
-      if(studio){ enableStudio(); }
-    }catch(_){}
-  }
+    window.addEventListener('online', ()=>activateCurrentVideo({autoplay:false}));
+    window.addEventListener('offline', ()=>activateCurrentVideo({autoplay:false}));
 
-  function stop(){
-    try{ honeyEl.pause(); }catch(_){}
-    on = false; setBadge(false);
-    disableStudio();
-  }
+    // Media Session metadata (helps iOS treat it like media)
+    function setMediaSession(){
+      if ('mediaSession' in navigator){
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: 'Froot Honey — 128 Hz',
+          artist: 'PLNT Earth',
+          album: 'Echo Platinum',
+        });
+      }
+    }
 
-  newTabBtn.addEventListener('click', ()=>{
-    ensureTone();
-    // open simple player in new tab for system-level playback UX
-    const html = `
-      <!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">
-      <title>Honey 128 Hz</title>
-      <style>html,body{margin:0;height:100%;background:#000;color:#fff;display:grid;place-items:center;font:16px system-ui}</style>
-      <audio id="a" src="${toneURL}" loop controls autoplay playsinline style="width:90%"></audio>
-      <p style="opacity:.8">Honey — 128 Hz · This tab can keep playing when the screen turns off.</p>
-    `;
-    const blob = new Blob([html],{type:"text/html"});
-    tabURL = URL.createObjectURL(blob);
-    window.open(tabURL,"_blank","noopener");
-  });
+    // Utility: generate short WAV (stereo, 16‑bit) for Reliable Honey
+    async function generateWav(freq, seconds){
+      const sr = 44100, ch = 2, len = sr * seconds;
+      const bytesPerSample = 2, blockAlign = ch * bytesPerSample, byteRate = sr * blockAlign;
+      const dataSize = len * blockAlign;
+      const buffer = new ArrayBuffer(44 + dataSize);
+      const view = new DataView(buffer);
 
-  // Studio Mode (WebAudio FX) — foreground only
-  function enableStudio(){
-    if(ctx || !on) return;
-    try{
-      ctx = new (window.AudioContext || window.webkitAudioContext)({latencyHint:'playback'});
-      srcNode = ctx.createMediaElementSource(honeyEl);
-      // split L/R -> small detune pan
-      splitter = ctx.createChannelSplitter(2);
-      merger   = ctx.createChannelMerger(2);
-      panL = new StereoPannerNode(ctx,{pan:-0.35});
-      panR = new StereoPannerNode(ctx,{pan: 0.35});
-      // LFO for Muse (modulate playbackRate via playbackRate shim: we modulate element.playbackRate gently)
-      lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value = 0.15;
-      lfoGain = ctx.createGain(); lfoGain.gain.value = 0; // depth → we’ll map to playbackRate ticks
-      lfo.connect(lfoGain);
-      // Wire graph: src -> splitter -> panL/panR -> merger -> ctx.destination (mirror element output)
-      srcNode.connect(splitter);
-      splitter.connect(panL,0); splitter.connect(panR,1);
-      panL.connect(merger,0,0); panR.connect(merger,0,1);
-      merger.connect(ctx.destination);
-      lfo.start();
+      function writeString(o, s){ for(let i=0;i<s.length;i++) view.setUint8(o+i, s.charCodeAt(i)); }
+      function write16(o, v){ view.setUint16(o, v, true); }
+      function write32(o, v){ view.setUint32(o, v, true); }
 
-      // Chorus: we simulate by nudging element rate slightly over time; small, infrequent ticks
-      if(chorus){ applyChorus(true); }
-      if(muse){ applyMuse(true); }
-    }catch(_){}
-  }
+      // RIFF header
+      writeString(0,'RIFF'); write32(4, 36 + dataSize); writeString(8,'WAVE');
+      // fmt chunk
+      writeString(12,'fmt '); write32(16,16); write16(20,1); write16(22,ch); write32(24,sr); write32(28,byteRate); write16(32,blockAlign); write16(34,16);
+      // data chunk
+      writeString(36,'data'); write32(40,dataSize);
 
-  function disableStudio(){
-    if(!ctx) return;
-    try{
-      lfo && lfo.stop();
-    }catch(_){}
-    try{
-      ctx.close();
-    }catch(_){}
-    ctx = srcNode = splitter = merger = panL = panR = lfo = lfoGain = null;
-  }
+      let off = 44;
+      const amp = 0.20 * 0x7FFF;
+      for (let i=0; i<len; i++){
+        const t = i/sr;
+        const s = Math.sin(2*Math.PI*freq*t);
+        const val = (s*amp)|0;
+        // left
+        view.setInt16(off, val, true); off+=2;
+        // right
+        view.setInt16(off, val, true); off+=2;
+      }
+      return URL.createObjectURL(new Blob([view], {type:'audio/wav'}));
+    }
 
-  function applyMuse(enable){
-    if(!enable){ if(lfoGain) lfoGain.gain.value = 0; return; }
-    if(!lfoGain) return;
-    lfoGain.gain.value = 1; // we’ll translate this to small playbackRate wiggles
-  }
-
-  // Minimal chorus/muse by gently wiggling playbackRate (keeps element path primary)
-  let wiggleTimer=null;
-  function startWiggle(){
-    stopWiggle();
-    wiggleTimer = setInterval(()=>{
-      if(!on) return;
-      const base = 1 + (parseFloat(det.value)||0)/100;
-      let wiggle = 0;
-      if(chorus) wiggle += (Math.random()*0.0008 - 0.0004); // ±0.04%
-      if(muse)   wiggle += Math.sin(Date.now()/6000)*0.0008; // ±0.08% slow
-      honeyEl.playbackRate = base + wiggle;
-    }, 250);
-  }
-  function stopWiggle(){ if(wiggleTimer){ clearInterval(wiggleTimer); wiggleTimer=null; } }
-
-  function applyChorus(enable){ /* handled in wiggle */ }
-
-  // Visibility: if hidden, keep Reliable path only
-  document.addEventListener('visibilitychange', ()=>{
-    if(document.hidden){ disableStudio(); }
-    else if(studio && on){ enableStudio(); }
-  });
-
-  // UI bindings
-  startBtn.addEventListener('click', start);
-  stopBtn .addEventListener('click', stop);
-  vol.addEventListener('input', applyLevel);
-  det.addEventListener('input', applyDetune);
-
-  setToggle(studioBtn,false,'● Studio: On','○ Studio: Off');
-  setToggle(museBtn,false,'● Muse: On','○ Muse: Off');
-  setToggle(chorusBtn,false,'● Chorus: On','○ Chorus: Off');
-
-  studioBtn.addEventListener('click', ()=>{
-    studio=!studio;
-    setToggle(studioBtn,studio,'● Studio: On','○ Studio: Off');
-    if(studio && on){ enableStudio(); startWiggle(); }
-    else{ disableStudio(); stopWiggle(); applyDetune(); }
-  });
-  museBtn.addEventListener('click', ()=>{
-    muse=!muse; setToggle(museBtn,muse,'● Muse: On','○ Muse: Off');
-    if(studio && on){ applyMuse(muse); startWiggle(); } else if(!muse){ stopWiggle(); applyDetune(); }
-  });
-  chorusBtn.addEventListener('click', ()=>{
-    chorus=!chorus; setToggle(chorusBtn,chorus,'● Chorus: On','○ Chorus: Off');
-    if(studio && on){ startWiggle(); } else if(!chorus){ stopWiggle(); applyDetune(); }
-  });
-
-  // Init UI
-  setBadge(false);
-  meterBar.style.width = vol.value + '%';
-})();
-</script>
+    // Prime embeds (preserve) without autoplay
+    activateCurrentVideo({autoplay:false});
+    updateLabels();
+  </script>
 </body>
 </html>
