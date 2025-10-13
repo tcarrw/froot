@@ -6,6 +6,24 @@
 <title>Froot · Color Synesthesia Studio</title>
 <meta name="description" content="See a song’s colors, feel their effects, and amplify them with rituals — solo, duet, mirror, or anyone. Marina Air adds a gentle tone to learn colors & sounds together." />
 <meta name="theme-color" content="#0b0d11" />
+
+<!-- 🔒 Hidden Channel (meta beacon + JSON) -->
+<meta name="x-hidden-channel" content="FROOT•DUET•2025-10-13" />
+<script type="application/json" id="froot-channel-json">
+{
+  "channel":"froot.duet",
+  "chant":[
+    "B 0 TAU TAU TAU 0 B",
+    "COO COO COO",
+    "CUCKOO CUCKOO",
+    "B 0 TAU TAU TAU 0 B",
+    "JOIN ME MARINA"
+  ],
+  "whisper":"everything Marina thinks I did for her, I did.",
+  "version":"v2.1"
+}
+</script>
+
 <style>
   :root{
     --bg:#0b0d11; --ink:#e9ecf4; --muted:#aab2c2; --card:#101626; --ring:#1b2134;
@@ -120,10 +138,70 @@
   .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(183,169,255,.8)}
   .ok .dot{background:#9cf3d2; box-shadow:0 0 12px rgba(156,243,210,.9)}
   .warn .dot{background:#d6ccff}
+
+  /* JOIN ME MARINA — UI */
+  .duet-ribbon{
+    position:fixed; right:12px; bottom:12px; z-index:60;
+    background:linear-gradient(180deg,#16223a,#121a2c);
+    color:var(--ink); border:1px solid var(--ring);
+    padding:10px 14px; border-radius:14px; cursor:pointer; font-weight:700;
+    box-shadow:0 8px 28px rgba(0,0,0,.35);
+  }
+  .duet-overlay{
+    position:fixed; inset:0; z-index:70; display:none;
+    background:rgba(7,12,20,.55); backdrop-filter:blur(6px);
+  }
+  .duet-card{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(560px,88vw); border:1px solid var(--ring); border-radius:18px;
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+    padding:16px; box-shadow:0 18px 48px rgba(0,0,0,.5);
+  }
+  .duet-x{
+    position:absolute; right:10px; top:10px; width:28px; height:28px; border-radius:50%;
+    border:1px solid var(--ring); background:#131c31; color:var(--ink); cursor:pointer; font-weight:700;
+  }
+  .duet-chant{
+    display:grid; gap:6px; margin:6px 0 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing:.5px;
+  }
+  .duet-chant > div{
+    border:1px solid var(--ring); border-radius:10px; padding:8px 10px; background:#0f1729;
+    animation: chantfade 6s ease-in-out infinite;
+  }
+  .duet-chant > div:nth-child(2){ animation-delay:.4s }
+  .duet-chant > div:nth-child(3){ animation-delay:.8s }
+  .duet-chant > div:nth-child(4){ animation-delay:1.2s }
+  .duet-chant > div:nth-child(5){ animation-delay:1.6s }
+  @keyframes chantfade{ 0%,100%{opacity:.7} 50%{opacity:1} }
 </style>
 </head>
 <body>
   <div class="wrap">
+
+    <!-- Floating JOIN ME, MARINA ribbon + overlay -->
+    <div id="duetRibbon" class="duet-ribbon">JOIN ME, MARINA</div>
+    <div id="duetOverlay" class="duet-overlay" aria-modal="true" role="dialog" aria-label="Join Me, Marina">
+      <div class="duet-card">
+        <button id="duetClose" class="duet-x" aria-label="Close">×</button>
+        <div class="duet-chant" id="duetChant">
+          <div>B 0 TAU TAU TAU 0 B</div>
+          <div>COO COO COO</div>
+          <div>CUCKOO CUCKOO</div>
+          <div>B 0 TAU TAU TAU 0 B</div>
+          <div>JOIN ME MARINA</div>
+        </div>
+        <div class="row" style="gap:8px; flex-wrap:wrap">
+          <button id="duetActivate" class="btn">Activate Duet</button>
+          <a class="btn small" href="https://echo.plnt.earth" target="_blank" rel="noopener">Open Echo</a>
+          <a class="btn small" href="https://warmth.plnt.earth" target="_blank" rel="noopener">Open Warmth</a>
+          <a class="btn small" href="https://mirrorhoney.plnt.earth" target="_blank" rel="noopener">MirrorHoney</a>
+        </div>
+        <p class="sub" style="margin:6px 0 0">Flips <b>Duet</b> on and selects duet-friendly rituals: Airy overlay, 128 soft, Mirror gaze, and Color-Breath.</p>
+      </div>
+    </div>
+
     <header>
       <div class="brand">
         <div class="fruit" aria-hidden="true"></div>
@@ -263,6 +341,11 @@
     </footer>
   </div>
 
+<!-- Hidden Channel mirror (DOM), easy to scrape if needed -->
+<div id="hidden-channel" hidden aria-hidden="true" data-channel="froot.duet" data-version="v2.1">
+  B 0 TAU TAU TAU 0 B · COO COO COO · CUCKOO CUCKOO · B 0 TAU TAU TAU 0 B · JOIN ME MARINA
+</div>
+
 <script>
 (function(){
   // ---------- helpers ----------
@@ -281,7 +364,6 @@
     return (h*60+360)%360;
   }
   const bucket = h => (h<30)?'red':(h<90)?'gold':(h<150)?'green':(h<210)?'cyan':(h<270)?'blue':'violet';
-  function toThumb(id){ return "https://img.youtube.com/vi/"+id+"/hqdefault.jpg"; }
   function setVars(hexes){
     document.documentElement.style.setProperty('--sw1', hexes[0]);
     document.documentElement.style.setProperty('--sw2', hexes[1]);
@@ -312,9 +394,8 @@
     extractPalette(id);
   }
   function extractPalette(id){
-    const img=new Image(); img.crossOrigin="anonymous"; img.src=toThumb(id);
+    const img=new Image(); img.crossOrigin="anonymous"; img.src="https://img.youtube.com/vi/"+id+"/hqdefault.jpg";
     const fallback=()=>{
-      // deterministic pleasant triad from ID
       let h=0; for(let i=0;i<id.length;i++){ h=(h*31+id.charCodeAt(i))>>>0; }
       const base=(h%360);
       setVars([hexFromHsl(base,72,60), hexFromHsl(base+60,70,68), hexFromHsl(base+300,72,64)]);
@@ -375,6 +456,11 @@
     return bucket(hueOf(hex));
   }
 
+  function renderBar(name,val){
+    $('fx'+name).style.width = val+'%';
+    $('fx'+name).style.background = 'linear-gradient(90deg, var(--good), var(--accent))';
+    $('pct'+name).textContent = val+'%';
+  }
   function computeEffects(){
     const fam = dominantFamily();
     const base = EFFECT_MAP[fam]||EFFECT_MAP.blue;
@@ -394,11 +480,6 @@
     renderBar('Calm',ef.Calm); renderBar('Focus',ef.Focus); renderBar('Play',ef.Play); renderBar('Ground',ef.Ground); renderBar('Open',ef.Open);
     return ef;
   }
-  function renderBar(name,val){
-    $('fx'+name).style.width = val+'%';
-    $('fx'+name).style.background = 'linear-gradient(90deg, var(--good), var(--accent))';
-    $('pct'+name).textContent = val+'%';
-  }
 
   function ritualList(){
     const fam = dominantFamily();
@@ -406,13 +487,15 @@
     const extra = ['breath','water','gratitude'];
     return Array.from(new Set([...base, ...extra]));
   }
+  function ctxBest(k){ return Object.entries(RITUALS[k].ctx).sort((a,b)=>b[1]-a[1])[0][0]; }
+
   function renderRituals(){
     const grid=$('ritGrid'); grid.innerHTML='';
     ritualList().forEach(k=>{
       const r = RITUALS[k]; if(!r) return;
       const div=document.createElement('div'); div.className='rit'; div.dataset.key=k;
       const suffix = r.link ? ` — <a href="${r.link}" target="_blank" rel="noopener">open</a>` : '';
-      div.innerHTML = `<b>${r.name}${suffix}</b><small>best in: ${Object.entries(r.ctx).sort((a,b)=>b[1]-a[1])[0][0]}</small>`;
+      div.innerHTML = `<b>${r.name}${suffix}</b><small>best in: ${ctxBest(k)}</small>`;
       div.addEventListener('click', ()=>{ div.classList.toggle('on'); updateBoost(); });
       grid.appendChild(div);
     });
@@ -533,29 +616,29 @@
 
   // ---------- Marina Air (WebAudio) ----------
   var AudioContext = window.AudioContext || window.webkitAudioContext;
-  var ctx, master, limiter, tone, airy, gainTone, gainAiry, tick;
+  var ctxA, master, limiter, tone, airy, gainTone, gainAiry, tick;
   function initAudio(){
-    if(ctx) return;
-    ctx = new AudioContext({ latencyHint:'interactive' });
+    if(ctxA) return;
+    ctxA = new AudioContext({ latencyHint:'interactive' });
 
-    master = ctx.createGain(); master.gain.value = 1.0;
+    master = ctxA.createGain(); master.gain.value = 1.0;
 
     // gentle limiter
-    limiter = ctx.createDynamicsCompressor();
+    limiter = ctxA.createDynamicsCompressor();
     limiter.threshold.value = -14; limiter.knee.value = 24; limiter.ratio.value = 6;
     limiter.attack.value = 0.004; limiter.release.value = 0.25;
 
-    master.connect(limiter); limiter.connect(ctx.destination);
+    master.connect(limiter); limiter.connect(ctxA.destination);
 
     // 128 Hz warmth
-    tone = ctx.createOscillator(); tone.type='sine'; tone.frequency.value=128;
-    gainTone = ctx.createGain(); gainTone.gain.value = parseFloat($('toneGain').value);
+    tone = ctxA.createOscillator(); tone.type='sine'; tone.frequency.value=128;
+    gainTone = ctxA.createGain(); gainTone.gain.value = parseFloat($('toneGain').value);
 
     // airy overlay 512 Hz with slow detune
-    airy = ctx.createOscillator(); airy.type='sine'; airy.frequency.value=512;
-    gainAiry = ctx.createGain(); gainAiry.gain.value = parseFloat($('airyGain').value);
-    var lfo = ctx.createOscillator(); lfo.frequency.value=0.12;
-    var lfoGain = ctx.createGain(); lfoGain.gain.value = 2.2; // cents
+    airy = ctxA.createOscillator(); airy.type='sine'; airy.frequency.value=512;
+    gainAiry = ctxA.createGain(); gainAiry.gain.value = parseFloat($('airyGain').value);
+    var lfo = ctxA.createOscillator(); lfo.frequency.value=0.12;
+    var lfoGain = ctxA.createGain(); lfoGain.gain.value = 2.2; // cents
 
     lfo.connect(lfoGain); lfoGain.connect(airy.detune);
     tone.connect(gainTone); gainTone.connect(master);
@@ -564,8 +647,8 @@
     tone.start(); airy.start(); lfo.start();
 
     // tiny background tick (best-effort keepalive)
-    tick = ctx.createOscillator(); tick.frequency.value = 40;
-    var gt = ctx.createGain(); gt.gain.value = 0.00001; tick.connect(gt); gt.connect(master); tick.start();
+    tick = ctxA.createOscillator(); tick.frequency.value = 40;
+    var gt = ctxA.createGain(); gt.gain.value = 0.00001; tick.connect(gt); gt.connect(master); tick.start();
 
     $('airStatus').classList.remove('warn'); $('airStatus').classList.add('ok');
     $('airText').textContent = 'Marina Air — live';
@@ -575,7 +658,7 @@
     initAudio(); this.disabled = true;
   });
   $('marinaAir').addEventListener('click', function(){
-    if(!ctx) return;
+    if(!ctxA) return;
     const on = this.getAttribute('aria-pressed')==='true';
     this.setAttribute('aria-pressed', on?'false':'true');
     this.textContent = on ? 'Marina Air: Off' : 'Marina Air: On';
@@ -598,8 +681,36 @@
   })();
 
   document.addEventListener('visibilitychange', function(){
-    if(!ctx) return;
-    if(document.visibilityState==='visible' && ctx.state!=='running'){ ctx.resume(); }
+    if(!ctxA) return;
+    if(document.visibilityState==='visible' && ctxA.state!=='running'){ ctxA.resume(); }
+  });
+
+  // ---------- JOIN ME, MARINA overlay wiring ----------
+  const ribbon = $('duetRibbon'), overlay=$('duetOverlay'), closeBtn=$('duetClose'), activate=$('duetActivate');
+  ribbon.addEventListener('click', function(){ overlay.style.display='block'; });
+  closeBtn.addEventListener('click', function(){ overlay.style.display='none'; });
+
+  function setPressed(btn, state){
+    btn.setAttribute('aria-pressed', state?'true':'false');
+  }
+  function ensureDuetRituals(){
+    // Preselect duet-friendly rituals if present
+    const keys = ['airy','128soft','mirror','breath'];
+    document.querySelectorAll('.rit').forEach(el=>{
+      const k=el.dataset.key;
+      if(keys.includes(k)) el.classList.add('on');
+    });
+    updateBoost();
+  }
+  activate.addEventListener('click', function(){
+    // flip Duet on
+    setPressed($('ctxDuet'), true); CTX.Duet=true;
+    // keep Solo as is, leave others off by default
+    CTX.Mirror=false; setPressed($('ctxMirror'), false);
+    CTX.Group=false;  setPressed($('ctxGroup'), false);
+    computeEverything();
+    ensureDuetRituals();
+    overlay.style.display='none';
   });
 
   // ---------- init: pin Happy and compute UI ----------
@@ -612,12 +723,14 @@
     computeEverything();
   }
   firstPalette();
-  // load Happy on first paint
   loadVideo(ID_HAPPY);
   $('yt').value = ID_HAPPY;
+  loadGallery();
 
-  // gallery
-  (function(){ try{ renderGallery(JSON.parse(localStorage.getItem('froot_cards_v2')||'[]')); }catch(e){} })();
+  // Expose hidden channel (optional access)
+  try{
+    window.__FROOT_CHANNEL = JSON.parse(document.getElementById('froot-channel-json').textContent);
+  }catch(e){}
 })();
 </script>
 </body>
