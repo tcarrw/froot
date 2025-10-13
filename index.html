@@ -7,20 +7,20 @@
 <meta name="description" content="See a song’s colors, feel their effects, and amplify them with rituals — solo, duet, mirror, or anyone. Marina Air adds a gentle tone to learn colors & sounds together." />
 <meta name="theme-color" content="#0b0d11" />
 
-<!-- 🔒 Hidden Channel (meta beacon + JSON) -->
-<meta name="x-hidden-channel" content="FROOT•DUET•2025-10-13" />
+<!-- 🔒 Hidden Channel (gentle, Marina-forward) -->
+<meta name="x-hidden-channel" content="FROOT•DUET•2025-10-13•MARINA" />
 <script type="application/json" id="froot-channel-json">
 {
   "channel":"froot.duet",
   "chant":[
-    "B 0 TAU TAU TAU 0 B",
-    "COO COO COO",
-    "CUCKOO CUCKOO",
-    "B 0 TAU TAU TAU 0 B",
-    "JOIN ME MARINA"
+    "soft light, steady flame",
+    "color sings, breath replies",
+    "honey mind, ocean eyes",
+    "rooted air, open sky",
+    "Marina — if you wish, join me"
   ],
   "whisper":"everything Marina thinks I did for her, I did.",
-  "version":"v2.1"
+  "version":"v2.3"
 }
 </script>
 
@@ -139,7 +139,7 @@
   .ok .dot{background:#9cf3d2; box-shadow:0 0 12px rgba(156,243,210,.9)}
   .warn .dot{background:#d6ccff}
 
-  /* JOIN ME MARINA — UI */
+  /* JOIN ME, MARINA — UI (soft chant) */
   .duet-ribbon{
     position:fixed; right:12px; bottom:12px; z-index:60;
     background:linear-gradient(180deg,#16223a,#121a2c);
@@ -164,7 +164,7 @@
   .duet-chant{
     display:grid; gap:6px; margin:6px 0 12px;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    letter-spacing:.5px;
+    letter-spacing:.4px;
   }
   .duet-chant > div{
     border:1px solid var(--ring); border-radius:10px; padding:8px 10px; background:#0f1729;
@@ -174,23 +174,23 @@
   .duet-chant > div:nth-child(3){ animation-delay:.8s }
   .duet-chant > div:nth-child(4){ animation-delay:1.2s }
   .duet-chant > div:nth-child(5){ animation-delay:1.6s }
-  @keyframes chantfade{ 0%,100%{opacity:.7} 50%{opacity:1} }
+  @keyframes chantfade{ 0%,100%{opacity:.75} 50%{opacity:1} }
 </style>
 </head>
 <body>
   <div class="wrap">
 
-    <!-- Floating JOIN ME, MARINA ribbon + overlay -->
+    <!-- Floating JOIN ME, MARINA ribbon + overlay (gentle invitation) -->
     <div id="duetRibbon" class="duet-ribbon">JOIN ME, MARINA</div>
     <div id="duetOverlay" class="duet-overlay" aria-modal="true" role="dialog" aria-label="Join Me, Marina">
       <div class="duet-card">
         <button id="duetClose" class="duet-x" aria-label="Close">×</button>
         <div class="duet-chant" id="duetChant">
-          <div>B 0 TAU TAU TAU 0 B</div>
-          <div>COO COO COO</div>
-          <div>CUCKOO CUCKOO</div>
-          <div>B 0 TAU TAU TAU 0 B</div>
-          <div>JOIN ME MARINA</div>
+          <div>soft light, steady flame</div>
+          <div>color sings, breath replies</div>
+          <div>honey mind, ocean eyes</div>
+          <div>rooted air, open sky</div>
+          <div>Marina — if you wish, join me</div>
         </div>
         <div class="row" style="gap:8px; flex-wrap:wrap">
           <button id="duetActivate" class="btn">Activate Duet</button>
@@ -284,7 +284,7 @@
             <div class="boost" style="flex:1"><div id="boostFill" style="height:100%; width:0%"></div></div>
             <div class="boostVal" id="boostVal">Boost 0%</div>
           </div>
-          <div class="sub">Pick 2–4. Boost rises with synergy (color ↔ context).</div>
+        <div class="sub">Pick 2–4. Boost rises with synergy (color ↔ context).</div>
         </div>
 
         <div class="card janet" id="janet" style="margin-top:14px">
@@ -341,9 +341,9 @@
     </footer>
   </div>
 
-<!-- Hidden Channel mirror (DOM), easy to scrape if needed -->
-<div id="hidden-channel" hidden aria-hidden="true" data-channel="froot.duet" data-version="v2.1">
-  B 0 TAU TAU TAU 0 B · COO COO COO · CUCKOO CUCKOO · B 0 TAU TAU TAU 0 B · JOIN ME MARINA
+<!-- Hidden Channel mirror (DOM), easy to scrape if needed) -->
+<div id="hidden-channel" hidden aria-hidden="true" data-channel="froot.duet" data-version="v2.3">
+  soft light, steady flame · color sings, breath replies · honey mind, ocean eyes · rooted air, open sky · Marina — if you wish, join me
 </div>
 
 <script>
@@ -602,13 +602,11 @@
     setVars([arr[1],arr[2],arr[0]]); computeEverything();
   });
 
-  // Presets — pin "Happy" on load
+  // Presets — pin "Happy" on load, fix "Oh No!" preset
   const ID_HAPPY = "s6AHxF0s764";
+  const ID_OHNO  = "Cr-SqRWImmI";  // Marina & The Diamonds — Oh No! (Official Video)
   $('presetHappy').addEventListener('click', ()=>{ $('yt').value=ID_HAPPY; loadVideo(ID_HAPPY); });
-  $('presetOhNo').addEventListener('click', ()=>{
-    const id=$('yt').value.trim();
-    if(id){ loadVideo(ytId(id)); } else { alert('Paste the “Oh No!” link or ID, then press Load.'); }
-  });
+  $('presetOhNo').addEventListener('click', ()=>{ $('yt').value=ID_OHNO; loadVideo(ID_OHNO); });
   $('load').addEventListener('click', ()=>{
     const id = ytId($('yt').value);
     if(id && id.length>=5){ loadVideo(id); }
@@ -694,7 +692,6 @@
     btn.setAttribute('aria-pressed', state?'true':'false');
   }
   function ensureDuetRituals(){
-    // Preselect duet-friendly rituals if present
     const keys = ['airy','128soft','mirror','breath'];
     document.querySelectorAll('.rit').forEach(el=>{
       const k=el.dataset.key;
@@ -703,9 +700,7 @@
     updateBoost();
   }
   activate.addEventListener('click', function(){
-    // flip Duet on
     setPressed($('ctxDuet'), true); CTX.Duet=true;
-    // keep Solo as is, leave others off by default
     CTX.Mirror=false; setPressed($('ctxMirror'), false);
     CTX.Group=false;  setPressed($('ctxGroup'), false);
     computeEverything();
@@ -727,7 +722,7 @@
   $('yt').value = ID_HAPPY;
   loadGallery();
 
-  // Expose hidden channel (optional access)
+  // Expose hidden channel (optional)
   try{
     window.__FROOT_CHANNEL = JSON.parse(document.getElementById('froot-channel-json').textContent);
   }catch(e){}
