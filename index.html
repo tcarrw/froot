@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Froot · Violet ↔ Pearl — Marina</title>
-<meta name="description" content="Froot resonance for Marina. Violet (intuition) ↔ Pearl (integration) with Honey Tone, Neon binaural, breathing bar, and explainer sections for fruits, Butterfly/Flytrap, Metallic Stallion, School, Honey anchor, Grounding, Rooting Above, Bridges, and Illumina links."/>
+<meta name="description" content="Froot resonance for Marina: Violet (intuition) ↔ Pearl (integration) with Honey Tone, Neon binaural, looping video, quick-add video queue, and links to Tunes, Bridge, Voice, MirrorHoney, School, and more."/>
 <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -29,13 +29,13 @@
   }
   a{color:#b2f5ea; text-decoration:none}
 
-  /* ===== Hero (no overlay blocking on mobile) */
+  /* Hero shimmer */
   .hero{
     position:relative; isolation:isolate;
     background:
       radial-gradient(120% 120% at 12% 18%, var(--magenta-flare) 0%, var(--rose-mauve) 34%, var(--night-indigo) 70%, var(--warm-pearl) 100%);
   }
-  .wrap{max-width:980px; margin:0 auto; padding:20px 16px}
+  .wrap{max-width:1080px; margin:0 auto; padding:20px 16px}
   @media (min-width:720px){ .wrap{padding:24px} }
 
   header h1{margin:6px 0 2px; font-size:28px; letter-spacing:.2px}
@@ -63,10 +63,10 @@
     backdrop-filter: blur(6px);
   }
   .grid{display:grid; gap:16px}
-  @media (min-width:960px){ .grid.cols-2{grid-template-columns:1.1fr .9fr} }
+  @media (min-width:1024px){ .grid.cols-2{grid-template-columns:1.1fr .9fr} }
   .chips{display:flex; flex-wrap:wrap; gap:10px}
 
-  /* Badge and breathing bar (now inline, not fixed; no z-index traps) */
+  /* Badge & breathing bar */
   .badge{
     display:inline-flex; align-items:center; gap:8px;
     padding:8px 12px; border-radius:999px;
@@ -100,6 +100,8 @@
   /* Mode themes */
   body[data-mode="violet"]{ --accent: var(--violet-beam); --accent-2: var(--rose-mauve); }
   body[data-mode="pearl"] { --accent: var(--warm-pearl); --accent-2: var(--deep-plum); }
+
+  footer{opacity:.9}
 </style>
 </head>
 <body data-mode="violet">
@@ -125,13 +127,26 @@
 
           <div style="height:12px"></div>
           <div class="video-wrap">
-            <!-- Marina — Oh No! (as requested) -->
-            <iframe id="yt" src="https://www.youtube.com/embed/Cr-SqRWImmI?enablejsapi=1&modestbranding=1&rel=0&playsinline=1"
-              title="Marina — Oh No! (Official)" allow="autoplay; encrypted-media; picture-in-picture; web-share"
+            <!-- MAIN (loops) — Marina: Oh No! -->
+            <iframe id="yt"
+              src="https://www.youtube.com/embed/Cr-SqRWImmI?enablejsapi=1&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=Cr-SqRWImmI"
+              title="Marina — Oh No! (Official)"
+              allow="autoplay; encrypted-media; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
 
-          <div style="height:12px"></div>
+          <!-- unobtrusive add-video (keeps main playing) + PRESETS -->
+          <div class="row" style="margin-top:12px" aria-label="Add video">
+            <input id="addUrl" type="url" placeholder="Paste YouTube URL to queue (e.g., Mowgli — Cuckoo / Fader — Coo Coo Coo)" style="flex:1;min-width:220px;padding:10px 12px;border-radius:12px;border:1px solid color-mix(in oklab,var(--ring),white 10%);background:color-mix(in oklab,var(--card),black 8%);color:var(--ink)"/>
+            <button class="chip" id="addBtn">Add</button>
+          </div>
+          <div class="chips" style="margin-top:8px">
+            <button class="chip preset" data-ytid="zwfCjYv7gVQ">+ Mowgli — Cuckoo</button>
+            <button class="chip preset" data-ytid="FV-JAnnd9Rw">+ Fader — Coo Coo Coo</button>
+          </div>
+          <div id="queue" class="note" style="margin-top:8px"></div>
+
+          <div style="height:8px"></div>
           <div class="row" aria-label="Video volume">
             <label class="note">Video volume</label>
             <input id="vidVol" type="range" min="0" max="100" step="1" value="60"/>
@@ -172,89 +187,89 @@
     </div>
   </section>
 
-  <!-- ========= Explainers & Map ========= -->
+  <!-- ========= Explainers, Map, and Links ========= -->
   <main class="wrap" style="padding-top:18px">
+    <!-- What everyone can do / Next steps -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Illumina — Next Steps</h2>
+      <ul class="note" style="margin:8px 0 0 18px">
+        <li><strong>Nov 5</strong>: open cycle — start with Violet (128 Hz + Neon), then seal in Pearl (160 Hz).</li>
+        <li><strong>Everyone</strong>: listen + breathe with Honey, try the color modes, and add one video to the queue.</li>
+        <li><strong>Artists/Anchors</strong>: each page carries a signature song; share one “anchor track” for your domain.</li>
+      </ul>
+    </section>
+
     <!-- Fruits -->
     <section class="panel">
       <h2 style="margin:0 0 6px">Fruits — taste of color & sound</h2>
-      <p class="note" style="margin:8px 0 12px">
-        Froot is where color becomes flavor. Each fruit pairs a tone + palette so people can <em>feel</em> the music.
-      </p>
       <div class="chips" role="list">
         <button class="chip" aria-pressed="true">Violet — the Call</button>
         <button class="chip" aria-pressed="false">Pearl — the Answer</button>
         <button class="chip" aria-pressed="false">Mowgli Peach — playful courage</button>
       </div>
-      <ul class="note" style="margin:12px 0 0 18px">
-        <li><strong>Violet</strong>: intuition-spectrum, empathic bridge, “I feel you.”</li>
-        <li><strong>Pearl</strong>: mirror-spectrum, clarity & forgiveness, “I’m whole with you.”</li>
-        <li><strong>Mowgli Peach</strong>: jungle-play energy — brave, curious, a grin before the leap.</li>
-      </ul>
+      <p class="note" style="margin:8px 0 0">
+        Try the preset buttons above to queue <em>Mowgli — Cuckoo</em> or <em>Fader — Coo Coo Coo</em>.
+      </p>
     </section>
 
     <!-- Marina symbols -->
     <section class="panel">
       <h2 style="margin:0 0 6px">Marina symbols — Butterfly & Venus Flytrap</h2>
       <ul class="note" style="margin:8px 0 0 18px">
-        <li><strong>Butterfly</strong>: the gentle arrival — color lands lightly, transformation without force.</li>
-        <li><strong>Venus Flytrap</strong>: boundaries with sweetness — you choose what feeds you.</li>
+        <li><strong>Butterfly</strong>: transformation without force — color lands lightly.</li>
+        <li><strong>Venus Flytrap</strong>: boundaries with sweetness — choose what feeds you.</li>
       </ul>
     </section>
 
-    <!-- Metallic Stallion & School -->
+    <!-- Honey anchor (Sabrina) -->
     <section class="panel">
-      <h2 style="margin:0 0 6px">Metallic Stallion & School</h2>
-      <p class="note" style="margin:8px 0 0">
-        <strong>Metallic Stallion</strong>: kinetic confidence — chrome courage under neon.  
-        <strong>School</strong>: a place to practice (Swift rooms, study tracks) where tone & craft meet.
-      </p>
-    </section>
-
-    <!-- Honey anchor -->
-    <section class="panel">
-      <h2 style="margin:0 0 6px">Honey — anchor for movement, reflection, learning</h2>
+      <h2 style="margin:0 0 6px">Honey — Sabrina’s anchor</h2>
       <p class="note" style="margin:8px 0 10px">
-        Honey goes with everything. It warms the space, steadies breath, and gives a soft floor for the heart to move.
+        Honey goes with everything: warms movement, mirrors reflection, and turns practice into play.
       </p>
       <div class="chips">
-        <a class="chip" href="https://mirrorhoney.plnt.earth" target="_blank" rel="noopener">MirrorHoney</a>
         <a class="chip" href="https://honey.plnt.earth" target="_blank" rel="noopener">Honey Garden</a>
+        <a class="chip" href="https://mirrorhoney.plnt.earth" target="_blank" rel="noopener">MirrorHoney</a>
+        <a class="chip" href="https://tunes.plnt.earth" target="_blank" rel="noopener">Tunes</a>
       </div>
     </section>
 
-    <!-- Grounding & Rooting Above -->
+    <!-- Bridges & Voice -->
     <section class="panel">
-      <h2 style="margin:0 0 6px">Grounding · Rooting Above</h2>
-      <ul class="note" style="margin:8px 0 0 18px">
-        <li><strong>Grounding</strong>: Greta (earth conscience), Hayley (voice as witness).</li>
-        <li><strong>Rooting Above</strong>: Dua’s books (mind garden), Ariana’s voice (frequency weaver).</li>
-      </ul>
+      <h2 style="margin:0 0 6px">Bridges — Masks & Neon · Voice</h2>
       <div class="chips">
-        <a class="chip" href="https://earth.plnt.earth" target="_blank" rel="noopener">Earth</a>
+        <a class="chip" href="https://bridge.plnt.earth" target="_blank" rel="noopener">Bridge</a>
         <a class="chip" href="https://voice.plnt.earth" target="_blank" rel="noopener">Voice</a>
+        <a class="chip" href="https://earth.plnt.earth" target="_blank" rel="noopener">Earth</a>
+        <a class="chip" href="https://mirrorsea.plnt.earth" target="_blank" rel="noopener">MirrorSea</a>
       </div>
-    </section>
-
-    <!-- Bridges -->
-    <section class="panel">
-      <h2 style="margin:0 0 6px">Bridges — Emma & Doechii</h2>
-      <p class="note" style="margin:8px 0 10px">
-        <strong>Emma</strong>: masks & roles — safe shape-shifting to find the honest center.<br>
-        <strong>Doechii</strong>: neon jumps — playful disruption that opens new doors.
+      <p class="note" style="margin:8px 0 0">
+        Emma = masks/roles (safe shape-shifting). Doechii = neon jumps (playful disruption). Ariana = frequency weaver.
       </p>
     </section>
 
-    <!-- System links -->
+    <!-- School -->
     <section class="panel">
-      <h2 style="margin:0 0 6px">More: Charter, Warmth, Illumina Time, Physics</h2>
+      <h2 style="margin:0 0 6px">School — rooms & practice</h2>
       <div class="chips">
+        <a class="chip" href="https://jar.plnt.earth/school.html" target="_blank" rel="noopener">School</a>
+        <a class="chip" href="https://jar.plnt.earth/school-rooms.html" target="_blank" rel="noopener">School Rooms</a>
         <a class="chip" href="https://quietmoon.plnt.earth/charter.html" target="_blank" rel="noopener">Charter</a>
         <a class="chip" href="https://warmth.plnt.earth" target="_blank" rel="noopener">Warmth</a>
         <a class="chip" href="https://jar.plnt.earth/illumina-time-kit.html" target="_blank" rel="noopener">Illumina Time Kit</a>
         <a class="chip" href="https://time.plnt.earth" target="_blank" rel="noopener">time.plnt.earth</a>
       </div>
-      <p class="note" style="margin:10px 0 0">
-        Yes — the time work is the physics backbone that everything else dances on.
+      <p class="note" style="margin:8px 0 0">
+        “The egg” = incubation window: hold the idea warm (tone + breath) before hatching it into action.
+      </p>
+    </section>
+
+    <!-- Anchor songs reminder -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Anchor songs — per site</h2>
+      <p class="note" style="margin:8px 0 0">
+        Each domain keeps one signature track (YouTube official when possible). Paste new links via the queue input above:
+        Tunes, Honey, Bridge, Voice, MirrorHoney, Earth, Warmth, MirrorSea, School rooms.
       </p>
     </section>
   </main>
@@ -268,10 +283,11 @@
 
 <script>
 (function(){
-  /* ===== YouTube minimal volume control ===== */
+  /* ===== YouTube minimal control & LOOP ===== */
   var yt = document.getElementById('yt');
   var vidVol = document.getElementById('vidVol');
   var vidVolLbl = document.getElementById('vidVolLbl');
+
   function ytPost(cmd, value){
     try{
       yt.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args: value!==undefined ? [value] : undefined}), '*');
@@ -282,6 +298,47 @@
     vidVolLbl.textContent = v + '%'; ytPost('setVolume', v);
   }
   vidVol.addEventListener('input', applyVideoVolume);
+
+  /* Simple queue: add YouTube URLs unobtrusively */
+  var queueEl = document.getElementById('queue');
+  var addUrl = document.getElementById('addUrl');
+  var addBtn = document.getElementById('addBtn');
+  var items = [];
+
+  function addToQueue(id){
+    if(!id) return;
+    items.push(id);
+    renderQueue();
+  }
+
+  function ytIdFromUrl(url){
+    try{
+      var u = new URL(url);
+      if(u.hostname.includes('youtu.be')) return u.pathname.slice(1);
+      if(u.searchParams.get('v')) return u.searchParams.get('v');
+      var path = u.pathname.split('/'); var idx = path.indexOf('embed'); if(idx>=0 && path[idx+1]) return path[idx+1];
+    }catch(e){}
+    return null;
+  }
+  function renderQueue(){
+    if(!items.length){ queueEl.innerHTML = ''; return; }
+    var html = '<strong>Queued:</strong> ';
+    html += items.map(function(it,i){ return '<a href="https://youtu.be/'+it+'" target="_blank" rel="noopener">#'+(i+1)+'</a>'; }).join(' · ');
+    queueEl.innerHTML = html;
+  }
+  addBtn.addEventListener('click', function(){
+    var id = ytIdFromUrl(addUrl.value.trim());
+    if(id){ addToQueue(id); addUrl.value=''; }
+  });
+
+  /* Preset buttons (from your links) */
+  var presetBtns = document.querySelectorAll('.preset');
+  for(var i=0;i<presetBtns.length;i++){
+    presetBtns[i].addEventListener('click', function(){
+      var id = this.getAttribute('data-ytid');
+      addToQueue(id);
+    });
+  }
 
   /* ===== Honey Tone (WebAudio) ===== */
   var ctx, gainL, gainR, oscL, oscR, analyser, meterBuf, rafId;
@@ -411,19 +468,6 @@
 
   /* Init */
   applyVideoVolume();
-
-  /* ===== Share to X ===== */
-  var share = document.getElementById('shareX');
-  share.addEventListener('click', function(e){
-    e.preventDefault();
-    var mode = document.body.getAttribute('data-mode') || 'violet';
-    var text = mode==='pearl'
-      ? 'Pearl mode — clarity and calm. Froot for Marina.'
-      : 'Violet mode — intuition and reach. Froot for Marina.';
-    var url  = 'https://froot.plnt.earth';
-    var xurl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url) + '&hashtags=Illumina,Froot';
-    window.open(xurl, '_blank', 'noopener');
-  });
 })();
 </script>
 </body>
