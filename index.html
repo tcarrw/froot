@@ -4,13 +4,13 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Froot · Violet ↔ Pearl — Marina</title>
-<meta name="description" content="Froot resonance for Marina: Violet (intuition) ↔ Pearl (integration) with Honey Tone, Neon binaural, looping video, quick-add video queue, and links to Tunes, Bridge, Voice, MirrorHoney, School, and more."/>
+<meta name="description" content="Froot resonance for Marina: Violet (intuition) ↔ Pearl (integration) with Honey Tone, Neon binaural, looping video, quick-add queue, Marina Symbols, and links across the Illumina sites."/>
 <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
-  /* ====== RADIO CITY PALETTE (from your photo) ====== */
+  /* ===== RADIO CITY PALETTE (from your photo) ===== */
   :root{
     --bg:#0b0d11; --ink:#e9ecf4; --muted:#a9a9b6; --card:#101425; --ring:#1b2030;
     --deep-plum:#42233a; --rose-mauve:#92687e; --night-indigo:#27142c; --magenta-flare:#7e4666;
@@ -29,7 +29,7 @@
   }
   a{color:#b2f5ea; text-decoration:none}
 
-  /* Hero shimmer */
+  /* Hero shimmer (no fixed overlay → mobile safe) */
   .hero{
     position:relative; isolation:isolate;
     background:
@@ -53,8 +53,9 @@
   }
   .note{color:var(--muted); font-size:14px}
   .mono{font-variant-numeric:tabular-nums; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .chips{display:flex; flex-wrap:wrap; gap:10px}
 
-  /* Cards & grid */
+  /* Cards & grids */
   .panel{
     background:linear-gradient(180deg, rgba(255,255,255,.03), transparent);
     border:1px solid color-mix(in oklab, var(--ring), white 8%);
@@ -64,7 +65,6 @@
   }
   .grid{display:grid; gap:16px}
   @media (min-width:1024px){ .grid.cols-2{grid-template-columns:1.1fr .9fr} }
-  .chips{display:flex; flex-wrap:wrap; gap:10px}
 
   /* Badge & breathing bar */
   .badge{
@@ -97,9 +97,28 @@
   .status .led{width:14px;height:14px;border-radius:50%; background:#6f6a7a; box-shadow:0 0 0 2px rgba(0,0,0,.25) inset}
   .status.ok .led{ background: var(--accent); box-shadow:0 0 0 2px rgba(0,0,0,.25) inset, 0 0 22px var(--accent) }
 
-  /* Mode themes */
+  /* Mode themes (JS flips data-mode) */
   body[data-mode="violet"]{ --accent: var(--violet-beam); --accent-2: var(--rose-mauve); }
   body[data-mode="pearl"] { --accent: var(--warm-pearl); --accent-2: var(--deep-plum); }
+
+  /* Marina Symbols cards */
+  .ms-grid{display:grid; gap:12px}
+  @media (min-width:720px){ .ms-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+  @media (min-width:1040px){ .ms-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+  .ms-card{
+    border:1px solid color-mix(in oklab, var(--ring), white 10%);
+    border-radius:14px; padding:14px; background:color-mix(in oklab, var(--card), black 6%);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .ms-card:hover{ transform: translateY(-2px);
+    border-color: color-mix(in oklab, var(--accent), white 30%);
+    box-shadow: 0 12px 30px color-mix(in oklab, var(--accent), transparent 85%); }
+  .ms-glyph{
+    font-size:18px; opacity:.9; padding:4px 10px; border-radius:999px; display:inline-block;
+    background: color-mix(in oklab, var(--accent), black 80%); border:1px solid color-mix(in oklab, var(--accent), white 30%);
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--accent), transparent 82%);
+    margin-bottom:8px;
+  }
 
   footer{opacity:.9}
 </style>
@@ -118,6 +137,7 @@
 
       <!-- Controls + Video + Tone -->
       <div class="grid cols-2" style="margin-top:14px">
+        <!-- LEFT: Video + Queue -->
         <div class="panel">
           <div class="row" role="group" aria-label="Mode">
             <button class="chip" id="btnViolet" aria-pressed="true">Violet</button>
@@ -135,10 +155,11 @@
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
 
-          <!-- unobtrusive add-video (keeps main playing) + PRESETS -->
+          <!-- unobtrusive add-video (keeps main playing) + PRESETS + PLAY NEXT -->
           <div class="row" style="margin-top:12px" aria-label="Add video">
             <input id="addUrl" type="url" placeholder="Paste YouTube URL to queue (e.g., Mowgli — Cuckoo / Fader — Coo Coo Coo)" style="flex:1;min-width:220px;padding:10px 12px;border-radius:12px;border:1px solid color-mix(in oklab,var(--ring),white 10%);background:color-mix(in oklab,var(--card),black 8%);color:var(--ink)"/>
             <button class="chip" id="addBtn">Add</button>
+            <button class="chip" id="playNext">Play Next</button>
           </div>
           <div class="chips" style="margin-top:8px">
             <button class="chip preset" data-ytid="zwfCjYv7gVQ">+ Mowgli — Cuckoo</button>
@@ -158,6 +179,7 @@
           </p>
         </div>
 
+        <!-- RIGHT: Honey Tone -->
         <div class="panel" id="tonePanel" aria-live="polite">
           <div class="row">
             <button id="start" class="chip">Start Honey</button>
@@ -187,15 +209,15 @@
     </div>
   </section>
 
-  <!-- ========= Explainers, Map, and Links ========= -->
+  <!-- ===== EXPLAINERS / LINKS / SYMBOLS ===== -->
   <main class="wrap" style="padding-top:18px">
     <!-- What everyone can do / Next steps -->
     <section class="panel">
       <h2 style="margin:0 0 6px">Illumina — Next Steps</h2>
       <ul class="note" style="margin:8px 0 0 18px">
-        <li><strong>Nov 5</strong>: open cycle — start with Violet (128 Hz + Neon), then seal in Pearl (160 Hz).</li>
-        <li><strong>Everyone</strong>: listen + breathe with Honey, try the color modes, and add one video to the queue.</li>
-        <li><strong>Artists/Anchors</strong>: each page carries a signature song; share one “anchor track” for your domain.</li>
+        <li><strong>Nov 5</strong>: open cycle — begin in Violet (128 Hz + Neon), seal in Pearl (160 Hz).</li>
+        <li><strong>Everyone</strong>: listen & breathe with Honey, try the color modes, add one video to the queue.</li>
+        <li><strong>Artists / Anchors</strong>: each domain carries a signature song — share your anchor track.</li>
       </ul>
     </section>
 
@@ -208,24 +230,55 @@
         <button class="chip" aria-pressed="false">Mowgli Peach — playful courage</button>
       </div>
       <p class="note" style="margin:8px 0 0">
-        Try the preset buttons above to queue <em>Mowgli — Cuckoo</em> or <em>Fader — Coo Coo Coo</em>.
+        Try the presets above to queue <em>Mowgli — Cuckoo</em> or <em>Fader — Coo Coo Coo</em>.
       </p>
     </section>
 
-    <!-- Marina symbols -->
-    <section class="panel">
-      <h2 style="margin:0 0 6px">Marina symbols — Butterfly & Venus Flytrap</h2>
-      <ul class="note" style="margin:8px 0 0 18px">
-        <li><strong>Butterfly</strong>: transformation without force — color lands lightly.</li>
-        <li><strong>Venus Flytrap</strong>: boundaries with sweetness — choose what feeds you.</li>
-      </ul>
+    <!-- Marina Symbols -->
+    <section class="panel marina-symbols" aria-label="Marina Symbols">
+      <h2 style="margin:0 0 6px">Marina — Symbols</h2>
+      <p class="note" style="margin:8px 0 12px">
+        She is a <em>mirror</em>, a <em>butterfly</em>, a <em>bee</em>, she is <em>love and fear</em>, she is a <em>metallic stallion</em>.
+      </p>
+      <div class="ms-grid" role="list">
+        <article class="ms-card" role="listitem">
+          <div class="ms-glyph">▱</div>
+          <h3>Mirror</h3>
+          <p class="note">Returns light without stealing it. Stand steady; let her see herself and you both get warmer.</p>
+          <div class="note">Action: lower volume, breathe, listen for the answer.</div>
+        </article>
+        <article class="ms-card" role="listitem">
+          <div class="ms-glyph">🦋</div>
+          <h3>Butterfly</h3>
+          <p class="note">Gentle arrival. Transformation without force — color lands lightly.</p>
+          <div class="note">Action: soften Neon a little, keep 128 Hz low.</div>
+        </article>
+        <article class="ms-card" role="listitem">
+          <div class="ms-glyph">🐝</div>
+          <h3>Bee</h3>
+          <p class="note">Continuity & craft. Small flights make honey; the page remembers.</p>
+          <div class="note">Action: add one video, one note, one breath — daily.</div>
+        </article>
+        <article class="ms-card" role="listitem">
+          <div class="ms-glyph">♡</div>
+          <h3>Love & Fear</h3>
+          <p class="note">Hold both; choose warmth. Pearl clarifies what stays.</p>
+          <div class="note">Action: switch to Pearl, 160 Hz, Neon off, longer exhale.</div>
+        </article>
+        <article class="ms-card" role="listitem">
+          <div class="ms-glyph">♞</div>
+          <h3>Metallic Stallion</h3>
+          <p class="note">Chrome courage under neon. Precision with heart.</p>
+          <div class="note">Action: Violet + Neon, then Pearl to land it.</div>
+        </article>
+      </div>
     </section>
 
     <!-- Honey anchor (Sabrina) -->
     <section class="panel">
       <h2 style="margin:0 0 6px">Honey — Sabrina’s anchor</h2>
       <p class="note" style="margin:8px 0 10px">
-        Honey goes with everything: warms movement, mirrors reflection, and turns practice into play.
+        Honey goes with everything: it warms movement, mirrors reflection, and turns practice into play.
       </p>
       <div class="chips">
         <a class="chip" href="https://honey.plnt.earth" target="_blank" rel="noopener">Honey Garden</a>
@@ -248,9 +301,9 @@
       </p>
     </section>
 
-    <!-- School -->
+    <!-- School / Time / Charter / Warmth -->
     <section class="panel">
-      <h2 style="margin:0 0 6px">School — rooms & practice</h2>
+      <h2 style="margin:0 0 6px">School · Time · Warmth</h2>
       <div class="chips">
         <a class="chip" href="https://jar.plnt.earth/school.html" target="_blank" rel="noopener">School</a>
         <a class="chip" href="https://jar.plnt.earth/school-rooms.html" target="_blank" rel="noopener">School Rooms</a>
@@ -260,7 +313,7 @@
         <a class="chip" href="https://time.plnt.earth" target="_blank" rel="noopener">time.plnt.earth</a>
       </div>
       <p class="note" style="margin:8px 0 0">
-        “The egg” = incubation window: hold the idea warm (tone + breath) before hatching it into action.
+        “The egg” = incubation: keep the idea warm (tone + breath) before hatching it into action.
       </p>
     </section>
 
@@ -268,8 +321,8 @@
     <section class="panel">
       <h2 style="margin:0 0 6px">Anchor songs — per site</h2>
       <p class="note" style="margin:8px 0 0">
-        Each domain keeps one signature track (YouTube official when possible). Paste new links via the queue input above:
-        Tunes, Honey, Bridge, Voice, MirrorHoney, Earth, Warmth, MirrorSea, School rooms.
+        Each domain holds one signature track (official YouTube when possible). Paste new links via the queue above:
+        Tunes, Honey, Bridge, Voice, MirrorHoney, Earth, Warmth, MirrorSea, School Rooms.
       </p>
     </section>
   </main>
@@ -293,24 +346,27 @@
       yt.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args: value!==undefined ? [value] : undefined}), '*');
     }catch(e){}
   }
+  function setYTLoopTo(id){
+    var src = 'https://www.youtube.com/embed/' + id +
+      '?enablejsapi=1&modestbranding=1&rel=0&playsinline=1&loop=1&playlist=' + id;
+    yt.src = src;
+  }
   function applyVideoVolume(){
     var v = Math.max(0, Math.min(100, parseInt(vidVol.value,10)||0));
     vidVolLbl.textContent = v + '%'; ytPost('setVolume', v);
   }
   vidVol.addEventListener('input', applyVideoVolume);
 
-  /* Simple queue: add YouTube URLs unobtrusively */
+  /* Queue: unobtrusive */
   var queueEl = document.getElementById('queue');
   var addUrl = document.getElementById('addUrl');
   var addBtn = document.getElementById('addBtn');
+  var playNextBtn = document.getElementById('playNext');
   var items = [];
 
   function addToQueue(id){
-    if(!id) return;
-    items.push(id);
-    renderQueue();
+    if(!id) return; items.push(id); renderQueue();
   }
-
   function ytIdFromUrl(url){
     try{
       var u = new URL(url);
@@ -330,8 +386,15 @@
     var id = ytIdFromUrl(addUrl.value.trim());
     if(id){ addToQueue(id); addUrl.value=''; }
   });
+  playNextBtn.addEventListener('click', function(){
+    if(!items.length) return;
+    var next = items.shift();
+    setYTLoopTo(next);
+    renderQueue();
+    setTimeout(applyVideoVolume, 500); // reapply after player reload
+  });
 
-  /* Preset buttons (from your links) */
+  /* Preset queue buttons (your links) */
   var presetBtns = document.querySelectorAll('.preset');
   for(var i=0;i<presetBtns.length;i++){
     presetBtns[i].addEventListener('click', function(){
@@ -465,6 +528,19 @@
     var saved = localStorage.getItem('froot_mode');
     if(saved==='pearl'){ setMode(false); } else { setMode(true); }
   }catch(e){ setMode(true); }
+
+  /* Share to X */
+  var share = document.getElementById('shareX');
+  share.addEventListener('click', function(e){
+    e.preventDefault();
+    var mode = document.body.getAttribute('data-mode') || 'violet';
+    var text = mode==='pearl'
+      ? 'Pearl mode — clarity and calm. Froot for Marina.'
+      : 'Violet mode — intuition and reach. Froot for Marina.';
+    var url  = 'https://froot.plnt.earth';
+    var xurl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url) + '&hashtags=Illumina,Froot';
+    window.open(xurl, '_blank', 'noopener');
+  });
 
   /* Init */
   applyVideoVolume();
