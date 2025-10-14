@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Froot · Violet ↔ Pearl — Marina</title>
-<meta name="description" content="Froot resonance for Marina. Violet (intuition) ↔ Pearl (integration) with a Honey Tone (128/160 Hz), Neon binaural, breathing bar, and quick Share to X."/>
+<meta name="description" content="Froot resonance for Marina. Violet (intuition) ↔ Pearl (integration) with Honey Tone, Neon binaural, breathing bar, and explainer sections for fruits, Butterfly/Flytrap, Metallic Stallion, School, Honey anchor, Grounding, Rooting Above, Bridges, and Illumina links."/>
 <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,23 +12,12 @@
 <style>
   /* ====== RADIO CITY PALETTE (from your photo) ====== */
   :root{
-    --bg:#0b0d11;
-    --ink:#e9ecf4;
-    --muted:#a9a9b6;
-    --card:#101425;
-    --ring:#1b2030;
+    --bg:#0b0d11; --ink:#e9ecf4; --muted:#a9a9b6; --card:#101425; --ring:#1b2030;
+    --deep-plum:#42233a; --rose-mauve:#92687e; --night-indigo:#27142c; --magenta-flare:#7e4666;
+    --warm-pearl:#b7a89a; --violet-beam:#842475;
 
-    --deep-plum:#42233a;    /* shadow */
-    --rose-mauve:#92687e;   /* warmth */
-    --night-indigo:#27142c; /* depth */
-    --magenta-flare:#7e4666;/* pull */
-    --warm-pearl:#b7a89a;   /* pearl */
-    --violet-beam:#842475;  /* violet */
-
-    /* Mode-accent variables (will swap per-mode) */
     --accent: var(--violet-beam);
     --accent-2: var(--rose-mauve);
-    --glow: color-mix(in oklab, var(--accent), white 20%);
   }
 
   *{box-sizing:border-box}
@@ -40,35 +29,17 @@
   }
   a{color:#b2f5ea; text-decoration:none}
 
-  /* Hero shimmer using palette */
+  /* ===== Hero (no overlay blocking on mobile) */
   .hero{
-    position:relative; overflow:hidden; isolation:isolate;
+    position:relative; isolation:isolate;
     background:
       radial-gradient(120% 120% at 12% 18%, var(--magenta-flare) 0%, var(--rose-mauve) 34%, var(--night-indigo) 70%, var(--warm-pearl) 100%);
   }
-  .hero::after{
-    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(60% 120% at 80% 0%, rgba(255,255,255,.08), transparent 60%),
-      radial-gradient(80% 60% at 0% 100%, rgba(255,255,255,.05), transparent 60%);
-    mix-blend-mode:overlay;
-  }
-  .wrap{max-width:980px; margin:0 auto; padding:24px; position:relative; z-index:1}
+  .wrap{max-width:980px; margin:0 auto; padding:20px 16px}
+  @media (min-width:720px){ .wrap{padding:24px} }
 
   header h1{margin:6px 0 2px; font-size:28px; letter-spacing:.2px}
   header p{margin:0; opacity:.95}
-
-  .grid{display:grid; gap:16px}
-  @media (min-width:960px){ .grid{grid-template-columns:1.1fr .9fr} }
-
-  .panel{
-    background:linear-gradient(180deg, rgba(255,255,255,.03), transparent);
-    border:1px solid color-mix(in oklab, var(--ring), white 8%);
-    border-radius:16px; padding:16px;
-    box-shadow:0 10px 40px rgba(0,0,0,.25);
-    backdrop-filter: blur(6px);
-  }
-
   .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
   .chip{
     appearance:none; border:1px solid color-mix(in oklab, var(--ring), white 10%);
@@ -83,70 +54,68 @@
   .note{color:var(--muted); font-size:14px}
   .mono{font-variant-numeric:tabular-nums; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 
-  /* Badges, status, and breathing bar */
+  /* Cards & grid */
+  .panel{
+    background:linear-gradient(180deg, rgba(255,255,255,.03), transparent);
+    border:1px solid color-mix(in oklab, var(--ring), white 8%);
+    border-radius:16px; padding:16px;
+    box-shadow:0 10px 36px rgba(0,0,0,.25);
+    backdrop-filter: blur(6px);
+  }
+  .grid{display:grid; gap:16px}
+  @media (min-width:960px){ .grid.cols-2{grid-template-columns:1.1fr .9fr} }
+  .chips{display:flex; flex-wrap:wrap; gap:10px}
+
+  /* Badge and breathing bar (now inline, not fixed; no z-index traps) */
   .badge{
     display:inline-flex; align-items:center; gap:8px;
     padding:8px 12px; border-radius:999px;
     border:1px solid color-mix(in oklab, var(--accent), white 30%);
     background: color-mix(in oklab, var(--accent), black 80%);
-    box-shadow:0 8px 36px color-mix(in oklab, var(--accent), transparent 82%);
+    box-shadow:0 8px 22px color-mix(in oklab, var(--accent), transparent 82%);
   }
   .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px var(--accent)}
 
+  .breath{position:relative; height:10px; border-radius:999px; overflow:hidden;
+    background: color-mix(in oklab, var(--rose-mauve), black 76%);
+    border:1px solid color-mix(in oklab, var(--rose-mauve), white 30%); margin-top:10px}
+  .bubble{position:absolute; top:0; bottom:0; left:0; width:18%; border-radius:999px; background: var(--accent);
+    box-shadow:0 0 24px var(--accent); animation: breathe 6.5s ease-in-out infinite}
+  @keyframes breathe{ 0%{transform:translateX(0)} 50%{transform:translateX(82%)} 100%{transform:translateX(0)} }
+  body[data-mode="pearl"] .bubble{ animation-duration: 8.5s }
+
+  /* Video */
+  .video-wrap{position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; background:#000}
+  iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+
+  /* Tone status */
   .status{
     display:inline-flex; align-items:center; gap:10px; padding:10px 12px;
     border-radius:999px; border:1px solid color-mix(in oklab, var(--ring), white 8%);
-    background:color-mix(in oklab, var(--card), black 8%);
+    background:color-mix(in oklab, var(--card), black 8%); white-space:nowrap
   }
   .status .led{width:14px;height:14px;border-radius:50%; background:#6f6a7a; box-shadow:0 0 0 2px rgba(0,0,0,.25) inset}
   .status.ok .led{ background: var(--accent); box-shadow:0 0 0 2px rgba(0,0,0,.25) inset, 0 0 22px var(--accent) }
 
-  .breath{
-    position:relative; height:10px; border-radius:999px; overflow:hidden;
-    background: color-mix(in oklab, var(--accent-2), black 75%);
-    border:1px solid color-mix(in oklab, var(--accent-2), white 30%);
-  }
-  .breath .bubble{
-    position:absolute; top:0; bottom:0; left:0; width:18%;
-    border-radius:999px; background: var(--accent);
-    box-shadow:0 0 24px var(--accent);
-    animation: breathe 6s ease-in-out infinite;
-  }
-  @keyframes breathe{
-    0%{ transform: translateX(0) scaleX(1); opacity:.85 }
-    50%{ transform: translateX(82%) scaleX(1.1); opacity:1 }
-    100%{ transform: translateX(0) scaleX(1); opacity:.85 }
-  }
-
-  /* Video */
-  .video-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
-  iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-
-  footer{opacity:.9}
-  footer .row{justify-content:space-between}
-
-  /* Mode themes (JS toggles data-mode on body) */
+  /* Mode themes */
   body[data-mode="violet"]{ --accent: var(--violet-beam); --accent-2: var(--rose-mauve); }
   body[data-mode="pearl"] { --accent: var(--warm-pearl); --accent-2: var(--deep-plum); }
-
-  /* Pearl mode adjusts breathing tempo (slower, steadier) */
-  body[data-mode="pearl"] .breath .bubble{ animation-duration: 8.5s; }
 </style>
 </head>
 <body data-mode="violet">
   <section class="hero">
     <div class="wrap">
       <header>
-        <div class="row">
-          <h1 style="margin-right:auto">Froot · <span class="mono">Violet ↔ Pearl</span></h1>
-          <div class="badge"><span class="dot"></span><span id="modeLabel">Violet — intuition / bridge</span></div>
+        <div class="row" style="justify-content:space-between; gap:12px">
+          <h1 style="margin:6px 0 0">Froot · <span class="mono">Violet ↔ Pearl</span></h1>
+          <div class="badge" aria-live="polite"><span class="dot"></span><span id="modeLabel">Violet — intuition / bridge</span></div>
         </div>
-        <p>Violet opens the empathic bridge. Pearl seals the warmth into clarity. This page gently carries both.</p>
+        <p>Violet opens the empathic bridge. Pearl seals the warmth into clarity. Honey carries both.</p>
         <div class="breath" aria-label="Breathing bar"><div class="bubble" aria-hidden="true"></div></div>
       </header>
 
-      <div class="grid" style="margin-top:14px">
-        <!-- Left: Video + Mode toggle -->
+      <!-- Controls + Video + Tone -->
+      <div class="grid cols-2" style="margin-top:14px">
         <div class="panel">
           <div class="row" role="group" aria-label="Mode">
             <button class="chip" id="btnViolet" aria-pressed="true">Violet</button>
@@ -156,25 +125,24 @@
 
           <div style="height:12px"></div>
           <div class="video-wrap">
-            <!-- Oh No! official (as requested) -->
+            <!-- Marina — Oh No! (as requested) -->
             <iframe id="yt" src="https://www.youtube.com/embed/Cr-SqRWImmI?enablejsapi=1&modestbranding=1&rel=0&playsinline=1"
               title="Marina — Oh No! (Official)" allow="autoplay; encrypted-media; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
 
           <div style="height:12px"></div>
-          <div class="row sl" aria-label="Video volume">
+          <div class="row" aria-label="Video volume">
             <label class="note">Video volume</label>
             <input id="vidVol" type="range" min="0" max="100" step="1" value="60"/>
             <span class="mono" id="vidVolLbl">60%</span>
           </div>
 
           <p class="note" style="margin-top:8px">
-            Tip: Adjust the video under the Honey Tone so the music rides just above the tone’s hum. Violet prefers a softer mix; Pearl can carry a little more volume.
+            Tip: Violet runs softer; Pearl can carry a little more volume. Set the music just above the Honey hum.
           </p>
         </div>
 
-        <!-- Right: Honey Tone -->
         <div class="panel" id="tonePanel" aria-live="polite">
           <div class="row">
             <button id="start" class="chip">Start Honey</button>
@@ -197,34 +165,103 @@
           </div>
 
           <p class="note" style="margin-top:8px">
-            On iPhone, tap <em>Start Honey</em> first to unlock audio. <strong>Neon</strong> adds a ~2 Hz left/right beat around the base frequency.
-          </p>
-
-          <hr style="border:none;border-top:1px solid color-mix(in oklab,var(--ring),white 8%);margin:12px 0">
-          <p class="note">
-            <strong>Violet</strong> = the call (intuition, soft reach). Defaults: 128 Hz, Neon ON, video 55–65%.<br>
-            <strong>Pearl</strong> = the answer (integration, calm union). Defaults: 160 Hz, Neon OFF, video 65–75%.
+            On iPhone, tap <strong>Start Honey</strong> first to unlock audio. Neon adds a ~2 Hz left/right beat.
           </p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ========= Explainers & Map ========= -->
   <main class="wrap" style="padding-top:18px">
+    <!-- Fruits -->
     <section class="panel">
-      <h2 style="margin:0 0 6px">How to use</h2>
-      <ol style="margin:8px 0 0 20px; padding:0">
-        <li>Choose <strong>Violet</strong> or <strong>Pearl</strong>. The colors and defaults will shift.</li>
-        <li>Tap <strong>Start Honey</strong>. Set frequency/volume to a gentle level.</li>
-        <li>Adjust the video volume so it sits just above the tone.</li>
-        <li>Watch the status light: it glows with your current accent when the tone is healthy.</li>
-      </ol>
+      <h2 style="margin:0 0 6px">Fruits — taste of color & sound</h2>
+      <p class="note" style="margin:8px 0 12px">
+        Froot is where color becomes flavor. Each fruit pairs a tone + palette so people can <em>feel</em> the music.
+      </p>
+      <div class="chips" role="list">
+        <button class="chip" aria-pressed="true">Violet — the Call</button>
+        <button class="chip" aria-pressed="false">Pearl — the Answer</button>
+        <button class="chip" aria-pressed="false">Mowgli Peach — playful courage</button>
+      </div>
+      <ul class="note" style="margin:12px 0 0 18px">
+        <li><strong>Violet</strong>: intuition-spectrum, empathic bridge, “I feel you.”</li>
+        <li><strong>Pearl</strong>: mirror-spectrum, clarity & forgiveness, “I’m whole with you.”</li>
+        <li><strong>Mowgli Peach</strong>: jungle-play energy — brave, curious, a grin before the leap.</li>
+      </ul>
+    </section>
+
+    <!-- Marina symbols -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Marina symbols — Butterfly & Venus Flytrap</h2>
+      <ul class="note" style="margin:8px 0 0 18px">
+        <li><strong>Butterfly</strong>: the gentle arrival — color lands lightly, transformation without force.</li>
+        <li><strong>Venus Flytrap</strong>: boundaries with sweetness — you choose what feeds you.</li>
+      </ul>
+    </section>
+
+    <!-- Metallic Stallion & School -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Metallic Stallion & School</h2>
+      <p class="note" style="margin:8px 0 0">
+        <strong>Metallic Stallion</strong>: kinetic confidence — chrome courage under neon.  
+        <strong>School</strong>: a place to practice (Swift rooms, study tracks) where tone & craft meet.
+      </p>
+    </section>
+
+    <!-- Honey anchor -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Honey — anchor for movement, reflection, learning</h2>
+      <p class="note" style="margin:8px 0 10px">
+        Honey goes with everything. It warms the space, steadies breath, and gives a soft floor for the heart to move.
+      </p>
+      <div class="chips">
+        <a class="chip" href="https://mirrorhoney.plnt.earth" target="_blank" rel="noopener">MirrorHoney</a>
+        <a class="chip" href="https://honey.plnt.earth" target="_blank" rel="noopener">Honey Garden</a>
+      </div>
+    </section>
+
+    <!-- Grounding & Rooting Above -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Grounding · Rooting Above</h2>
+      <ul class="note" style="margin:8px 0 0 18px">
+        <li><strong>Grounding</strong>: Greta (earth conscience), Hayley (voice as witness).</li>
+        <li><strong>Rooting Above</strong>: Dua’s books (mind garden), Ariana’s voice (frequency weaver).</li>
+      </ul>
+      <div class="chips">
+        <a class="chip" href="https://earth.plnt.earth" target="_blank" rel="noopener">Earth</a>
+        <a class="chip" href="https://voice.plnt.earth" target="_blank" rel="noopener">Voice</a>
+      </div>
+    </section>
+
+    <!-- Bridges -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">Bridges — Emma & Doechii</h2>
+      <p class="note" style="margin:8px 0 10px">
+        <strong>Emma</strong>: masks & roles — safe shape-shifting to find the honest center.<br>
+        <strong>Doechii</strong>: neon jumps — playful disruption that opens new doors.
+      </p>
+    </section>
+
+    <!-- System links -->
+    <section class="panel">
+      <h2 style="margin:0 0 6px">More: Charter, Warmth, Illumina Time, Physics</h2>
+      <div class="chips">
+        <a class="chip" href="https://quietmoon.plnt.earth/charter.html" target="_blank" rel="noopener">Charter</a>
+        <a class="chip" href="https://warmth.plnt.earth" target="_blank" rel="noopener">Warmth</a>
+        <a class="chip" href="https://jar.plnt.earth/illumina-time-kit.html" target="_blank" rel="noopener">Illumina Time Kit</a>
+        <a class="chip" href="https://time.plnt.earth" target="_blank" rel="noopener">time.plnt.earth</a>
+      </div>
+      <p class="note" style="margin:10px 0 0">
+        Yes — the time work is the physics backbone that everything else dances on.
+      </p>
     </section>
   </main>
 
   <footer class="wrap" style="margin-top:auto; padding-bottom:26px">
-    <div class="row">
-      <small class="note">Froot for Marina — Violet calls, Pearl answers.</small>
+    <div class="row" style="justify-content:space-between">
+      <small class="note">Froot for Marina — give the Diamonds a taste of color & sound.</small>
       <small class="note"><a href="#" onclick="document.documentElement.scrollTo({top:0,behavior:'smooth'})">Back to top</a></small>
     </div>
   </footer>
@@ -237,15 +274,12 @@
   var vidVolLbl = document.getElementById('vidVolLbl');
   function ytPost(cmd, value){
     try{
-      yt.contentWindow.postMessage(JSON.stringify({
-        event:'command', func:cmd, args: value!==undefined ? [value] : undefined
-      }), '*');
+      yt.contentWindow.postMessage(JSON.stringify({event:'command', func:cmd, args: value!==undefined ? [value] : undefined}), '*');
     }catch(e){}
   }
   function applyVideoVolume(){
     var v = Math.max(0, Math.min(100, parseInt(vidVol.value,10)||0));
-    vidVolLbl.textContent = v + '%';
-    ytPost('setVolume', v);
+    vidVolLbl.textContent = v + '%'; ytPost('setVolume', v);
   }
   vidVol.addEventListener('input', applyVideoVolume);
 
@@ -269,8 +303,7 @@
     oscL=null; oscR=null;
   }
   function startTone(){
-    ensureCtx();
-    if(ctx.state==='suspended'){ ctx.resume(); }
+    ensureCtx(); if(ctx.state==='suspended'){ ctx.resume(); }
     stopToneNodes();
     oscL = ctx.createOscillator(); oscR = ctx.createOscillator();
     oscL.type='sine'; oscR.type='sine';
@@ -285,23 +318,14 @@
     oscL.start(); oscR.start();
     started = true; monitor(true);
   }
-  function pauseTone(){
-    stopToneNodes(); started=false; monitor(false);
-    if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
-  }
+  function pauseTone(){ stopToneNodes(); started=false; monitor(false); if(rafId){ cancelAnimationFrame(rafId); rafId=null; } }
 
   /* Status light via simple RMS meter */
   var statusEl = document.getElementById('toneStatus');
-  var led = statusEl ? statusEl.querySelector('.led') : null;
   function setStatus(ok){
     if(!statusEl) return;
-    if(ok){
-      statusEl.classList.add('ok');
-      statusEl.lastChild.textContent = 'tone healthy';
-    }else{
-      statusEl.classList.remove('ok');
-      statusEl.lastChild.textContent = 'tone inactive';
-    }
+    if(ok){ statusEl.classList.add('ok'); statusEl.lastChild.textContent = 'tone healthy'; }
+    else  { statusEl.classList.remove('ok'); statusEl.lastChild.textContent = 'tone inactive'; }
   }
   function monitor(on){
     if(!on){ setStatus(false); return; }
@@ -335,9 +359,7 @@
 
   function setFreqButtons(f){
     var btns=document.querySelectorAll('.freq');
-    for(var i=0;i<btns.length;i++){
-      btns[i].setAttribute('aria-pressed', (btns[i].dataset.f==String(f))?'true':'false');
-    }
+    for(var i=0;i<btns.length;i++){ btns[i].setAttribute('aria-pressed', (btns[i].dataset.f==String(f))?'true':'false'); }
   }
   var freqBtns=document.querySelectorAll('.freq');
   for(var j=0;j<freqBtns.length;j++){
@@ -378,7 +400,6 @@
     if(started){ startTone(); }
     try{ localStorage.setItem('froot_mode', violet?'violet':'pearl'); }catch(e){}
   }
-
   btnViolet.addEventListener('click', function(){ setMode(true); });
   btnPearl.addEventListener('click',  function(){ setMode(false); });
 
