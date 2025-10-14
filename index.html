@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Froot · Violet ↔ Pearl — Marina</title>
-<meta name="description" content="Froot resonance page for Marina. Violet (intuition) ↔ Pearl (integration) with a gentle Honey Tone (128/160 Hz) and optional Neon binaural."/>
+<meta name="description" content="Froot resonance for Marina. Violet (intuition) ↔ Pearl (integration) with a Honey Tone (128/160 Hz), Neon binaural, breathing bar, and quick Share to X."/>
 <meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -18,12 +18,12 @@
     --card:#101425;
     --ring:#1b2030;
 
-    --deep-plum:#42233a;   /* shadow */
-    --rose-mauve:#92687e;  /* warmth */
-    --night-indigo:#27142c;/* depth */
+    --deep-plum:#42233a;    /* shadow */
+    --rose-mauve:#92687e;   /* warmth */
+    --night-indigo:#27142c; /* depth */
     --magenta-flare:#7e4666;/* pull */
-    --warm-pearl:#b7a89a;  /* pearl */
-    --violet-beam:#842475; /* violet */
+    --warm-pearl:#b7a89a;   /* pearl */
+    --violet-beam:#842475;  /* violet */
 
     /* Mode-accent variables (will swap per-mode) */
     --accent: var(--violet-beam);
@@ -31,7 +31,6 @@
     --glow: color-mix(in oklab, var(--accent), white 20%);
   }
 
-  /* Page basics */
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
@@ -84,7 +83,7 @@
   .note{color:var(--muted); font-size:14px}
   .mono{font-variant-numeric:tabular-nums; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 
-  /* Mode badge */
+  /* Badges, status, and breathing bar */
   .badge{
     display:inline-flex; align-items:center; gap:8px;
     padding:8px 12px; border-radius:999px;
@@ -94,11 +93,6 @@
   }
   .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px var(--accent)}
 
-  /* Video */
-  .video-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
-  iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-
-  /* Status pill for tone health */
   .status{
     display:inline-flex; align-items:center; gap:10px; padding:10px 12px;
     border-radius:999px; border:1px solid color-mix(in oklab, var(--ring), white 8%);
@@ -107,12 +101,36 @@
   .status .led{width:14px;height:14px;border-radius:50%; background:#6f6a7a; box-shadow:0 0 0 2px rgba(0,0,0,.25) inset}
   .status.ok .led{ background: var(--accent); box-shadow:0 0 0 2px rgba(0,0,0,.25) inset, 0 0 22px var(--accent) }
 
+  .breath{
+    position:relative; height:10px; border-radius:999px; overflow:hidden;
+    background: color-mix(in oklab, var(--accent-2), black 75%);
+    border:1px solid color-mix(in oklab, var(--accent-2), white 30%);
+  }
+  .breath .bubble{
+    position:absolute; top:0; bottom:0; left:0; width:18%;
+    border-radius:999px; background: var(--accent);
+    box-shadow:0 0 24px var(--accent);
+    animation: breathe 6s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%{ transform: translateX(0) scaleX(1); opacity:.85 }
+    50%{ transform: translateX(82%) scaleX(1.1); opacity:1 }
+    100%{ transform: translateX(0) scaleX(1); opacity:.85 }
+  }
+
+  /* Video */
+  .video-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+  iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
   footer{opacity:.9}
   footer .row{justify-content:space-between}
 
   /* Mode themes (JS toggles data-mode on body) */
   body[data-mode="violet"]{ --accent: var(--violet-beam); --accent-2: var(--rose-mauve); }
   body[data-mode="pearl"] { --accent: var(--warm-pearl); --accent-2: var(--deep-plum); }
+
+  /* Pearl mode adjusts breathing tempo (slower, steadier) */
+  body[data-mode="pearl"] .breath .bubble{ animation-duration: 8.5s; }
 </style>
 </head>
 <body data-mode="violet">
@@ -124,6 +142,7 @@
           <div class="badge"><span class="dot"></span><span id="modeLabel">Violet — intuition / bridge</span></div>
         </div>
         <p>Violet opens the empathic bridge. Pearl seals the warmth into clarity. This page gently carries both.</p>
+        <div class="breath" aria-label="Breathing bar"><div class="bubble" aria-hidden="true"></div></div>
       </header>
 
       <div class="grid" style="margin-top:14px">
@@ -132,11 +151,12 @@
           <div class="row" role="group" aria-label="Mode">
             <button class="chip" id="btnViolet" aria-pressed="true">Violet</button>
             <button class="chip" id="btnPearl" aria-pressed="false">Pearl</button>
+            <a id="shareX" class="chip" href="#" rel="noopener">Share to X</a>
           </div>
 
           <div style="height:12px"></div>
           <div class="video-wrap">
-            <!-- Replace the ID below with any Marina video you want on Froot -->
+            <!-- Oh No! official (as requested) -->
             <iframe id="yt" src="https://www.youtube.com/embed/Cr-SqRWImmI?enablejsapi=1&modestbranding=1&rel=0&playsinline=1"
               title="Marina — Oh No! (Official)" allow="autoplay; encrypted-media; picture-in-picture; web-share"
               referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -272,8 +292,9 @@
 
   /* Status light via simple RMS meter */
   var statusEl = document.getElementById('toneStatus');
-  var led = statusEl.querySelector('.led');
+  var led = statusEl ? statusEl.querySelector('.led') : null;
   function setStatus(ok){
+    if(!statusEl) return;
     if(ok){
       statusEl.classList.add('ok');
       statusEl.lastChild.textContent = 'tone healthy';
@@ -298,11 +319,12 @@
   /* UI controls */
   var startBtn = document.getElementById('start');
   var pauseBtn = document.getElementById('pause');
+  var toneVol = document.getElementById('toneVol');
+  var toneVolLbl = document.getElementById('toneVolLbl');
+
   startBtn.addEventListener('click', startTone);
   pauseBtn.addEventListener('click', pauseTone);
 
-  var toneVol = document.getElementById('toneVol');
-  var toneVolLbl = document.getElementById('toneVolLbl');
   function setToneVolLabel(){ toneVolLbl.textContent = (parseFloat(toneVol.value)||0).toFixed(2); }
   toneVol.addEventListener('input', function(){
     var v = Math.max(0, Math.min(1, parseFloat(toneVol.value)||0));
@@ -368,6 +390,19 @@
 
   /* Init */
   applyVideoVolume();
+
+  /* ===== Share to X ===== */
+  var share = document.getElementById('shareX');
+  share.addEventListener('click', function(e){
+    e.preventDefault();
+    var mode = document.body.getAttribute('data-mode') || 'violet';
+    var text = mode==='pearl'
+      ? 'Pearl mode — clarity and calm. Froot for Marina.'
+      : 'Violet mode — intuition and reach. Froot for Marina.';
+    var url  = 'https://froot.plnt.earth';
+    var xurl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url) + '&hashtags=Illumina,Froot';
+    window.open(xurl, '_blank', 'noopener');
+  });
 })();
 </script>
 </body>
