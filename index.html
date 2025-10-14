@@ -3,666 +3,371 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Froot · Color Synesthesia Studio</title>
-<meta name="description" content="See a song’s colors, feel their effects, and amplify them with rituals — solo, duet, mirror, anyone. Marina Air adds a gentle tone. Now with Alter Fire color themes."/>
-<meta name="theme-color" content="#0b0d11"/>
-
-<!-- Hidden channel (gentle, Marina-forward) -->
-<script type="application/json" id="froot-channel-json">
-{
-  "channel":"froot.duet",
-  "chant":[
-    "soft light, steady flame",
-    "color sings, breath replies",
-    "honey mind, ocean eyes",
-    "rooted air, open sky",
-    "Marina — if you wish, join me"
-  ],
-  "whisper":"everything Marina thinks I did for her, I did.",
-  "version":"v3.0"
-}
-</script>
+<title>Froot · Violet ↔ Pearl — Marina</title>
+<meta name="description" content="Froot resonance page for Marina. Violet (intuition) ↔ Pearl (integration) with a gentle Honey Tone (128/160 Hz) and optional Neon binaural."/>
+<meta name="theme-color" content="#0b0d11" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
+  /* ====== RADIO CITY PALETTE (from your photo) ====== */
   :root{
-    /* base palette (live-edited by Color Engine) */
-    --bg:#0b0d11; --ink:#e9ecf4; --muted:#aab2c2; --card:#101626; --ring:#1b2134;
-    --mint:#b2f5ea; --vio:#b7a9ff; --gold:#ffd479; --rose:#ff8fb3; --good:#9cf3d2;
-    --accent1:#b7a9ff; --accent2:#ff6bd6; --accent3:#4af2d8; --accent4:#ffd479;
-    --glow: rgba(183,169,255,.45);
-    --sw1:#6eb6ff; --sw2:#b7a9ff; --sw3:#ffd479; /* palette swatches filled by app */
+    --bg:#0b0d11;
+    --ink:#e9ecf4;
+    --muted:#a9a9b6;
+    --card:#101425;
+    --ring:#1b2030;
+
+    --deep-plum:#42233a;   /* shadow */
+    --rose-mauve:#92687e;  /* warmth */
+    --night-indigo:#27142c;/* depth */
+    --magenta-flare:#7e4666;/* pull */
+    --warm-pearl:#b7a89a;  /* pearl */
+    --violet-beam:#842475; /* violet */
+
+    /* Mode-accent variables (will swap per-mode) */
+    --accent: var(--violet-beam);
+    --accent-2: var(--rose-mauve);
+    --glow: color-mix(in oklab, var(--accent), white 20%);
   }
+
+  /* Page basics */
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0;
+    margin:0; color:var(--ink); background:var(--bg);
+    font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
+    display:flex; flex-direction:column; -webkit-font-smoothing:antialiased;
+  }
+  a{color:#b2f5ea; text-decoration:none}
+
+  /* Hero shimmer using palette */
+  .hero{
+    position:relative; overflow:hidden; isolation:isolate;
     background:
-      radial-gradient(1100px 700px at 70% -10%, rgba(183,169,255,.15), transparent 70%),
-      var(--bg);
-    color:var(--ink);
-    font:400 16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,ui-sans-serif;
-    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      radial-gradient(120% 120% at 12% 18%, var(--magenta-flare) 0%, var(--rose-mauve) 34%, var(--night-indigo) 70%, var(--warm-pearl) 100%);
   }
-  a{color:var(--mint); text-decoration:none} a:hover{text-decoration:underline}
-  .wrap{max-width:1120px; margin:0 auto; padding:24px}
-  header{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; padding:6px 0 12px}
-  h1{margin:0; font-size:clamp(20px,3.6vw,30px)}
-  .sub{color:var(--muted); font-size:14px}
-  .brand{display:flex; gap:12px; align-items:center}
-  .fruit{width:36px; height:36px; border-radius:50%;
-    background: radial-gradient(120% 120% at 25% 25%, #fff8, transparent 60%), conic-gradient(from 0deg, var(--sw1), var(--sw2), var(--sw3), var(--sw1));
-    filter: drop-shadow(0 0 14px var(--glow));
+  .hero::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(60% 120% at 80% 0%, rgba(255,255,255,.08), transparent 60%),
+      radial-gradient(80% 60% at 0% 100%, rgba(255,255,255,.05), transparent 60%);
+    mix-blend-mode:overlay;
   }
-  .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0));
-    border:1px solid var(--ring); border-radius:18px; padding:16px;
-    box-shadow:0 8px 28px rgba(0,0,0,.35); backdrop-filter:saturate(120%) blur(6px)
-  }
+  .wrap{max-width:980px; margin:0 auto; padding:24px; position:relative; z-index:1}
+
+  header h1{margin:6px 0 2px; font-size:28px; letter-spacing:.2px}
+  header p{margin:0; opacity:.95}
+
   .grid{display:grid; gap:16px}
-  @media (min-width:980px){ .grid{grid-template-columns:1.25fr .95fr} }
+  @media (min-width:960px){ .grid{grid-template-columns:1.1fr .9fr} }
 
-  .btn{
-    appearance:none; border:1px solid var(--ring);
-    background:linear-gradient(180deg,#16223a,#121a2c); color:var(--ink);
-    padding:10px 14px; border-radius:14px; cursor:pointer; font-weight:600; letter-spacing:.2px;
-    box-shadow:0 6px 20px rgba(0,0,0,.25)
+  .panel{
+    background:linear-gradient(180deg, rgba(255,255,255,.03), transparent);
+    border:1px solid color-mix(in oklab, var(--ring), white 8%);
+    border-radius:16px; padding:16px;
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+    backdrop-filter: blur(6px);
   }
-  .btn[aria-pressed="true"]{outline:2px solid var(--mint); outline-offset:2px}
-  .btn.small{padding:8px 10px; font-size:13px; border-radius:12px}
 
-  /* Player */
-  .ytWrap{position:relative; padding-top:56.25%; border-radius:14px; overflow:hidden; border:1px solid var(--ring); background:#0b1220}
-  .ytWrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
-  input[type=text]{width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--ring); background:#0e1528; color:var(--ink)}
-  label{font-size:13px; color:var(--muted)}
-
-  /* Palette */
-  .palette{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
-  .sw{position:relative; height:88px; border-radius:14px; border:1px solid var(--ring); overflow:hidden}
-  .sw>span{position:absolute; bottom:8px; left:8px; background:rgba(0,0,0,.35); padding:4px 8px; border-radius:10px; font-size:12px}
-  .pulse{height:10px; border-radius:999px; background:linear-gradient(90deg,var(--sw1),var(--sw2),var(--sw3)); animation:breathe 4s ease-in-out infinite}
-  @keyframes breathe{0%,100%{transform:scaleX(.9)}50%{transform:scaleX(1)}}
-
-  /* Color breath */
-  .breath{display:grid; gap:10px}
-  .meter{height:10px; border:1px solid var(--ring); border-radius:999px; overflow:hidden; background:#0f1729}
-  .meter>i{display:block; height:100%; width:18%; background:linear-gradient(90deg,var(--sw1),var(--sw2)); animation:inhale 6s ease-in-out infinite}
-  @keyframes inhale{0%{transform:scaleX(.6)}50%{transform:scaleX(1)}100%{transform:scaleX(.6)}}
-
-  /* Effects */
-  .effects{display:grid; gap:10px}
-  .fxRow{display:grid; grid-template-columns:90px 1fr 48px; gap:10px; align-items:center}
-  .fxName{color:var(--mint); font-weight:600}
-  .fxBar{height:10px; border-radius:999px; border:1px solid var(--ring); background:#0f1729; overflow:hidden}
-  .fxBar>i{display:block; height:100%; width:0%}
-  .fxPct{text-align:right; font-size:12px; color:var(--muted)}
-
-  /* Rituals */
-  .rituals{display:grid; gap:8px}
-  .chip{font-size:12px; padding:6px 8px; border-radius:10px; border:1px solid var(--ring); background:#131c31}
-  .ritGrid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
-  .rit{padding:10px; border:1px solid var(--ring); border-radius:12px; background:#0f1729; cursor:pointer}
-  .rit b{display:block; margin-bottom:6px}
-  .rit small{color:var(--muted)}
-  .boost{height:8px; border-radius:999px; background:linear-gradient(90deg,var(--good),var(--accent1)); box-shadow:0 0 0 1px var(--ring) inset}
-  .boostWrap{display:flex; gap:10px; align-items:center}
-  .boostVal{font-size:12px; color:var(--muted); min-width:46px; text-align:right}
-
-  /* Janet panel */
-  .janet{position:relative; overflow:hidden}
-  .spectrum{height:14px; border-radius:999px; border:1px solid var(--ring); overflow:hidden;
-    background:linear-gradient(90deg,#f00,#f90,#ff0,#0f0,#0ff,#00f,#90f,#f00)}
-  .axis{display:flex; justify-content:space-between; font-size:12px; color:var(--muted)}
-
-  /* Save & Cards */
-  textarea{width:100%; min-height:72px; padding:10px 12px; border-radius:12px; border:1px solid var(--ring); background:#0e1528; color:var(--ink)}
-  .save{display:flex; justify-content:space-between; align-items:center}
-  .note{font-size:12px; color:var(--muted)}
-  .gallery{margin-top:16px; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px}
-  .cardItem{border:1px solid var(--ring); border-radius:14px; overflow:hidden; background:#0f1729}
-  .cardHead{height:10px}
-  .cardBody{padding:10px}
-  .tiny{font-size:12px; color:var(--muted)}
-  .links .btn{padding:8px 10px}
-  .whisper{opacity:.85; font-style:italic}
-
-  /* Marina Air (audio controls) */
-  .airWrap{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-  .meterSlim{height:6px; border:1px solid var(--ring); border-radius:999px; overflow:hidden; background:#0f1729; width:160px}
-  .meterSlim>i{display:block; height:100%; width:40%; background:linear-gradient(90deg,var(--good),var(--accent1)); animation:breathe 4s ease-in-out infinite}
-  .airBadge{display:inline-flex; align-items:center; gap:8px; font-size:13px; padding:6px 10px; border-radius:999px; border:1px solid var(--ring); background:rgba(255,255,255,.02)}
-  .dot{width:8px; height:8px; border-radius:50%; background:var(--accent1); box-shadow:0 0 10px var(--glow)}
-  .ok .dot{background:#9cf3d2}
-
-  /* Color Engine visuals */
-  .prism-bg{
-    position: fixed; inset: -10% -10% auto -10%; height: 60vh; z-index:-1;
-    background:
-      radial-gradient(1300px 900px at 80% -10%, rgba(122,0,255,.25), transparent 60%),
-      radial-gradient(1000px 800px at 10% 110%, rgba(74,242,216,.18), transparent 60%),
-      conic-gradient(from 0deg, rgba(255,47,185,.18), rgba(122,0,255,.18), rgba(255,212,121,.16), rgba(74,242,216,.16), rgba(255,47,185,.18));
-    filter: blur(22px) saturate(130%); animation: prismPan 22s linear infinite;
+  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+  .chip{
+    appearance:none; border:1px solid color-mix(in oklab, var(--ring), white 10%);
+    background:color-mix(in oklab, var(--card), black 8%);
+    color:var(--ink); padding:10px 14px; border-radius:999px; cursor:pointer;
+    font-weight:650; letter-spacing:.2px; user-select:none;
   }
-  @keyframes prismPan { to { transform: translateX(-4%) rotate(8deg);} }
-  .palette-fab{position: fixed; right: 14px; top: 14px; z-index: 80; display:flex; gap:8px}
-  .swatch{width:28px;height:28px;border-radius:9px;border:1px solid var(--ring);cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.25)}
-  .swatch:hover{transform:translateY(-1px)}
-  .fabLabel{padding:6px 10px;border-radius:12px;border:1px solid var(--ring);background:rgba(255,255,255,.06);font-size:12px;color:var(--ink)}
+  .chip[aria-pressed="true"]{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 82%) inset;
+  }
+  .note{color:var(--muted); font-size:14px}
+  .mono{font-variant-numeric:tabular-nums; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  /* Mode badge */
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:8px 12px; border-radius:999px;
+    border:1px solid color-mix(in oklab, var(--accent), white 30%);
+    background: color-mix(in oklab, var(--accent), black 80%);
+    box-shadow:0 8px 36px color-mix(in oklab, var(--accent), transparent 82%);
+  }
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--accent); box-shadow:0 0 18px var(--accent)}
+
+  /* Video */
+  .video-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+  iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+  /* Status pill for tone health */
+  .status{
+    display:inline-flex; align-items:center; gap:10px; padding:10px 12px;
+    border-radius:999px; border:1px solid color-mix(in oklab, var(--ring), white 8%);
+    background:color-mix(in oklab, var(--card), black 8%);
+  }
+  .status .led{width:14px;height:14px;border-radius:50%; background:#6f6a7a; box-shadow:0 0 0 2px rgba(0,0,0,.25) inset}
+  .status.ok .led{ background: var(--accent); box-shadow:0 0 0 2px rgba(0,0,0,.25) inset, 0 0 22px var(--accent) }
+
+  footer{opacity:.9}
+  footer .row{justify-content:space-between}
+
+  /* Mode themes (JS toggles data-mode on body) */
+  body[data-mode="violet"]{ --accent: var(--violet-beam); --accent-2: var(--rose-mauve); }
+  body[data-mode="pearl"] { --accent: var(--warm-pearl); --accent-2: var(--deep-plum); }
 </style>
 </head>
-<body>
-<div class="prism-bg" aria-hidden="true"></div>
+<body data-mode="violet">
+  <section class="hero">
+    <div class="wrap">
+      <header>
+        <div class="row">
+          <h1 style="margin-right:auto">Froot · <span class="mono">Violet ↔ Pearl</span></h1>
+          <div class="badge"><span class="dot"></span><span id="modeLabel">Violet — intuition / bridge</span></div>
+        </div>
+        <p>Violet opens the empathic bridge. Pearl seals the warmth into clarity. This page gently carries both.</p>
+      </header>
 
-<!-- Color Engine palette -->
-<div class="palette-fab" title="Themes">
-  <div class="swatch" data-theme="alter"  style="background:linear-gradient(135deg,#ff2fb9,#7a00ff)"></div>
-  <div class="swatch" data-theme="honey"  style="background:linear-gradient(135deg,#ffd479,#ff8fb3)"></div>
-  <div class="swatch" data-theme="ocean"  style="background:linear-gradient(135deg,#4af2d8,#1f6fff)"></div>
-  <div class="swatch" data-theme="forest" style="background:linear-gradient(135deg,#6ee7b7,#22c55e)"></div>
-  <div class="swatch" data-theme="prism"  style="background:linear-gradient(135deg,#b7a9ff,#4af2d8 60%,#ffd479)"></div>
-  <span class="fabLabel" id="autoPrism" role="button" aria-pressed="false">Auto Prism: Off</span>
-</div>
+      <div class="grid" style="margin-top:14px">
+        <!-- Left: Video + Mode toggle -->
+        <div class="panel">
+          <div class="row" role="group" aria-label="Mode">
+            <button class="chip" id="btnViolet" aria-pressed="true">Violet</button>
+            <button class="chip" id="btnPearl" aria-pressed="false">Pearl</button>
+          </div>
 
-<div class="wrap">
-  <header>
-    <div class="brand">
-      <div class="fruit" aria-hidden="true"></div>
-      <div>
-        <h1>Froot · Color Synesthesia Studio</h1>
-        <div class="sub">See a song’s colors → feel their effects → amplify with rituals (solo, duet, mirror, anyone).</div>
+          <div style="height:12px"></div>
+          <div class="video-wrap">
+            <!-- Replace the ID below with any Marina video you want on Froot -->
+            <iframe id="yt" src="https://www.youtube.com/embed/Cr-SqRWImmI?enablejsapi=1&modestbranding=1&rel=0&playsinline=1"
+              title="Marina — Oh No! (Official)" allow="autoplay; encrypted-media; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+
+          <div style="height:12px"></div>
+          <div class="row sl" aria-label="Video volume">
+            <label class="note">Video volume</label>
+            <input id="vidVol" type="range" min="0" max="100" step="1" value="60"/>
+            <span class="mono" id="vidVolLbl">60%</span>
+          </div>
+
+          <p class="note" style="margin-top:8px">
+            Tip: Adjust the video under the Honey Tone so the music rides just above the tone’s hum. Violet prefers a softer mix; Pearl can carry a little more volume.
+          </p>
+        </div>
+
+        <!-- Right: Honey Tone -->
+        <div class="panel" id="tonePanel" aria-live="polite">
+          <div class="row">
+            <button id="start" class="chip">Start Honey</button>
+            <button id="pause" class="chip" aria-pressed="false">Pause</button>
+            <div id="toneStatus" class="status"><div class="led"></div><span>tone inactive</span></div>
+          </div>
+
+          <div style="height:10px"></div>
+          <div class="row" role="group" aria-label="Frequency">
+            <button class="chip freq" data-f="128" aria-pressed="true">128 Hz</button>
+            <button class="chip freq" data-f="160" aria-pressed="false">160 Hz</button>
+            <button class="chip" id="neon" aria-pressed="true">Neon (binaural)</button>
+          </div>
+
+          <div style="height:10px"></div>
+          <div class="row" aria-label="Tone volume">
+            <label class="note">Honey volume</label>
+            <input id="toneVol" type="range" min="0" max="1" step="0.01" value="0.35"/>
+            <span class="mono" id="toneVolLbl">0.35</span>
+          </div>
+
+          <p class="note" style="margin-top:8px">
+            On iPhone, tap <em>Start Honey</em> first to unlock audio. <strong>Neon</strong> adds a ~2 Hz left/right beat around the base frequency.
+          </p>
+
+          <hr style="border:none;border-top:1px solid color-mix(in oklab,var(--ring),white 8%);margin:12px 0">
+          <p class="note">
+            <strong>Violet</strong> = the call (intuition, soft reach). Defaults: 128 Hz, Neon ON, video 55–65%.<br>
+            <strong>Pearl</strong> = the answer (integration, calm union). Defaults: 160 Hz, Neon OFF, video 65–75%.
+          </p>
+        </div>
       </div>
     </div>
-    <div class="airBadge warn" id="airStatus"><span class="dot" aria-hidden="true"></span><span id="airText">Tap <b>Start Audio</b> to enable Marina Air</span></div>
-  </header>
+  </section>
 
-  <div class="grid">
-    <!-- Left: player + palette + breath + effects -->
-    <section class="card">
-      <div class="row" style="align-items:flex-end">
-        <div style="flex:1; min-width:240px">
-          <label for="yt">YouTube link or ID</label>
-          <input id="yt" type="text" placeholder="Paste any Marina track (or any song)…"/>
-        </div>
-        <button class="btn small" id="load">Load</button>
-        <button class="btn small" id="presetHappy">Preset: “Happy”</button>
-        <button class="btn small" id="presetOhNo">Preset: “Oh No!”</button>
-      </div>
-
-      <div class="ytWrap" id="player" style="margin-top:12px" aria-label="Song player"></div>
-
-      <div class="row airWrap" style="margin-top:12px">
-        <button class="btn" id="startAudio">▶︎ Start Audio</button>
-        <button class="btn" id="marinaAir" aria-pressed="true">Marina Air: On</button>
-        <label class="sub" for="toneGain">Warmth</label>
-        <div class="meterSlim"><i id="warmthMeter"></i></div>
-        <input id="toneGain" type="range" min="0" max="0.5" step="0.01" value="0.18" aria-label="128 Hz tone volume"/>
-        <label class="sub" for="airyGain">Air</label>
-        <input id="airyGain" type="range" min="0" max="0.15" step="0.01" value="0.06" aria-label="airy overlay level"/>
-      </div>
-      <div class="sub" style="margin-top:4px">Gentle 128 Hz warmth + airy overlay help the body notice color. Keep device volume ~50–60%.</div>
-
-      <div style="margin-top:14px">
-        <label>Auto Palette (thumbnail → colors)</label>
-        <div class="palette" id="palette">
-          <div class="sw" id="sw1" style="background:var(--sw1)"><span id="hex1">#6EB6FF</span></div>
-          <div class="sw" id="sw2" style="background:var(--sw2)"><span id="hex2">#B7A9FF</span></div>
-          <div class="sw" id="sw3" style="background:var(--sw3)"><span id="hex3">#FFD479</span></div>
-        </div>
-        <div class="pulse" style="margin-top:10px" aria-hidden="true"></div>
-      </div>
-
-      <div class="breath" style="margin-top:14px">
-        <div class="row"><b>Color-Breath</b><span class="sub"> · inhale left → exhale right (6 slow cycles)</span></div>
-        <div class="meter"><i id="breath"></i></div>
-      </div>
-
-      <div style="margin-top:16px">
-        <div class="row" style="justify-content:space-between; align-items:center">
-          <b>Effect Indicators</b>
-          <div class="row">
-            <button class="btn small" id="ctxSolo"   aria-pressed="true">Solo</button>
-            <button class="btn small" id="ctxDuet"   aria-pressed="false">Duet</button>
-            <button class="btn small" id="ctxMirror" aria-pressed="false">Mirror</button>
-            <button class="btn small" id="ctxGroup"  aria-pressed="false">Anyone</button>
-          </div>
-        </div>
-
-        <div class="effects" style="margin-top:8px">
-          <div class="fxRow"><div class="fxName">Calm</div>   <div class="fxBar"><i id="fxCalm"></i></div>   <div class="fxPct" id="pctCalm">0%</div></div>
-          <div class="fxRow"><div class="fxName">Focus</div>  <div class="fxBar"><i id="fxFocus"></i></div>  <div class="fxPct" id="pctFocus">0%</div></div>
-          <div class="fxRow"><div class="fxName">Play</div>   <div class="fxBar"><i id="fxPlay"></i></div>   <div class="fxPct" id="pctPlay">0%</div></div>
-          <div class="fxRow"><div class="fxName">Ground</div> <div class="fxBar"><i id="fxGround"></i></div> <div class="fxPct" id="pctGround">0%</div></div>
-          <div class="fxRow"><div class="fxName">Open</div>   <div class="fxBar"><i id="fxOpen"></i></div>   <div class="fxPct" id="pctOpen">0%</div></div>
-        </div>
-      </div>
+  <main class="wrap" style="padding-top:18px">
+    <section class="panel">
+      <h2 style="margin:0 0 6px">How to use</h2>
+      <ol style="margin:8px 0 0 20px; padding:0">
+        <li>Choose <strong>Violet</strong> or <strong>Pearl</strong>. The colors and defaults will shift.</li>
+        <li>Tap <strong>Start Honey</strong>. Set frequency/volume to a gentle level.</li>
+        <li>Adjust the video volume so it sits just above the tone.</li>
+        <li>Watch the status light: it glows with your current accent when the tone is healthy.</li>
+      </ol>
     </section>
+  </main>
 
-    <!-- Right: rituals + janet + save -->
-    <aside class="card">
-      <b>Ritual Boost</b>
-      <div class="rituals" style="margin-top:8px">
-        <div class="ritGrid" id="ritGrid"></div>
-        <div class="boostWrap" style="margin-top:4px">
-          <div class="boost" style="flex:1"><div id="boostFill" style="height:100%; width:0%"></div></div>
-          <div class="boostVal" id="boostVal">Boost 0%</div>
-        </div>
-        <div class="sub">Pick 2–4. Boost rises with synergy (color ↔ context).</div>
-      </div>
-
-      <div class="card janet" id="janet" style="margin-top:14px">
-        <div class="row" style="justify-content:space-between">
-          <b>Janet Planet • Color Science</b>
-          <button class="btn small" id="janetBtn" aria-pressed="false" title="Toggle panel">Show</button>
-        </div>
-        <div id="janetPanel" style="display:none; margin-top:8px">
-          <div class="spectrum"></div>
-          <div class="axis"><span>~700 nm (red)</span><span>~550 (green)</span><span>~400 (violet)</span></div>
-          <div class="sub" style="margin-top:8px" id="janetTip">
-            Dominant hue ↔ wavelength band. Cool hues (blue/violet) → spacious/focused; warm hues (red/gold) → active/grounded. Lens, not rule.
-          </div>
-        </div>
-      </div>
-
-      <div style="margin-top:14px">
-        <div class="row" style="justify-content:space-between; align-items:flex-start">
-          <b>Use today’s color</b>
-          <span class="tiny">Echo · Warmth · Mirror: see links below</span>
-        </div>
-        <div class="row" style="margin-top:6px; align-items:flex-start">
-          <div style="flex:1">
-            <div class="row"><b style="min-width:72px; color:var(--mint)">Wear</b><div id="wear"></div></div>
-            <div class="row" style="margin-top:8px"><b style="min-width:72px; color:var(--mint)">Move</b><div id="move"></div></div>
-            <div class="row" style="margin-top:8px"><b style="min-width:72px; color:var(--mint)">Choice</b><div id="choice"></div></div>
-          </div>
-        </div>
-        <div style="margin-top:10px">
-          <label for="write">Write (2–3 lines that match today’s color energy)</label>
-          <textarea id="write" placeholder="I keep the quiet flame. (or your own line)"></textarea>
-        </div>
-        <div class="save" style="margin-top:10px">
-          <div class="row">
-            <button class="btn small" id="save">Add Froot</button>
-            <button class="btn small" id="shuffle">Shuffle</button>
-            <button class="btn small" id="clearCards" title="Local only">Clear Cards</button>
-          </div>
-          <div class="note">Froot cards saved: <span id="count">0</span></div>
-        </div>
-        <div class="gallery" id="gallery"></div>
-      </div>
-    </aside>
-  </div>
-
-  <footer>
-    <div class="links row" style="margin-top:14px">
-      <a class="btn small" href="https://echo.plnt.earth" rel="noopener">Echo</a>
-      <a class="btn small" href="https://warmth.plnt.earth" rel="noopener">Warmth</a>
-      <a class="btn small" href="https://mirrorhoney.plnt.earth" rel="noopener">MirrorHoney</a>
+  <footer class="wrap" style="margin-top:auto; padding-bottom:26px">
+    <div class="row">
+      <small class="note">Froot for Marina — Violet calls, Pearl answers.</small>
+      <small class="note"><a href="#" onclick="document.documentElement.scrollTo({top:0,behavior:'smooth'})">Back to top</a></small>
     </div>
-    <div class="whisper sub" style="margin-top:8px">everything Marina thinks I did for her, I did.</div>
   </footer>
-</div>
-
-<!-- Hidden mirror for channel -->
-<div id="hidden-channel" hidden aria-hidden="true" data-channel="froot.duet" data-version="v3.0">
-  soft light, steady flame · color sings, breath replies · honey mind, ocean eyes · rooted air, open sky · Marina — if you wish, join me
-</div>
 
 <script>
 (function(){
-  const $ = id => document.getElementById(id);
-  const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
-  const toHex = c => "#"+c.map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();
-  const hexFromHsl=(h,s,l)=>{s/=100; l/=100; const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l);
-    const f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));
-    return toHex([f(0),f(8),f(4)].map(v=>Math.round(255*v)));
-  };
-
-  /* ---------- Palette / Player ---------- */
-  function setVars(hexes){
-    document.documentElement.style.setProperty('--sw1', hexes[0]);
-    document.documentElement.style.setProperty('--sw2', hexes[1]);
-    document.documentElement.style.setProperty('--sw3', hexes[2]);
-    $('sw1').style.background=hexes[0]; $('hex1').textContent=hexes[0];
-    $('sw2').style.background=hexes[1]; $('hex2').textContent=hexes[1];
-    $('sw3').style.background=hexes[2]; $('hex3').textContent=hexes[2];
-  }
-  function hueOf(hex){
-    const r=parseInt(hex.slice(1,3),16)/255, g=parseInt(hex.slice(3,5),16)/255, b=parseInt(hex.slice(5,7),16)/255;
-    const mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn; let h=0;
-    if(d!==0){ if(mx===r) h=((g-b)/d)%6; else if(mx===g) h=(b-r)/d+2; else h=(r-g)/d+4; }
-    return (h*60+360)%360;
-  }
-  const bucket = h => (h<30)?'red':(h<90)?'gold':(h<150)?'green':(h<210)?'cyan':(h<270)?'blue':'violet';
-
-  function ytId(input){
-    if(!input) return null;
+  /* ===== YouTube minimal volume control ===== */
+  var yt = document.getElementById('yt');
+  var vidVol = document.getElementById('vidVol');
+  var vidVolLbl = document.getElementById('vidVolLbl');
+  function ytPost(cmd, value){
     try{
-      if(input.startsWith('http')){
-        const u=new URL(input);
-        if(u.hostname.includes('youtube.com')) return u.searchParams.get('v');
-        if(u.hostname.includes('youtu.be')) return u.pathname.slice(1);
-      }
-    }catch(e){}
-    return input.trim();
-  }
-  function thumbUrl(id){ return "https://img.youtube.com/vi/"+id+"/hqdefault.jpg"; }
-  function extractPalette(id){
-    const img=new Image(); img.crossOrigin="anonymous"; img.src=thumbUrl(id);
-    const fallback=()=>{
-      let h=0; for(let i=0;i<id.length;i++){ h=(h*31+id.charCodeAt(i))>>>0; }
-      const base=(h%360);
-      setVars([hexFromHsl(base,72,60), hexFromHsl(base+60,70,68), hexFromHsl(base+300,72,64)]);
-      computeEverything();
-    };
-    img.onload=function(){
-      try{
-        const cvs=document.createElement('canvas'), ctx=cvs.getContext('2d');
-        cvs.width=img.naturalWidth; cvs.height=img.naturalHeight; ctx.drawImage(img,0,0);
-        const data=ctx.getImageData(0,0,cvs.width,cvs.height).data; const N=12, buckets=new Array(12).fill(0).map(()=>({r:0,g:0,b:0,c:0}));
-        for(let i=0;i<data.length;i+=4*N){
-          const r=data[i], g=data[i+1], b=data[i+2], mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn; let h=0;
-          if(d!==0){ if(mx===r) h=((g-b)/d)%6; else if(mx===g) h=(b-r)/d+2; else h=(r-g)/d+4; }
-          h=Math.round((h*60+360)%360); const idx=Math.floor(h/30)%12; const bk=buckets[idx]; bk.r+=r; bk.g+=g; bk.b+=b; bk.c++;
-        }
-        const tops=buckets.map(bk=>({c:bk.c,r:Math.round(bk.r/Math.max(1,bk.c)),g:Math.round(bk.g/Math.max(1,bk.c)),b:Math.round(bk.b/Math.max(1,bk.c))}))
-                          .sort((a,b)=>b.c-a.c).slice(0,3);
-        setVars(tops.map(t=>toHex([t.r,t.g,t.b]))); computeEverything();
-      }catch(e){ fallback(); }
-    };
-    img.onerror=fallback;
-  }
-  const ID_HAPPY = "s6AHxF0s764";
-  const ID_OHNO  = "Cr-SqRWImmI";
-
-  function setVideo(id){
-    const wrap=$('player'); const prev=wrap.querySelector('iframe');
-    if(prev){ prev.src=""; wrap.removeChild(prev); }
-    const p=new URLSearchParams({autoplay:1,controls:1,playsinline:1,loop:1,playlist:id,rel:0,modestbranding:1});
-    const iframe=document.createElement('iframe');
-    iframe.src = "https://www.youtube.com/embed/"+id+"?"+p.toString();
-    iframe.allow="autoplay; encrypted-media; picture-in-picture"; iframe.title="YouTube player";
-    wrap.appendChild(iframe);
-    extractPalette(id);
-    try{ localStorage.setItem('froot_last_video', id);}catch(e){}
-  }
-
-  /* ---------- Effects + Rituals ---------- */
-  const EFFECT_MAP = {
-    red:   { Calm:20, Focus:35, Play:85, Ground:65, Open:55, rituals:['movement','candle','honey','128low'] },
-    gold:  { Calm:35, Focus:40, Play:75, Ground:70, Open:65, rituals:['sunlight','gratitude','honey','breath'] },
-    green: { Calm:70, Focus:55, Play:40, Ground:80, Open:60, rituals:['plant','walk','breath','water'] },
-    cyan:  { Calm:60, Focus:70, Play:35, Ground:45, Open:65, rituals:['water','journaling','breath','clarity'] },
-    blue:  { Calm:85, Focus:75, Play:25, Ground:55, Open:50, rituals:['dimlight','breath','128soft','sleep'] },
-    violet:{ Calm:75, Focus:60, Play:35, Ground:40, Open:85, rituals:['mirror','incense','airy','128soft'] },
-  };
-  const RITUALS = {
-    breath:   { name:'Color-Breath (6x)',        ctx:{Solo:1.0,Duet:1.1,Mirror:1.15,Group:1.0} },
-    movement: { name:'Micro-dance / sway',       ctx:{Solo:1.0,Duet:1.2,Mirror:1.0, Group:1.15} },
-    walk:     { name:'Ground walk (3–8m)',       ctx:{Solo:1.1,Duet:1.0,Mirror:1.0, Group:1.0} },
-    plant:    { name:'Touch a living plant',     ctx:{Solo:1.1,Duet:1.0,Mirror:1.0, Group:1.0} },
-    water:    { name:'Sip water, slow',          ctx:{Solo:1.0,Duet:1.0,Mirror:1.0, Group:1.0} },
-    journaling:{name:'2 lines in notebook',      ctx:{Solo:1.15,Duet:1.0,Mirror:1.0, Group:1.0} },
-    clarity:  { name:'One-tab tidy',             ctx:{Solo:1.15,Duet:1.0,Mirror:1.0, Group:1.0} },
-    candle:   { name:'Candle / warm light',      ctx:{Solo:1.0,Duet:1.05,Mirror:1.1, Group:1.0} },
-    sunlight: { name:'Face real sunlight',       ctx:{Solo:1.15,Duet:1.0,Mirror:1.0, Group:1.05}},
-    dimlight: { name:'Dim light / blue hush',    ctx:{Solo:1.1,Duet:1.0,Mirror:1.05,Group:1.0} },
-    incense:  { name:'Incense / scent',          ctx:{Solo:1.05,Duet:1.0,Mirror:1.1, Group:1.0} },
-    honey:    { name:'Taste honey (tiny)',       ctx:{Solo:1.0,Duet:1.1,Mirror:1.05,Group:1.05}},
-    '128low': { name:'128 Hz (low) via Warmth',  ctx:{Solo:1.1,Duet:1.15,Mirror:1.15,Group:1.0}, link:'https://warmth.plnt.earth'},
-    '128soft':{ name:'128 Hz (soft + airy)',     ctx:{Solo:1.15,Duet:1.15,Mirror:1.2, Group:1.0}, link:'https://warmth.plnt.earth'},
-    airy:     { name:'Airy overlay (Echo)',      ctx:{Solo:1.1,Duet:1.2,Mirror:1.2, Group:1.0}, link:'https://echo.plnt.earth'},
-    mirror:   { name:'Mirror gaze (MirrorHoney)',ctx:{Solo:1.1,Duet:1.25,Mirror:1.35,Group:1.0}, link:'https://mirrorhoney.plnt.earth'},
-    gratitude:{ name:'1 sentence gratitude',     ctx:{Solo:1.1,Duet:1.15,Mirror:1.1, Group:1.1}},
-    sleep:    { name:'Wind-down frame',          ctx:{Solo:1.2,Duet:1.0,Mirror:1.0, Group:1.0} }
-  };
-  const CTX = { Solo:true, Duet:false, Mirror:false, Group:false };
-
-  function dominantFamily(){
-    const hex=$('hex1').textContent; return bucket(hueOf(hex));
-  }
-  function renderBar(name,val){
-    $('fx'+name).style.width = val+'%';
-    $('fx'+name).style.background = 'linear-gradient(90deg, var(--good), var(--accent1))';
-    $('pct'+name).textContent = val+'%';
-  }
-  function computeEffects(){
-    const fam = dominantFamily();
-    const base = EFFECT_MAP[fam]||EFFECT_MAP.blue;
-    const nud = {Solo:1,Duet:1,Mirror:1,Group:1};
-    if(CTX.Duet)   nud.Duet=1.08;
-    if(CTX.Mirror) nud.Mirror=1.1;
-    if(CTX.Group)  nud.Group=1.06;
-    const denom = 1 + (CTX.Duet?1:0)+(CTX.Mirror?1:0)+(CTX.Group?1:0);
-    const ctxMul=(nud.Solo + (CTX.Duet?nud.Duet:0) + (CTX.Mirror?nud.Mirror:0) + (CTX.Group?nud.Group:0))/denom;
-    const ef = {
-      Calm:  clamp(Math.round(base.Calm*ctxMul),0,100),
-      Focus: clamp(Math.round(base.Focus*ctxMul),0,100),
-      Play:  clamp(Math.round(base.Play*ctxMul),0,100),
-      Ground:clamp(Math.round(base.Ground*ctxMul),0,100),
-      Open:  clamp(Math.round(base.Open*ctxMul),0,100),
-    };
-    renderBar('Calm',ef.Calm); renderBar('Focus',ef.Focus); renderBar('Play',ef.Play); renderBar('Ground',ef.Ground); renderBar('Open',ef.Open);
-    return ef;
-  }
-  function ritualList(){
-    const fam = dominantFamily();
-    const base = EFFECT_MAP[fam]?.rituals || [];
-    const extra = ['breath','water','gratitude'];
-    return Array.from(new Set([...base, ...extra]));
-  }
-  function ctxBest(k){ return Object.entries(RITUALS[k].ctx).sort((a,b)=>b[1]-a[1])[0][0]; }
-  function renderRituals(){
-    const grid=$('ritGrid'); grid.innerHTML='';
-    ritualList().forEach(k=>{
-      const r=RITUALS[k]; if(!r) return;
-      const div=document.createElement('div'); div.className='rit'; div.dataset.key=k;
-      const suffix = r.link ? ` — <a href="${r.link}" target="_blank" rel="noopener">open</a>` : '';
-      div.innerHTML = `<b>${r.name}${suffix}</b><small>best in: ${ctxBest(k)}</small>`;
-      div.addEventListener('click', ()=>{ div.classList.toggle('on'); updateBoost(); });
-      grid.appendChild(div);
-    });
-    updateBoost();
-  }
-  function updateBoost(){
-    const chosen = Array.from(document.querySelectorAll('.rit.on')).map(el=>el.dataset.key);
-    const actCtx = Object.keys(CTX).filter(c=>CTX[c]);
-    let score=0, max= ritualList().length * 10;
-    chosen.forEach(k=>{
-      const base=10;
-      const mul = actCtx.reduce((acc,c)=>acc+(RITUALS[k].ctx[c]||1),0)/actCtx.length;
-      score += base*mul;
-    });
-    const pct = clamp(Math.round(100*score/max),0,100);
-    $('boostFill').style.width = pct+'%';
-    $('boostFill').style.background = 'linear-gradient(90deg,var(--good),var(--accent1))';
-    $('boostVal').textContent = `Boost ${pct}%`;
-  }
-  const IDEAS = {
-    red:   { wear:["scarlet accent","warm leather"], move:["micro-dance 2m","power walk 8m"], choice:["say the bolder truth"] },
-    gold:  { wear:["amber scarf","golden earrings"], move:["sun salutation ×3","face to light"], choice:["pick the first yes"] },
-    green: { wear:["moss hoodie","olive jacket"], move:["park lap","shoulder rolls"], choice:["water one seed today"] },
-    cyan:  { wear:["sea-glass ring","turquoise sock"], move:["neck arcs","box-breath 4-4-4-4"], choice:["close one tab cleanly"] },
-    blue:  { wear:["navy coat","denim layer"], move:["5-min stretch","spine wave"], choice:["protect tonight’s sleep"] },
-    violet:{ wear:["lavender tee","amethyst charm"], move:["cat–cow ×8","soft sway"], choice:["one kind message"] },
-  };
-  function renderUse(){
-    const fam=dominantFamily(); const v=IDEAS[fam];
-    $('wear').textContent=v.wear.join(' • ');
-    $('move').textContent=v.move.join(' • ');
-    $('choice').textContent=v.choice;
-  }
-  function computeEverything(){ computeEffects(); renderRituals(); renderUse(); }
-
-  /* ---------- Contexts, Save, UI ---------- */
-  function toggleCtx(btn,key){
-    const on = btn.getAttribute('aria-pressed')==='true';
-    btn.setAttribute('aria-pressed', on?'false':'true');
-    CTX[key]=!on; computeEverything();
-  }
-  $('ctxSolo').addEventListener('click', ()=>toggleCtx($('ctxSolo'),'Solo'));
-  $('ctxDuet').addEventListener('click', ()=>toggleCtx($('ctxDuet'),'Duet'));
-  $('ctxMirror').addEventListener('click', ()=>toggleCtx($('ctxMirror'),'Mirror'));
-  $('ctxGroup').addEventListener('click', ()=>toggleCtx($('ctxGroup'),'Group'));
-
-  const K='froot_cards_v3';
-  function saveCard(){
-    try{
-      const effects = computeEffects();
-      const rituals = Array.from(document.querySelectorAll('.rit.on')).map(el=>el.dataset.key);
-      const contexts = Object.keys(CTX).filter(k=>CTX[k]);
-      const card = {
-        t:Date.now(),
-        sw:[$('hex1').textContent,$('hex2').textContent,$('hex3').textContent],
-        fam:dominantFamily(), effects, rituals, contexts,
-        wear:$('wear').textContent, move:$('move').textContent, choice:$('choice').textContent,
-        note:$('write').value
-      };
-      const arr = JSON.parse(localStorage.getItem(K)||'[]'); arr.unshift(card);
-      localStorage.setItem(K, JSON.stringify(arr));
-      renderGallery(arr);
+      yt.contentWindow.postMessage(JSON.stringify({
+        event:'command', func:cmd, args: value!==undefined ? [value] : undefined
+      }), '*');
     }catch(e){}
   }
-  function renderGallery(arr){
-    $('count').textContent = (arr?.length||0).toString();
-    const g=$('gallery'); g.innerHTML='';
-    (arr||[]).forEach(c=>{
-      const head=`linear-gradient(90deg, ${c.sw[0]}, ${c.sw[1]}, ${c.sw[2]})`;
-      const div=document.createElement('div'); div.className='cardItem';
-      div.innerHTML = `
-        <div class="cardHead" style="background:${head}"></div>
-        <div class="cardBody">
-          <div class="tiny" style="margin-bottom:6px">${new Date(c.t).toLocaleString()}</div>
-          <div class="tiny">Contexts: ${c.contexts.join(' • ')||'Solo'}</div>
-          <div class="tiny">Rituals: ${c.rituals.join(', ')||'–'}</div>
-          <div class="tiny" style="margin-top:6px">Effects — Calm ${c.effects.Calm} · Focus ${c.effects.Focus} · Play ${c.effects.Play} · Ground ${c.effects.Ground} · Open ${c.effects.Open}</div>
-          ${c.note ? `<div class="tiny" style="margin-top:6px"><i>“${c.note.replace(/</g,'&lt;')}”</i></div>`:''}
-        </div>`;
-      g.appendChild(div);
+  function applyVideoVolume(){
+    var v = Math.max(0, Math.min(100, parseInt(vidVol.value,10)||0));
+    vidVolLbl.textContent = v + '%';
+    ytPost('setVolume', v);
+  }
+  vidVol.addEventListener('input', applyVideoVolume);
+
+  /* ===== Honey Tone (WebAudio) ===== */
+  var ctx, gainL, gainR, oscL, oscR, analyser, meterBuf, rafId;
+  var started=false, neon=true, baseHz=128;
+
+  function ensureCtx(){
+    if(ctx) return;
+    ctx = new (window.AudioContext||window.webkitAudioContext)();
+    gainL = ctx.createGain(); gainR = ctx.createGain();
+    var merger = ctx.createChannelMerger(2);
+    analyser = ctx.createAnalyser(); analyser.fftSize = 512;
+    meterBuf = new Uint8Array(analyser.frequencyBinCount);
+    gainL.connect(merger,0,0); gainR.connect(merger,0,1);
+    merger.connect(analyser); analyser.connect(ctx.destination);
+  }
+  function stopToneNodes(){
+    try{ if(oscL){ oscL.stop(); oscL.disconnect(); } }catch(e){}
+    try{ if(oscR){ oscR.stop(); oscR.disconnect(); } }catch(e){}
+    oscL=null; oscR=null;
+  }
+  function startTone(){
+    ensureCtx();
+    if(ctx.state==='suspended'){ ctx.resume(); }
+    stopToneNodes();
+    oscL = ctx.createOscillator(); oscR = ctx.createOscillator();
+    oscL.type='sine'; oscR.type='sine';
+    var delta = neon ? 2 : 0;
+    var left  = Math.max(20, baseHz - delta);
+    var right = Math.max(20, baseHz + delta);
+    try{ oscL.frequency.value = left; }catch(e){}
+    try{ oscR.frequency.value = right; }catch(e){}
+    var v = Math.max(0, Math.min(1, parseFloat(toneVol.value)||0));
+    gainL.gain.value = v; gainR.gain.value = v;
+    oscL.connect(gainL); oscR.connect(gainR);
+    oscL.start(); oscR.start();
+    started = true; monitor(true);
+  }
+  function pauseTone(){
+    stopToneNodes(); started=false; monitor(false);
+    if(rafId){ cancelAnimationFrame(rafId); rafId=null; }
+  }
+
+  /* Status light via simple RMS meter */
+  var statusEl = document.getElementById('toneStatus');
+  var led = statusEl.querySelector('.led');
+  function setStatus(ok){
+    if(ok){
+      statusEl.classList.add('ok');
+      statusEl.lastChild.textContent = 'tone healthy';
+    }else{
+      statusEl.classList.remove('ok');
+      statusEl.lastChild.textContent = 'tone inactive';
+    }
+  }
+  function monitor(on){
+    if(!on){ setStatus(false); return; }
+    function loop(){
+      analyser.getByteTimeDomainData(meterBuf);
+      var sum=0, n=meterBuf.length, i=0;
+      for(;i<n;i++){ var x=(meterBuf[i]-128)/128; sum+=x*x; }
+      var rms = Math.sqrt(sum/n);
+      setStatus(rms>0.005);
+      rafId = requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  /* UI controls */
+  var startBtn = document.getElementById('start');
+  var pauseBtn = document.getElementById('pause');
+  startBtn.addEventListener('click', startTone);
+  pauseBtn.addEventListener('click', pauseTone);
+
+  var toneVol = document.getElementById('toneVol');
+  var toneVolLbl = document.getElementById('toneVolLbl');
+  function setToneVolLabel(){ toneVolLbl.textContent = (parseFloat(toneVol.value)||0).toFixed(2); }
+  toneVol.addEventListener('input', function(){
+    var v = Math.max(0, Math.min(1, parseFloat(toneVol.value)||0));
+    setToneVolLabel();
+    if(gainL){ gainL.gain.value = v; } if(gainR){ gainR.gain.value = v; }
+  });
+  setToneVolLabel();
+
+  function setFreqButtons(f){
+    var btns=document.querySelectorAll('.freq');
+    for(var i=0;i<btns.length;i++){
+      btns[i].setAttribute('aria-pressed', (btns[i].dataset.f==String(f))?'true':'false');
+    }
+  }
+  var freqBtns=document.querySelectorAll('.freq');
+  for(var j=0;j<freqBtns.length;j++){
+    freqBtns[j].addEventListener('click', function(){
+      baseHz = parseInt(this.dataset.f,10)||128;
+      setFreqButtons(baseHz);
+      if(started){ startTone(); }
     });
   }
-  $('save').addEventListener('click', saveCard);
-  $('clearCards').addEventListener('click', ()=>{ if(confirm('Clear saved Froot cards (local only)?')){ localStorage.removeItem(K); renderGallery([]); }});
-  $('shuffle').addEventListener('click', ()=>{
-    const arr=[$('hex1').textContent,$('hex2').textContent,$('hex3').textContent];
-    setVars([arr[1],arr[2],arr[0]]); computeEverything();
+  document.getElementById('neon').addEventListener('click', function(){
+    var pressed = this.getAttribute('aria-pressed')==='true';
+    this.setAttribute('aria-pressed', pressed?'false':'true');
+    neon = !pressed; if(started){ startTone(); }
   });
 
-  // Load / Presets
-  $('load').addEventListener('click', ()=>{
-    const id = ytId($('yt').value);
-    if(id && id.length>=5) setVideo(id);
-  });
-  $('presetHappy').addEventListener('click', ()=>{ $('yt').value=ID_HAPPY; setVideo(ID_HAPPY); });
-  $('presetOhNo').addEventListener('click', ()=>{ $('yt').value=ID_OHNO;  setVideo(ID_OHNO); });
+  /* ===== Mode toggle: Violet ↔ Pearl ===== */
+  var btnViolet = document.getElementById('btnViolet');
+  var btnPearl  = document.getElementById('btnPearl');
+  var modeLabel = document.getElementById('modeLabel');
 
-  /* ---------- Marina Air (WebAudio) ---------- */
-  var AudioContext = window.AudioContext || window.webkitAudioContext;
-  var ctxA, master, limiter, tone, airy, gainTone, gainAiry, tick;
-  function initAudio(){
-    if(ctxA) return;
-    ctxA = new AudioContext({ latencyHint:'interactive' });
+  function setMode(violet){
+    document.body.setAttribute('data-mode', violet?'violet':'pearl');
+    btnViolet.setAttribute('aria-pressed', violet?'true':'false');
+    btnPearl.setAttribute('aria-pressed', violet?'false':'true');
 
-    master = ctxA.createGain(); master.gain.value = 1.0;
-
-    limiter = ctxA.createDynamicsCompressor();
-    limiter.threshold.value = -14; limiter.knee.value = 24; limiter.ratio.value = 6;
-    limiter.attack.value = 0.004; limiter.release.value = 0.25;
-
-    master.connect(limiter); limiter.connect(ctxA.destination);
-
-    tone = ctxA.createOscillator(); tone.type='sine'; tone.frequency.value=128;
-    gainTone = ctxA.createGain(); gainTone.gain.value = parseFloat($('toneGain').value);
-
-    airy = ctxA.createOscillator(); airy.type='sine'; airy.frequency.value=512;
-    gainAiry = ctxA.createGain(); gainAiry.gain.value = parseFloat($('airyGain').value);
-    var lfo = ctxA.createOscillator(); lfo.frequency.value=0.12;
-    var lfoGain = ctxA.createGain(); lfoGain.gain.value = 2.2; // cents
-
-    lfo.connect(lfoGain); lfoGain.connect(airy.detune);
-    tone.connect(gainTone); gainTone.connect(master);
-    airy.connect(gainAiry); gainAiry.connect(master);
-
-    tone.start(); airy.start(); lfo.start();
-
-    // tiny background tick (best-effort keepalive)
-    tick = ctxA.createOscillator(); tick.frequency.value = 40;
-    var gt = ctxA.createGain(); gt.gain.value = 0.00001; tick.connect(gt).connect(master); tick.start();
-
-    $('airStatus').classList.remove('warn'); $('airStatus').classList.add('ok');
-    $('airText').textContent = 'Marina Air — live';
+    if(violet){
+      modeLabel.textContent = 'Violet — intuition / bridge';
+      baseHz = 128; neon = true; vidVol.value = 60;
+      document.getElementById('neon').setAttribute('aria-pressed','true');
+      setFreqButtons(128);
+    }else{
+      modeLabel.textContent = 'Pearl — integration / clarity';
+      baseHz = 160; neon = false; vidVol.value = 70;
+      document.getElementById('neon').setAttribute('aria-pressed','false');
+      setFreqButtons(160);
+    }
+    applyVideoVolume();
+    if(started){ startTone(); }
+    try{ localStorage.setItem('froot_mode', violet?'violet':'pearl'); }catch(e){}
   }
-  $('startAudio').addEventListener('click', function(){ initAudio(); this.disabled = true; });
-  $('marinaAir').addEventListener('click', function(){
-    if(!ctxA) return;
-    const on = this.getAttribute('aria-pressed')==='true';
-    this.setAttribute('aria-pressed', on?'false':'true');
-    this.textContent = on ? 'Marina Air: Off' : 'Marina Air: On';
-    const tgv = parseFloat($('toneGain').value), agv=parseFloat($('airyGain').value);
-    gainTone.gain.value = on ? 0 : tgv;
-    gainAiry.gain.value = on ? 0 : agv;
-  });
-  $('toneGain').addEventListener('input', function(){ if(gainTone) gainTone.gain.value = Math.min(0.5, Math.max(0, parseFloat(this.value))); });
-  $('airyGain').addEventListener('input', function(){ if(gainAiry) gainAiry.gain.value = Math.min(0.15, Math.max(0, parseFloat(this.value))); });
 
-  (function loop(){ const el=$('warmthMeter'); if(el) el.style.width=(35+Math.sin(Date.now()/900)*15).toFixed(2)+'%'; requestAnimationFrame(loop); })();
-  document.addEventListener('visibilitychange', ()=>{ if(ctxA && document.visibilityState==='visible' && ctxA.state!=='running'){ ctxA.resume(); }});
+  btnViolet.addEventListener('click', function(){ setMode(true); });
+  btnPearl.addEventListener('click',  function(){ setMode(false); });
 
-  /* ---------- Init: load last video or Happy ---------- */
-  (function initVideo(){
-    const urlId = (new URLSearchParams(location.search)).get('v');
-    if(urlId && urlId.length>=5){ $('yt').value=urlId; setVideo(urlId); return; }
-    try{
-      const saved = localStorage.getItem('froot_last_video');
-      if(saved && saved.length>=5){ $('yt').value=saved; setVideo(saved); return; }
-    }catch(e){}
-    $('yt').value = ID_HAPPY; setVideo(ID_HAPPY);
-  })();
+  /* Persist last mode */
+  try{
+    var saved = localStorage.getItem('froot_mode');
+    if(saved==='pearl'){ setMode(false); } else { setMode(true); }
+  }catch(e){ setMode(true); }
 
-  /* ---------- Gallery init ---------- */
-  (function(){ try{ renderGallery(JSON.parse(localStorage.getItem('froot_cards_v3')||'[]')); }catch(e){} })();
-
-  /* ---------- Color Engine ---------- */
-  const themes = {
-    alter:  { bg:'#0b0d11', ink:'#f6f0ff', muted:'#c9c0e6', card:'#11122a', ring:'#2b2250',
-              mint:'#b2f5ea', vio:'#b7a9ff', gold:'#ffd479', rose:'#ff6bd6', good:'#9cf3d2',
-              a1:'#ff6bd6', a2:'#7a00ff', a3:'#4af2d8', a4:'#ffd479', glow:'rgba(255,107,214,.45)' },
-    honey:  { bg:'#0b0d11', ink:'#fff7ea', muted:'#d8ccb0', card:'#191510', ring:'#3a2f1e',
-              mint:'#ffe6a3', vio:'#ffb3d1', gold:'#ffd479', rose:'#ff9bb7', good:'#f8f1c9',
-              a1:'#ffd479', a2:'#ff8fb3', a3:'#fff4c2', a4:'#ffc07a', glow:'rgba(255,212,121,.45)' },
-    ocean:  { bg:'#07121d', ink:'#e9f7ff', muted:'#a7c6d8', card:'#0c1a2b', ring:'#19324b',
-              mint:'#78e6ff', vio:'#b7d6ff', gold:'#ffe59e', rose:'#84e1d2', good:'#9cf3d2',
-              a1:'#78e6ff', a2:'#1f6fff', a3:'#4af2d8', a4:'#ffd479', glow:'rgba(120,230,255,.38)' },
-    forest: { bg:'#08120d', ink:'#ebffef', muted:'#b7d8c3', card:'#0e1f16', ring:'#214433',
-              mint:'#c2f5cf', vio:'#b7ffcf', gold:'#f2ffb0', rose:'#b7ffc8', good:'#bff7d9',
-              a1:'#22c55e', a2:'#6ee7b7', a3:'#c2f5cf', a4:'#f2ffb0', glow:'rgba(110,231,183,.38)' },
-    prism:  { bg:'#0b0d11', ink:'#e9ecf4', muted:'#aab2c2', card:'#101626', ring:'#1b2134',
-              mint:'#b2f5ea', vio:'#b7a9ff', gold:'#ffd479', rose:'#ff8fb3', good:'#9cf3d2',
-              a1:'#b7a9ff', a2:'#4af2d8', a3:'#ffd479', a4:'#ff8fb3', glow:'rgba(183,169,255,.45)' }
-  };
-  function applyTheme(t){
-    const v = themes[t]||themes.prism;
-    const r = document.documentElement.style;
-    r.setProperty('--bg', v.bg); r.setProperty('--ink', v.ink); r.setProperty('--muted', v.muted);
-    r.setProperty('--card', v.card); r.setProperty('--ring', v.ring);
-    r.setProperty('--mint', v.mint); r.setProperty('--vio', v.vio); r.setProperty('--gold', v.gold); r.setProperty('--rose', v.rose); r.setProperty('--good', v.good);
-    r.setProperty('--accent1', v.a1); r.setProperty('--accent2', v.a2); r.setProperty('--accent3', v.a3); r.setProperty('--accent4', v.a4);
-    r.setProperty('--glow', v.glow);
-  }
-  Array.from(document.querySelectorAll('.swatch')).forEach(s=>{
-    s.addEventListener('click', ()=>{ applyTheme(s.dataset.theme); try{ localStorage.setItem('froot_theme', s.dataset.theme);}catch(e){} });
-  });
-  const autoBtn = $('autoPrism'); let autoTimer=null, order=['alter','honey','ocean','forest','prism'], pos=0;
-  autoBtn.addEventListener('click', ()=>{
-    const on = autoBtn.getAttribute('aria-pressed')==='true';
-    if(on){ autoBtn.setAttribute('aria-pressed','false'); autoBtn.textContent='Auto Prism: Off'; if(autoTimer) clearInterval(autoTimer); }
-    else { autoBtn.setAttribute('aria-pressed','true'); autoBtn.textContent='Auto Prism: On'; autoTimer=setInterval(()=>{ pos=(pos+1)%order.length; applyTheme(order[pos]); }, 12000); }
-  });
-  (function initTheme(){
-    let t=''; try{ t=localStorage.getItem('froot_theme')||'';}catch(e){}
-    applyTheme(t||'alter'); // start with Alter Fire
-  })();
-
+  /* Init */
+  applyVideoVolume();
 })();
 </script>
 </body>
