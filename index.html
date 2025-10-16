@@ -3,190 +3,177 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>froot.plnt.earth — χ Palettes + Video (v1.3)</title>
-<meta name="description" content="Froot — feel the χ-field as color palettes, tones, micro-rituals, and clean, tinted video cards. Tabs for Marina, Sigrid, Sabrina, Swift, Ariana, Doechii. Cycle-aware via /data/calendar.json." />
+<title>froot.plnt.earth — χ Palettes + Video (v1.3.1)</title>
+<meta name="description" content="Froot — feel the χ-field as color palettes, tones, micro-rituals and clean tinted video cards. Tabs for Marina, Sigrid, Sabrina, Swift, Ariana, Doechii. Cycle-aware via /data/calendar.json and /data/seeds.json." />
 <meta name="color-scheme" content="dark light" />
 <meta name="theme-color" content="#0b0b10" />
 
 <style>
+:root{
+  --bg:#0b0b10;--bg-soft:#12121a;--panel:#171723;
+  --ink:#e9e9ef;--ink-dim:#b7b7c6;--ink-soft:#8d8da1;
+  --accent:#9ad7ff;--accent-2:#a0ffa6;--callout:#1e2740;
+  --border:#26263a;--shadow:0 8px 30px rgba(0,0,0,.35);
+  --radius:14px;--maxw:1000px;--header-h:56px;
+  --tint:rgba(0,0,0,0);--tintOpacity:.35;
+}
+@media (min-width:980px){:root{--header-h:64px}}
+@media (prefers-color-scheme:light){
   :root{
-    --bg:#0b0b10; --bg-soft:#12121a; --panel:#171723;
-    --ink:#e9e9ef; --ink-dim:#b7b7c6; --ink-soft:#8d8da1;
-    --accent:#9ad7ff; --accent-2:#a0ffa6; --callout:#1e2740;
-    --border:#26263a; --shadow:0 8px 30px rgba(0,0,0,.35);
-    --radius:14px; --maxw:1000px; --header-h:56px;
-    --tint: rgba(0,0,0,0); --tintOpacity: 0.35;
+    --bg:#f9fafc;--bg-soft:#f1f4f8;--panel:#fff;
+    --ink:#111217;--ink-dim:#303241;--ink-soft:#5b5e70;
+    --accent:#165dff;--accent-2:#0b9f52;--callout:#eaf2ff;
+    --border:#e6e8ee;
   }
-  @media (min-width:980px){ :root{ --header-h:64px } }
-  @media (prefers-color-scheme: light){
-    :root{
-      --bg:#f9fafc; --bg-soft:#f1f4f8; --panel:#ffffff;
-      --ink:#111217; --ink-dim:#303241; --ink-soft:#5b5e70;
-      --accent:#165dff; --accent-2:#0b9f52; --callout:#eaf2ff;
-      --border:#e6e8ee;
-    }
-  }
-  *{ box-sizing:border-box }
-  html,body{
-    margin:0; padding:0; background:var(--bg); color:var(--ink);
-    font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,Apple Color Emoji,Segoe UI Emoji;
-    line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility
-  }
-  a{ color:var(--accent); text-decoration:none } a:hover{text-decoration:underline}
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,Apple Color Emoji,Segoe UI Emoji;
+  line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility
+}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
 
-  header.site{
-    position:sticky; top:0; z-index:50;
-    background: color-mix(in oklab, var(--bg) 86%, transparent);
-    backdrop-filter:saturate(120%) blur(6px);
-    border-bottom:1px solid var(--border);
-    block-size: calc(var(--header-h) + env(safe-area-inset-top));
-    padding-top: env(safe-area-inset-top);
-  }
-  .site-inner{
-    max-width:var(--maxw); margin:0 auto; padding:8px 20px; block-size:calc(var(--header-h));
-    display:flex; align-items:center; gap:12px
-  }
-  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px; white-space:nowrap }
-  .dot{ inline-size:10px; block-size:10px; border-radius:50%; background:var(--accent);
-    box-shadow:0 0 24px color-mix(in oklab, var(--accent) 70%, transparent) }
-  .spacer{ flex:1 }
-  .btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px;
-    background:var(--panel); color:var(--ink); border:1px solid var(--border); box-shadow:var(--shadow);
-    text-decoration:none; font-weight:600; font-size:13px; white-space:nowrap }
-  .btn.secondary{ background:var(--bg-soft) }
+/* header */
+header.site{
+  position:sticky;top:0;z-index:50;
+  background:color-mix(in oklab,var(--bg)86%,transparent);
+  backdrop-filter:saturate(120%) blur(6px);
+  border-bottom:1px solid var(--border);
+  block-size:calc(var(--header-h)+env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top)
+}
+.site-inner{
+  max-width:var(--maxw);margin:0 auto;padding:8px 20px;
+  block-size:calc(var(--header-h));display:flex;align-items:center;gap:12px
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.3px;white-space:nowrap}
+.dot{inline-size:10px;block-size:10px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 24px color-mix(in oklab,var(--accent)70%,transparent)}
+.spacer{flex:1}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;
+  background:var(--panel);color:var(--ink);border:1px solid var(--border);box-shadow:var(--shadow);
+  text-decoration:none;font-weight:600;font-size:13px;white-space:nowrap}
+.btn.secondary{background:var(--bg-soft)}
 
-  .wrap{ max-width:var(--maxw); margin:0 auto; padding: calc(var(--header-h) + env(safe-area-inset-top) + 14px) 20px 80px }
-  .hero{ position:relative; background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 70%, transparent), transparent 60%);
-    border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); overflow:hidden }
-  .tint{ position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; background:var(--tint); opacity:var(--tintOpacity) }
-  h1{ font-size:clamp(26px,3vw,38px); margin:0 0 8px }
-  .sub{ color:var(--ink-soft); font-size:clamp(14px,2vw,16px) }
-  .badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px }
-  .badge{ font-size:12px; color:var(--ink-soft); background:var(--bg-soft);
-    border:1px solid var(--border); padding:6px 10px; border-radius:999px }
+.wrap{max-width:var(--maxw);margin:0 auto;
+  padding:calc(var(--header-h)+env(safe-area-inset-top)+14px) 20px 80px}
+.hero{position:relative;background:linear-gradient(180deg,color-mix(in oklab,var(--panel)70%,transparent),transparent 60%);
+  border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);overflow:hidden}
+.tint{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:var(--tint);opacity:var(--tintOpacity)}
+h1{font-size:clamp(26px,3vw,38px);margin:0 0 8px}
+.sub{color:var(--ink-soft);font-size:clamp(14px,2vw,16px)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.badge{font-size:12px;color:var(--ink-soft);background:var(--bg-soft);
+  border:1px solid var(--border);padding:6px 10px;border-radius:999px}
 
-  /* Ground Check (easter egg) */
-  .ground{ position:absolute; top:12px; right:12px; display:flex; align-items:center; gap:10px; z-index:2; user-select:none }
-  .dotegg{
-    inline-size:18px; block-size:18px; border-radius:50%;
-    background:radial-gradient(circle at 30% 30%, #333, #000);
-    border:1px solid var(--border); box-shadow:0 0 0 2px rgba(0,0,0,.2) inset, 0 0 20px rgba(0,0,0,.25);
-    cursor:pointer; position:relative;
-  }
-  .dotegg.on{ background:radial-gradient(circle at 30% 30%, #b6ffd1, #2cff7b);
-    box-shadow:0 0 0 2px rgba(0,0,0,.2) inset, 0 0 28px rgba(46,255,123,.45) }
-  .gtext{ font-size:12px; color:var(--ink-soft) }
-  .breath{
-    display:inline-block; inline-size:18px; block-size:18px; border-radius:50%;
-    background:rgba(154,215,255,.2); border:1px dashed var(--accent); opacity:.75; animation:none;
-  }
-  .breath.on{ animation: breathe 14s ease-in-out infinite; }
-  @keyframes breathe{
-    0%{ transform:scale(1); opacity:.75 }
-    28%{ transform:scale(1.4); opacity:1 }  /* inhale 4 */
-    57%{ transform:scale(1.4); opacity:1 }  /* hold 4 */
-    100%{ transform:scale(0.9); opacity:.65 } /* exhale 6 */
-  }
+/* ground check */
+.ground{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:10px;z-index:2;user-select:none}
+.dotegg{inline-size:18px;block-size:18px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#333,#000);
+  border:1px solid var(--border);
+  box-shadow:0 0 0 2px rgba(0,0,0,.2) inset,0 0 20px rgba(0,0,0,.25);cursor:pointer;position:relative}
+.dotegg.on{background:radial-gradient(circle at 30% 30%,#b6ffd1,#2cff7b);
+  box-shadow:0 0 0 2px rgba(0,0,0,.2) inset,0 0 28px rgba(46,255,123,.45)}
+.gtext{font-size:12px;color:var(--ink-soft)}
+.breath{display:inline-block;inline-size:18px;block-size:18px;border-radius:50%;
+  background:rgba(154,215,255,.2);border:1px dashed var(--accent);opacity:.75;animation:none}
+.breath.on{animation:breathe 14s ease-in-out infinite}
+@keyframes breathe{
+  0%{transform:scale(1);opacity:.75}
+  28%{transform:scale(1.4);opacity:1}
+  57%{transform:scale(1.4);opacity:1}
+  100%{transform:scale(.9);opacity:.65}
+}
 
-  /* Tabs & controls */
-  .tabs{ margin-top:18px; display:flex; gap:8px; flex-wrap:wrap }
-  .tab{ padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:var(--panel);
-    color:var(--ink-soft); font-weight:600; cursor:pointer; user-select:none }
-  .tab.active{ color:var(--ink); background:var(--bg-soft) }
+/* tabs + controls */
+.tabs{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.tab{padding:8px 12px;border-radius:999px;border:1px solid var(--border);
+  background:var(--panel);color:var(--ink-soft);font-weight:600;cursor:pointer;user-select:none}
+.tab.active{color:var(--ink);background:var(--bg-soft)}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg-soft);
+  border:1px solid var(--border);border-radius:999px;font-size:12px;color:var(--ink-soft)}
+.switch{display:inline-flex;gap:8px;align-items:center}
+.switch button{padding:7px 10px;border-radius:8px;border:1px solid var(--border);
+  background:var(--panel);color:var(--ink);font-weight:600;cursor:pointer}
+.switch button.active{background:var(--bg-soft)}
+.start{padding:10px 14px;border-radius:10px;border:1px solid var(--border);
+  background:var(--accent);color:#001;font-weight:800;cursor:pointer}
+.range{display:inline-flex;align-items:center;gap:8px}
+.range input{width:140px}
 
-  .controls{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:14px }
-  .chip{ display:inline-flex; align-items:center; gap:8px; padding:7px 10px; background:var(--bg-soft);
-    border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--ink-soft) }
-  .switch{ display:inline-flex; gap:8px; align-items:center }
-  .switch button{ padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--panel); color:var(--ink); font-weight:600; cursor:pointer }
-  .switch button.active{ background:var(--bg-soft) }
-  .start{ padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:var(--accent); color:#001; font-weight:800; cursor:pointer }
-  .range{ display:inline-flex; align-items:center; gap:8px }
-  .range input{ width:140px }
+/* grid + cards */
+.grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px}
+@media(min-width:850px){.grid{grid-template-columns:1fr 1fr}}
+section.card{background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+section.card h2{margin:0 0 10px;font-size:20px}
+.palette{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}
+.sw{border:1px solid var(--border);border-radius:10px;overflow:hidden;position:relative;min-height:64px;cursor:pointer}
+.sw>span{position:absolute;left:8px;bottom:6px;font-size:11px;font-weight:700;color:#000;
+  text-shadow:0 1px 2px rgba(255,255,255,.6)}
+.mini{font-size:12px;opacity:.9}
+.ritual{background:var(--bg-soft);border:1px solid var(--border);border-radius:12px;
+  padding:12px;margin-top:10px;font-size:14px}
+.cchip{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--border);
+  background:var(--bg-soft);font-size:11px;margin-left:6px}
 
-  /* Layout cards */
-  .grid{ display:grid; grid-template-columns:1fr; gap:16px; margin-top:18px }
-  @media (min-width:850px){ .grid{ grid-template-columns: 1fr 1fr } }
-  section.card{ background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow) }
-  section.card h2{ margin:0 0 10px; font-size:20px }
+/* videos */
+.videos{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
+@media(min-width:700px){.videos{grid-template-columns:1fr 1fr}}
+.vcard{position:relative;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#000;box-shadow:var(--shadow)}
+.vcard.expanded{grid-column:1/-1}
+.thumb{position:relative;aspect-ratio:16/9;background:#000 center/cover no-repeat}
+.vlabel{position:absolute;left:10px;bottom:8px;right:10px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  font-size:12px;font-weight:700;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.play,.expand{padding:8px 10px;border-radius:999px;background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.25);color:#fff;font-weight:800}
+.toverlay{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;opacity:var(--tintOpacity);background:var(--tint)}
+.iframe-wrap{position:relative;aspect-ratio:16/9}
+.iframe-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
-  .palette{ display:grid; grid-template-columns: repeat(6,1fr); gap:8px; margin-top:10px }
-  .sw{ border:1px solid var(--border); border-radius:10px; overflow:hidden; position:relative; min-height:64px; cursor:pointer }
-  .sw > span{ position:absolute; left:8px; bottom:6px; font-size:11px; font-weight:700; color:#000; text-shadow: 0 1px 2px rgba(255,255,255,.6) }
-  .mini{ font-size:12px; opacity:.9 }
-  .ritual{ background:var(--bg-soft); border:1px solid var(--border); border-radius:12px; padding:12px; margin-top:10px; font-size:14px }
-  .cchip{ display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid var(--border); background:var(--bg-soft); font-size:11px; margin-left:6px }
+/* footer */
+.footer{margin-top:28px;color:var(--ink-soft);font-size:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.links{display:flex;gap:10px;flex-wrap:wrap}
 
-  /* Videos */
-  .videos{ display:grid; grid-template-columns:1fr; gap:12px; margin-top:10px }
-  @media (min-width:700px){ .videos{ grid-template-columns:1fr 1fr } }
-  .vcard{ position:relative; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#000; box-shadow:var(--shadow) }
-  .vcard.expanded{ grid-column: 1 / -1; }
-  .thumb{ position:relative; aspect-ratio:16/9; background:#000 center/cover no-repeat; }
-  .vlabel{
-    position:absolute; left:10px; bottom:8px; right:10px;
-    display:flex; justify-content:space-between; align-items:center; gap:10px;
-    font-size:12px; font-weight:700; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7);
-  }
-  .play,.expand{
-    padding:8px 10px; border-radius:999px; background:rgba(0,0,0,.55);
-    border:1px solid rgba(255,255,255,.25); color:#fff; font-weight:800
-  }
-  .toverlay{ position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light; opacity:var(--tintOpacity); background:var(--tint) }
-  .iframe-wrap{ position:relative; aspect-ratio:16/9; }
-  .iframe-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+@media(max-width:420px){
+  :root{--header-h:44px}
+  .site-inner{padding:6px 12px;gap:8px}
+  .btn{padding:6px 10px;font-size:12px;border-radius:8px}
+  .hero{padding:16px}
+  section.card{padding:16px}
+}
 
-  .footer{ margin-top:28px; color:var(--ink-soft); font-size:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; align-items:center }
-  .links{ display:flex; gap:10px; flex-wrap:wrap }
+/* moon-phase theme */
+body[data-phase="seed"] .tint{opacity:.25;filter:saturate(.9)}
+body[data-phase="grow"] .tint{opacity:.35;filter:saturate(1.05)}
+body[data-phase="mirror"] .tint{opacity:.5;filter:saturate(1.2)}
+body[data-phase="integrate"] .tint{opacity:.32;filter:saturate(1)}
+body[data-phase="rest"] .tint{opacity:.22;filter:grayscale(.15)}
 
-  @media (max-width:420px){
-    :root{ --header-h:44px }
-    .site-inner{ padding:6px 12px; gap:8px }
-    .btn{ padding:6px 10px; font-size:12px; border-radius:8px }
-    .hero{ padding:16px }
-    section.card{ padding:16px }
-  }
-
-  /* Phase-aware theme (set by calendar loader) */
-  body[data-phase="seed"]      .tint { opacity:0.25; filter:saturate(0.9) }
-  body[data-phase="grow"]      .tint { opacity:0.35; filter:saturate(1.05) }
-  body[data-phase="mirror"]    .tint { opacity:0.5;  filter:saturate(1.2) }
-  body[data-phase="integrate"] .tint { opacity:0.32; filter:saturate(1.0) }
-  body[data-phase="rest"]      .tint { opacity:0.22; filter:grayscale(0.15) }
-
-  @media print{
-    header.site, .tabs, .controls, .footer, .badges, .ground { display:none !important }
-    .wrap{ padding:0 } section.card{ break-inside:avoid } body{ background:#fff }
-  }
+@media print{
+  header.site,.tabs,.controls,.footer,.badges,.ground{display:none!important}
+  .wrap{padding:0}section.card{break-inside:avoid}body{background:#fff}
+}
 </style>
 
-<!-- Illumina calendar loader -->
+<!-- phase loader -->
 <script>
 (function(){
-  function setPhaseByCalendar(c){
+  function setPhase(c){
     try{
-      var start = new Date(c.illumina.start+"T00:00:00");
-      var now = new Date();
-      var day = Math.floor((now - start)/(1000*60*60*24)) + 1; // Day 1-based
-      var phase = 'rest';
-      if(day<=0) phase = 'seed';
-      else if(day<=20) phase = 'grow';
-      else if(day===21) phase = 'mirror';
-      else if(day<=41) phase = 'integrate';
-      else phase = 'rest';
-      document.body.setAttribute('data-phase', phase);
-
-      // Banner text (if present)
-      var cyc = c.illumina;
-      var banner = document.getElementById('cycleBanner');
-      if(banner){
-        banner.textContent = "Illumina " + (cyc.cycle_number||"") + " • " + (cyc.start||"") + " – " + (cyc.end||"");
-      }
+      var s=new Date(c.illumina.start+"T00:00:00"),n=new Date();
+      var d=Math.floor((n-s)/(1000*60*60*24))+1,p='rest';
+      if(d<=0)p='seed';else if(d<=20)p='grow';else if(d===21)p='mirror';
+      else if(d<=41)p='integrate';else p='rest';
+      document.body.dataset.phase=p;
+      var cyc=c.illumina,b=document.getElementById('cycleBanner');
+      if(b)b.textContent="Illumina "+cyc.cycle_number+" • "+cyc.start+" – "+cyc.end;
     }catch(e){}
   }
-  fetch('/data/calendar.json').then(function(r){return r.json();}).then(setPhaseByCalendar).catch(function(){});
-  // seeds.json is optional; preload quietly to warm caches
-  fetch('/data/seeds.json').catch(function(){});
+  fetch('/data/calendar.json').then(r=>r.json()).then(setPhase).catch(()=>{});
 })();
 </script>
 </head>
@@ -196,7 +183,7 @@
   <div class="site-inner">
     <div class="brand"><span class="dot"></span><span>froot.plnt.earth — χ Palettes</span></div>
     <div class="spacer"></div>
-    <a class="btn secondary" href="https://time.plnt.earth" target="_blank" rel="noopener">χ Calibrated (time.plnt.earth)</a>
+    <a class="btn secondary" href="https://time.plnt.earth" target="_blank" rel="noopener">χ Calibrated</a>
     <a class="btn" href="https://github.com/tcarrw/time" target="_blank" rel="noopener">GitHub: tcarrw/time</a>
   </div>
 </header>
@@ -204,26 +191,23 @@
 <main class="wrap">
   <div class="hero">
     <div class="tint" aria-hidden="true"></div>
-
-    <!-- Ground Check -->
     <div class="ground" aria-label="Ground Check">
       <div class="breath" id="breathGuide" title="4-4-6 breath guide (tap to start/stop)"></div>
       <button class="dotegg" id="groundDot" title="Tap 10× or complete a breath cycle / feel test to light"></button>
       <span class="gtext" id="gstatus">Ground Check: off</span>
     </div>
-
     <h1>Feel χ as Color</h1>
     <div class="sub">
-      Pick an anchor • choose a palette • (optional) tone bed • tiny tinted video cards.
+      Pick an anchor • choose a palette • (optional) tone bed • tiny tinted video cards.<br>
+      <strong>Welcome. Start with Blue, breathe once, then press Play.</strong>
       <span class="mini" id="cycleBanner" style="display:block;margin-top:6px;color:var(--ink-soft)"></span>
     </div>
     <div class="badges">
-      <span class="badge">Version v1.3</span>
+      <span class="badge">Version v1.3.1</span>
       <span class="badge">No libraries • No logs</span>
       <span class="badge">Mobile-first • Print-ready</span>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs" role="tablist" aria-label="Anchors">
       <button class="tab active" data-artist="marina" role="tab" aria-selected="true">Marina</button>
       <button class="tab" data-artist="sigrid" role="tab">Sigrid</button>
@@ -233,7 +217,6 @@
       <button class="tab" data-artist="doechii" role="tab">Doechii</button>
     </div>
 
-    <!-- Controls -->
     <div class="controls" aria-label="Tone & Options">
       <button class="start" id="startAudio" aria-pressed="false">Enable Audio</button>
       <div class="switch" role="group" aria-label="Tone">
@@ -253,8 +236,11 @@
 
   <div id="content" class="grid" aria-live="polite"></div>
 
-  <div class="footer">
-    <div>© 2025 PLNT Earth — <em>froot.plnt.earth</em>. CC BY 4.0. Music © respective artists; embedded for reference.</div>
+    <div class="footer" id="footer">
+    <div>
+      © 2025 PLNT Earth — <em>froot.plnt.earth</em> • CC BY 4.0 • Music © respective artists; embedded for reference.
+      <div id="seedLine" style="font-size:12px; opacity:.8; margin-top:6px;"></div>
+    </div>
     <div class="links">
       <a class="btn secondary" href="https://time.plnt.earth" target="_blank" rel="noopener">Back to χ</a>
       <a class="btn secondary" href="#" id="runFeel">Run 30-sec Feel Test</a>
@@ -263,402 +249,24 @@
 </main>
 
 <script>
+/* ---- Seed footer loader (auto-prints latest seed) ---- */
 (function(){
-  /* ---------- Verified Data ---------- */
-  var DATA = {
-    marina: {
-      title: "Marina — Mirror / Butterfly",
-      lyric: "“I feel like I'm the worst, so I always act like I'm the best.” — Oh No!",
-      palettes: [
-        {name:"Blue (Mirror)", hex:["#0E1C3A","#183C66","#1F5FA1","#2C82D3","#6AB6FF","#BFDFFF"], ritual:"Breathe 4–4–6. “Clarity is kind.”"},
-        {name:"Pearl (Clarity)", hex:["#0E0F14","#1D2030","#2A3048","#B8C6DC","#E6EEF8","#F7FAFF"], ritual:"Palms on chest. “I tell the truth softly.”"},
-        {name:"Violet (Victory)", hex:["#1A0F2A","#3A1E5A","#5A2E8A","#8C5FE0","#BCA8FF","#E9E2FF"], ritual:"Exhale through lips. “I take the stage.”"},
-        {name:"Honey (Warmth)", hex:["#1A1202","#3D2606","#6B3E08","#A0640B","#F5B942","#FFE7B0"], ritual:"“Sweet on the tongue, steady in the core.”"},
-        {name:"Air (Lift)", hex:["#0C1418","#0F2A33","#0F3D4C","#1B6A7A","#69C9D0","#C9F4F8"], ritual:"“I rise without effort.”"},
-        {name:"Magnet (Draw)", hex:["#1B0E0E","#391414","#692020","#B53333","#FF6A6A","#FFD1D1"], ritual:"“What matches me arrives.”"}
-      ],
-      songs: [
-        { t: "Froot", id: "WZzcY7ASQno" },
-        { t: "Blue", id: "gDr7aTfBffU" },
-        { t: "I'm a Ruin (I Am a Trier)", id: "ZT_skmohD-c" },
-        { t: "Venus Fly Trap", id: "F1JTlnHGa90" },
-        { t: "Oh No!", id: "Cr-SqRWImmI" },
-        { t: "Happy", id: "s6AHxF0s764" },
-        { t: "Butterfly", id: "aQMKAZpcynA" }
-      ]
-    },
-    sigrid: {
-      title: "Sigrid — Clarity / Jellyfish",
-      lyric: "“I don't know you, but it feels like home.”",
-      palettes: [
-        {name:"Nord (Snow-Sea)", hex:["#0B1216","#10212A","#15313D","#2C5566","#7CC2D0","#E8FBFF"], ritual:"Side-breath. “Ocean in lungs.”"},
-        {name:"Aurora (Blue-Green)", hex:["#0F1A13","#12281C","#17412C","#1F6845","#56B78E","#C9F2E1"], ritual:"Palm to nape. “I glow quiet.”"},
-        {name:"Pearl Rose", hex:["#110E10","#221920","#3F2C3C","#7D597A","#E7C4E1","#FFEAF8"], ritual:"“Kind eyes, clear words.”"},
-        {name:"Sky Milk", hex:["#0D0E11","#161821","#22263A","#6C76A8","#B8C1F0","#F0F3FF"], ritual:"Count 5 things, then close eyes."},
-        {name:"Neon Snow", hex:["#090B13","#0E1730","#13275A","#3B6BFA","#8FB1FF","#E7EEFF"], ritual:"Trace a star and breathe."},
-        {name:"Home Light", hex:["#0E1112","#1C2326","#2C383C","#51757C","#A4C9CE","#EFF7F8"], ritual:"“Steady as tide.”"}
-      ],
-      songs: [
-        { t: "Strangers", id: "cIriwVhRPVA" },
-        { t: "Don’t Feel Like Crying", id: "w5x93pXSmRM" },
-        { t: "Mirror", id: "E7lr7pU9fYA" }
-      ]
-    },
-    sabrina: {
-      title: "Sabrina — Honey / Prism",
-      lyric: "“I'll sweeten every room I enter.”",
-      palettes: [
-        {name:"Prism Honey", hex:["#1A1202","#3D2606","#6B3E08","#A0640B","#F5B942","#FFF4C9"], ritual:"“Honey with boundaries.”"},
-        {name:"Neon Peach", hex:["#1A0C08","#2E1812","#5A2C23","#C96548","#FF9E7C","#FFD7CA"], ritual:"Shimmy shoulders; “Joy moves me.”"},
-        {name:"Stage Pink", hex:["#1C0E1A","#3B1840","#7C2E7A","#D552C0","#FF8CE6","#FFD9F7"], ritual:"Snap pulse 1-2-3-4."},
-        {name:"Cool Mint", hex:["#0A1513","#0F2420","#174038","#2B6D60","#7FD7C1","#DFF9F2"], ritual:"Inhale cool; exhale warm."},
-        {name:"Gold Film", hex:["#151107","#2C2511","#4A3E1C","#7C642C","#D8B663","#FFF0C8"], ritual:"“I shine and rest.”"},
-        {name:"Night Pop", hex:["#0B0B12","#14182C","#222B55","#3D53A6","#8DA9FF","#DCE5FF"], ritual:"“Play is sacred.”"}
-      ],
-      songs: [
-        { t: "Feather", id: "kLbn61Z4LDI" },
-        { t: "Espresso", id: "eVli-tstM5E" },
-        { t: "Please Please Please", id: "cF1Na4AIecM" },
-        { t: "Nonsense", id: "YcSP1ZUf1eQ" },
-        { t: "Fast Times", id: "Gla5AzlHnS4" }
-      ]
-    },
-    swift: {
-      title: "Taylor Swift — Story / Constellations",
-      lyric: "“My memories have chapters; my chapters hum in color.”",
-      palettes: [
-        { name:"Folklore Fog",  hex:["#0D0E0F","#1A1C1E","#2A2D31","#6D7178","#B8BBC1","#EFF0F2"], ritual:"Name the chapter before sleep." },
-        { name:"Midnight Ink",  hex:["#0A0B12","#13162A","#1E2450","#33418D","#8AA0FF","#DDE4FF"], ritual:"Breathe once for each star you remember." },
-        { name:"Red Thread",    hex:["#190B0B","#351214","#5A1E22","#A5343B","#FF7A84","#FFD1D4"], ritual:"Touch wrist pulse; feel continuity." },
-        { name:"Gold Pen",      hex:["#141006","#272010","#44371B","#7B622D","#D5B367","#FFF0CC"], ritual:"Whisper a promise to self." },
-        { name:"Green Meadow",  hex:["#0E120F","#142219","#1D3A2A","#2F6248","#7DC19F","#DCF5E8"], ritual:"Exhale regret, inhale ease." },
-        { name:"Blue Frame",    hex:["#0B0E12","#0F1C2B","#18324A","#2C5A85","#78AEE2","#D7ECFF"], ritual:"Picture the safe room; step inside." }
-      ],
-      songs: [
-        { t:"Love Story",  id:"8xg3vE8Ie_E" },
-        { t:"Cardigan (lyric version)", id:"zLSUp53y-HQ" },
-        { t:"Anti-Hero",   id:"b1kbLwvqugk" },
-        { t:"Bejeweled",   id:"b7QlX3yR2xs" }
-      ]
-    },
-    ariana: {
-      title: "Ariana — Voice / Resonance",
-      lyric: "“The body sings what the soul remembers.”",
-      palettes: [
-        { name: "Resonance Blush", hex: ["#150E0D","#2C1A18","#553430","#A36A5F","#F5B8A5","#FFEAE4"], ritual: "Inhale nose, exhale mouth; feel chest vibrate." },
-        { name: "Silver Breath", hex: ["#0E0E11","#1B1C25","#2E2F3D","#6E7083","#C7C9D5","#F3F4F8"], ritual: "Tilt chin; whisper your name like a lyric." },
-        { name: "Peach Pulse", hex: ["#120E0B","#251814","#3E2A25","#7B5146","#E4A18F","#FFE1D8"], ritual: "Two fingers to throat; hum until buzz." },
-        { name: "Rose Air", hex: ["#130E11","#251A21","#3F2A36","#7A556A","#DCA3BE","#FBE4F0"], ritual: "Smile faintly on the exhale." },
-        { name: "Gold Quiet", hex: ["#151107","#2A2312","#473D20","#7E6C3B","#D9BF7A","#FFF8D5"], ritual: "Hand to heart. Speak gently." },
-        { name: "Voice Halo", hex: ["#0B0C0D","#1A1C21","#30323A","#585C68","#B9BECF","#F0F3FA"], ritual: "Hear the note between notes." }
-      ],
-      songs: [
-        { t: "yes, and?", id: "eB6txyhHFG4" },
-        { t: "No Tears Left To Cry", id: "ffxKSjUwKdU" },
-        { t: "POV (Live)", id: "fLFvbwrWLQY" },
-        { t: "Positions", id: "tcYodQoapMg" }
-      ]
-    },
-    doechii: {
-      title: "Doechii — Neon / Trickster",
-      lyric: "“I bend the rules so joy can pass.”",
-      palettes: [
-        {name:"Neon Citrus", hex:["#101204","#1A2006","#2C360A","#4E6B12","#A5EC39","#EDFFD0"], ritual:"Tongue click + grin."},
-        {name:"Ultraviolet", hex:["#120A1C","#26103B","#431B6A","#7A2BC0","#C27CFF","#F2E6FF"], ritual:"Surprise = life."},
-        {name:"Street Glow", hex:["#0B0B0E","#141420","#232342","#4949A0","#9E9EF5","#E4E4FF"], ritual:"Look left/right/center."},
-        {name:"Heat Lightning", hex:["#150F08","#2B1D0F","#4A331B","#7E5A2E","#E2AA66","#FFE9CC"], ritual:"Hands warm; mind cool."},
-        {name:"Jade Flash", hex:["#0B110E","#102019","#1B3A2E","#2E644C","#6AC7A0","#D8FAEA"], ritual:"Exhale hiss."},
-        {name:"Candy Riot", hex:["#130811","#2A0F22","#4D1B3E","#8E3576","#E26AB5","#FFD7EF"], ritual:"Silent laugh, release."}
-      ],
-      songs: [
-        { t: "What It Is",               id: "phtcAd8j6Ro" },
-        { t: "Yucky Blucky Fruitcake",   id: "8qnOpJfFfpU" },
-        { t: "Stressed",                 id: "29mk5rz3m7Q" },
-        { t: "Crazy (Live)",             id: "L94niPkteGg" }
-      ]
-    }
-  };
-
-  /* Palette→Frequency (for palette clicks) */
-  var FREQ_BY_NAME = {
-    'Blue':128, 'Pearl':160, 'Violet':256, 'Honey':128, 'Air':160, 'Magnet':256,
-    'Nord':128, 'Aurora':160, 'Pearl Rose':160, 'Sky Milk':256, 'Neon Snow':256, 'Home Light':128,
-    'Prism Honey':128, 'Neon Peach':160, 'Stage Pink':256, 'Cool Mint':160, 'Gold Film':128, 'Night Pop':256,
-    'Folklore Fog':128, 'Midnight Ink':256, 'Red Thread':160, 'Gold Pen':128, 'Green Meadow':160, 'Blue Frame':256,
-    'Neon Citrus':160, 'Ultraviolet':256, 'Street Glow':256, 'Heat Lightning':128, 'Jade Flash':160, 'Candy Riot':256,
-    'Resonance Blush':160, 'Silver Breath':256, 'Peach Pulse':128, 'Rose Air':160, 'Gold Quiet':128, 'Voice Halo':256
-  };
-
-  /* Helpers */
-  function contrastRatio(hex1, hex2){
-    function L(hex){
-      var r=parseInt(hex.substr(1,2),16)/255,g=parseInt(hex.substr(3,2),16)/255,b=parseInt(hex.substr(5,2),16)/255;
-      [r,g,b]=[r,g,b].map(function(c){ return c<=0.03928? c/12.92 : Math.pow((c+0.055)/1.055,2.4); });
-      return 0.2126*r+0.7152*g+0.0722*b;
-    }
-    var L1=L(hex1), L2=L(hex2), lighter=Math.max(L1,L2), darker=Math.min(L1,L2);
-    return (lighter+0.05)/(darker+0.05);
-  }
-  function setTint(hex){
-    var el=document.querySelector('.tint');
-    var o = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tintOpacity')*100 || 35,10);
-    el.style.background = hex;
-    el.style.opacity = o/100;
-    document.documentElement.style.setProperty('--tint', hex);
-  }
-  function setTintOpacity(pct){
-    document.documentElement.style.setProperty('--tintOpacity', (pct/100).toString());
-  }
-  function ytThumb(id){ return 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'; }
-  function ytEmbed(id){
-    return 'https://www.youtube-nocookie.com/embed/'+id+'?rel=0&modestbranding=1&playsinline=1&autoplay=1&color=white';
-  }
-
-  /* WebAudio Tone Bed */
-  var AC=null, osc=null, gain=null, started=false, currentFreq=0;
-  function ensureAudio(){
-    if(AC) return true;
-    try{
-      AC = new (window.AudioContext||window.webkitAudioContext)();
-      gain = AC.createGain(); gain.gain.value = 0.0; gain.connect(AC.destination);
-      return true;
-    }catch(e){ return false; }
-  }
-  function unlockAudio() {
-    if (!ensureAudio()) return;
-    if (AC.state === 'suspended') { AC.resume(); }
-    if (!started) {
-      osc = AC.createOscillator(); osc.type = "sine"; osc.frequency.value = 440; osc.connect(gain); osc.start(); started=true;
-      gain.gain.setValueAtTime(0.0, AC.currentTime);
-      gain.gain.linearRampToValueAtTime(0.18, AC.currentTime + 0.02);
-      gain.gain.linearRampToValueAtTime(0.0, AC.currentTime + 0.18);
-    }
-    var b=document.getElementById('startAudio'); b.textContent='Audio Enabled'; b.setAttribute('aria-pressed','true');
-  }
-  function startTone(freq){
-    if(!ensureAudio()) return;
-    if(!started){ unlockAudio(); }
-    if(freq>0){
-      osc.frequency.setValueAtTime(freq, AC.currentTime);
-      gain.gain.cancelScheduledValues(AC.currentTime);
-      gain.gain.linearRampToValueAtTime(0.22, AC.currentTime + 0.06);
-    }else{
-      stopTone();
-    }
-  }
-  function stopTone(){
-    if(!AC || !started) return;
-    gain.gain.cancelScheduledValues(AC.currentTime);
-    gain.gain.linearRampToValueAtTime(0.0, AC.currentTime + 0.06);
-    currentFreq = 0;
-    document.querySelectorAll('.switch button').forEach(function(b){
-      var f = parseInt(b.getAttribute('data-freq')||'0',10);
-      b.classList.toggle('active', f===0);
-      b.setAttribute('aria-pressed', f===0?'true':'false');
-    });
-  }
-  function setFreq(freq){ currentFreq=freq; startTone(freq); }
-
-  /* Easter egg state */
-  var taps = 0, tapTimer = null, eggOn = false;
-  var dotEl = null, statusEl = null, breathEl = null;
-  function markGrounded(){
-    eggOn = true;
-    dotEl.classList.add('on');
-    statusEl.textContent = 'Ground Check: on';
-    try{ localStorage.setItem('froot:grounded','1'); }catch(e){}
-  }
-  function resetTapWindow(){
-    taps = 0;
-    if(tapTimer){ clearTimeout(tapTimer); tapTimer=null; }
-  }
-
-  /* Renderers */
-  var content = document.getElementById('content');
-
-  function renderVideos(artistKey){
-    var group = document.createElement('section'); group.className='card';
-    group.innerHTML = '<h2>Video Gallery</h2>';
-    var vids = document.createElement('div'); vids.className='videos';
-    DATA[artistKey].songs.forEach(function(s){
-      var card = document.createElement('div'); card.className='vcard';
-      var th = document.createElement('div'); th.className='thumb';
-      th.style.backgroundImage = 'url('+ytThumb(s.id)+')';
-      var label = document.createElement('div'); label.className='vlabel';
-      label.innerHTML = '<span>'+s.t+'</span>'
-        + '<span style="display:flex; gap:8px">'
-        +   '<button class="expand" type="button" aria-pressed="false">Expand</button>'
-        +   '<button class="play" type="button">Play</button>'
-        + '</span>';
-      var overlay = document.createElement('div'); overlay.className='toverlay';
-      th.appendChild(label); card.appendChild(th); card.appendChild(overlay);
-
-      label.querySelector('.play').addEventListener('click', function(e){
-        e.stopPropagation();
-        var wrap = document.createElement('div'); wrap.className='iframe-wrap';
-        var iframe = document.createElement('iframe');
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-        iframe.allowFullscreen = true;
-        iframe.src = ytEmbed(s.id);
-        wrap.appendChild(iframe);
-        card.innerHTML=''; card.appendChild(wrap);
-        var over2 = document.createElement('div'); over2.className='toverlay'; card.appendChild(over2);
+  fetch('/data/seeds.json')
+    .then(function(r){ return r.json(); })
+    .then(function(seeds){
+      if(!Array.isArray(seeds) || !seeds.length) return;
+      seeds.sort(function(a,b){
+        return new Date(b.start_date || '1970-01-01') - new Date(a.start_date || '1970-01-01');
       });
-
-      label.querySelector('.expand').addEventListener('click', function(e){
-        e.stopPropagation();
-        document.querySelectorAll('.vcard.expanded').forEach(function(v){ if(v!==card){ v.classList.remove('expanded'); }});
-        var isNow = !card.classList.contains('expanded');
-        card.classList.toggle('expanded', isNow);
-        this.setAttribute('aria-pressed', isNow ? 'true' : 'false');
-        this.textContent = isNow ? 'Collapse' : 'Expand';
-        if(isNow){ card.scrollIntoView({behavior:'smooth', block:'start'}); }
-      });
-
-      vids.appendChild(card);
-    });
-    group.appendChild(vids);
-    content.appendChild(group);
-  }
-
-  function renderArtist(key){
-    var d = DATA[key];
-    loadFeel(key);
-    content.innerHTML = '';
-
-    // Overview
-    var card = document.createElement('section'); card.className='card';
-    card.innerHTML =
-      '<h2>'+d.title+'</h2>'+
-      '<div class="mini">'+d.lyric+'</div>'+
-      '<div class="mini" style="margin-top:6px">Palettes: '+d.palettes.length+' • Videos: '+d.songs.length+'</div>';
-    content.appendChild(card);
-
-    // Palettes
-    var pal = document.createElement('section'); pal.className='card';
-    pal.innerHTML = '<h2>Palettes</h2>';
-    var grid = document.createElement('div'); grid.className='palette';
-    pal.appendChild(grid);
-
-    d.palettes.forEach(function(p){
-      var sw = document.createElement('div'); sw.className='sw';
-      sw.setAttribute('title', p.name + ' — click to tint + tone');
-      sw.style.background = 'linear-gradient(90deg,'+p.hex.join(',')+')';
-      var label = document.createElement('span'); label.textContent = p.name;
-      sw.appendChild(label);
-      sw.addEventListener('click', function(){
-        var tintHex = p.hex[Math.min(4,p.hex.length-1)];
-        setTint(tintHex);
-        saveFeel(key, p.name);
-        var baseName = p.name.split('(')[0].trim();
-        var f = FREQ_BY_NAME[baseName] || 128;
-        setFreq(f);
-      });
-      grid.appendChild(sw);
-
-      var chips = p.hex.map(function(h){
-        var cr = contrastRatio(h, '#0b0b10'); var rating = cr>=7 ? 'AAA' : (cr>=4.5 ? 'AA' : '•');
-        return '<span class="cchip" title="Contrast vs bg">'+h+' '+rating+'</span>';
-      }).join(' ');
-      var wrap = document.createElement('div'); wrap.style.gridColumn='1 / -1'; wrap.style.marginBottom='8px';
-      wrap.innerHTML = chips + '<div class="ritual">'+p.ritual+'</div>';
-      pal.appendChild(wrap);
-    });
-    content.appendChild(pal);
-
-    // Videos
-    renderVideos(key);
-  }
-
-  /* Feel Test */
-  function saveFeel(artist, tag){
-    try{ localStorage.setItem('froot:feel:'+artist, tag); }catch(e){}
-    var el=document.getElementById('feelBadge');
-    el.textContent = 'Feel Test: ' + tag;
-  }
-  function loadFeel(artist){
-    var el=document.getElementById('feelBadge');
-    var val = '';
-    try{ val = localStorage.getItem('froot:feel:'+artist)||''; }catch(e){}
-    el.textContent = 'Feel Test: ' + (val || '—');
-  }
-
-  /* UI Wiring */
-  var tabs = document.querySelectorAll('.tab');
-  tabs.forEach(function(t){
-    t.addEventListener('click', function(){
-      tabs.forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-selected','false'); });
-      t.classList.add('active'); t.setAttribute('aria-selected','true');
-      var artist = t.getAttribute('data-artist');
-      renderArtist(artist);
-      stopTone();
-      setTint('rgba(0,0,0,0)');
-    });
-  });
-
-  var toneBtns = document.querySelectorAll('.switch button');
-  toneBtns.forEach(function(b){
-    b.addEventListener('click', function(){
-      toneBtns.forEach(function(x){ x.classList.remove('active'); x.setAttribute('aria-pressed','false'); });
-      b.classList.add('active'); b.setAttribute('aria-pressed','true');
-      var f = parseInt(b.getAttribute('data-freq')||'0',10);
-      setFreq(f);
-    });
-  });
-
-  var startBtn = document.getElementById('startAudio');
-  startBtn.addEventListener('click', unlockAudio);
-  document.addEventListener('touchend', function once(){ unlockAudio(); document.removeEventListener('touchend', once); }, {passive:true});
-  document.addEventListener('mousedown', function once(){ unlockAudio(); document.removeEventListener('mousedown', once); });
-
-  document.getElementById('runFeel').addEventListener('click', function(e){
-    e.preventDefault();
-    var artist = document.querySelector('.tab.active').getAttribute('data-artist');
-    var list = DATA[artist].palettes.slice().sort(function(){ return Math.random()-0.5; }).slice(0,3);
-    var i=0;
-    function step(){
-      if(i>=list.length){ stopTone(); saveFeel(artist, '✓'); if(!eggOn){ markGrounded(); } return; }
-      var p = list[i++], tintHex = p.hex[Math.min(4,p.hex.length-1)];
-      setTint(tintHex); if(ensureAudio()){ startTone(128 + (i-1)*32); }
-      setTimeout(step, 10000);
-    }
-    step();
-  });
-
-  document.getElementById('tintPct').addEventListener('input', function(){
-    setTintOpacity(this.value);
-  });
-
-  document.addEventListener('visibilitychange', function(){ if(document.hidden){ stopTone(); } });
-
-  // Easter egg
-  dotEl = document.getElementById('groundDot');
-  statusEl = document.getElementById('gstatus');
-  breathEl = document.getElementById('breathGuide');
-  try{ if(localStorage.getItem('froot:grounded')==='1'){ eggOn=true; dotEl.classList.add('on'); statusEl.textContent='Ground Check: on'; } }catch(e){}
-  dotEl.addEventListener('click', function(){
-    if(eggOn) return;
-    taps++;
-    if(!tapTimer){ tapTimer = setTimeout(function(){ resetTapWindow(); }, 20000); }
-    if(taps>=10){ resetTapWindow(); markGrounded(); }
-  });
-  var breathTimer = null, breathing = false;
-  breathEl.addEventListener('click', function(){
-    if(breathing){
-      breathing=false; breathEl.classList.remove('on'); if(breathTimer){ clearTimeout(breathTimer); breathTimer=null; }
-      return;
-    }
-    breathing=true; breathEl.classList.add('on');
-    if(breathTimer){ clearTimeout(breathTimer); }
-    breathTimer = setTimeout(function(){
-      if(!eggOn){ markGrounded(); }
-      breathing=false; breathEl.classList.remove('on');
-    }, 14000);
-  });
-
-  // Initial render
-  renderArtist('marina');
+      var s = seeds[0];
+      var txt = "Seed " + (s.id || "") + " • " + (s.name || "") + " • " + (s.start_date || "")
+              + (s.notes ? " — " + s.notes : "");
+      var el = document.getElementById('seedLine');
+      if(el) el.textContent = txt;
+    })
+    .catch(function(){});
 })();
 </script>
 </body>
 </html>
+
