@@ -1,0 +1,16 @@
+{
+  "illumina": {
+    "cycle_number": 1,
+    "theme": "Launch Cycle",
+    "start": "2025-11-05",
+    "end": "2025-12-17",
+    "seed_date": "2025-10-18",
+    "phases": [
+      { "name": "Seed", "symbol": "🌑", "days": [1], "macro": "Write one line of intention in Jar." },
+      { "name": "Grow", "symbol": "🌓", "days": [2,20], "macro": "Choose one Honey or tone session each day." },
+      { "name": "Mirror", "symbol": "🌕", "days": [21], "macro": "Post one Mirror entry or photo." },
+      { "name": "Integrate", "symbol": "🌗", "days": [22,41], "macro": "Refine or archive one thing you've made." },
+      { "name": "Rest", "symbol": "🌘", "days": [42], "macro": "Silence day – no tone, no posting." }
+    ]
+  }
+}
