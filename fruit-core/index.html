@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Froot · Core v1.4-core</title>
+<meta name="theme-color" content="#0b0d11">
+<style>
+  :root{--bg:#0b0d11;--ink:#e8f0ff;--sub:#a9b4c7;--accent:#73ffd9;--line:#1a2030;--card:#121725;--card2:#0f1420}
+  *{box-sizing:border-box}html,body{height:100%}
+  body{margin:0;font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:linear-gradient(180deg,var(--bg),#0a0e1a 40%,#070a14);color:var(--ink);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  header{padding:14px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d1220,var(--card2))}
+  h1{margin:0;font-size:18px;letter-spacing:.3px}.sub{color:var(--sub);font-size:13px}
+  main{max-width:920px;margin:22px auto;padding:0 16px 24px}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panel{background:linear-gradient(180deg,var(--card),#0c1220);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .playerbox{aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  button,.toggle,.chip{border:1px solid var(--line);background:#0f1524;color:var(--ink);padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px}
+  button.primary{background:var(--accent);color:#071015;border-color:transparent}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .toggle.on{background:#13233a;border-color:#24446e}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.grow{flex:1 1 auto}
+  .list{margin:10px 0 0;padding:0;list-style:none;max-height:300px;overflow:auto;border-top:1px dashed var(--line)}
+  .list li{display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px dashed var(--line)}
+  .badge{font-size:11px;color:var(--sub);border:1px solid var(--line);padding:2px 6px;border-radius:999px}
+  input[type="text"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0b1120;color:var(--ink);font-size:14px}
+  .hint{color:var(--sub);font-size:12px;margin-top:6px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;color:var(--ink);background:#0e1422}
+  .k{color:#93a4c7}.footer{margin-top:14px;color:var(--sub);font-size:12px}
+  .sep{height:1px;background:var(--line);margin:12px 0}.queue-title{display:flex;align-items:center;justify-content:space-between}
+  .qs{font-size:12px;color:var(--sub)}.now{color:var(--accent);font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <h1>Froot · Core <span class="sub">v1.4-core — auto-advance queue + 128.15 Hz tone</span></h1>
+</header>
+
+<main class="grid">
+  <section class="panel">
+    <div class="playerbox" id="playerBox"><div id="player"></div></div>
+    <div class="controls" aria-label="Player controls">
+      <button id="btnPlay" class="primary">Play</button>
+      <button id="btnPause">Pause</button>
+      <button id="btnPrev">Prev</button>
+      <button id="btnNext">Next</button>
+      <button id="btnLoop" class="toggle">Loop: Off</button>
+      <span class="pill" id="status"><span class="k">Track</span> <strong id="sIndex">–</strong> · <span class="k">State</span> <strong id="sState">idle</strong></span>
+    </div>
+    <div class="controls" style="margin-top:8px" aria-label="Tone controls">
+      <button id="btnTone" class="toggle">128.15 Hz Tone: Off</button>
+      <label class="pill">Gain <input id="gain" type="range" min="0" max="1" step="0.01" value="0.22" style="vertical-align:middle"></label>
+    </div>
+    <div class="footer">Tip: tap <b>Play</b> once to unlock audio on iPhone. Queue auto-advances; toggle <b>Loop</b> to cycle.</div>
+  </section>
+
+  <aside class="panel">
+    <div class="queue-title">
+      <strong>Queue</strong>
+      <span class="qs"><span class="k">Origin</span> froot.plnt.earth · <span class="k">Persists</span> local</span>
+    </div>
+    <ul class="list" id="queueList" aria-live="polite"></ul>
+    <div class="sep"></div>
+    <div class="row"><input id="newId" type="text" placeholder="Paste a YouTube ID (e.g., mkR_Qwix4Ho) or full URL"></div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnAdd">Add to Queue</button>
+      <button id="btnClear">Clear Queue</button>
+      <button id="btnToday" class="toggle">Reload Today’s Set</button>
+      <span class="badge">Saved automatically</span>
+    </div>
+    <div class="hint">Click a row to play. Uses YouTube IFrame API with <code>enablejsapi=1</code> and <code>playsinline=1</code>.</div>
+  </aside>
+</main>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+(function(){
+  var KEY = "froot_core_v1_4";
+  function loadState(){ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return {} } }
+  function saveState(){
+    localStorage.setItem(KEY, JSON.stringify({
+      queue: state.queue, index: state.index, loop: state.loop, toneOn: state.toneOn,
+      gain: gainNode ? gainNode.gain.value : 0.22
+    }));
+  }
+
+  var todaysSet = ["mkR_Qwix4Ho","Hy9W_mrY_Vk","K9_VFxzCuQ0","k2qgadSvNyU","QtXby3twMmI"];
+
+  var state = Object.assign({queue: todaysSet.slice(), index:0, loop:true, toneOn:false}, loadState());
+  if(!Array.isArray(state.queue) || state.queue.length===0){ state.queue = todaysSet.slice(); state.index = 0; }
+
+  var player, ready=false;
+  var btnPlay = document.getElementById("btnPlay"), btnPause = document.getElementById("btnPause");
+  var btnPrev = document.getElementById("btnPrev"), btnNext = document.getElementById("btnNext");
+  var btnLoop = document.getElementById("btnLoop"), btnTone = document.getElementById("btnTone");
+  var gainSlider = document.getElementById("gain"), sIndex=document.getElementById("sIndex"), sState=document.getElementById("sState");
+  var list=document.getElementById("queueList"), newId=document.getElementById("newId");
+  var btnAdd=document.getElementById("btnAdd"), btnClear=document.getElementById("btnClear"), btnToday=document.getElementById("btnToday");
+
+  function parseId(input){
+    if(!input) return "";
+    input = input.trim();
+    var m = input.match(/[?&]v=([^&]+)/) || input.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+    return m ? m[1] : input;
+  }
+  function currentId(){ if(state.queue.length===0) return ""; var i=Math.max(0,Math.min(state.index,state.queue.length-1)); return state.queue[i]; }
+  function render(){
+    sIndex.textContent = state.queue.length ? (state.index+1)+" / "+state.queue.length : "–";
+    btnLoop.classList.toggle("on", !!state.loop); btnLoop.textContent = "Loop: " + (state.loop ? "On" : "Off");
+    btnTone.classList.toggle("on", !!state.toneOn); btnTone.textContent = "128.15 Hz Tone: " + (state.toneOn ? "On" : "Off");
+    list.innerHTML = "";
+    for(var i=0;i<state.queue.length;i++){
+      var id = state.queue[i], li=document.createElement("li");
+      var idx=document.createElement("span"); idx.className="badge"; idx.textContent=(i+1<10?"0":"")+(i+1);
+      var title=document.createElement("span"); title.textContent=id; if(i===state.index){ title.className="now"; }
+      var go=document.createElement("button"); go.className="chip"; go.textContent="Play";
+      (function(i){ go.onclick=function(){ state.index=i; saveState(); render(); cueAndPlay(); }; })(i);
+      var rm=document.createElement("button"); rm.className="chip"; rm.textContent="Remove";
+      (function(i){ rm.onclick=function(){ state.queue.splice(i,1); if(state.index>=state.queue.length) state.index=Math.max(0,state.queue.length-1); saveState(); render(); }; })(i);
+      li.appendChild(idx); li.appendChild(title); li.appendChild(go); li.appendChild(rm); list.appendChild(li);
+    }
+  }
+  function setStateText(t){ sState.textContent=t; }
+
+  window.onYouTubeIframeAPIReady=function(){
+    player = new YT.Player('player', {
+      videoId: currentId()||undefined, width:'100%', height:'100%',
+      playerVars:{autoplay:0,controls:1,rel:0,iv_load_policy:3,modestbranding:1,playsinline:1,origin:location.origin},
+      events:{
+        onReady:function(){ ready=true; setStateText('ready'); },
+        onStateChange:function(e){
+          if(e.data===0){
+            if(state.index<state.queue.length-1){ state.index+=1; saveState(); render(); cueAndPlay(); }
+            else if(state.loop && state.queue.length){ state.index=0; saveState(); render(); cueAndPlay(); }
+            else{ setStateText('ended'); }
+          }else if(e.data===1){ setStateText('playing'); } else if(e.data===2){ setStateText('paused'); }
+        }
+      }
+    });
+  };
+  function cueAndPlay(){ var id=currentId(); if(!id||!ready) return; player.loadVideoById(id); }
+
+  var audioCtx, osc, gainNode, unlocked=false, targetHz=128.15;
+  function ensureAudio(){
+    if(!audioCtx){ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); gainNode=audioCtx.createGain(); gainNode.gain.setValueAtTime(parseFloat(gainSlider.value||"0.22"), audioCtx.currentTime); gainNode.connect(audioCtx.destination); }
+    if(audioCtx.state==="suspended"){ audioCtx.resume(); } unlocked=true;
+  }
+  function startTone(){
+    ensureAudio(); if(osc) return; osc=audioCtx.createOscillator(); osc.type="sine"; osc.frequency.setValueAtTime(targetHz,audioCtx.currentTime); osc.connect(gainNode);
+    var g=gainNode.gain, now=audioCtx.currentTime; g.cancelScheduledValues(now); g.setValueAtTime(0.0001,now); g.exponentialRampToValueAtTime(parseFloat(gainSlider.value||"0.22"), now+0.08);
+    osc.start(); state.toneOn=true; saveState(); render();
+  }
+  function stopTone(){
+    if(!osc||!audioCtx){ state.toneOn=false; saveState(); render(); return; }
+    var now=audioCtx.currentTime, g=gainNode.gain; g.cancelScheduledValues(now); g.setValueAtTime(g.value,now); g.exponentialRampToValueAtTime(0.0001, now+0.06);
+    var toStop=osc; setTimeout(function(){ try{toStop.stop()}catch(_){} try{toStop.disconnect()}catch(_){}} , 90); osc=null; state.toneOn=false; saveState(); render();
+  }
+  gainSlider.oninput=function(){ if(gainNode){ var now=audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.setValueAtTime(gainNode.gain.value,now); gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, parseFloat(gainSlider.value||"0.22")), now+0.05); saveState(); } };
+
+  btnPlay.onclick=function(){ if(!unlocked){ ensureAudio(); } if(state.queue.length===0){ setStateText('add videos'); return; } cueAndPlay(); if(state.toneOn){ startTone(); } };
+  btnPause.onclick=function(){ if(ready){ player.pauseVideo(); } };
+  btnPrev.onclick=function(){ if(state.queue.length===0) return; state.index=(state.index-1+state.queue.length)%state.queue.length; saveState(); render(); cueAndPlay(); };
+  btnNext.onclick=function(){ if(state.queue.length===0) return; state.index=(state.index+1)%state.queue.length; saveState(); render(); cueAndPlay(); };
+  btnLoop.onclick=function(){ state.loop=!state.loop; saveState(); render(); };
+  btnTone.onclick=function(){ if(state.toneOn){ stopTone(); } else { startTone(); } };
+
+  btnAdd.onclick=function(){ var id=parseId(newId.value); if(!id) return; if(!state.queue.includes(id)) state.queue.push(id); if(state.queue.length===1){ state.index=0; } newId.value=""; saveState(); render(); };
+  btnClear.onclick=function(){ state.queue=[]; state.index=0; saveState(); render(); if(ready){ setStateText('queue cleared'); } };
+  btnToday.onclick=function(){ // reload today's curated set
+    state.queue = todaysSet.slice(); state.index = 0; saveState(); render();
+  };
+
+  document.addEventListener("touchend", function once(){ document.removeEventListener("touchend", once, {passive:true}); ensureAudio(); if(state.toneOn){ startTone(); } }, {passive:true});
+  document.addEventListener("click", function once(){ document.removeEventListener("click", once, true); ensureAudio(); if(state.toneOn){ startTone(); } }, true);
+  document.addEventListener("visibilitychange", function(){ if(document.visibilityState!=="hidden" && state.toneOn){ startTone(); } });
+
+  if(typeof state.gain==="number"){ gainSlider.value=String(state.gain); }
+  render();
+})();
+</script>
+</body>
+</html>
