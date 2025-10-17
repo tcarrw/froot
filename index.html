@@ -13,7 +13,7 @@ body{margin:0;background:#0b0d11;color:var(--fg);font:500 16px/1.45 system-ui,Se
 .wrap{max-width:980px;margin:0 auto;padding:18px;display:flex;flex-direction:column;gap:14px}
 h1{font-size:20px;margin:0 0 6px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,input,select,textarea{background:#14161b;color:var(--fg);border:1px solid #1e222a;border-radius:10px;padding:10px 12px;font:inherit}
+button,input,select{background:#14161b;color:var(--fg);border:1px solid #1e222a;border-radius:10px;padding:10px 12px;font:inherit}
 button{cursor:pointer}
 button.primary{background:var(--accent);border-color:var(--accent);color:#0b0d11;font-weight:700}
 button:disabled{opacity:.55;cursor:not-allowed}
@@ -29,12 +29,10 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .range{width:160px}
 footer{color:var(--muted);font-size:13px;text-align:center;padding:10px}
-.tint{position:fixed;inset:0;pointer-events:none;mix-blend-mode:color;opacity:.0;background:transparent;transition:opacity .2s}
+.tint{position:fixed;inset:0;pointer-events:none;mix-blend-mode:color;opacity:0;background:transparent;transition:opacity .2s}
 .hidden{display:none}
 hr{border:0;border-top:1px solid #171a20;margin:8px 0}
-textarea{width:100%;height:140px;border-radius:12px}
 .small{font-size:12px;color:#b9bfca}
-kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#161a21;border:1px solid #202532;border-radius:6px;padding:2px 6px;font-size:12px;color:#cfd3dc}
 </style>
 </head>
 <body>
@@ -57,24 +55,16 @@ kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#161a21;b
       </select>
       <label class="badge">Tint <input id="tintRange" class="range" type="range" min="0" max="100" value="0"></label>
       <label class="badge">Gain <input id="gainRange" class="range" type="range" min="0" max="100" value="35"></label>
+      <button id="btnExport" class="badge">Export IDs</button>
+      <label class="badge"><input type="file" id="fileImport" accept="application/json" class="hidden"><span id="btnImport" style="cursor:pointer">Import IDs</span></label>
     </div>
+    <div class="small">Official titles and channels load from YouTube automatically. Storage keeps IDs only.</div>
   </div>
 
   <div class="grid">
     <div class="card">
       <div id="player" style="aspect-ratio:16/9;background:#0d0f13;border-radius:12px"></div>
-      <div class="controls" style="margin-top:8px">
-        <input id="newId" placeholder="YouTube URL or ID" style="flex:1;min-width:200px">
-        <button id="btnAdd">Add</button>
-        <button id="btnExport" class="ghost">Export IDs</button>
-        <label class="badge">
-          <input type="file" id="fileImport" accept="application/json" class="hidden">
-          <span id="btnImport" style="cursor:pointer">Import IDs</span>
-        </label>
-      </div>
-      <p class="small">Official names are enforced. Titles and channels are pulled from YouTube and refresh on load. Stored data only includes IDs.</p>
     </div>
-
     <div class="card">
       <div class="row" style="justify-content:space-between">
         <div class="small">Queue</div>
@@ -93,6 +83,7 @@ let ctx=null, osc=null, gain=null, tone="off";
 const el=(id)=>document.getElementById(id);
 const nowBadge=el("nowBadge"), listEl=el("list"), tintEl=el("tint");
 const storeKey="froot_ids_v1";
+const PRELOAD_IDS=['WZzcY7ASQno','cIriwVhRPVA','kLbn61Z4LDI','8xg3vE8Ie_E','eB6txyhHFG4','phtcAd8j6Ro','gDr7aTfBffU','w5x93pXSmRM','eVli-tstM5E','zLSUp53y-HQ','ffxKSjUwKdU','8qnOpJfFfpU','ZT_skmohD-c','E7lr7pU9fYA','cF1Na4AIecM','b1kbLwvqugk','fLFvbwrWLQY','29mk5rz3m7Q','F1JTlnHGa90','Cr-SqRWImmI','YcSP1ZUf1eQ','b7QlX3yR2xs','tcYodQoapMg','L94niPkteGg','s6AHxF0s764','aQMKAZpcynA','Gla5AzlHnS4'];
 
 function parseId(input){
   if(!input) return "";
@@ -110,11 +101,16 @@ function save(){
 
 async function load(){
   try{
-    const ids=JSON.parse(localStorage.getItem(storeKey)||"[]");
+    const idsStored=JSON.parse(localStorage.getItem(storeKey)||"[]");
+    const ids = Array.isArray(idsStored)&&idsStored.length>0 ? idsStored : PRELOAD_IDS.slice();
     queue = ids.map(id=>({id, title:"", channel:""}));
     for(const item of queue){ refreshMeta(item).catch(()=>{}); }
-    render();
-  }catch(_){queue=[]; render();}
+    i=0; save(); render();
+  }catch(_){
+    queue = PRELOAD_IDS.map(id=>({id, title:"", channel:""}));
+    i=0; save(); render();
+    queue.forEach(item=>refreshMeta(item).catch(()=>{}));
+  }
 }
 
 async function refreshMeta(item){
@@ -137,7 +133,7 @@ function render(){
     left.className="meta";
     const t=document.createElement("div");
     t.className="t";
-    t.textContent=q.title?q.title:(q.id);
+    t.textContent=q.title?q.title:q.id;
     const c=document.createElement("div");
     c.className="c";
     c.textContent=q.channel?q.channel:"";
@@ -163,7 +159,7 @@ function render(){
 function updateNowBadge(){
   if(!queue[i]){ nowBadge.textContent="Idle"; return; }
   const q=queue[i];
-  nowBadge.textContent=(q.title?q.title:q.id);
+  nowBadge.textContent=q.title?q.title:q.id;
 }
 
 function ensureAudio(){
@@ -212,7 +208,6 @@ window.onYouTubeIframeAPIReady=function(){
       onStateChange:(e)=>{
         if(e.data===YT.PlayerState.ENDED){ next(); }
         if(e.data===YT.PlayerState.PLAYING){
-          // refresh title from player if missing or changed
           const d=player.getVideoData();
           const cur=queue[i];
           if(cur){
@@ -247,15 +242,6 @@ function prev(){
   loadCurrent(true);
 }
 
-function addId(raw){
-  const id=parseId(raw);
-  if(!id) return;
-  queue.push({id, title:"", channel:""});
-  save();
-  render();
-  refreshMeta(queue[queue.length-1]).catch(()=>{});
-}
-
 function exportIDs(){
   const ids=queue.map(q=>q.id);
   const blob=new Blob([JSON.stringify(ids,null,2)],{type:"application/json"});
@@ -285,7 +271,6 @@ function importIDs(file){
 document.addEventListener("DOMContentLoaded",()=>{
   loadYouTubeAPI();
   load();
-
   el("btnStart").onclick=async ()=>{
     try{ await (ctx?ctx.resume():Promise.resolve()); }catch(_){}
     setTone(el("toneSel").value);
@@ -304,7 +289,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   el("toneSel").onchange=(e)=>{ setTone(e.target.value); };
   el("gainRange").oninput=setGain;
   el("tintRange").oninput=(e)=>setTint(e.target.value);
-  el("btnAdd").onclick=()=>{ addId(el("newId").value.trim()); el("newId").value=""; };
   el("btnExport").onclick=exportIDs;
   el("btnImport").onclick=()=>el("fileImport").click();
   el("fileImport").onchange=(e)=>{ if(e.target.files&&e.target.files[0]) importIDs(e.target.files[0]); };
