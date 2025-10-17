@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Froot · Core v1.5 (titles + notes)</title>
+<meta name="theme-color" content="#0b0d11">
+<style>
+  :root{--bg:#0b0d11;--ink:#e8f0ff;--sub:#a9b4c7;--accent:#73ffd9;--line:#1a2030;--card:#121725;--card2:#0f1420}
+  *{box-sizing:border-box}html,body{height:100%}
+  body{margin:0;font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;background:linear-gradient(180deg,var(--bg),#0a0e1a 40%,#070a14);color:var(--ink);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  header{padding:14px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d1220,var(--card2))}
+  h1{margin:0;font-size:18px;letter-spacing:.3px}.sub{color:var(--sub);font-size:13px}
+  main{max-width:980px;margin:22px auto;padding:0 16px 24px}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panel{background:linear-gradient(180deg,var(--card),#0c1220);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .playerbox{aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  button,.toggle,.chip{border:1px solid var(--line);background:#0f1524;color:#e8f0ff;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px}
+  button.primary{background:var(--accent);color:#071015;border-color:transparent}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .toggle.on{background:#13233a;border-color:#24446e}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0e1422}
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .list{margin:10px 0 0;padding:0;list-style:none;max-height:360px;overflow:auto;border-top:1px dashed var(--line)}
+  .list li{display:grid;grid-template-columns:auto 1fr auto;gap:8px;padding:8px;border-bottom:1px dashed var(--line);align-items:center}
+  .badge{font-size:11px;color:#a9b4c7;border:1px solid var(--line);padding:2px 6px;border-radius:999px}
+  input[type="text"], textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0b1120;color:#e8f0ff;font-size:14px}
+  textarea{min-height:84px;resize:vertical}
+  .hint{color:#a9b4c7;font-size:12px;margin-top:6px}
+  .qs{font-size:12px;color:#a9b4c7}
+  .now{color:var(--accent);font-weight:700}
+  .sep{height:1px;background:var(--line);margin:12px 0}
+  .footer{margin-top:14px;color:#a9b4c7;font-size:12px}
+  .k{color:#93a4c7}
+  /* editor */
+  .editor{margin-top:12px;background:#0e1422;border:1px solid var(--line);border-radius:12px;padding:12px;display:none}
+  .editor.active{display:block}
+  .dim{font-size:12px;color:#a9b4c7}
+  /* hidden meta player (for title import) */
+  #metaBox{position:absolute;left:-99999px;top:-99999px;width:1px;height:1px;overflow:hidden}
+</style>
+</head>
+<body>
+<header>
+  <h1>Froot · Core <span class="sub">v1.5 — titles + notes · auto-advance + 128.15 Hz tone</span></h1>
+</header>
+
+<main class="grid">
+  <!-- LEFT: Video Player -->
+  <section class="panel">
+    <div class="playerbox" id="playerBox"><div id="player"></div></div>
+    <div class="controls" aria-label="Player controls">
+      <button id="btnPlay" class="primary">Play</button>
+      <button id="btnPause">Pause</button>
+      <button id="btnPrev">Prev</button>
+      <button id="btnNext">Next</button>
+      <button id="btnLoop" class="toggle">Loop: Off</button>
+      <span class="pill"><span class="k">Track</span>&nbsp;<strong id="sIndex">–</strong>&nbsp;·&nbsp;<span class="k">State</span>&nbsp;<strong id="sState">idle</strong></span>
+    </div>
+    <div class="controls" style="margin-top:8px" aria-label="Tone controls">
+      <button id="btnTone" class="toggle">128.15 Hz Tone: Off</button>
+      <label class="pill">Gain <input id="gain" type="range" min="0" max="1" step="0.01" value="0.22" style="vertical-align:middle"></label>
+      <label class="pill"><input id="autoImport" type="checkbox" style="vertical-align:middle">&nbsp;Auto-import title on add</label>
+    </div>
+    <div class="footer">Tip: tap <b>Play</b> once on iPhone to unlock audio. Queue auto-advances; toggle <b>Loop</b> to cycle. Titles/notes save locally.</div>
+  </section>
+
+  <!-- RIGHT: Queue + Editor -->
+  <aside class="panel">
+    <div class="row" style="justify-content:space-between;align-items:baseline">
+      <strong>Queue</strong>
+      <span class="qs"><span class="k">Origin</span> froot.plnt.earth · <span class="k">Persists</span> local</span>
+    </div>
+    <ul class="list" id="queueList" aria-live="polite"></ul>
+
+    <div class="sep"></div>
+    <div class="row">
+      <input id="newId" type="text" placeholder="Paste a YouTube ID or URL">
+      <button id="btnAdd">Add</button>
+      <button id="btnToday" class="toggle">Reload Today’s Set</button>
+      <button id="btnClear">Clear</button>
+    </div>
+    <div class="hint">Click a row’s <b>Title</b> to play. Use <b>Import</b> to fetch YouTube title, then <b>Edit</b> to confirm/add a note.</div>
+
+    <!-- Inline editor -->
+    <div id="editor" class="editor" aria-live="polite">
+      <div class="dim" id="edHeader">Editing</div>
+      <div class="row" style="margin-top:8px">
+        <input id="edTitle" type="text" placeholder="Title">
+      </div>
+      <div class="row" style="margin-top:8px">
+        <textarea id="edNote" placeholder="Personal note (why this matters, what to do, Illumina cue…)"></textarea>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="edSave" class="primary">Save</button>
+        <button id="edCancel">Cancel</button>
+      </div>
+      <div class="dim" style="margin-top:6px">Saved to your browser only.</div>
+    </div>
+  </aside>
+</main>
+
+<!-- Hidden meta player for title import -->
+<div id="metaBox"><div id="metaPlayer"></div></div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+(function(){
+  /* ---------- Persistence ---------- */
+  var KEY="froot_core_v1_5";
+  function loadState(){ try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}} }
+  function saveState(){
+    localStorage.setItem(KEY, JSON.stringify({
+      queue: state.queue, index: state.index, loop: state.loop, toneOn: state.toneOn,
+      gain: gainNode ? gainNode.gain.value : 0.22, autoImport: !!autoImport.checked
+    }));
+  }
+
+  /* ---------- Initial set (objects now: {id,title?,note?}) ---------- */
+  var todaysSet = [
+    {id:"GiOGlYjKgX8"}, // MARINA — Handmade Heaven
+    {id:"1YUBbF24H44"}, // Sabrina — because i liked a boy
+    {id:"mkR_Qwix4Ho"}, // Taylor — Lavender Haze
+    {id:"Hy9W_mrY_Vk"}, // Solange — Losing You
+    {id:"K9_VFxzCuQ0"}, // Sigrid — Strangers
+    {id:"k2qgadSvNyU"}, // Dua Lipa — New Rules
+    {id:"QtXby3twMmI"}  // Coldplay — Adventure of a Lifetime
+  ];
+
+  var state = Object.assign({queue: todaysSet.slice(), index:0, loop:true, toneOn:false}, loadState());
+
+  /* migrate old string array -> object array */
+  if(Array.isArray(state.queue) && state.queue.length && typeof state.queue[0]==="string"){
+    state.queue = state.queue.map(function(id){ return {id:id}; });
+  }
+  if(!Array.isArray(state.queue) || state.queue.length===0){
+    state.queue = todaysSet.slice(); state.index = 0;
+  }
+
+  /* ---------- YouTube players ---------- */
+  var player, metaPlayer, ready=false, metaReady=false;
+  var btnPlay = document.getElementById("btnPlay"), btnPause = document.getElementById("btnPause");
+  var btnPrev = document.getElementById("btnPrev"), btnNext = document.getElementById("btnNext");
+  var btnLoop = document.getElementById("btnLoop"), btnTone = document.getElementById("btnTone");
+  var gainSlider = document.getElementById("gain"), sIndex=document.getElementById("sIndex"), sState=document.getElementById("sState");
+  var list=document.getElementById("queueList"), newId=document.getElementById("newId");
+  var btnAdd=document.getElementById("btnAdd"), btnClear=document.getElementById("btnClear"), btnToday=document.getElementById("btnToday");
+  var editor=document.getElementById("editor"), edHeader=document.getElementById("edHeader");
+  var edTitle=document.getElementById("edTitle"), edNote=document.getElementById("edNote");
+  var edSave=document.getElementById("edSave"), edCancel=document.getElementById("edCancel");
+  var autoImport=document.getElementById("autoImport");
+  autoImport.checked = !!(loadState().autoImport);
+
+  function parseId(input){
+    if(!input) return "";
+    input = input.trim();
+    var m = input.match(/[?&]v=([^&]+)/) || input.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+    return m ? m[1] : input;
+  }
+  function current(){ var i=Math.max(0,Math.min(state.index,state.queue.length-1)); return state.queue[i]; }
+  function currentId(){ var c=current(); return c ? c.id : ""; }
+
+  function render(){
+    sIndex.textContent = state.queue.length ? (state.index+1)+" / "+state.queue.length : "–";
+    btnLoop.classList.toggle("on", !!state.loop); btnLoop.textContent = "Loop: " + (state.loop ? "On" : "Off");
+    btnTone.classList.toggle("on", !!state.toneOn); btnTone.textContent = "128.15 Hz Tone: " + (state.toneOn ? "On" : "Off");
+    list.innerHTML = "";
+    for(var i=0;i<state.queue.length;i++){
+      (function(i){
+        var item = state.queue[i];
+        var li=document.createElement("li");
+        var idx=document.createElement("span"); idx.className="badge"; idx.textContent=(i+1<10?"0":"")+(i+1);
+        var titleBtn=document.createElement("button"); titleBtn.className="chip"; titleBtn.style.textAlign="left";
+        titleBtn.textContent = item.title ? item.title : item.id;
+        if(i===state.index){ titleBtn.classList.add("now"); }
+        titleBtn.onclick=function(){ state.index=i; saveState(); render(); cueAndPlay(); };
+
+        var actions=document.createElement("div");
+        var imp=document.createElement("button"); imp.className="chip"; imp.textContent="Import";
+        imp.onclick=function(){ importTitleFor(i); };
+        var edit=document.createElement("button"); edit.className="chip"; edit.textContent="Edit";
+        edit.onclick=function(){ openEditor(i); };
+        var rm=document.createElement("button"); rm.className="chip"; rm.textContent="Remove";
+        rm.onclick=function(){ state.queue.splice(i,1); if(state.index>=state.queue.length) state.index=Math.max(0,state.queue.length-1); saveState(); render(); if(!state.queue.length){ setStateText('queue empty'); }};
+
+        actions.appendChild(imp); actions.appendChild(edit); actions.appendChild(rm);
+
+        li.appendChild(idx); li.appendChild(titleBtn); li.appendChild(actions);
+        list.appendChild(li);
+      })(i);
+    }
+    if(editor.classList.contains("active")){
+      // keep showing current edit item label up to date
+      edHeader.textContent = edHeader.textContent;
+    }
+  }
+  function setStateText(t){ sState.textContent=t; }
+
+  /* YouTube API ready */
+  window.onYouTubeIframeAPIReady=function(){
+    player = new YT.Player('player', {
+      videoId: currentId()||undefined, width:'100%', height:'100%',
+      playerVars:{autoplay:0,controls:1,rel:0,iv_load_policy:3,modestbranding:1,playsinline:1,origin:location.origin},
+      events:{
+        onReady:function(){ ready=true; setStateText('ready'); },
+        onStateChange:function(e){
+          if(e.data===0){
+            if(state.index<state.queue.length-1){ state.index+=1; saveState(); render(); cueAndPlay(); }
+            else if(state.loop && state.queue.length){ state.index=0; saveState(); render(); cueAndPlay(); }
+            else{ setStateText('ended'); }
+          }else if(e.data===1){ setStateText('playing'); } else if(e.data===2){ setStateText('paused'); }
+        }
+      }
+    });
+    /* hidden meta player for title import */
+    metaPlayer = new YT.Player('metaPlayer', {
+      height:'1', width:'1',
+      playerVars:{autoplay:0,controls:0,rel:0,iv_load_policy:3,modestbranding:1,playsinline:1,origin:location.origin},
+      events:{ onReady:function(){ metaReady=true; } }
+    });
+  };
+
+  function cueAndPlay(){ var id=currentId(); if(!id||!ready) return; player.loadVideoById(id); }
+
+  /* ---------- Title import via hidden player ---------- */
+  function importTitleFor(idx){
+    if(!metaReady) return;
+    var item = state.queue[idx];
+    metaPlayer.cueVideoById(item.id);
+    // poll for title once cued
+    var tries=0, maxTries=40;
+    var iv = setInterval(function(){
+      tries++;
+      var data = metaPlayer.getVideoData ? metaPlayer.getVideoData() : null;
+      var title = data && data.title ? data.title.trim() : "";
+      if(title || tries>=maxTries){
+        clearInterval(iv);
+        openEditor(idx, title || (item.title||""), item.note||"");
+      }
+    }, 150);
+  }
+
+  /* ---------- Inline editor (confirm/edit title + note) ---------- */
+  var editingIndex = -1;
+  function openEditor(idx, suggestedTitle, existingNote){
+    editingIndex = idx;
+    var item = state.queue[idx];
+    edHeader.textContent = "Editing · " + (item.title || suggestedTitle || item.id);
+    edTitle.value = (suggestedTitle || item.title || "");
+    edNote.value = (existingNote != null ? existingNote : (item.note || ""));
+    editor.classList.add("active");
+  }
+  edSave.onclick=function(){
+    if(editingIndex<0) return;
+    var it = state.queue[editingIndex];
+    it.title = edTitle.value.trim() || undefined;
+    it.note = edNote.value.trim() || undefined;
+    saveState(); render();
+    editor.classList.remove("active");
+    editingIndex = -1;
+  };
+  edCancel.onclick=function(){
+    editor.classList.remove("active"); editingIndex = -1;
+  };
+
+  /* ---------- Tone (WebAudio, 128.15 Hz) ---------- */
+  var audioCtx, osc, gainNode, unlocked=false, targetHz=128.15;
+  function ensureAudio(){
+    if(!audioCtx){ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); gainNode=audioCtx.createGain(); gainNode.gain.setValueAtTime(parseFloat(gainSlider.value||"0.22"), audioCtx.currentTime); gainNode.connect(audioCtx.destination); }
+    if(audioCtx.state==="suspended"){ audioCtx.resume(); } unlocked=true;
+  }
+  function startTone(){
+    ensureAudio(); if(osc) return; osc=audioCtx.createOscillator(); osc.type="sine"; osc.frequency.setValueAtTime(targetHz,audioCtx.currentTime); osc.connect(gainNode);
+    var g=gainNode.gain, now=audioCtx.currentTime; g.cancelScheduledValues(now); g.setValueAtTime(0.0001,now); g.exponentialRampToValueAtTime(parseFloat(gainSlider.value||"0.22"), now+0.08);
+    osc.start(); state.toneOn=true; saveState(); render();
+  }
+  function stopTone(){
+    if(!osc||!audioCtx){ state.toneOn=false; saveState(); render(); return; }
+    var now=audioCtx.currentTime, g=gainNode.gain; g.cancelScheduledValues(now); g.setValueAtTime(g.value,now); g.exponentialRampToValueAtTime(0.0001, now+0.06);
+    var toStop=osc; setTimeout(function(){ try{toStop.stop()}catch(_){ } try{toStop.disconnect()}catch(_){ } }, 90); osc=null; state.toneOn=false; saveState(); render();
+  }
+
+  /* ---------- Controls ---------- */
+  btnPlay.onclick=function(){ if(!unlocked){ ensureAudio(); } if(!state.queue.length){ setStateText('add videos'); return; } cueAndPlay(); if(state.toneOn){ startTone(); } };
+  btnPause.onclick=function(){ if(ready){ player.pauseVideo(); } };
+  btnPrev.onclick=function(){ if(!state.queue.length) return; state.index=(state.index-1+state.queue.length)%state.queue.length; saveState(); render(); cueAndPlay(); };
+  btnNext.onclick=function(){ if(!state.queue.length) return; state.index=(state.index+1)%state.queue.length; saveState(); render(); cueAndPlay(); };
+  btnLoop.onclick=function(){ state.loop=!state.loop; saveState(); render(); };
+  btnTone.onclick=function(){ if(state.toneOn){ stopTone(); } else { startTone(); } };
+  gainSlider.oninput=function(){ if(gainNode){ var now=audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.setValueAtTime(gainNode.gain.value,now); gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, parseFloat(gainSlider.value||"0.22")), now+0.05); saveState(); } };
+
+  /* ---------- Queue editing ---------- */
+  function addId(raw){
+    var id = parseId(raw); if(!id) return;
+    // avoid duplicates
+    var exists = state.queue.some(function(x){ return x.id===id; });
+    if(!exists) state.queue.push({id:id});
+    if(state.queue.length===1){ state.index=0; }
+    saveState(); render();
+    if(autoImport.checked){ importTitleFor(state.queue.length-1); }
+  }
+  btnAdd.onclick=function(){ addId(newId.value); newId.value=""; };
+  btnClear.onclick=function(){ state.queue=[]; state.index=0; saveState(); render(); setStateText('queue cleared'); };
+  btnToday.onclick=function(){ state.queue = todaysSet.slice(); state.index = 0; saveState(); render(); };
+
+  /* ---------- Page lifecycle ---------- */
+  document.addEventListener("touchend", function once(){ document.removeEventListener("touchend", once, {passive:true}); ensureAudio(); if(state.toneOn){ startTone(); } }, {passive:true});
+  document.addEventListener("click", function once(){ document.removeEventListener("click", once, true); ensureAudio(); if(state.toneOn){ startTone(); } }, true);
+  document.addEventListener("visibilitychange", function(){ if(document.visibilityState!=="hidden" && state.toneOn){ startTone(); } });
+
+  /* ---------- Initial ---------- */
+  if(typeof loadState().gain==="number"){ gainSlider.value=String(loadState().gain); }
+  render();
+})();
+</script>
+</body>
+</html>
