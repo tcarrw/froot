@@ -2,236 +2,154 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Froot · Day 14 — Tornado Warnings (Sabrina Carpenter)</title>
-<meta name="description" content="Froot · Day 14 — color + song + seed ritual + mantra. Sabrina Carpenter — Tornado Warnings. Honey 128.15 Hz & Magnetic 160 Hz." />
-<meta name="theme-color" content="#0b0d11">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no" />
+<title>Day 14 — Sabrina Carpenter “Tornado Warnings”</title>
+<meta name="description" content="Illumina 1 · Day 14 — Sabrina Carpenter · seed ritual, mantra, and live tones (128 / 160 Hz) with a responsive honey→lavender gradient." />
+<meta name="theme-color" content="#0b0d11" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <style>
-  :root{
-    --c1:#F7C873; /* Honey Amber */
-    --c2:#A89FBF; /* Lavender Grey */
-    --ink:#f4f6ff;
-    --ink-dim:#cdd3ea;
-    --panel:#0e1118;
-    --line:rgba(255,255,255,.10);
-    --accent:#ffdca6;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0}
-  body{
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial;
-    color:var(--ink);
-    background: linear-gradient(135deg,var(--c1),var(--c2));
-    background-size:200% 200%;
-    animation: bgshift 42s ease-in-out infinite alternate;
-  }
-  @keyframes bgshift{0%{background-position:0% 0%}100%{background-position:100% 100%}}
-
-  .wrap{max-width:980px;margin:0 auto;padding:16px;display:grid;gap:16px}
-  header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-  h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.2px}
-  .pill{display:inline-flex;gap:8px;flex-wrap:wrap}
-  .chip{background:rgba(12,15,23,.7);border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px}
-
-  .grid{display:grid;gap:16px}
-  @media(min-width:840px){ .grid{grid-template-columns:1.25fr 1fr} }
-
-  .card{
-    background: rgba(10,12,18,.60);
-    border:1px solid var(--line);
-    border-radius:18px;
-    backdrop-filter: blur(10px) saturate(120%);
-    padding:14px;
-  }
-  .player{width:100%;aspect-ratio:16/9;border:0;border-radius:12px}
-  .meta{margin-top:10px;font-size:14px;color:var(--ink-dim);display:grid;gap:6px}
-  .swatch{
-    display:inline-grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin-top:6px
-  }
-  .box{height:18px;border-radius:6px;border:1px solid var(--line)}
-  .box1{background:var(--c1)}
-  .box2{background:var(--c2)}
-  code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px}
-
-  .tone{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-  .tone button,.tone select,.tone input[type="range"]{
-    background:#0e1118;color:var(--ink);border:1px solid var(--line);
-    border-radius:12px;padding:10px 12px;font-size:14px
-  }
-  .tone input[type="range"]{appearance:none;height:4px;border-radius:999px;width:180px;padding:0}
-
-  .section-title{font-weight:700;margin:0 0 8px 0}
-  ol{margin:0 0 10px 18px;line-height:1.55}
-  .mantra{font-size:18px;font-weight:700}
-  .rule{height:1px;background:var(--line);margin:10px 0}
-  .links a{color:var(--accent);text-decoration:none}
-  .links{display:flex;gap:12px;flex-wrap:wrap}
-  footer{opacity:.75;font-size:12px}
-
-  .note{
-    width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);
-    background:#0c0f15;color:var(--ink);padding:10px;font-size:14px;resize:vertical
-  }
-  .small{font-size:12px;opacity:.85}
+:root{
+  --bg:#0b0d11; --ink:#f7f4fb; --muted:#c9c4d6; --panel:#121523; --border:rgba(255,255,255,.08);
+  --honey:#F5B942; --lavender:#C4C3D0;
+  --shadow:0 12px 34px rgba(0,0,0,.32);
+  --radius:16px; --header-h:56px; --maxw:860px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:
+  radial-gradient(900px 600px at 25% 12%, color-mix(in oklab,var(--honey), #000 80%), transparent 60%),
+  radial-gradient(900px 600px at 85% 88%, color-mix(in oklab,var(--lavender), #000 80%), transparent 60%),
+  linear-gradient(180deg, color-mix(in oklab,var(--honey) 40%, #0b0d11 60%) 0%, #0b0d11 40%, color-mix(in oklab,var(--lavender) 45%, #0b0d11 55%) 100%);
+color:var(--ink);font:400 16px/1.55 ui-sans-serif,system-ui,-apple-system,Inter,Roboto,"Helvetica Neue",Arial;-webkit-text-size-adjust:100%}
+h1,h2{font-family: ui-serif,Georgia,"Times New Roman",serif}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:calc(var(--header-h)+env(safe-area-inset-top)+12px) 16px 42px}
+header.site{position:sticky;top:0;z-index:30;background:color-mix(in oklab,#101422 90%, transparent);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(8px);block-size:calc(var(--header-h)+env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
+.site-inner{max-width:var(--maxw);margin:0 auto;height:var(--header-h);display:flex;align-items:center;gap:12px;padding:8px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900}
+.dot{width:44px;height:44px;border-radius:12px;background:
+  radial-gradient(60% 60% at 50% 40%,var(--honey),transparent 70%),
+  radial-gradient(60% 60% at 60% 70%,rgba(196,195,208,.85),transparent 70%),
+  linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  box-shadow:0 0 36px rgba(245,185,66,.26),inset 0 0 10px rgba(196,195,208,.18);position:relative;overflow:hidden}
+.dot:after{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,rgba(245,185,66,0),rgba(245,185,66,.18),rgba(196,195,208,.12),rgba(185,140,255,.14),rgba(245,185,66,0));mix-blend-mode:screen;animation:spin 9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#161a2a;color:var(--ink);text-decoration:none;font-weight:800;min-height:44px}
+.hero{margin-top:16px;background:
+  linear-gradient(180deg,rgba(245,185,66,.06),rgba(196,195,208,.05));border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden}
+.hero .shimmer{position:absolute;inset:-20%;
+  background:radial-gradient(1200px 1200px at var(--sx,50%) var(--sy,35%),rgba(245,185,66,.12),transparent 52%),
+            radial-gradient(1000px 900px at calc(100% - var(--sx,50%)) calc(100% - var(--sy,35%)),rgba(196,195,208,.10),transparent 55%);
+  filter:blur(30px);pointer-events:none;animation:breath 14s ease-in-out infinite}
+@keyframes breath{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.mantra{font-size:28px;line-height:1.25;font-weight:800;margin:6px 0 10px;background:linear-gradient(90deg,var(--honey),var(--lavender));
+  -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 18px rgba(245,185,66,.12)}
+.sub{color:var(--muted);font-size:14px;margin-top:-6px}
+.card{background:#12182e;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);margin-top:16px}
+.player{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--border);box-shadow:var(--shadow)}
+.player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.control{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#171b2c;color:var(--ink);font-weight:800;min-height:44px}
+.range{display:inline-flex;gap:8px;align-items:center}
+.range input{width:200px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:rgba(20,28,48,.92);color:#fff;padding:10px 14px;border:1px solid var(--border);border-radius:999px;font-size:13px;z-index:100}
+.mini{color:var(--muted);font-size:14px}
+@media(max-width:420px){
+  :root{--header-h:48px}
+  .site-inner{padding:6px 12px}
+}
 </style>
 </head>
 <body>
+<header class="site">
+  <div class="site-inner">
+    <div class="brand"><span class="dot" aria-hidden="true"></span><span style="font-weight:900">Illumina 1 — Day 14</span></div>
+    <div style="flex:1"></div>
+    <a class="btn" href="../froot/">Froot</a>
+    <a class="btn" href="../mirrorhoney/">MirrorHoney</a>
+  </div>
+</header>
+
 <main class="wrap">
+  <section class="hero">
+    <div class="shimmer" aria-hidden="true"></div>
+    <div class="mantra">“Gentle truth clears the weather.”</div>
+    <div class="sub">Sabrina Carpenter • “Tornado Warnings” • Honey Amber → Lavender Grey</div>
 
-  <header>
-    <h1>Froot · Day 14 — <span style="opacity:.9">Sabrina Carpenter</span> — Tornado Warnings</h1>
-    <div class="pill">
-      <span class="chip">Honey 128.15 Hz</span>
-      <span class="chip">Magnetic 160 Hz</span>
-      <span class="chip">#amberstorm</span>
-    </div>
-  </header>
-
-  <section class="grid">
-    <!-- LEFT PAGE (digital twin): Color + Song -->
-    <div class="card">
-      <iframe id="yt" class="player"
-        allow="autoplay; encrypted-media; picture-in-picture"
-        allowfullscreen
-        title="Tornado Warnings — Sabrina Carpenter"></iframe>
-
-      <div class="meta">
-        <div>🎨 <b>Color field:</b> Honey Amber → Lavender Grey</div>
-        <div class="swatch">
-          <div class="box box1" title="#F7C873"></div><code>#F7C873</code>
-          <div class="box box2" title="#A89FBF"></div><code>#A89FBF</code>
-        </div>
-        <div>🕊️ <b>Mantra:</b> <span class="mantra">Warm air, steady heart.</span></div>
-
-        <div class="tone">
-          <button id="startTone" aria-pressed="false">Start Tone</button>
-          <button id="stopTone">Stop</button>
-          <label>Freq
-            <select id="freq">
-              <option value="128.15">128.15 Hz (Honey)</option>
-              <option value="160">160 Hz (Magnetic)</option>
-            </select>
-          </label>
-          <label>Volume
-            <input id="gain" type="range" min="0" max="1" step="0.01" value="0.25">
-          </label>
-        </div>
+    <div class="controls">
+      <button id="start" class="control" style="background:#8cc7ff;color:#001;border:1px solid #5da9e2">▶︎ Play / Enable Audio</button>
+      <div class="control" id="toneChip">Tone: Off</div>
+      <div role="group" aria-label="Tone">
+        <button data-freq="0"   class="control">Off</button>
+        <button data-freq="128" class="control">128 Hz</button>
+        <button data-freq="160" class="control">160 Hz</button>
       </div>
-    </div>
-
-    <!-- RIGHT PAGE (digital twin): Ritual + Practices -->
-    <div class="card">
-      <h3 class="section-title">Seed Ritual — Calm the Storm</h3>
-      <ol>
-        <li>Sit by a window (or play wind sounds).</li>
-        <li>Inhale for four counts · exhale for six.</li>
-        <li>Speak one true sentence softly.</li>
-        <li>Write: “I am safe even when …”.</li>
-        <li>Morning → warm tea with honey · Night → slow palm circle (30s).</li>
-      </ol>
-
-      <div class="rule"></div>
-
-      <h4 class="section-title" style="margin-top:8px">Morning</h4>
-      <div class="small">Turn on <b>Honey Tone 128.15 Hz</b> for ~2 minutes. Notice how light moves across the room.</div>
-
-      <h4 class="section-title" style="margin-top:10px">Night</h4>
-      <div class="small">Replay “Tornado Warnings” in Froot Mode (low volume). Let your eyes close on a resonant line.</div>
-
-      <div class="rule"></div>
-
-      <h4 class="section-title" style="margin-top:8px">Reflection</h4>
-      <div class="small" style="margin-bottom:6px"><i>When I tell the truth, what part of me changes color?</i></div>
-      <textarea id="note" class="note" placeholder="Three lines max…"></textarea>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-        <label>Forecast Color
-          <input id="forecast" placeholder="#F7C873"
-                 style="background:#0c0f15;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--ink);margin-left:6px">
-        </label>
-        <button id="saveLocal" style="background:#0e1118;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px">Save (local)</button>
-      </div>
-
-      <div class="rule"></div>
-
-      <div class="links">
-        <a id="toMirror" href="https://mirrorhoney.plnt.earth/day14" target="_blank" rel="noopener">Open MirrorHoney</a>
-        <a id="toJar" href="https://jar.plnt.earth" target="_blank" rel="noopener">Open Jar</a>
-        <a id="toReflect" href="https://reflect.plnt.earth" target="_blank" rel="noopener">Open Reflect</a>
-      </div>
+      <div class="control"><label style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="hpEQ" /> Headphone Optimizer</label></div>
     </div>
   </section>
 
-  <footer>Froot Day Module · Illumina 1 · Sabrina (Honey Anchor)</footer>
+  <section class="card">
+    <h2>Seed Ritual</h2>
+    <ol class="mini" style="padding-left:18px;line-height:1.75">
+      <li>4 slow breaths. On each exhale, picture the storm softening.</li>
+      <li>Tap your heart once; notice what you feel — no edits, no spin.</li>
+      <li>Choose a tone (128 Hz = body warm; 160 Hz = mind clear) and sit for ~60 s.</li>
+    </ol>
+    <div class="mini" style="margin-top:8px"><strong>Mantra:</strong> “I tell the truth gently. I am safe to feel, and my weather clears.”</div>
+  </section>
+
+  <section class="card">
+    <h2>Song</h2>
+    <div class="player">
+      <iframe id="yt" src="https://www.youtube-nocookie.com/embed/wP4JsTRPSsA?rel=0&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    </div>
+    <div class="controls" style="justify-content:space-between">
+      <a class="btn" href="https://youtu.be/wP4JsTRPSsA" target="_blank" rel="noopener">Open in YouTube</a>
+      <div class="mini">Tones keep playing while you scroll.</div>
+    </div>
+  </section>
 </main>
 
 <script>
-  // -------- Shared day data --------
-  var DAY = {
-    id: "14",
-    title: "Tornado Warnings",
-    artist: "Sabrina Carpenter",
-    youtubeId: "_QhYpF6F5ug",
-    color1: "#F7C873",
-    color2: "#A89FBF",
-    mantra: "Warm air, steady heart."
-  };
+/* Live tones (128 / 160 Hz) + gentle EQ */
+var AC=null, osc=null, gain=null, hpL=null, hpH=null, ready=false;
+function ensureAudio(){
+  if(AC) return true;
+  try{
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    gain=AC.createGain(); gain.gain.value=0.0;
+    hpL=AC.createBiquadFilter(); hpL.type='lowshelf'; hpL.frequency.value=120; hpL.gain.value=0;
+    hpH=AC.createBiquadFilter(); hpH.type='highshelf'; hpH.frequency.value=6000; hpH.gain.value=0;
+    osc=AC.createOscillator(); osc.type='sine'; osc.frequency.value=128;
+    osc.connect(hpL); hpL.connect(hpH); hpH.connect(gain); gain.connect(AC.destination);
+    osc.start(); ready=true; return true;
+  }catch(e){ return false; }
+}
+function setEQ(on){ if(!ensureAudio())return; hpL.gain.value=on?2.5:0; hpH.gain.value=on?2.0:0; }
+function setFreq(f){
+  if(!ensureAudio())return;
+  if(AC.state==='suspended'){ AC.resume(); }
+  var chip=document.getElementById('toneChip');
+  if(f>0){ var t=AC.currentTime; osc.frequency.setValueAtTime(f,t); gain.gain.cancelScheduledValues(t); gain.gain.setTargetAtTime(.22,t,.05); chip.textContent='Tone: '+f+' Hz'; }
+  else{ var t=AC.currentTime; gain.gain.cancelScheduledValues(t); gain.gain.setTargetAtTime(0.0,t,.06); chip.textContent='Tone: Off'; }
+}
+document.getElementById('hpEQ').addEventListener('change', e=> setEQ(e.target.checked));
 
-  // -------- YouTube embed (loop without extra scripts) --------
-  var yt = document.getElementById('yt');
-  var params = new URLSearchParams({
-    autoplay: 0,
-    modestbranding: 1,
-    rel: 0,
-    color: 'white',
-    playsinline: 1,
-    loop: 1,
-    playlist: DAY.youtubeId
-  });
-  yt.src = "https://www.youtube.com/embed/" + DAY.youtubeId + "?" + params.toString();
+// Start button
+document.getElementById('start').addEventListener('click', function(){
+  ensureAudio(); setFreq(128);
+});
 
-  // -------- WebAudio tone (click-to-start) --------
-  var ctx, osc, gn;
-  function ensureCtx(){ if(!ctx){ ctx = new (window.AudioContext||window.webkitAudioContext)(); } }
-  function startTone(){
-    ensureCtx(); if(osc){return;}
-    osc = ctx.createOscillator(); gn = ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.value = parseFloat(document.getElementById('freq').value);
-    gn.gain.value = parseFloat(document.getElementById('gain').value);
-    osc.connect(gn).connect(ctx.destination);
-    osc.start();
-    document.getElementById('startTone').setAttribute('aria-pressed','true');
-  }
-  function stopTone(){
-    if(osc){ osc.stop(); osc.disconnect(); gn.disconnect(); osc=null; gn=null; }
-    document.getElementById('startTone').setAttribute('aria-pressed','false');
-  }
-  document.getElementById('startTone').addEventListener('click', startTone, {passive:true});
-  document.getElementById('stopTone').addEventListener('click', stopTone, {passive:true});
-  document.getElementById('freq').addEventListener('change', function(e){ if(osc){ osc.frequency.setValueAtTime(parseFloat(e.target.value), ctx.currentTime); } }, {passive:true});
-  document.getElementById('gain').addEventListener('input', function(e){ if(gn){ gn.gain.setValueAtTime(parseFloat(e.target.value), ctx.currentTime); } }, {passive:true});
+// Tone buttons
+document.querySelectorAll('[data-freq]').forEach(function(b){
+  b.addEventListener('click', function(){ setFreq(parseInt(this.getAttribute('data-freq')||'0',10)); });
+});
 
-  // -------- Save local reflection + forecast color --------
-  function saveLocal(){
-    var entries = JSON.parse(localStorage.getItem('jar_entries')||'[]');
-    entries.push({d:DAY.id, t:Date.now(), note:document.getElementById('note').value, mantra:DAY.mantra});
-    localStorage.setItem('jar_entries', JSON.stringify(entries));
-    var fc = document.getElementById('forecast').value.trim();
-    if(fc){ localStorage.setItem('froot_forecast_color', fc); }
-    document.getElementById('saveLocal').textContent = "Saved ✓";
-    setTimeout(function(){ document.getElementById('saveLocal').textContent = "Save (local)"; }, 1600);
-  }
-  document.getElementById('saveLocal').addEventListener('click', saveLocal, {passive:true});
-
-  // Prefill forecast with any prior value
-  var prior = localStorage.getItem('froot_forecast_color');
-  if(prior){ document.getElementById('forecast').value = prior; }
-
-  // -------- Safety: stop tone if user navigates away (optional) --------
-  window.addEventListener('pagehide', stopTone, {passive:true});
+// Shimmer follow
+(function(){
+  const sh=document.querySelector('.shimmer'); let sx=50,sy=35,tx=50,ty=35; (function anim(){ sx+=.04*(tx-sx); sy+=.04*(ty-sy); sh.style.setProperty('--sx',sx+'%'); sh.style.setProperty('--sy',sy+'%'); requestAnimationFrame(anim);})(); addEventListener('pointermove',e=>{tx=e.clientX/innerWidth*100; ty=e.clientY/innerHeight*100;},{passive:true});
+})();
 </script>
 </body>
 </html>
