@@ -6,7 +6,7 @@
 <title>Froot</title>
 <meta name="theme-color" content="#0b0d11">
 <style>
-:root{--bg:#0b0d11;--fg:#ebeaf2;--muted:#9aa0a6;--accent:#8a7bf0;--surface:#101318;--line:#171a20}
+:root{--bg:#0b0d11;--fg:#ebeaf2;--muted:#9aa0a6;--accent:#8a7bf0;--surface:#101318;--line:#171a20;--glow:rgba(138,123,240,.25)}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:500 16px/1.5 system-ui,Segoe UI,Roboto,Inter,Arial}
@@ -24,18 +24,17 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .badge.ok{border-color:#2b9c4a;color:#a9e8b7}
 .badge.fail{border-color:#a33f3f;color:#ffb6b6}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px}
-.grid{display:grid;grid-template-columns:1fr 320px;gap:14px}
-@media (max-width:900px){.grid{grid-template-columns:1fr}}
-.list{display:flex;flex-direction:column;gap:8px;max-height:460px;overflow:auto}
-.item{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#0f1318;border:1px solid var(--line);border-radius:14px;padding:10px 12px;transition:box-shadow .16s ease}
-.item.active{box-shadow:0 0 0 2px var(--accent) inset}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:14px}
+@media (max-width:960px){.grid{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto}
+.item{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#0f1318;border:1px solid var(--line);border-radius:14px;padding:10px 12px;transition:box-shadow .16s ease,outline .16s ease}
+.item.active{box-shadow:0 0 0 2px var(--accent) inset,0 0 24px var(--glow)}
 .item .meta{display:flex;flex-direction:column;gap:2px;min-width:0}
 .item .t{font-weight:600;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:420px}
 .item .c{font-size:12px;color:#b6bbc6;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-width:420px}
 .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .range{width:160px}
 footer{color:var(--muted);font-size:13px;text-align:center;padding:10px}
-hr{border:0;border-top:1px solid var(--line);margin:8px 0}
 .small{font-size:12px;color:#b9bfca}
 .hero{display:flex;flex-direction:column;gap:8px;padding:18px;border-radius:18px;background:
 radial-gradient(1200px 400px at 30% -10%, rgba(138,123,240,.18), transparent 60%),
@@ -45,63 +44,116 @@ radial-gradient(800px 400px at 80% -20%, rgba(88,70,210,.12), transparent 60%)}
 a.hush{color:#bfc3cf;text-decoration:none;border-bottom:1px dotted #2a2f3a}
 .stickybar{position:sticky;top:10px;z-index:10}
 kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#161a21;border:1px solid #202532;border-radius:6px;padding:2px 6px;font-size:12px;color:#cfd3dc}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid #2a2f3a;border-radius:999px;padding:6px 10px;cursor:pointer}
+.chip.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--glow) inset}
+fieldset{border:1px solid #242a34;border-radius:12px}
+legend{font-size:12px;color:#c9cdd6;padding:0 6px}
+.toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#121520;border:1px solid #212734;color:#edeef6;padding:10px 14px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .18s ease}
+.toast.show{opacity:1}
+.whisper{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#10131b;border:1px solid #1f2530;color:#edeef6;padding:10px 14px;border-radius:12px;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.whisper.show{opacity:1}
 </style>
 </head>
 <body>
 <div class="tint" id="tint"></div>
+<div id="toast" class="toast">Copied</div>
+<div id="whisper" class="whisper"></div>
+
 <div class="wrap">
+  <!-- HERO -->
   <div class="hero card">
     <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap">
       <div>
         <h1>Froot</h1>
-        <p class="lead">A quiet room for Marina’s arc — official videos, one sequence, optional listening ritual.</p>
+        <p class="lead">A quiet room to listen with me—one path, one feeling at a time.</p>
       </div>
       <div class="small">No tracking • Official titles • Single file</div>
     </div>
+
+    <!-- Controls (Butterfly labels) -->
     <div class="controls row stickybar" aria-label="Player controls">
-      <button id="btnStart" class="primary">Start</button>
-      <button id="btnPrev" aria-label="Previous">Prev</button>
+      <button id="btnStart" class="primary">Begin</button>
+      <button id="btnPrev" aria-label="Back">Back</button>
       <button id="btnPlayPause" aria-live="polite">Play</button>
-      <button id="btnNext" aria-label="Next">Next</button>
+      <button id="btnNext" aria-label="Ahead">Ahead</button>
       <span class="badge" id="nowBadge">Idle</span>
-      <label class="badge"><input type="checkbox" id="chkLoop"> Loop</label>
-      <label class="badge"><input type="checkbox" id="chkMute"> Mute</label>
-      <select id="toneSel" aria-label="Tone">
-        <option value="off">Tone: Off</option>
-        <option value="128">Tone: 128 Hz</option>
-        <option value="160">Tone: 160 Hz</option>
+      <label class="badge"><input type="checkbox" id="chkLoop"> Circle</label>
+      <label class="badge"><input type="checkbox" id="chkMute"> Silence</label>
+      <select id="toneSel" aria-label="Ritual">
+        <option value="off">Ritual: Off</option>
+        <option value="128">Ritual: Ground (128)</option>
+        <option value="160">Ritual: Lift (160)</option>
       </select>
-      <label class="badge">Tint <input id="tintRange" class="range" type="range" min="0" max="100" value="0" aria-label="Tint"></label>
-      <label class="badge">Gain <input id="gainRange" class="range" type="range" min="0" max="100" value="35" aria-label="Gain"></label>
+      <label class="badge">Color <input id="tintRange" class="range" type="range" min="0" max="100" value="0" aria-label="Color"></label>
+      <label class="badge">Volume <input id="gainRange" class="range" type="range" min="0" max="100" value="35" aria-label="Volume"></label>
       <button id="btnExport" class="badge">Export IDs</button>
       <label class="badge"><input type="file" id="fileImport" accept="application/json" class="hidden"><span id="btnImport" style="cursor:pointer">Import IDs</span></label>
+      <button id="btnShare" class="badge">Share</button>
     </div>
-    <div class="small">Videos via official YouTube channels. Storage saves only IDs. Tone is optional and defaults Off.</div>
+    <div class="small">Ritual is optional. “Ground” is a soft 128 Hz bed. “Lift” is 160 Hz. Use none, one, or both—your body decides.</div>
   </div>
 
+  <!-- ILLUMINA OVERLAYS -->
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div class="row" style="gap:10px;flex-wrap:wrap">
+        <strong>Illumina</strong>
+        <span class="badge" id="cycleDayBadge">Day –/42</span>
+        <span class="badge" id="weekBadge">Week –</span>
+        <span class="badge" id="themeBadge">Theme: —</span>
+        <span class="badge" id="intentBadge">Intention: —</span>
+      </div>
+      <div class="row" style="gap:8px">
+        <label class="small">Cycle Start <input type="date" id="cycleStart"></label>
+        <input id="weekTheme" class="small" placeholder="Week theme (e.g., Soft Courage)" style="min-width:200px">
+        <input id="weekIntent" class="small" placeholder="Week intention (one action)" style="min-width:220px">
+        <button id="saveIllumina" class="ghost">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER CHIPS -->
+  <div class="card">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <div class="chips" id="anchorChips">
+        <div class="chip active" data-anchor="all">All</div>
+        <div class="chip" data-anchor="marina">Marina</div>
+        <div class="chip" data-anchor="sabrina">Sabrina</div>
+        <div class="chip" data-anchor="sigrid">Sigrid</div>
+        <div class="chip" data-anchor="swift">Swift</div>
+        <div class="chip" data-anchor="ariana">Ariana</div>
+        <div class="chip" data-anchor="doechii">Doechii</div>
+      </div>
+      <div class="small">“Sequence” is a feeling, not a law.</div>
+    </div>
+  </div>
+
+  <!-- SELF-TEST -->
   <div class="card" id="spec">
     <div class="row" style="gap:12px;align-items:center">
       <strong>Checks</strong>
       <span id="c_queue" class="badge">Queue</span>
       <span id="c_api" class="badge">YouTube</span>
       <span id="c_play" class="badge">Play/Pause</span>
-      <span id="c_nav" class="badge">Prev/Next</span>
-      <span id="c_loop" class="badge">Loop</span>
+      <span id="c_nav" class="badge">Back/Ahead</span>
+      <span id="c_loop" class="badge">Circle</span>
       <span id="c_audio" class="badge">Audio</span>
-      <span id="c_tone" class="badge">Tone</span>
+      <span id="c_tone" class="badge">Ritual</span>
       <span id="c_store" class="badge">Storage</span>
       <button id="btnSelfTest">Self-Test</button>
       <span id="receipt" class="small" aria-live="polite"></span>
     </div>
   </div>
 
+  <!-- PLAYER + QUEUE -->
   <div class="grid">
     <div class="card">
-      <div id="player" style="aspect-ratio:16/9;background:#0d0f13;border-radius:14px"></div>
+      <div id="player" style="aspect-ratio:16/9;background:#0d0f13;border-radius:14px;box-shadow:0 0 24px var(--glow)"></div>
     </div>
     <div class="card">
       <div class="row" style="justify-content:space-between">
-        <div class="small">Queue</div>
+        <div class="small">Sequence</div>
         <div class="small"><span id="countBadge">0</span> items</div>
       </div>
       <div id="list" class="list"></div>
@@ -109,16 +161,23 @@ kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#161a21;b
   </div>
 
   <footer>
-    Froot • <span class="small">Built as a calm listening room. <a class="hush" href="#" onclick="location.reload()">Reset</a></span>
+    Froot • <span class="small">Videos via official channels • No tracking • <a class="hush" href="#" onclick="localStorage.removeItem('froot_idx_v1');localStorage.removeItem('froot_ids_v1');localStorage.removeItem('froot_tone_v1');localStorage.removeItem('froot_tint_v1');localStorage.removeItem('froot_cycle_v1');localStorage.removeItem('froot_anchor_map_v1');location.reload()">Reset</a></span>
   </footer>
 </div>
 
 <script>
+/* ---------- State ---------- */
 let YTready=false, player=null, queue=[], i=0, loop=false, isMuted=false;
 let ctx=null, osc=null, gain=null, tone="off";
 const el=(id)=>document.getElementById(id);
 const nowBadge=el("nowBadge"), listEl=el("list"), tintEl=el("tint");
 const storeKey="froot_ids_v1";
+const indexKey="froot_idx_v1";
+const toneKey="froot_tone_v1";
+const tintKey="froot_tint_v1";
+const cycleKey="froot_cycle_v1";
+const anchorMapKey="froot_anchor_map_v1";
+
 const PRELOAD_IDS=[
   'WZzcY7ASQno','cIriwVhRPVA','kLbn61Z4LDI','8xg3vE8Ie_E','eB6txyhHFG4','phtcAd8j6Ro',
   'gDr7aTfBffU','w5x93pXSmRM','eVli-tstM5E','zLSUp53y-HQ','ffxKSjUwKdU','8qnOpJfFfpU',
@@ -127,59 +186,142 @@ const PRELOAD_IDS=[
   's6AHxF0s764','aQMKAZpcynA','Gla5AzlHnS4'
 ];
 
-function save(){ try{localStorage.setItem(storeKey, JSON.stringify(queue.map(q=>q.id)));}catch(_){} }
+/* Seeded anchors (editable later) */
+const SEED_ANCHORS={
+  marina:  ['WZzcY7ASQno','gDr7aTfBffU','ZT_skmohD-c','F1JTlnHGa90','Cr-SqRWImmI','s6AHxF0s764','aQMKAZpcynA'],
+  sigrid:  ['cIriwVhRPVA','w5x93pXSmRM','E7lr7pU9fYA'],
+  sabrina: ['kLbn61Z4LDI','eVli-tstM5E','cF1Na4AIecM','YcSP1ZUf1eQ','Gla5AzlHnS4'],
+  swift:   ['8xg3vE8Ie_E','zLSUp53y-HQ','b1kbLwvqugk','b7QlX3yR2xs'],
+  ariana:  ['eB6txyhHFG4','ffxKSjUwKdU','fLFvbwrWLQY','tcYodQoapMg'],
+  doechii: ['phtcAd8j6Ro','8qnOpJfFfpU','29mk5rz3m7Q','L94niPkteGg']
+};
+
+/* Whispers per anchor */
+const WHISPERS={
+  marina:"Breathe here.",
+  sabrina:"Follow the spark.",
+  sigrid:"Call your brave voice.",
+  ariana:"Let light in.",
+  swift:"Name it, then sing it.",
+  doechii:"Flip the script."
+};
+
+/* ---------- Storage helpers ---------- */
+function saveIDs(){ try{ localStorage.setItem(storeKey, JSON.stringify(queue.map(q=>q.id))); }catch(_){} }
+function saveIndex(){ try{ localStorage.setItem(indexKey, String(i)); }catch(_){} }
+function loadIndex(len){ try{ const v=parseInt(localStorage.getItem(indexKey)||"0",10); if(Number.isFinite(v)&&v>=0&&v<len){ i=v; } }catch(_){} }
+function saveTone(){ try{ localStorage.setItem(toneKey, tone); }catch(_){} }
+function loadTone(){ try{ const v=localStorage.getItem(toneKey)||"off"; return v; }catch(_){ return "off"; } }
+function saveTint(val){ try{ localStorage.setItem(tintKey, String(val)); }catch(_){} }
+function loadTint(){ try{ return parseInt(localStorage.getItem(tintKey)||"0",10); }catch(_){ return 0; } }
+function saveCycle(obj){ try{ localStorage.setItem(cycleKey, JSON.stringify(obj)); }catch(_){} }
+function loadCycle(){ try{ return JSON.parse(localStorage.getItem(cycleKey)||"{}"); }catch(_){ return {}; } }
+function saveAnchorMap(map){ try{ localStorage.setItem(anchorMapKey, JSON.stringify(map)); }catch(_){} }
+function loadAnchorMap(){ try{ return JSON.parse(localStorage.getItem(anchorMapKey)||"{}"); }catch(_){ return {}; } }
+
+/* ---------- Boot data ---------- */
+let anchorMap = loadAnchorMap();
 async function load(){
   try{
     const idsStored=JSON.parse(localStorage.getItem(storeKey)||"[]");
     const ids = Array.isArray(idsStored)&&idsStored.length>0 ? idsStored : PRELOAD_IDS.slice();
     queue = ids.map(id=>({id, title:"", channel:""}));
+    // seed anchors if missing
+    for(const [a,arr] of Object.entries(SEED_ANCHORS)){ for(const id of arr){ if(!anchorMap[id]) anchorMap[id]=a; } }
+    saveAnchorMap(anchorMap);
+
+    loadIndex(queue.length);
     for(const item of queue){ refreshMeta(item).catch(()=>{}); }
-    i=0; save(); render();
+    saveIDs(); render();
+
+    // Persist ritual + color on load
+    const t = loadTone(); tone=t; document.getElementById("toneSel").value=t; if(t!=="off"){ ensureAudio(); setTone(t); }
+    const tv = loadTint(); document.getElementById("tintRange").value=tv; setTint(tv);
+
+    // Cycle overlays
+    const cyc = loadCycle();
+    if(cyc.start){ document.getElementById("cycleStart").value = cyc.start; }
+    if(cyc.theme){ document.getElementById("weekTheme").value = cyc.theme; }
+    if(cyc.intent){ document.getElementById("weekIntent").value = cyc.intent; }
+    renderCycleBadges();
   }catch(_){
     queue = PRELOAD_IDS.map(id=>({id, title:"", channel:""}));
-    i=0; save(); render();
-    queue.forEach(item=>refreshMeta(item).catch(()=>{}));
+    loadIndex(queue.length); saveIDs(); render(); queue.forEach(item=>refreshMeta(item).catch(()=>{}));
   }
 }
+
+/* ---------- Metadata ---------- */
 async function refreshMeta(item){
   const url = "https://www.youtube.com/oembed?format=json&url="+encodeURIComponent("https://www.youtube.com/watch?v="+item.id);
-  const r = await fetch(url,{mode:"cors"}); if(!r.ok) throw 0; const j = await r.json();
-  item.title = j.title || ""; item.channel = j.author_name || ""; render();
+  const r = await fetch(url,{mode:"cors"}); if(!r.ok) throw 0;
+  const j = await r.json(); item.title=j.title||""; item.channel=j.author_name||""; render();
 }
+
+/* ---------- UI render ---------- */
 function render(){
+  const activeId = queue[i]?.id;
   listEl.innerHTML=""; el("countBadge").textContent=String(queue.length);
   queue.forEach((q,idx)=>{
     const div=document.createElement("div"); div.className="item"+(idx===i?" active":"");
     const left=document.createElement("div"); left.className="meta";
     const t=document.createElement("div"); t.className="t"; t.textContent=q.title?q.title:q.id;
     const c=document.createElement("div"); c.className="c"; c.textContent=q.channel?q.channel:"";
-    left.append(t,c);
+    const tag=document.createElement("div"); tag.className="small"; const a=anchorMap[q.id]||"";
+    if(a){ tag.textContent=a[0].toUpperCase()+a.slice(1); tag.style.opacity=.8; }
+    left.append(t,c,tag);
+
     const right=document.createElement("div"); right.className="row";
     const up=document.createElement("button"); up.textContent="↑";
     const down=document.createElement("button"); down.textContent="↓";
     const play=document.createElement("button"); play.textContent="Play";
     const del=document.createElement("button"); del.textContent="Del";
-    up.onclick=()=>{ if(idx>0){ [queue[idx-1],queue[idx]]=[queue[idx],queue[idx-1]]; if(i===idx)i=idx-1; else if(i===idx-1)i=idx; save(); render(); } };
-    down.onclick=()=>{ if(idx<queue.length-1){ [queue[idx+1],queue[idx]]=[queue[idx],queue[idx+1]]; if(i===idx)i=idx+1; else if(i===idx+1)i=idx; save(); render(); } };
-    play.onclick=()=>{ i=idx; loadCurrent(true); };
-    del.onclick=()=>{ queue.splice(idx,1); if(i>=queue.length)i=queue.length-1; save(); render(); };
+    up.onclick=()=>{ if(idx>0){ [queue[idx-1],queue[idx]]=[queue[idx],queue[idx-1]]; if(i===idx)i=idx-1; else if(i===idx-1)i=idx; saveIDs(); saveIndex(); render(); } };
+    down.onclick=()=>{ if(idx<queue.length-1){ [queue[idx+1],queue[idx]]=[queue[idx],queue[idx+1]]; if(i===idx)i=idx+1; else if(i===idx+1)i=idx; saveIDs(); saveIndex(); render(); } };
+    play.onclick=()=>{ i=idx; saveIndex(); loadCurrent(true); };
+    del.onclick=()=>{ queue.splice(idx,1); if(i>=queue.length)i=queue.length-1; if(i<0)i=0; saveIDs(); saveIndex(); render(); };
     right.append(up,down,play,del); div.append(left,right); listEl.append(div);
   });
   updateNowBadge();
 }
-function updateNowBadge(){ nowBadge.textContent = queue[i] ? (queue[i].title||queue[i].id) : "Idle"; }
 
+/* ---------- Cycle badges ---------- */
+function renderCycleBadges(){
+  const cyc = loadCycle();
+  const startStr = cyc.start;
+  const dayEl = document.getElementById("cycleDayBadge");
+  const weekEl = document.getElementById("weekBadge");
+  const themeEl = document.getElementById("themeBadge");
+  const intentEl = document.getElementById("intentBadge");
+  if(startStr){
+    const start = new Date(startStr+"T00:00:00");
+    const now = new Date();
+    const diff = Math.floor((now - start)/(1000*60*60*24));
+    let day = ((diff % 42)+42)%42; day = day+1; // 1..42
+    const week = Math.ceil(day/7);
+    dayEl.textContent = "Day "+day+"/42";
+    weekEl.textContent = "Week "+week;
+  }else{
+    dayEl.textContent="Day –/42";
+    weekEl.textContent="Week –";
+  }
+  themeEl.textContent = "Theme: "+(cyc.theme||"—");
+  intentEl.textContent = "Intention: "+(cyc.intent||"—");
+}
+
+/* ---------- Audio / Ritual ---------- */
 function ensureAudio(){ if(!ctx){ ctx=new (window.AudioContext||window.webkitAudioContext)(); }
   if(!gain){ gain=ctx.createGain(); gain.gain.value=0.35; gain.connect(ctx.destination); }
   if(!osc){ osc=ctx.createOscillator(); osc.type="sine"; osc.frequency.value=128; osc.connect(gain); osc.start(); } }
 function setTone(sel){
-  tone=sel; if(sel==="off"){ if(gain) gain.gain.value=0; return; }
+  tone=sel; saveTone();
+  if(sel==="off"){ if(gain) gain.gain.value=0; return; }
   ensureAudio(); if(osc){ osc.frequency.value = sel==="128"?128:160; }
-  if(gain){ const v = Number(el("gainRange").value)/100; gain.gain.value = v; } }
-function setGain(){ if(gain){ const v = Number(el("gainRange").value)/100; gain.gain.value = tone==="off"?0:v; } }
+  if(gain){ const v = Number(document.getElementById("gainRange").value)/100; gain.gain.value = v; } }
+function setGain(){ if(gain){ const v = Number(document.getElementById("gainRange").value)/100; gain.gain.value = tone==="off"?0:v; } }
 function setMute(m){ isMuted=m; if(player){ if(m) player.mute(); else player.unMute(); } }
-function setTint(v){ const o = Number(v)/100; tintEl.style.opacity=o; tintEl.style.background="hsl(260 80% 60% / 1)"; }
+function setTint(v){ const o = Number(v)/100; tintEl.style.opacity=o; tintEl.style.background="hsl(260 80% 60% / 1)"; saveTint(v); }
 
+/* ---------- YouTube ---------- */
 function loadYouTubeAPI(){ if(window.YT&&window.YT.Player){ onYouTubeIframeAPIReady(); return; }
   const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; document.head.appendChild(s); }
 window.onYouTubeIframeAPIReady=function(){
@@ -187,59 +329,156 @@ window.onYouTubeIframeAPIReady=function(){
   player=new YT.Player("player",{
     width:"100%",height:"100%",
     playerVars:{autoplay:0,controls:1,rel:0,modestbranding:1,iv_load_policy:3,enablejsapi:1},
-    events:{ onReady:()=>{}, onStateChange:(e)=>{ if(e.data===YT.PlayerState.ENDED){ next(); } if(e.data===YT.PlayerState.PLAYING){ syncMetaFromPlayer(); } syncPlayLabel(); } }
+    events:{ onReady:()=>{}, onStateChange:(e)=>{ if(e.data===YT.PlayerState.ENDED){ next(); } if(e.data===YT.PlayerState.PLAYING){ syncMetaFromPlayer(); onTrackStartWhisper(); } syncPlayLabel(); } }
   });
 };
 function syncMetaFromPlayer(){ const d=player?player.getVideoData():null; const cur=queue[i];
   if(cur&&d){ if(d.title) cur.title=d.title; if(d.author) cur.channel=d.author; render(); } }
-function syncPlayLabel(){ if(!player) return; const s=player.getPlayerState(); el("btnPlayPause").textContent=(s===1)?"Pause":"Play"; }
+function syncPlayLabel(){ if(!player) return; const s=player.getPlayerState(); document.getElementById("btnPlayPause").textContent=(s===1)?"Pause":"Play"; }
 
-function loadCurrent(autoplay){ const cur=queue[i]; if(!cur) return;
-  if(player&&player.loadVideoById){ player.loadVideoById(cur.id); if(!autoplay){ player.pauseVideo(); } setTimeout(syncPlayLabel,150); }
-  updateNowBadge(); }
-function next(){ if(queue.length===0) return; if(i<queue.length-1){ i++; } else if(loop){ i=0; } else { return; } loadCurrent(true); }
-function prev(){ if(queue.length===0) return; if(i>0){ i--; } else if(loop){ i=queue.length-1; } loadCurrent(true); }
-function exportIDs(){ const ids=queue.map(q=>q.id); const blob=new Blob([JSON.stringify(ids,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="froot_ids.json"; document.body.appendChild(a); a.click(); a.remove(); }
-function importIDs(file){ const r=new FileReader(); r.onload=()=>{ try{ const ids=JSON.parse(r.result);
-  if(Array.isArray(ids)){ queue=ids.map(id=>({id:String(id),title:"",channel:""})); i=0; save(); render(); queue.forEach(item=>refreshMeta(item).catch(()=>{})); } }catch(_){} };
-  r.readAsText(file); }
+/* ---------- Playback flow ---------- */
+function updateNowBadge(){ nowBadge.textContent = queue[i] ? (queue[i].title||queue[i].id) : "Idle"; }
+function loadCurrent(autoplay){
+  const cur=queue[i]; if(!cur) return; saveIndex();
+  if(player&&player.loadVideoById){
+    player.loadVideoById(cur.id);
+    if(!autoplay){ player.pauseVideo(); }
+    setTimeout(syncPlayLabel,150);
+  }
+  updateNowBadge();
+}
+function next(){ if(queue.length===0) return; if(i<queue.length-1){ i++; } else if(loop){ i=0; } else { return; } saveIndex(); loadCurrent(true); }
+function prev(){ if(queue.length===0) return; if(i>0){ i--; } else if(loop){ i=queue.length-1; } saveIndex(); loadCurrent(true); }
 
-/* Self-Test */
-function mark(elm, ok){ elm.classList.remove('ok','fail'); elm.classList.add(ok?'ok':'fail'); }
-function receiptLine(){ const ids=['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'];
-  const ok = ids.every(id=>document.getElementById(id).classList.contains('ok'));
-  el('receipt').textContent = ok ? 'All green' : 'Needs fixes: ' + ids.filter(id=>!document.getElementById(id).classList.contains('ok')).map(s=>document.getElementById(s).textContent).join(', '); }
-function waitForState(targets, timeout=4000){ return new Promise((res)=>{ const start=performance.now(); (function tick(){
-  const s = player?player.getPlayerState():null; if(s!=null && targets.includes(s)) return res(true);
-  if(performance.now()-start>timeout) return res(false); requestAnimationFrame(tick); })(); }); }
-async function runSelfTest(){
+/* ---------- Import/Export/Share ---------- */
+function exportIDs(){
+  const ids=queue.map(q=>q.id);
+  const blob=new Blob([JSON.stringify(ids,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="froot_ids.json";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function importIDs(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const ids=JSON.parse(r.result);
+      if(Array.isArray(ids)){
+        queue = ids.map(id=>({id:String(id), title:"", channel:""}));
+        if(i>=queue.length) i = queue.length?queue.length-1:0;
+        saveIDs(); saveIndex(); render();
+        queue.forEach(item=>refreshMeta(item).catch(()=>{}));
+      }
+    }catch(_){}
+  };
+  r.readAsText(file);
+}
+function copyShare(){
   try{
-    mark(el('c_queue'), Array.isArray(queue)&&queue.length>0);
-    const apiReady=!!(window.YT&&window.YT.Player&&player); let apiLoadOk=false;
-    if(apiReady&&queue[i]&&queue[i].id){ try{ player.cueVideoById(queue[i].id); apiLoadOk=true; }catch(_){ apiLoadOk=false; } }
-    mark(el('c_api'), apiReady&&apiLoadOk);
-    let playOk=false; if(apiReady){ player.playVideo(); const played=await waitForState([1,3]); player.pauseVideo(); const paused=await waitForState([2,5,0]); playOk=played&&paused; }
-    mark(el('c_play'), playOk);
-    const before=i; next(); const movedNext=(i!==before); prev(); const movedPrev=(i===before); mark(el('c_nav'), movedNext&&movedPrev);
-    const oldIdx=i, oldLoop=loop; i=queue.length?queue.length-1:0; loop=true; next(); const wrapped=(i===0&&queue.length>0); mark(el('c_loop'), wrapped); i=oldIdx; loop=oldLoop;
-    let audioOk=false; try{ await (ctx?ctx.resume():Promise.resolve()); ensureAudio(); audioOk=!!(ctx&&gain&&osc); }catch(_){} mark(el('c_audio'), audioOk);
-    const toneWas=tone; setTone('128'); const t128ok=(osc&&Math.abs(osc.frequency.value-128)<0.5); setTone('160'); const t160ok=(osc&&Math.abs(osc.frequency.value-160)<0.5); setTone(toneWas); mark(el('c_tone'), t128ok&&t160ok);
-    let storeOk=false; try{ const snap=JSON.stringify(queue.map(q=>q.id)); localStorage.setItem(storeKey,snap); const back=localStorage.getItem(storeKey); storeOk=(back===snap); }catch(_){}
-    mark(el('c_store'), storeOk); syncPlayLabel(); receiptLine();
-  }catch(_){ ['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'].forEach(id=>mark(el(id),false)); receiptLine(); }
+    navigator.clipboard.writeText(location.href).then(()=>flashToast("Link copied"));
+  }catch(_){ flashToast("Copy failed"); }
+}
+function flashToast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1200);
 }
 
-/* Boot */
+/* ---------- Anchors: reorder-only filter ---------- */
+function reorderByAnchor(anchor){
+  if(anchor==="all") return; // keep current order
+  const idsTop=[]; const idsRest=[];
+  for(const q of queue){
+    const a = anchorMap[q.id] || "";
+    if(a===anchor) idsTop.push(q); else idsRest.push(q);
+  }
+  queue = idsTop.concat(idsRest);
+  // keep current index pointing to same ID if possible
+  const curId = (queue[i]||{}).id;
+  const newIdx = queue.findIndex(x=>x.id===curId);
+  if(newIdx>=0) i = newIdx;
+  saveIDs(); saveIndex(); render();
+}
+
+/* ---------- Per-anchor whispers ---------- */
+function onTrackStartWhisper(){
+  const id = queue[i]?.id; if(!id) return;
+  const a = anchorMap[id] || "";
+  const line = WHISPERS[a] || "";
+  if(!line) return;
+  const w = document.getElementById("whisper"); w.textContent=line; w.classList.add("show");
+  setTimeout(()=>w.classList.remove("show"), 1300);
+}
+
+/* ---------- Self-Test ---------- */
+function mark(elm, ok){ elm.classList.remove('ok','fail'); elm.classList.add(ok?'ok':'fail'); }
+function receiptLine(){
+  const ids=['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'];
+  const ok = ids.every(id=>document.getElementById(id).classList.contains('ok'));
+  document.getElementById('receipt').textContent = ok ? 'All green' : 'Needs fixes: ' + ids.filter(id=>!document.getElementById(id).classList.contains('ok')).map(s=>document.getElementById(s).textContent).join(', ');
+}
+function waitForState(targets, timeout=4000){
+  return new Promise((res)=>{
+    const start=performance.now();
+    (function tick(){
+      const s = player?player.getPlayerState():null;
+      if(s!=null && targets.includes(s)) return res(true);
+      if(performance.now()-start>timeout) return res(false);
+      requestAnimationFrame(tick);
+    })();
+  });
+}
+async function runSelfTest(){
+  try{
+    mark(document.getElementById('c_queue'), Array.isArray(queue)&&queue.length>0);
+    const apiReady=!!(window.YT&&window.YT.Player&&player); let apiLoadOk=false;
+    if(apiReady&&queue[i]&&queue[i].id){ try{ player.cueVideoById(queue[i].id); apiLoadOk=true; }catch(_){ apiLoadOk=false; } }
+    mark(document.getElementById('c_api'), apiReady&&apiLoadOk);
+    let playOk=false; if(apiReady){ player.playVideo(); const played=await waitForState([1,3]); player.pauseVideo(); const paused=await waitForState([2,5,0]); playOk=played&&paused; }
+    mark(document.getElementById('c_play'), playOk);
+    const before=i; next(); const movedNext=(i!==before); prev(); const movedPrev=(i===before); mark(document.getElementById('c_nav'), movedNext&&movedPrev);
+    const oldIdx=i, oldLoop=loop; i=queue.length?queue.length-1:0; loop=true; next(); const wrapped=(i===0&&queue.length>0); mark(document.getElementById('c_loop'), wrapped); i=oldIdx; loop=oldLoop;
+    let audioOk=false; try{ await (ctx?ctx.resume():Promise.resolve()); ensureAudio(); audioOk=!!(ctx&&gain&&osc); }catch(_){} mark(document.getElementById('c_audio'), audioOk);
+    const toneWas=tone; setTone('128'); const t128ok=(osc&&Math.abs(osc.frequency.value-128)<0.5); setTone('160'); const t160ok=(osc&&Math.abs(osc.frequency.value-160)<0.5); setTone(toneWas); mark(document.getElementById('c_tone'), t128ok&&t160ok);
+    let storeOk=false; try{ const snap=JSON.stringify(queue.map(q=>q.id)); localStorage.setItem(storeKey,snap); const back=localStorage.getItem(storeKey); storeOk=(back===snap); }catch(_){}
+    mark(document.getElementById('c_store'), storeOk); syncPlayLabel(); receiptLine();
+  }catch(_){ ['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'].forEach(id=>mark(document.getElementById(id),false)); receiptLine(); }
+}
+
+/* ---------- Boot & events ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
   loadYouTubeAPI(); load();
-  el("btnStart").onclick=async ()=>{ try{ await (ctx?ctx.resume():Promise.resolve()); }catch(_){} setTone(el("toneSel").value); loadCurrent(false); };
-  el("btnPrev").onclick=prev; el("btnNext").onclick=next;
-  el("btnPlayPause").onclick=()=>{ if(!player) return; const s=player.getPlayerState(); if(s===1){ player.pauseVideo(); } else { player.playVideo(); } setTimeout(syncPlayLabel,150); };
-  el("chkLoop").onchange=(e)=>{ loop=e.target.checked; }; el("chkMute").onchange=(e)=>{ setMute(e.target.checked); };
-  el("toneSel").onchange=(e)=>{ setTone(e.target.value); }; el("gainRange").oninput=setGain; el("tintRange").oninput=(e)=>setTint(e.target.value);
-  el("btnExport").onclick=exportIDs; el("btnImport").onclick=()=>el("fileImport").click(); el("fileImport").onchange=(e)=>{ if(e.target.files&&e.target.files[0]) importIDs(e.target.files[0]); };
-  el("btnSelfTest").onclick=runSelfTest;
+
+  document.getElementById("btnStart").onclick=async ()=>{ try{ await (ctx?ctx.resume():Promise.resolve()); }catch(_){} setTone(document.getElementById("toneSel").value); loadCurrent(false); };
+  document.getElementById("btnPrev").onclick=prev;
+  document.getElementById("btnNext").onclick=next;
+  document.getElementById("btnPlayPause").onclick=()=>{ if(!player) return; const s=player.getPlayerState(); if(s===1){ player.pauseVideo(); } else { player.playVideo(); } setTimeout(syncPlayLabel,150); };
+  document.getElementById("chkLoop").onchange=(e)=>{ loop=e.target.checked; };
+  document.getElementById("chkMute").onchange=(e)=>{ setMute(e.target.checked); };
+  document.getElementById("toneSel").onchange=(e)=>{ setTone(e.target.value); };
+  document.getElementById("gainRange").oninput=setGain;
+  document.getElementById("tintRange").oninput=(e)=>setTint(e.target.value);
+  document.getElementById("btnExport").onclick=exportIDs;
+  document.getElementById("btnImport").onclick=()=>document.getElementById("fileImport").click();
+  document.getElementById("fileImport").onchange=(e)=>{ if(e.target.files&&e.target.files[0]) importIDs(e.target.files[0]); };
+  document.getElementById("btnSelfTest").onclick=runSelfTest;
+  document.getElementById("btnShare").onclick=copyShare;
+
+  // Illumina edits
+  document.getElementById("saveIllumina").onclick=()=>{
+    const start = document.getElementById("cycleStart").value;
+    const theme = document.getElementById("weekTheme").value.trim();
+    const intent = document.getElementById("weekIntent").value.trim();
+    saveCycle({start,theme,intent}); renderCycleBadges(); flashToast("Saved");
+  };
+
+  // Anchor chips
+  document.getElementById("anchorChips").addEventListener("click",(e)=>{
+    const target = e.target.closest(".chip"); if(!target) return;
+    document.querySelectorAll(".chip").forEach(ch=>ch.classList.remove("active"));
+    target.classList.add("active");
+    reorderByAnchor(target.dataset.anchor);
+  });
+
+  window.addEventListener("beforeunload", saveIndex);
 });
 </script>
 </body>
