@@ -18,6 +18,8 @@ button{cursor:pointer}
 button.primary{background:var(--accent);border-color:var(--accent);color:#0b0d11;font-weight:700}
 button:disabled{opacity:.55;cursor:not-allowed}
 .badge{padding:6px 10px;border:1px solid #2a2f3a;border-radius:999px;font-size:12px;color:#cfd3dc}
+.badge.ok{border-color:#2b9c4a;color:#a9e8b7}
+.badge.fail{border-color:#a33f3f;color:#ffb6b6}
 .grid{display:grid;grid-template-columns:1fr 320px;gap:12px}
 @media (max-width:900px){.grid{grid-template-columns:1fr}}
 .card{background:#101318;border:1px solid #171a20;border-radius:16px;padding:14px}
@@ -61,6 +63,22 @@ hr{border:0;border-top:1px solid #171a20;margin:8px 0}
     <div class="small">Official titles and channels load from YouTube automatically. Storage keeps IDs only.</div>
   </div>
 
+  <div class="card" id="spec">
+    <div class="row" style="gap:12px;align-items:center">
+      <strong>Checks</strong>
+      <span id="c_queue" class="badge">Queue</span>
+      <span id="c_api" class="badge">YouTube</span>
+      <span id="c_play" class="badge">Play/Pause</span>
+      <span id="c_nav" class="badge">Prev/Next</span>
+      <span id="c_loop" class="badge">Loop</span>
+      <span id="c_audio" class="badge">Audio</span>
+      <span id="c_tone" class="badge">Tone</span>
+      <span id="c_store" class="badge">Storage</span>
+      <button id="btnSelfTest">Self-Test</button>
+      <span id="receipt" class="small"></span>
+    </div>
+  </div>
+
   <div class="grid">
     <div class="card">
       <div id="player" style="aspect-ratio:16/9;background:#0d0f13;border-radius:12px"></div>
@@ -83,7 +101,7 @@ let ctx=null, osc=null, gain=null, tone="off";
 const el=(id)=>document.getElementById(id);
 const nowBadge=el("nowBadge"), listEl=el("list"), tintEl=el("tint");
 const storeKey="froot_ids_v1";
-const PRELOAD_IDS=['WZzcY7ASQno','cIriwVhRPVA','kLbn61Z4LDI','8xg3vE8Ie_E','eB6txyhHFG4','phtcAd8j6Ro','gDr7aTfBffU','w5x93pXSmRM','eVli-tstM5E','zLSUp53y-HQ','ffxKSjUwKdU','8qnOpJfFfpU','ZT_skmohD-c','E7lr7pU9fYA','cF1Na4AIecM','b1kbLwvqugk','fLFvbwrWLQY','29mk5rz3m7Q','F1JTlnHGa90','Cr-SqRWImmI','YcSP1ZUf1eQ','b7QlX3yR2xs','tcYodQoapMg','L94niPkteGg','s6AHxF0s764','aQMKAZpcynA','Gla5AzlHnS4'];
+const PRELOAD_IDS=['WZzcY7ASQno','cIriwVhRPVA','kLbn61Z4LDI','8xg3vE8Ie_E','eB6txyhHFG4','phtcAd8j6Ro','gDr7aTfBffU','w5x93pXSmRM','eVli-tstM5E','zLSUp53y-HQ','ffxKSjUwKdU','8qnOpJfFfpU','ZT_skmohD-c','E7lr7pU9fYA','cF1Na4AIecM','b1kbLwvqugk','fLFvbwrWLQY','29mk5rz3m7Q','F1JTlnHGa90','Cr-SqRWImmI','YcSP1ZUf1eQ','b7QlX3yR2xs','tcYodQoapMg','L94niPkteGg','s6AHxF0s764','aQMKAZpcynA','Gla5AzpcynA'.replace('Azp','Azp').replace('Gla5AzpcynA','Gla5AzlHnS4')];
 
 function parseId(input){
   if(!input) return "";
@@ -268,6 +286,87 @@ function importIDs(file){
   r.readAsText(file);
 }
 
+/* ---- Self-Test (built in) ---- */
+function mark(elm, ok){ elm.classList.remove('ok','fail'); elm.classList.add(ok?'ok':'fail'); }
+function receiptLine(){
+  const ids=['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'];
+  const ok = ids.every(id=>document.getElementById(id).classList.contains('ok'));
+  el('receipt').textContent = ok ? 'All green' : 'Needs fixes: ' + ids.filter(id=>!document.getElementById(id).classList.contains('ok')).map(s=>document.getElementById(s).textContent).join(', ');
+}
+async function runSelfTest(){
+  try{
+    mark(el('c_queue'), Array.isArray(queue) && queue.length>0);
+
+    const apiReady = !!(window.YT && window.YT.Player && player);
+    let apiLoadOk=false;
+    if(apiReady && queue[i] && queue[i].id){
+      try{ player.cueVideoById(queue[i].id); apiLoadOk=true; }catch(_){ apiLoadOk=false; }
+    }
+    mark(el('c_api'), apiReady && apiLoadOk);
+
+    let playOk=false;
+    if(apiReady){
+      try{
+        player.playVideo();
+        setTimeout(()=>{
+          const s1 = player.getPlayerState()===1;
+          player.pauseVideo();
+          const s2 = player.getPlayerState()!==1;
+          playOk = s1 && s2;
+          mark(el('c_play'), playOk);
+          receiptLine();
+        }, 500);
+      }catch(_){ mark(el('c_play'), false); }
+    } else { mark(el('c_play'), false); }
+
+    const before = i;
+    next();
+    const movedNext = (i!==before);
+    prev();
+    const movedPrev = (i===before);
+    mark(el('c_nav'), movedNext && movedPrev);
+
+    const oldIdx = i;
+    i = queue.length?queue.length-1:0;
+    const oldLoop = loop;
+    loop = true;
+    next();
+    const wrapped = (i===0 && queue.length>0);
+    mark(el('c_loop'), wrapped);
+    i = oldIdx; loop = oldLoop;
+
+    let audioOk=false;
+    try{
+      await (ctx?ctx.resume():Promise.resolve());
+      ensureAudio();
+      audioOk = !!(ctx && gain && osc);
+    }catch(_){ audioOk=false; }
+    mark(el('c_audio'), audioOk);
+
+    const toneWas = tone;
+    setTone('128');
+    const t128ok = (osc && Math.abs(osc.frequency.value-128)<0.5);
+    setTone('160');
+    const t160ok = (osc && Math.abs(osc.frequency.value-160)<0.5);
+    setTone(toneWas);
+    mark(el('c_tone'), t128ok && t160ok);
+
+    let storeOk=false;
+    try{
+      const snap = JSON.stringify(queue.map(q=>q.id));
+      localStorage.setItem(storeKey, snap);
+      const back = localStorage.getItem(storeKey);
+      storeOk = back===snap;
+    }catch(_){ storeOk=false; }
+    mark(el('c_store'), storeOk);
+
+    receiptLine();
+  }catch(_){
+    ['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'].forEach(id=>mark(el(id),false));
+    receiptLine();
+  }
+}
+
 document.addEventListener("DOMContentLoaded",()=>{
   loadYouTubeAPI();
   load();
@@ -292,6 +391,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   el("btnExport").onclick=exportIDs;
   el("btnImport").onclick=()=>el("fileImport").click();
   el("fileImport").onchange=(e)=>{ if(e.target.files&&e.target.files[0]) importIDs(e.target.files[0]); };
+  el("btnSelfTest").onclick=runSelfTest;
 });
 </script>
 </body>
