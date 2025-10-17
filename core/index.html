@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Froot · Core v1.8 — editor + notes/info + export/import + site snippet</title>
+<title>Froot · Core v1.9 — editor + notes/info + export/import</title>
 <meta name="theme-color" content="#0b0d11">
 <style>
   :root{--bg:#0b0d11;--ink:#e8f0ff;--sub:#a9b4c7;--accent:#73ffd9;--line:#1a2030;--card:#121725;--card2:#0f1420}
@@ -45,7 +45,7 @@
   details.info .ibox{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#0d1526;color:#dfe6ff}
 
   /* Popover editor */
-  .popover{position:fixed;left:0;top:0;min-width:280px;max-width:92vw;z-index:999;border:1px solid var(--line);background:#0e1422;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4);padding:12px;display:none}
+  .popover{position:fixed;left:0;top:0;min-width:300px;max-width:92vw;z-index:999;border:1px solid var(--line);background:#0e1422;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4);padding:12px;display:none}
   .popover.active{display:block}
   .popover .hdr{font-size:12px;color:#a9b4c7;margin-bottom:8px}
   .popover .row{margin-top:6px}
@@ -64,7 +64,7 @@
 </head>
 <body>
 <header>
-  <h1>Froot · Core <span class="sub">v1.8 — editor + notes/info + export/import + site snippet · auto-advance + 128.15 Hz</span></h1>
+  <h1>Froot · Core <span class="sub">v1.9 — editor + notes/info + export/import · auto-advance + 128.15 Hz</span></h1>
 </header>
 
 <main class="grid">
@@ -117,7 +117,7 @@
         <div class="ioRow">
           <button id="btnExportSnippet" class="primary">Export Site Snippet</button>
           <button id="btnCopySnippet">Copy Site Snippet</button>
-          <span class="small">Paste snippet directly into other pages.</span>
+          <span class="small">Paste snippet anywhere in a page; it exposes <code>window.FROOT_DATA</code>.</span>
         </div>
         <div class="ioRow">
           <input id="fileJSON" type="file" accept="application/json">
@@ -143,7 +143,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 (function(){
-  var KEY="froot_core_v1_8";
+  var KEY="froot_core_v1_9";
   function loadState(){ try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}} }
   function saveState(){
     localStorage.setItem(KEY, JSON.stringify({
@@ -152,12 +152,19 @@
     }));
   }
 
+  /* Seed set (objects: {id,title?,note?,info?}) */
   var todaysSet = [
-    {id:"GiOGlYjKgX8"}, {id:"1YUBbF24H44"}, {id:"mkR_Qwix4Ho"},
-    {id:"Hy9W_mrY_Vk"}, {id:"K9_VFxzCuQ0"}, {id:"k2qgadSvNyU"}, {id:"QtXby3twMmI"}
+    {id:"GiOGlYjKgX8"}, // MARINA — Handmade Heaven
+    {id:"1YUBbF24H44"}, // Sabrina — because i liked a boy
+    {id:"mkR_Qwix4Ho"}, // Taylor — Lavender Haze
+    {id:"Hy9W_mrY_Vk"}, // Solange — Losing You
+    {id:"K9_VFxzCuQ0"}, // Sigrid — Strangers
+    {id:"k2qgadSvNyU"}, // Dua Lipa — New Rules
+    {id:"QtXby3twMmI"}  // Coldplay — Adventure of a Lifetime
   ];
 
   var state = Object.assign({queue: todaysSet.slice(), index:0, loop:true, toneOn:false}, loadState());
+  /* migrate string arrays -> object arrays */
   if(Array.isArray(state.queue) && state.queue.length && typeof state.queue[0]==="string"){
     state.queue = state.queue.map(function(id){ return {id:id}; });
   }
@@ -172,6 +179,7 @@
   var btnAdd=document.getElementById("btnAdd"), btnClear=document.getElementById("btnClear"), btnToday=document.getElementById("btnToday");
   var autoImport=document.getElementById("autoImport");
 
+  /* Import/Export elements */
   var btnExportJSON=document.getElementById("btnExportJSON");
   var btnCopyJSON=document.getElementById("btnCopyJSON");
   var btnExportCSV=document.getElementById("btnExportCSV");
@@ -185,9 +193,10 @@
   function escapeHTML(s){return String(s).replace(/[&<>"']/g,function(m){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])});}
   function parseId(input){
     if(!input) return "";
-    input = input.trim();
-    var m = input.match(/[?&]v=([^&]+)/) || input.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
-    return m ? m[1] : input;
+    var s = input.trim();
+    /* handle common formats: v=, youtu.be/, /shorts/ */
+    var m = s.match(/[?&]v=([^&]+)/) || s.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/) || s.match(/youtube\.com\/shorts\/([A-Za-z0-9_-]{6,})/);
+    return m ? m[1] : s;
   }
   function current(){ var i=Math.max(0,Math.min(state.index,state.queue.length-1)); return state.queue[i]; }
   function currentId(){ var c=current(); return c ? c.id : ""; }
@@ -215,7 +224,7 @@
         bEdit.onclick=function(ev){ openPopover(i, ev.currentTarget); };
 
         var bImport=document.createElement("button"); bImport.className="chip"; bImport.textContent="Import";
-        bImport.onclick=function(){ importTitleFor(i); };
+        bImport.onclick=function(ev){ importTitleFor(i, ev.currentTarget); };
 
         var bPlay=document.createElement("button"); bPlay.className="chip"; bPlay.textContent="Play";
         bPlay.onclick=function(){ state.index=i; saveState(); render(); cueAndPlay(); };
@@ -253,6 +262,7 @@
 
   function setStateText(t){ sState.textContent=t; }
 
+  /* YouTube players */
   window.onYouTubeIframeAPIReady=function(){
     player = new YT.Player('player', {
       videoId: currentId()||undefined, width:'100%', height:'100%',
@@ -276,11 +286,14 @@
   };
   function cueAndPlay(){ var id=currentId(); if(!id||!ready) return; player.loadVideoById(id); }
 
-  function importTitleFor(idx){
-    if(!metaReady) return;
+  /* Title import with optional focus back to the clicked control */
+  var lastAnchorBtn = null;
+  function importTitleFor(idx, anchor){
+    if(anchor){ lastAnchorBtn = anchor; }
+    if(!metaReady){ openPopover(idx, lastAnchorBtn); return; }
     var item = state.queue[idx];
     metaPlayer.cueVideoById(item.id);
-    var tries=0, maxTries=40;
+    var tries=0, maxTries=60; /* ~9s max */
     var iv = setInterval(function(){
       tries++;
       var data = metaPlayer.getVideoData ? metaPlayer.getVideoData() : null;
@@ -293,12 +306,13 @@
     }, 150);
   }
 
+  /* Popover editor anchored to button */
   var pop = document.createElement("div"); pop.className="popover"; document.body.appendChild(pop);
   var mask = document.createElement("div"); mask.className="closeMask"; document.body.appendChild(mask);
-  var editingIndex = -1, lastAnchorBtn = null;
+  var editingIndex = -1;
 
   function openPopover(idx, anchorBtn){
-    editingIndex = idx; lastAnchorBtn = anchorBtn || lastAnchorBtn;
+    editingIndex = idx;
     var it = state.queue[idx];
     pop.innerHTML = ''
       + '<div class="hdr">Editing · '+escapeHTML(it.title || it.id)+'</div>'
@@ -325,19 +339,20 @@
     pop.querySelector("#pCancel").onclick=function(){ closePopover(); };
   }
   function placePopover(anchorBtn){
-    var r;
     if(anchorBtn){
-      r = anchorBtn.getBoundingClientRect();
+      var r = anchorBtn.getBoundingClientRect();
       var top = r.bottom + 8 + window.scrollY;
-      var left = Math.min(window.scrollX + r.left, window.scrollX + window.innerWidth - 320);
+      var left = Math.min(window.scrollX + r.left, window.scrollX + window.innerWidth - 360);
       pop.style.top = top+"px"; pop.style.left = left+"px";
     }else{
-      var y = 80 + window.scrollY; pop.style.top=y+"px"; pop.style.left="16px";
+      pop.style.top = (80 + window.scrollY) + "px";
+      pop.style.left = "16px";
     }
   }
   function closePopover(){ pop.classList.remove("active"); mask.classList.remove("active"); editingIndex=-1; }
   mask.onclick=closePopover; document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ closePopover(); } });
 
+  /* Tone (128.15 Hz) */
   var audioCtx, osc, gainNode, unlocked=false, targetHz=128.15;
   function ensureAudio(){
     if(!audioCtx){
@@ -352,7 +367,8 @@
   function startTone(){
     ensureAudio(); if(osc) return;
     osc=audioCtx.createOscillator(); osc.type="sine"; osc.frequency.setValueAtTime(targetHz,audioCtx.currentTime); osc.connect(gainNode);
-    var g=gainNode.gain, now=audioCtx.currentTime; g.cancelScheduledValues(now); g.setValueAtTime(0.0001,now); g.exponentialRampToValueAtTime(parseFloat(gainSlider.value||"0.22"), now+0.08);
+    var g=gainNode.gain, now=audioCtx.currentTime; g.cancelScheduledValues(now);
+    g.setValueAtTime(0.0001,now); g.exponentialRampToValueAtTime(parseFloat(gainSlider.value||"0.22"), now+0.08);
     osc.start(); state.toneOn=true; saveState(); render();
   }
   function stopTone(){
@@ -363,6 +379,7 @@
     osc=null; state.toneOn=false; saveState(); render();
   }
 
+  /* Controls */
   btnPlay.onclick=function(){ if(!unlocked){ ensureAudio(); } if(!state.queue.length){ setStateText('add videos'); return; } cueAndPlay(); if(state.toneOn){ startTone(); } };
   btnPause.onclick=function(){ if(ready){ player.pauseVideo(); } };
   btnPrev.onclick=function(){ if(!state.queue.length) return; state.index=(state.index-1+state.queue.length)%state.queue.length; saveState(); render(); cueAndPlay(); };
@@ -371,22 +388,20 @@
   btnTone.onclick=function(){ if(state.toneOn){ stopTone(); } else { startTone(); } };
   gainSlider.oninput=function(){ if(gainNode){ var now=audioCtx.currentTime; gainNode.gain.cancelScheduledValues(now); gainNode.gain.setValueAtTime(gainNode.gain.value,now); gainNode.gain.exponentialRampToValueAtTime(Math.max(0.0001, parseFloat(gainSlider.value||"0.22")), now+0.05); saveState(); } };
 
-  document.addEventListener("touchend", function once(){ document.removeEventListener("touchend", once, {passive:true}); ensureAudio(); if(state.toneOn){ startTone(); } }, {passive:true});
-  document.addEventListener("click", function once(){ document.removeEventListener("click", once, true); ensureAudio(); if(state.toneOn){ startTone(); } }, true);
-  document.addEventListener("visibilitychange", function(){ if(document.visibilityState!=="hidden" && state.toneOn){ startTone(); } });
-
+  /* Queue editing */
   btnAdd.onclick=function(){
     var id=parseId(newId.value); if(!id) return;
     var exists = state.queue.some(function(x){ return x.id===id; });
     if(!exists) state.queue.push({id:id});
     if(state.queue.length===1){ state.index=0; }
     saveState(); render();
-    if(autoImport.checked){ importTitleFor(state.queue.length-1); }
+    if(autoImport.checked){ importTitleFor(state.queue.length-1, null); }
     newId.value="";
   };
   btnClear.onclick=function(){ state.queue=[]; state.index=0; saveState(); render(); setStateText('queue cleared'); };
   btnToday.onclick=function(){ state.queue = todaysSet.slice(); state.index = 0; saveState(); render(); };
 
+  /* Import/Export */
   function queueJSON(){
     return state.queue.map(function(x){ return { id:x.id, title:x.title, note:x.note, info:x.info }; });
   }
@@ -400,13 +415,22 @@
     var a = document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
   }
+  var btnExportJSON=document.getElementById("btnExportJSON");
+  var btnCopyJSON=document.getElementById("btnCopyJSON");
+  var btnExportCSV=document.getElementById("btnExportCSV");
+  var btnExportSnippet=document.getElementById("btnExportSnippet");
+  var btnCopySnippet=document.getElementById("btnCopySnippet");
+  var fileJSON=document.getElementById("fileJSON");
+  var pasteJSON=document.getElementById("pasteJSON");
+  var btnLoadJSON=document.getElementById("btnLoadJSON");
+  var ioStatus=document.getElementById("ioStatus");
 
-  /* JSON / CSV */
   btnExportJSON.onclick=function(){ download("froot-queue-"+todayStamp()+".json", JSON.stringify(queueJSON(),null,2), "application/json"); };
   btnCopyJSON.onclick=function(){
     var json=JSON.stringify(queueJSON(),null,2);
-    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(json).then(function(){ ioStatus.textContent="Copied JSON."; setTimeout(function(){ ioStatus.textContent=""; },1500); }); }
-    else{ pasteJSON.value=json; ioStatus.textContent="Copied JSON to box."; setTimeout(function(){ ioStatus.textContent=""; },1500); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(json).then(function(){ ioStatus.textContent="Copied JSON."; setTimeout(function(){ ioStatus.textContent=""; },1500); });
+    }else{ pasteJSON.value=json; ioStatus.textContent="Copied JSON to box."; setTimeout(function(){ ioStatus.textContent=""; },1500); }
   };
   btnExportCSV.onclick=function(){
     var rows=[["id","title","note","info"]];
@@ -414,24 +438,18 @@
     var csv=rows.map(function(r){ return r.map(function(c){ var s=String(c).replace(/"/g,'""'); return '"'+s+'"'; }).join(","); }).join("\n");
     download("froot-queue-"+todayStamp()+".csv", csv, "text/csv");
   };
-
-  /* Site Snippet */
   function siteSnippet(){
     var json = JSON.stringify(queueJSON());
     return '<!-- Froot queue data -->\\n'
       + '<script type="application/json" id="froot-data">'+json.replace(/</g,"\\u003c")+'</script>\\n'
       + '<script>window.FROOT_DATA=JSON.parse(document.getElementById(\\'froot-data\\').textContent);</script>';
   }
-  btnExportSnippet.onclick=function(){
-    download("froot-data-"+todayStamp()+".html", siteSnippet(), "text/html");
-  };
+  btnExportSnippet.onclick=function(){ download("froot-data-"+todayStamp()+".html", siteSnippet(), "text/html"); };
   btnCopySnippet.onclick=function(){
     var txt = siteSnippet();
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(txt).then(function(){ ioStatus.textContent="Copied site snippet."; setTimeout(function(){ ioStatus.textContent=""; },1500); });
-    }else{
-      pasteJSON.value = txt; ioStatus.textContent="Snippet in box below."; setTimeout(function(){ ioStatus.textContent=""; },1500);
-    }
+    }else{ pasteJSON.value = txt; ioStatus.textContent="Snippet in box below."; setTimeout(function(){ ioStatus.textContent=""; },1500); }
   };
 
   fileJSON.onchange=function(){
@@ -462,6 +480,11 @@
     }
     saveState(); render();
   }
+
+  /* Lifecycle */
+  document.addEventListener("touchend", function once(){ document.removeEventListener("touchend", once, {passive:true}); ensureAudio(); if(state.toneOn){ startTone(); } }, {passive:true});
+  document.addEventListener("click", function once(){ document.removeEventListener("click", once, true); ensureAudio(); if(state.toneOn){ startTone(); } }, true);
+  document.addEventListener("visibilitychange", function(){ if(document.visibilityState!=="hidden" && state.toneOn){ startTone(); } });
 
   var init = loadState(); if(typeof init.gain==="number"){ gainSlider.value=String(init.gain); }
   autoImport.checked = !!init.autoImport;
