@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>froot.plnt.earth — χ Palettes + Video (v1.4.4)</title>
+<title>froot.plnt.earth — χ Palettes + Video (v1.4.5)</title>
 <meta name="description" content="Froot — single-player, week-aware FLOW/SPOTLIGHT queues with palettes, tones, and large queue thumbnails. One YouTube player only (in Queue Strip)." />
 <meta name="color-scheme" content="dark light" />
 <meta name="theme-color" content="#0b1020" />
 <!--
 File: /index.html
-Version: v1.4.4
+Version: v1.4.5
 Changes:
- • Removed bottom player bar entirely
- • Single player is now embedded as a big 'Now Playing' panel inside the Queue Strip
- • One player only, looped queue, exposed controls + track picker in the strip
+ • Queue Strip is non-sticky to avoid covering content
+ • Auto mini-player (desktop) once the big player scrolls off-screen
+ • Rebuild resets playlist and jumps to track 1
+ • Single YouTube player only; looped queue; exposed controls + track picker
 -->
 
 <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin>
@@ -111,10 +112,12 @@ section.card h2{margin:0 0 10px; font-size:22px}
 .setqueue,.playfirst{padding:8px 10px; border-radius:999px; background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.25); color:#fff; font-weight:900}
 
-/* QUEUE STRIP (now contains the only player) */
+/* QUEUE STRIP (non-sticky) */
 .queuestrip{
-  position:sticky; top:calc(var(--header-h) + 14px + env(safe-area-inset-top));
-  z-index:40; margin-top:14px; padding:12px; border:1px solid var(--border); border-radius:var(--radius);
+  position: relative; /* FIX: was sticky */
+  top: auto;
+  z-index: 1; /* ensure content scrolls above player region below */
+  margin-top:14px; padding:12px; border:1px solid var(--border); border-radius:var(--radius);
   background:color-mix(in oklab, var(--panel) 85%, transparent); backdrop-filter:blur(6px);
 }
 .qhdr{display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom:8px; color:var(--ink-soft); font-size:12px}
@@ -127,6 +130,21 @@ section.card h2{margin:0 0 10px; font-size:22px}
 .qtile::after{content:attr(data-label); position:absolute; left:8px; bottom:6px; right:8px; font-size:12px; font-weight:900; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7)}
 .qmeta{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-top:6px; font-size:12px; color:var(--ink-soft)}
 .select{padding:6px 10px; border:1px solid var(--border); border-radius:10px; background:var(--panel); color:var(--ink); font-weight:600}
+
+/* Desktop-only mini player after scroll */
+@media (min-width: 1024px){
+  .nowplayer.fixed-mini{
+    position: fixed;
+    right: 16px; bottom: 16px;
+    width: 360px;  /* 16:9 */
+    height: 202px;
+    aspect-ratio: auto;
+    z-index: 50;
+    border-radius: 12px;
+    box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  }
+  .nowplayer.fixed-mini #ytframe{ height:100%; }
+}
 
 @media(max-width:420px){
   :root{--header-h:44px}
@@ -229,7 +247,7 @@ function computeWeekNumber(day){
     </div>
 
     <!-- The ONLY player lives here -->
-    <div class="nowplayer"><div id="ytframe"></div></div>
+    <div class="nowplayer" id="nowPlayer"><div id="ytframe"></div></div>
 
     <!-- Thumbnails -->
     <div class="qrow" id="queueStrip"></div>
@@ -253,10 +271,10 @@ function computeWeekNumber(day){
   <div id="content" class="grid" aria-live="polite"></div>
 </main>
 
-<!-- No bottom player anymore -->
+<!-- No bottom player -->
 
 <script>
-/* ===== DATA (same as v1.4.3, truncated for brevity; keep your lists) ===== */
+/* ===== DATA ===== */
 var DATA = {
   marina:{ title:"Marina — Mirror / Butterfly",
     palettes:[
@@ -400,7 +418,7 @@ function createPlayer(){
     playerVars:{ rel:0, modestbranding:1, playsinline:1, autoplay:1, color:'white', loop:1 },
     events:{
       onReady:function(){ playerReady=true; loadIntoPlayer(); },
-      onStateChange:function(){ /* loop is handled by playlist */ }
+      onStateChange:function(){ }
     }
   });
 }
@@ -534,12 +552,31 @@ document.getElementById('playBtn').addEventListener('click', play);
 document.getElementById('pauseBtn').addEventListener('click', pause);
 document.getElementById('nextQ').addEventListener('click', next);
 document.getElementById('prevQ').addEventListener('click', prev);
-document.getElementById('rebuildQ').addEventListener('click', function(){ if(MODE==='FLOW') buildFlow(); else buildSpotlight(); });
+document.getElementById('rebuildQ').addEventListener('click', function(){
+  if(MODE==='FLOW') buildFlow(); else buildSpotlight();
+  if (player && player.playVideoAt) { player.playVideoAt(0); }
+});
+
+/* Mini player on scroll (desktop) */
+(function miniOnScroll(){
+  var np = document.getElementById('nowPlayer');
+  if(!np || !('IntersectionObserver' in window)) return;
+  var isMini = false;
+  var obs = new IntersectionObserver(function(entries){
+    var e = entries[0];
+    var shouldMini = (e.intersectionRatio < 0.2 && window.innerWidth >= 1024);
+    if(shouldMini !== isMini){
+      isMini = shouldMini;
+      np.classList.toggle('fixed-mini', isMini);
+    }
+  }, {threshold:[0, .2, 1]});
+  obs.observe(np);
+})();
 
 /* Init */
 (function init(){
   renderArtist('marina'); updateWeekBadge();
-  if(!ensureYTAPI()){ /* script injected */ } else { createPlayer(); }
+  if(!ensureYTAPI()){ } else { createPlayer(); }
   buildFlow(); // default
 })();
 </script>
