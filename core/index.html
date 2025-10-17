@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Froot · Core v1.9 — editor + notes/info + export/import</title>
+<title>Froot · Core v1.9.1 — editor + notes/info + export/import</title>
 <meta name="theme-color" content="#0b0d11">
 <style>
   :root{--bg:#0b0d11;--ink:#e8f0ff;--sub:#a9b4c7;--accent:#73ffd9;--line:#1a2030;--card:#121725;--card2:#0f1420}
@@ -64,7 +64,7 @@
 </head>
 <body>
 <header>
-  <h1>Froot · Core <span class="sub">v1.9 — editor + notes/info + export/import · auto-advance + 128.15 Hz</span></h1>
+  <h1>Froot · Core <span class="sub">v1.9.1 — editor + notes/info + export/import · auto-advance + 128.15 Hz</span></h1>
 </header>
 
 <main class="grid">
@@ -101,6 +101,7 @@
       <button id="btnAdd">Add</button>
       <button id="btnToday" class="toggle">Reload Today’s Set</button>
       <button id="btnClear">Clear</button>
+      <button id="btnReset">Reset Core</button>
     </div>
     <div class="hint">Per-item flow: <b>Edit → Import → Play → Remove</b>. Notes show inline; extra details under <b>Info</b>.</div>
 
@@ -143,7 +144,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 (function(){
-  var KEY="froot_core_v1_9";
+  var KEY="froot_core_v1_9_1";
   function loadState(){ try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}} }
   function saveState(){
     localStorage.setItem(KEY, JSON.stringify({
@@ -154,13 +155,13 @@
 
   /* Seed set (objects: {id,title?,note?,info?}) */
   var todaysSet = [
-    {id:"GiOGlYjKgX8"}, // MARINA — Handmade Heaven
-    {id:"1YUBbF24H44"}, // Sabrina — because i liked a boy
-    {id:"mkR_Qwix4Ho"}, // Taylor — Lavender Haze
-    {id:"Hy9W_mrY_Vk"}, // Solange — Losing You
-    {id:"K9_VFxzCuQ0"}, // Sigrid — Strangers
-    {id:"k2qgadSvNyU"}, // Dua Lipa — New Rules
-    {id:"QtXby3twMmI"}  // Coldplay — Adventure of a Lifetime
+    {id:"GiOGlYjKgX8"},  /* MARINA — Handmade Heaven */
+    {id:"1YUBbF24H44"}, /* Sabrina — because i liked a boy */
+    {id:"mkR_Qwix4Ho"}, /* Taylor — Lavender Haze */
+    {id:"Hy9W_mrY_Vk"}, /* Solange — Losing You */
+    {id:"K9_VFxzCuQ0"}, /* Sigrid — Strangers */
+    {id:"k2qgadSvNyU"}, /* Dua Lipa — New Rules */
+    {id:"QtXby3twMmI"}  /* Coldplay — Adventure of a Lifetime */
   ];
 
   var state = Object.assign({queue: todaysSet.slice(), index:0, loop:true, toneOn:false}, loadState());
@@ -176,7 +177,7 @@
   var btnLoop = document.getElementById("btnLoop"), btnTone = document.getElementById("btnTone");
   var gainSlider = document.getElementById("gain"), sIndex=document.getElementById("sIndex"), sState=document.getElementById("sState");
   var list=document.getElementById("queueList"), newId=document.getElementById("newId");
-  var btnAdd=document.getElementById("btnAdd"), btnClear=document.getElementById("btnClear"), btnToday=document.getElementById("btnToday");
+  var btnAdd=document.getElementById("btnAdd"), btnClear=document.getElementById("btnClear"), btnToday=document.getElementById("btnToday"), btnReset=document.getElementById("btnReset");
   var autoImport=document.getElementById("autoImport");
 
   /* Import/Export elements */
@@ -400,6 +401,11 @@
   };
   btnClear.onclick=function(){ state.queue=[]; state.index=0; saveState(); render(); setStateText('queue cleared'); };
   btnToday.onclick=function(){ state.queue = todaysSet.slice(); state.index = 0; saveState(); render(); };
+  btnReset.onclick=function(){
+    localStorage.removeItem(KEY);
+    state = {queue: todaysSet.slice(), index:0, loop:true, toneOn:false};
+    saveState(); render(); setStateText('reset');
+  };
 
   /* Import/Export */
   function queueJSON(){
@@ -438,11 +444,13 @@
     var csv=rows.map(function(r){ return r.map(function(c){ var s=String(c).replace(/"/g,'""'); return '"'+s+'"'; }).join(","); }).join("\n");
     download("froot-queue-"+todayStamp()+".csv", csv, "text/csv");
   };
+
+  /* Site Snippet (fixed: escape </script>) */
   function siteSnippet(){
-    var json = JSON.stringify(queueJSON());
+    var json = JSON.stringify(queueJSON()).replace(/</g,"\\u003c");
     return '<!-- Froot queue data -->\\n'
-      + '<script type="application/json" id="froot-data">'+json.replace(/</g,"\\u003c")+'</script>\\n'
-      + '<script>window.FROOT_DATA=JSON.parse(document.getElementById(\\'froot-data\\').textContent);</script>';
+      + '<script type="application/json" id="froot-data">'+json+'</script>\\n'
+      + '<script>window.FROOT_DATA=JSON.parse(document.getElementById(\\'froot-data\\').textContent);<\\/script>';
   }
   btnExportSnippet.onclick=function(){ download("froot-data-"+todayStamp()+".html", siteSnippet(), "text/html"); };
   btnCopySnippet.onclick=function(){
