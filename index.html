@@ -33,7 +33,6 @@ button:disabled{opacity:.55;cursor:not-allowed}
 footer{color:var(--muted);font-size:13px;text-align:center;padding:10px}
 .tint{position:fixed;inset:0;pointer-events:none;mix-blend-mode:color;opacity:0;background:transparent;transition:opacity .2s}
 .hidden{display:none}
-hr{border:0;border-top:1px solid #171a20;margin:8px 0}
 .small{font-size:12px;color:#b9bfca}
 </style>
 </head>
@@ -101,7 +100,13 @@ let ctx=null, osc=null, gain=null, tone="off";
 const el=(id)=>document.getElementById(id);
 const nowBadge=el("nowBadge"), listEl=el("list"), tintEl=el("tint");
 const storeKey="froot_ids_v1";
-const PRELOAD_IDS=['WZzcY7ASQno','cIriwVhRPVA','kLbn61Z4LDI','8xg3vE8Ie_E','eB6txyhHFG4','phtcAd8j6Ro','gDr7aTfBffU','w5x93pXSmRM','eVli-tstM5E','zLSUp53y-HQ','ffxKSjUwKdU','8qnOpJfFfpU','ZT_skmohD-c','E7lr7pU9fYA','cF1Na4AIecM','b1kbLwvqugk','fLFvbwrWLQY','29mk5rz3m7Q','F1JTlnHGa90','Cr-SqRWImmI','YcSP1ZUf1eQ','b7QlX3yR2xs','tcYodQoapMg','L94niPkteGg','s6AHxF0s764','aQMKAZpcynA','Gla5AzpcynA'.replace('Azp','Azp').replace('Gla5AzpcynA','Gla5AzlHnS4')];
+const PRELOAD_IDS=[
+  'WZzcY7ASQno','cIriwVhRPVA','kLbn61Z4LDI','8xg3vE8Ie_E','eB6txyhHFG4','phtcAd8j6Ro',
+  'gDr7aTfBffU','w5x93pXSmRM','eVli-tstM5E','zLSUp53y-HQ','ffxKSjUwKdU','8qnOpJfFfpU',
+  'ZT_skmohD-c','E7lr7pU9fYA','cF1Na4AIecM','b1kbLwvqugk','fLFvbwrWLQY','29mk5rz3m7Q',
+  'F1JTlnHGa90','Cr-SqRWImmI','YcSP1ZUf1eQ','b7QlX3yR2xs','tcYodQoapMg','L94niPkteGg',
+  's6AHxF0s764','aQMKAZpcynA','Gla5AzlHnS4'
+];
 
 function parseId(input){
   if(!input) return "";
@@ -113,9 +118,7 @@ function parseId(input){
   }catch(_){return input.trim();}
 }
 
-function save(){
-  try{localStorage.setItem(storeKey, JSON.stringify(queue.map(q=>q.id)));}catch(_){}
-}
+function save(){ try{localStorage.setItem(storeKey, JSON.stringify(queue.map(q=>q.id)));}catch(_){} }
 
 async function load(){
   try{
@@ -150,11 +153,9 @@ function render(){
     const left=document.createElement("div");
     left.className="meta";
     const t=document.createElement("div");
-    t.className="t";
-    t.textContent=q.title?q.title:q.id;
+    t.className="t"; t.textContent=q.title?q.title:q.id;
     const c=document.createElement("div");
-    c.className="c";
-    c.textContent=q.channel?q.channel:"";
+    c.className="c"; c.textContent=q.channel?q.channel:"";
     left.appendChild(t); left.appendChild(c);
     const right=document.createElement("div");
     right.className="row";
@@ -176,8 +177,7 @@ function render(){
 
 function updateNowBadge(){
   if(!queue[i]){ nowBadge.textContent="Idle"; return; }
-  const q=queue[i];
-  nowBadge.textContent=q.title?q.title:q.id;
+  const q=queue[i]; nowBadge.textContent=q.title?q.title:q.id;
 }
 
 function ensureAudio(){
@@ -194,14 +194,9 @@ function setTone(sel){
   if(gain){ const v = Number(el("gainRange").value)/100; gain.gain.value = v; }
 }
 
-function setGain(){
-  if(gain){ const v = Number(el("gainRange").value)/100; gain.gain.value = tone==="off"?0:v; }
-}
+function setGain(){ if(gain){ const v = Number(el("gainRange").value)/100; gain.gain.value = tone==="off"?0:v; } }
 
-function setMute(m){
-  isMuted=m;
-  if(player){ if(m) player.mute(); else player.unMute(); }
-}
+function setMute(m){ isMuted=m; if(player){ if(m) player.mute(); else player.unMute(); } }
 
 function setTint(v){
   const o = Number(v)/100;
@@ -225,32 +220,43 @@ window.onYouTubeIframeAPIReady=function(){
       onReady:()=>{},
       onStateChange:(e)=>{
         if(e.data===YT.PlayerState.ENDED){ next(); }
-        if(e.data===YT.PlayerState.PLAYING){
-          const d=player.getVideoData();
-          const cur=queue[i];
-          if(cur){
-            if(d&&d.title){ cur.title=d.title; }
-            if(d&&d.author){ cur.channel=d.author; }
-            render();
-          }
-        }
+        if(e.data===YT.PlayerState.PLAYING){ syncMetaFromPlayer(); }
+        syncPlayLabel();
       }
     }
   });
 };
 
-function loadCurrent(autoplay){
+function syncMetaFromPlayer(){
+  const d=player?player.getVideoData():null;
   const cur=queue[i];
-  if(!cur){ updateNowBadge(); return; }
-  if(player&&player.loadVideoById){ player.loadVideoById(cur.id); if(!autoplay){ player.pauseVideo(); } }
+  if(cur && d){
+    if(d.title) cur.title=d.title;
+    if(d.author) cur.channel=d.author;
+    render();
+  }
+}
+
+function syncPlayLabel(){
+  if(!player) return;
+  const s=player.getPlayerState();
+  el("btnPlayPause").textContent = (s===1) ? "Pause" : "Play";
+}
+
+function loadCurrent(autoplay){
+  const cur=queue[i]; if(!cur){ updateNowBadge(); return; }
+  if(player&&player.loadVideoById){
+    player.loadVideoById(cur.id);
+    if(!autoplay){ player.pauseVideo(); }
+    setTimeout(syncPlayLabel, 150);
+  }
   updateNowBadge();
 }
 
 function next(){
   if(queue.length===0) return;
   if(i<queue.length-1){ i++; }
-  else if(loop){ i=0; }
-  else { return; }
+  else if(loop){ i=0; } else { return; }
   loadCurrent(true);
 }
 
@@ -266,9 +272,7 @@ function exportIDs(){
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
   a.download="froot_ids.json";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  document.body.appendChild(a); a.click(); a.remove();
 }
 
 function importIDs(file){
@@ -286,13 +290,26 @@ function importIDs(file){
   r.readAsText(file);
 }
 
-/* ---- Self-Test (built in) ---- */
+/* ---------- Self-Test (robust, waits for states) ---------- */
 function mark(elm, ok){ elm.classList.remove('ok','fail'); elm.classList.add(ok?'ok':'fail'); }
 function receiptLine(){
   const ids=['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'];
   const ok = ids.every(id=>document.getElementById(id).classList.contains('ok'));
   el('receipt').textContent = ok ? 'All green' : 'Needs fixes: ' + ids.filter(id=>!document.getElementById(id).classList.contains('ok')).map(s=>document.getElementById(s).textContent).join(', ');
 }
+
+function waitForState(targets, timeout=4000){
+  return new Promise((res)=>{
+    const start=performance.now();
+    (function tick(){
+      const s = player?player.getPlayerState():null;
+      if(s!=null && targets.includes(s)) return res(true);
+      if(performance.now()-start>timeout) return res(false);
+      requestAnimationFrame(tick);
+    })();
+  });
+}
+
 async function runSelfTest(){
   try{
     mark(el('c_queue'), Array.isArray(queue) && queue.length>0);
@@ -306,48 +323,32 @@ async function runSelfTest(){
 
     let playOk=false;
     if(apiReady){
-      try{
-        player.playVideo();
-        setTimeout(()=>{
-          const s1 = player.getPlayerState()===1;
-          player.pauseVideo();
-          const s2 = player.getPlayerState()!==1;
-          playOk = s1 && s2;
-          mark(el('c_play'), playOk);
-          receiptLine();
-        }, 500);
-      }catch(_){ mark(el('c_play'), false); }
-    } else { mark(el('c_play'), false); }
+      player.playVideo();
+      const played = await waitForState([1,3]); // PLAYING or BUFFERING
+      player.pauseVideo();
+      const paused = await waitForState([2,5,0]); // PAUSED, CUED, UNSTARTED
+      playOk = played && paused;
+    }
+    mark(el('c_play'), playOk);
 
     const before = i;
-    next();
-    const movedNext = (i!==before);
-    prev();
-    const movedPrev = (i===before);
+    next(); const movedNext = (i!==before);
+    prev(); const movedPrev = (i===before);
     mark(el('c_nav'), movedNext && movedPrev);
 
-    const oldIdx = i;
-    i = queue.length?queue.length-1:0;
-    const oldLoop = loop;
-    loop = true;
-    next();
+    const oldIdx = i, oldLoop = loop;
+    i = queue.length?queue.length-1:0; loop = true; next();
     const wrapped = (i===0 && queue.length>0);
     mark(el('c_loop'), wrapped);
     i = oldIdx; loop = oldLoop;
 
     let audioOk=false;
-    try{
-      await (ctx?ctx.resume():Promise.resolve());
-      ensureAudio();
-      audioOk = !!(ctx && gain && osc);
-    }catch(_){ audioOk=false; }
+    try{ await (ctx?ctx.resume():Promise.resolve()); ensureAudio(); audioOk = !!(ctx && gain && osc); }catch(_){}
     mark(el('c_audio'), audioOk);
 
     const toneWas = tone;
-    setTone('128');
-    const t128ok = (osc && Math.abs(osc.frequency.value-128)<0.5);
-    setTone('160');
-    const t160ok = (osc && Math.abs(osc.frequency.value-160)<0.5);
+    setTone('128'); const t128ok = (osc && Math.abs(osc.frequency.value-128)<0.5);
+    setTone('160'); const t160ok = (osc && Math.abs(osc.frequency.value-160)<0.5);
     setTone(toneWas);
     mark(el('c_tone'), t128ok && t160ok);
 
@@ -357,19 +358,21 @@ async function runSelfTest(){
       localStorage.setItem(storeKey, snap);
       const back = localStorage.getItem(storeKey);
       storeOk = back===snap;
-    }catch(_){ storeOk=false; }
+    }catch(_){}
     mark(el('c_store'), storeOk);
 
-    receiptLine();
+    syncPlayLabel(); receiptLine();
   }catch(_){
     ['c_queue','c_api','c_play','c_nav','c_loop','c_audio','c_tone','c_store'].forEach(id=>mark(el(id),false));
     receiptLine();
   }
 }
 
+/* ---------- Boot ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
   loadYouTubeAPI();
   load();
+
   el("btnStart").onclick=async ()=>{
     try{ await (ctx?ctx.resume():Promise.resolve()); }catch(_){}
     setTone(el("toneSel").value);
@@ -380,8 +383,8 @@ document.addEventListener("DOMContentLoaded",()=>{
   el("btnPlayPause").onclick=()=>{
     if(!player) return;
     const s=player.getPlayerState();
-    if(s===1){ player.pauseVideo(); el("btnPlayPause").textContent="Play"; }
-    else { player.playVideo(); el("btnPlayPause").textContent="Pause"; }
+    if(s===1){ player.pauseVideo(); } else { player.playVideo(); }
+    setTimeout(syncPlayLabel,150);
   };
   el("chkLoop").onchange=(e)=>{ loop=e.target.checked; };
   el("chkMute").onchange=(e)=>{ setMute(e.target.checked); };
