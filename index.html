@@ -3,19 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>froot.plnt.earth — χ Palettes + Video (v1.4.6)</title>
+<title>froot.plnt.earth — χ Palettes + Video (v1.4.7)</title>
 <meta name="description" content="Froot — single-player, week-aware FLOW/SPOTLIGHT queues with palettes, tones, and large queue thumbnails. One YouTube player only (in Queue Strip)." />
 <meta name="color-scheme" content="dark light" />
 <meta name="theme-color" content="#0b1020" />
 <!--
 File: /index.html
-Version: v1.4.6
-Changes:
- • Preload (cue) an anchor’s playlist when their tab is clicked
- • Enable Audio now starts a 128 Hz tone AND plays the current song
- • Feel Test button added and fixed
- • Loop guard for 1-song anchors (duplicates first ID)
- • Queue Strip non-sticky + desktop mini-player on scroll (kept from 1.4.5)
+Version: v1.4.7
+Fixes:
+ • Main player: use IFrame API correctly (playlist:[ids]) for load/cue
+ • Large thumbnail buttons: higher z-index + always play after set
+ • Minor: safer click handlers + consistent Open in YouTube link
 -->
 
 <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin>
@@ -109,7 +107,8 @@ section.card h2{margin:0 0 10px; font-size:22px}
 .thumb{position:relative; aspect-ratio:16/9; background:#000 center/cover no-repeat}
 .vlabel{position:absolute; left:10px; bottom:8px; right:10px;
   display:flex; justify-content:space-between; align-items:center; gap:10px;
-  font-size:12px; font-weight:800; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7)}
+  font-size:12px; font-weight:800; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7);
+  z-index:2; /* ensure buttons are always clickable above image */}
 .setqueue,.playfirst{padding:8px 10px; border-radius:999px; background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.25); color:#fff; font-weight:900}
 
@@ -272,10 +271,8 @@ function computeWeekNumber(day){
   <div id="content" class="grid" aria-live="polite"></div>
 </main>
 
-<!-- No bottom player -->
-
 <script>
-/* ===== DATA ===== */
+/* ===== DATA (same lists as before) ===== */
 var DATA = {
   marina:{ title:"Marina — Mirror / Butterfly",
     palettes:[
@@ -362,7 +359,7 @@ function computeWeek(){ var d=window._FROOT_CYCLE_DAY||1; return computeWeekNumb
 function updateWeekBadge(){ var wk=computeWeek(), p=(window._FROOT_PHASE||'—'); var badge=document.getElementById('weekBadge'); if(badge) badge.textContent="Week "+wk+" • "+p+" • Mode "+MODE; }
 function updateOpenInYT(){ var a=document.getElementById('openInYT'); if(a && currentFirstId){ a.href = "https://youtu.be/"+currentFirstId; } }
 function setQueueName(n){ var el=document.getElementById('queueName'); if(el) el.textContent=n; }
-function ensureLoop(ids){ return (ids.length===1) ? [ids[0], ids[0]] : ids.slice(); } // guard for 1-song loop
+function ensureLoop(ids){ return (ids.length===1) ? [ids[0], ids[0]] : ids.slice(); }
 
 /* ===== Queue building ===== */
 function setQueueFromAnchor(key, opts){
@@ -393,10 +390,10 @@ function setQueueFromIds(ids,titles,name, opts){
   currentContextName=name||'—';
   currentFirstId=currentQueueIds[0]||""; setQueueName(currentContextName);
   updateOpenInYT(); renderQueueStrip(); renderTrackPicker();
-  (opts && opts.cueOnly) ? cueIntoPlayer() : loadIntoPlayer(); // cue for preload, load for play
+  (opts && opts.cueOnly) ? cueIntoPlayer() : loadIntoPlayer();
 }
 
-/* ===== Single player via YouTube IFrame API (mounted in #ytframe) ===== */
+/* ===== Single player via YouTube IFrame API ===== */
 function ensureYTAPI(){
   if(window.YT && window.YT.Player) return true;
   var tag=document.createElement('script'); tag.src="https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
@@ -416,12 +413,23 @@ function createPlayer(){
 }
 function loadIntoPlayer(){
   if(!playerReady || !player || !currentQueueIds.length) return;
-  player.loadPlaylist({ list: currentQueueIds.join(','), listType:'playlist', index:0, startSeconds:0 });
+  /* FIX: use playlist: [ids] (array), not list: 'comma-string' */
+  player.loadPlaylist({
+    playlist: currentQueueIds,   // <— correct key + array of videoIds
+    index: 0,
+    startSeconds: 0,
+    suggestedQuality: 'default'
+  });
   setTimeout(updateOpenInYT,300);
 }
 function cueIntoPlayer(){
   if(!playerReady || !player || !currentQueueIds.length) return;
-  player.cuePlaylist({ list: currentQueueIds.join(','), listType:'playlist', index:0, startSeconds:0 });
+  player.cuePlaylist({
+    playlist: currentQueueIds,   // <— correct key + array
+    index: 0,
+    startSeconds: 0,
+    suggestedQuality: 'default'
+  });
   setTimeout(updateOpenInYT,300);
 }
 function play(){ if(playerReady && player) player.playVideo(); }
@@ -453,18 +461,25 @@ function renderVideos(artistKey){
     var titleTxt=(artistKey==="flow" ? (item.artist.toUpperCase()+": "+item.t) : item.t);
     label.innerHTML='<span>'+titleTxt+'</span><span style="display:flex;gap:8px"><button class="setqueue" type="button">Set Queue</button><button class="playfirst" type="button">Play</button></span>';
     th.appendChild(label); card.appendChild(th);
-    label.querySelector('.setqueue').addEventListener('click',function(){
+
+    /* Always set + PLAY to make the button feel alive */
+    label.querySelector('.setqueue').addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
       if(artistKey==="flow"){ buildFlow(); } else { setQueueFromAnchor(artistKey); }
+      play();
       window.scrollTo({top:document.querySelector('.queuestrip').offsetTop-24, behavior:'smooth'});
     });
-    label.querySelector('.playfirst').addEventListener('click',function(){
+    label.querySelector('.playfirst').addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
       var ids = artistKey==="flow" ? buildFlowCards().map(x=>x.id) : DATA[artistKey].songs.map(s=>s.id);
       var titles = artistKey==="flow" ? buildFlowCards().map(x=>x.artist.toUpperCase()+": "+x.t) : DATA[artistKey].songs.map(s=>s.t);
       var idx=ids.indexOf(item.id);
       if(idx>0){ ids=ids.slice(idx).concat(ids.slice(0,idx)); titles=titles.slice(idx).concat(titles.slice(0,idx)); }
       setQueueFromIds(ids,titles, artistKey==="flow" ? "FLOW (custom)" : DATA[artistKey].title.split('—')[0].trim());
       play();
+      window.scrollTo({top:document.querySelector('.queuestrip').offsetTop-24, behavior:'smooth'});
     });
+
     vids.appendChild(card);
   });
   group.appendChild(vids); content.appendChild(group);
@@ -523,7 +538,7 @@ document.getElementById('runFeel').addEventListener('click', function(){
   var artist = document.querySelector('.tab.active')?.getAttribute('data-artist') || 'marina';
   var list = (artist==="flow")
     ? [{name:"Blue"},{name:"Pearl"},{name:"Violet"}]
-    : (DATA[artist].palettes||[]).slice(0,3); // first 3 palettes as a quick feel
+    : (DATA[artist].palettes||[]).slice(0,3);
   var i=0; var ring=document.createElement('div'); ring.textContent='Feel Test 1/3'; ring.style.position='fixed'; ring.style.left='50%'; ring.style.bottom='84px'; ring.style.transform='translateX(-50%)'; ring.style.background='rgba(20,28,48,.9)'; ring.style.color='#fff'; ring.style.padding='8px 12px'; ring.style.border='1px solid var(--border)'; ring.style.borderRadius='999px'; ring.style.fontSize='12px'; ring.style.zIndex='100'; document.body.appendChild(ring);
   function step(){
     if(i>=3){ setFreq(0); saveFeel(artist,'✓'); ring.remove(); return; }
@@ -562,7 +577,6 @@ document.querySelectorAll('.tab').forEach(function(t){
     t.classList.add('active'); t.setAttribute('aria-selected','true');
     var artist=t.getAttribute('data-artist');
     renderArtist(artist);
-    // PRELOAD (cue) the anchor’s playlist immediately
     if(artist==="flow"){ buildFlow({cueOnly:true}); }
     else{ setQueueFromAnchor(artist, {cueOnly:true}); loadFeel(artist); }
   });
@@ -598,7 +612,7 @@ document.getElementById('rebuildQ').addEventListener('click', function(){
 (function init(){
   renderArtist('marina'); updateWeekBadge();
   if(!ensureYTAPI()){ } else { createPlayer(); }
-  buildFlow({cueOnly:true}); // preload FLOW at start
+  buildFlow({cueOnly:true}); // preload FLOW
 })();
 </script>
 <script>
