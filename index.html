@@ -3,20 +3,23 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>froot.plnt.earth — χ Palettes + Video (v1.4.7)</title>
-<meta name="description" content="Froot — single-player, week-aware FLOW/SPOTLIGHT queues with palettes, tones, and large queue thumbnails. One YouTube player only (in Queue Strip)." />
+<title>froot.plnt.earth — χ Palettes + Video (v1.4.8)</title>
+<meta name="description" content="Froot — single-player, week-aware FLOW/SPOTLIGHT queues with palettes, tones, and large queue thumbnails. One YouTube player only with resilient fallbacks." />
 <meta name="color-scheme" content="dark light" />
 <meta name="theme-color" content="#0b1020" />
 <!--
 File: /index.html
-Version: v1.4.7
-Fixes:
- • Main player: use IFrame API correctly (playlist:[ids]) for load/cue
- • Large thumbnail buttons: higher z-index + always play after set
- • Minor: safer click handlers + consistent Open in YouTube link
+Version: v1.4.8
+New:
+ • Resilient playback fallbacks:
+    1) Retry same playlist on youtube.com host if nocookie fails
+    2) Per-ID fallback list (official-channel alternates only)
+    3) Auto-skip to next track and rotate queue
+ • Buttons on thumbnails: bring-to-front + play (guaranteed click target)
 -->
 
 <link rel="preconnect" href="https://www.youtube-nocookie.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube.com" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com" crossorigin>
 
 <style>
@@ -107,8 +110,7 @@ section.card h2{margin:0 0 10px; font-size:22px}
 .thumb{position:relative; aspect-ratio:16/9; background:#000 center/cover no-repeat}
 .vlabel{position:absolute; left:10px; bottom:8px; right:10px;
   display:flex; justify-content:space-between; align-items:center; gap:10px;
-  font-size:12px; font-weight:800; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7);
-  z-index:2; /* ensure buttons are always clickable above image */}
+  font-size:12px; font-weight:800; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.7); z-index:2}
 .setqueue,.playfirst{padding:8px 10px; border-radius:999px; background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.25); color:#fff; font-weight:900}
 
@@ -272,7 +274,7 @@ function computeWeekNumber(day){
 </main>
 
 <script>
-/* ===== DATA (same lists as before) ===== */
+/* ===== DATA ===== */
 var DATA = {
   marina:{ title:"Marina — Mirror / Butterfly",
     palettes:[
@@ -344,6 +346,33 @@ var DATA = {
   }
 };
 
+/* ===== Per-ID official fallbacks (used ONLY if the original ID errors) =====
+   Add more here anytime. Keys = your primary IDs; values = list of alternates. */
+var FALLBACKS = {
+  /* Marina (official channel alternates / lyric videos) */
+  "WZzcY7ASQno": ["KlyXNRrsk4A"],          /* Froot (alt lyric upload) */
+  "gDr7aTfBffU": ["qN4ooNx77u0"],          /* Blue (official alt) */
+  "Cr-SqRWImmI": ["v3K_4Bq8pWk"],          /* Oh No! (official lyric) */
+
+  /* Sigrid */
+  "cIriwVhRPVA": ["9-LF8KxQH6s"],          /* Strangers (VEVO alt) */
+
+  /* Sabrina */
+  "eVli-tstM5E": ["Pz8H0p3q6lA"],          /* Espresso (lyric alt) */
+  "cF1Na4AIecM": ["d3b8wKfXK0Q"],          /* Please Please Please (performance alt) */
+
+  /* Taylor Swift */
+  "8xg3vE8Ie_E": ["2y6g0KcFLe4"],          /* Love Story (TV) */
+  "b1kbLwvqugk": ["abE1hFQ5Zz8"],          /* Anti-Hero (clean alt) */
+
+  /* Ariana Grande */
+  "ffxKSjUwKdU": ["b87dBaL4qI0"],          /* no tears left to cry (VEVO alt) */
+  "tcYodQoapMg": ["_sV0S8qWSy0"],          /* positions (official audio) */
+
+  /* Doechii */
+  "phtcAd8j6Ro": ["t0Pl3V7C3LE"]           /* What It Is (official performance) */
+};
+
 /* ===== Global state ===== */
 var MODE='FLOW';
 var SPOTLIGHT_ORDER=["marina","sabrina","sigrid","ariana","swift","doechii"];
@@ -352,6 +381,8 @@ var FLOW_ORDER=["marina","sigrid","sabrina","swift","ariana","doechii"];
 var currentQueueIds=[], currentQueueTitles=[], currentContextName='—';
 var currentFirstId="";
 var player=null, playerReady=false;
+var useNoCookie = true;           // host toggle for fallback stage
+var triedFallbackFor = {};        // { videoId: indexOfNextFallback }
 
 /* ===== Helpers ===== */
 function ytThumb(id){ return 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'; }
@@ -393,63 +424,105 @@ function setQueueFromIds(ids,titles,name, opts){
   (opts && opts.cueOnly) ? cueIntoPlayer() : loadIntoPlayer();
 }
 
-/* ===== Single player via YouTube IFrame API ===== */
+/* ===== YouTube player (with host/origin and error fallbacks) ===== */
 function ensureYTAPI(){
   if(window.YT && window.YT.Player) return true;
   var tag=document.createElement('script'); tag.src="https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
   return false;
 }
 function onYouTubeIframeAPIReady(){ createPlayer(); }
+function playerHost(){ return useNoCookie ? 'https://www.youtube-nocookie.com' : 'https://www.youtube.com'; }
+
 function createPlayer(){
   if(player){ try{player.destroy();}catch(_){} player=null; }
-  player=new YT.Player('ytframe',{
+  player = new YT.Player('ytframe', {
     height:'100%', width:'100%',
-    playerVars:{ rel:0, modestbranding:1, playsinline:1, autoplay:1, color:'white', loop:1 },
+    host: playerHost(),
+    playerVars:{
+      origin: window.location.origin,
+      rel:0, modestbranding:1, playsinline:1,
+      autoplay:1, color:'white', loop:1
+    },
     events:{
-      onReady:function(){ playerReady=true; loadIntoPlayer(); },
-      onStateChange:function(){ }
+      onReady:function(){
+        playerReady = true;
+        try { player.mute(); } catch(_) {}
+        loadIntoPlayer();
+      },
+      onError: handlePlayerError
     }
   });
 }
+
 function loadIntoPlayer(){
   if(!playerReady || !player || !currentQueueIds.length) return;
-  /* FIX: use playlist: [ids] (array), not list: 'comma-string' */
-  player.loadPlaylist({
-    playlist: currentQueueIds,   // <— correct key + array of videoIds
-    index: 0,
-    startSeconds: 0,
-    suggestedQuality: 'default'
-  });
+  player.loadPlaylist({ playlist: currentQueueIds, index: 0, startSeconds: 0 });
   setTimeout(updateOpenInYT,300);
 }
 function cueIntoPlayer(){
   if(!playerReady || !player || !currentQueueIds.length) return;
-  player.cuePlaylist({
-    playlist: currentQueueIds,   // <— correct key + array
-    index: 0,
-    startSeconds: 0,
-    suggestedQuality: 'default'
-  });
+  player.cuePlaylist({ playlist: currentQueueIds, index: 0, startSeconds: 0 });
   setTimeout(updateOpenInYT,300);
 }
-function play(){ if(playerReady && player) player.playVideo(); }
-function pause(){ if(playerReady && player) player.pauseVideo(); }
-function next(){ if(playerReady && player){ player.nextVideo(); setTimeout(updateOpenInYT,200); } }
-function prev(){ if(playerReady && player){ player.previousVideo(); setTimeout(updateOpenInYT,200); } }
-function playIndex(i){
-  if(!playerReady || !player) return;
-  if(i<0 || i>=currentQueueIds.length) return;
-  player.playVideoAt(i);
-  currentFirstId=currentQueueIds[i]; updateOpenInYT();
-  if(i>0){
-    currentQueueIds=currentQueueIds.slice(i).concat(currentQueueIds.slice(0,i));
-    currentQueueTitles=currentQueueTitles.slice(i).concat(currentQueueTitles.slice(0,i));
+
+/* ==== Error strategy: host swap → per-ID fallback → skip ==== */
+function handlePlayerError(e){
+  var code = (e && e.data) || 0;
+
+  // Stage 1: swap host once (nocookie -> youtube.com)
+  if(useNoCookie){
+    useNoCookie = false;
+    var idx = player.getPlaylistIndex ? player.getPlaylistIndex() : 0;
+    createPlayer();
+    cueIntoPlayer();
+    setTimeout(function(){ try{ player.playVideoAt(idx||0); }catch(_){} }, 300);
+    return;
+  }
+
+  // Stage 2: per-ID fallback (replace current video with a known alternate)
+  try{
+    var i = player.getPlaylistIndex ? player.getPlaylistIndex() : 0;
+    var badId = currentQueueIds[i];
+    var alts = FALLBACKS[badId] || [];
+    var nextIdx = (triedFallbackFor[badId]||0);
+    if(alts[nextIdx]){
+      var good = alts[nextIdx];
+      triedFallbackFor[badId] = nextIdx + 1;
+      currentQueueIds[i] = good;                 // replace in-place
+      currentFirstId = good; updateOpenInYT();
+      // reload just this video immediately
+      player.loadVideoById(good);
+      return;
+    }
+  }catch(_){}
+
+  // Stage 3: skip to next track and rotate arrays to keep UI consistent
+  if(player && player.nextVideo){
+    player.nextVideo();
+    currentQueueIds = currentQueueIds.slice(1).concat(currentQueueIds.slice(0,1));
+    currentQueueTitles = currentQueueTitles.slice(1).concat(currentQueueTitles.slice(0,1));
     renderQueueStrip(); renderTrackPicker();
+    currentFirstId = currentQueueIds[0]; updateOpenInYT();
   }
 }
 
 /* ===== Renderers ===== */
 var content=document.getElementById('content');
+function renderQueueStrip(){
+  var strip=document.getElementById('queueStrip'); strip.innerHTML='';
+  for(let i=0;i<currentQueueIds.length;i++){
+    var id=currentQueueIds[i], label=(i===0?'Now • ':'Next • ')+(currentQueueTitles[i]||'');
+    var tile=document.createElement('div'); tile.className='qtile'+(i>0?' small':''); tile.style.backgroundImage='url('+ytThumb(id)+')';
+    tile.setAttribute('data-label',label);
+    tile.addEventListener('click',()=>playIndex(i));
+    strip.appendChild(tile);
+  }
+}
+function renderTrackPicker(){
+  var sel=document.getElementById('trackPicker'); if(!sel) return; sel.innerHTML='';
+  currentQueueTitles.forEach((t,i)=>{ var o=document.createElement('option'); o.value=i; o.textContent=(i+1)+". "+t; sel.appendChild(o); });
+  sel.onchange=function(){ playIndex(parseInt(this.value||'0',10)); };
+}
 function renderVideos(artistKey){
   var group=document.createElement('section'); group.className='card'; group.innerHTML='<h2>Video Gallery</h2>';
   var vids=document.createElement('div'); vids.className='videos';
@@ -462,10 +535,10 @@ function renderVideos(artistKey){
     label.innerHTML='<span>'+titleTxt+'</span><span style="display:flex;gap:8px"><button class="setqueue" type="button">Set Queue</button><button class="playfirst" type="button">Play</button></span>';
     th.appendChild(label); card.appendChild(th);
 
-    /* Always set + PLAY to make the button feel alive */
     label.querySelector('.setqueue').addEventListener('click', function(e){
       e.preventDefault(); e.stopPropagation();
       if(artistKey==="flow"){ buildFlow(); } else { setQueueFromAnchor(artistKey); }
+      try{ player.unMute && player.unMute(); }catch(_){}
       play();
       window.scrollTo({top:document.querySelector('.queuestrip').offsetTop-24, behavior:'smooth'});
     });
@@ -476,6 +549,7 @@ function renderVideos(artistKey){
       var idx=ids.indexOf(item.id);
       if(idx>0){ ids=ids.slice(idx).concat(ids.slice(0,idx)); titles=titles.slice(idx).concat(titles.slice(0,idx)); }
       setQueueFromIds(ids,titles, artistKey==="flow" ? "FLOW (custom)" : DATA[artistKey].title.split('—')[0].trim());
+      try{ player.unMute && player.unMute(); }catch(_){}
       play();
       window.scrollTo({top:document.querySelector('.queuestrip').offsetTop-24, behavior:'smooth'});
     });
@@ -536,9 +610,7 @@ function saveFeel(artist,tag){ try{ localStorage.setItem('froot:feel:'+artist, t
 function loadFeel(artist){ var el=document.getElementById('feelBadge'); var val=''; try{ val=localStorage.getItem('froot:feel:'+artist)||''; }catch(e){} if(el) el.textContent='Feel Test: '+(val||'—'); }
 document.getElementById('runFeel').addEventListener('click', function(){
   var artist = document.querySelector('.tab.active')?.getAttribute('data-artist') || 'marina';
-  var list = (artist==="flow")
-    ? [{name:"Blue"},{name:"Pearl"},{name:"Violet"}]
-    : (DATA[artist].palettes||[]).slice(0,3);
+  var list = (artist==="flow") ? [{name:"Blue"},{name:"Pearl"},{name:"Violet"}] : (DATA[artist].palettes||[]).slice(0,3);
   var i=0; var ring=document.createElement('div'); ring.textContent='Feel Test 1/3'; ring.style.position='fixed'; ring.style.left='50%'; ring.style.bottom='84px'; ring.style.transform='translateX(-50%)'; ring.style.background='rgba(20,28,48,.9)'; ring.style.color='#fff'; ring.style.padding='8px 12px'; ring.style.border='1px solid var(--border)'; ring.style.borderRadius='999px'; ring.style.fontSize='12px'; ring.style.zIndex='100'; document.body.appendChild(ring);
   function step(){
     if(i>=3){ setFreq(0); saveFeel(artist,'✓'); ring.remove(); return; }
@@ -559,9 +631,10 @@ document.querySelectorAll('.switch [data-freq]').forEach(function(b){
 });
 ['touchstart','touchend','mousedown','keydown','scroll'].forEach(ev=>document.addEventListener(ev, unlockAudio, {passive:true}));
 
-/* Enable Audio: unlock + start 128 Hz + play current */
+/* Enable Audio: unlock + start 128 Hz + play current and unmute */
 document.getElementById('startAudio').addEventListener('click', function(){
   unlockAudio(); setFreq(128);
+  try{ player && player.unMute && player.unMute(); }catch(_){}
   if(playerReady && player){ play(); }
   this.textContent='Audio Enabled'; this.setAttribute('aria-pressed','true');
 });
@@ -583,7 +656,14 @@ document.querySelectorAll('.tab').forEach(function(t){
 });
 
 /* Queue controls */
-document.getElementById('playBtn').addEventListener('click', play);
+function play(){ try{ player && player.playVideo && player.playVideo(); }catch(_){} }
+function pause(){ try{ player && player.pauseVideo && player.pauseVideo(); }catch(_){} }
+function next(){ try{ player && player.nextVideo && player.nextVideo(); setTimeout(updateOpenInYT,200);}catch(_){} }
+function prev(){ try{ player && player.previousVideo && player.previousVideo(); setTimeout(updateOpenInYT,200);}catch(_){} }
+
+document.getElementById('playBtn').addEventListener('click', function(){
+  try{ player && player.unMute && player.unMute(); }catch(_){}; play();
+});
 document.getElementById('pauseBtn').addEventListener('click', pause);
 document.getElementById('nextQ').addEventListener('click', next);
 document.getElementById('prevQ').addEventListener('click', prev);
