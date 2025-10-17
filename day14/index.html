@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Froot · Day 14 — Tornado Warnings (Sabrina Carpenter)</title>
+<meta name="description" content="Froot · Day 14 — color + song + seed ritual + mantra. Sabrina Carpenter — Tornado Warnings. Honey 128.15 Hz & Magnetic 160 Hz." />
+<meta name="theme-color" content="#0b0d11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<style>
+  :root{
+    --c1:#F7C873; /* Honey Amber */
+    --c2:#A89FBF; /* Lavender Grey */
+    --ink:#f4f6ff;
+    --ink-dim:#cdd3ea;
+    --panel:#0e1118;
+    --line:rgba(255,255,255,.10);
+    --accent:#ffdca6;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Helvetica, Arial;
+    color:var(--ink);
+    background: linear-gradient(135deg,var(--c1),var(--c2));
+    background-size:200% 200%;
+    animation: bgshift 42s ease-in-out infinite alternate;
+  }
+  @keyframes bgshift{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+
+  .wrap{max-width:980px;margin:0 auto;padding:16px;display:grid;gap:16px}
+  header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.2px}
+  .pill{display:inline-flex;gap:8px;flex-wrap:wrap}
+  .chip{background:rgba(12,15,23,.7);border:1px solid var(--line);padding:6px 10px;border-radius:999px;font-size:12px}
+
+  .grid{display:grid;gap:16px}
+  @media(min-width:840px){ .grid{grid-template-columns:1.25fr 1fr} }
+
+  .card{
+    background: rgba(10,12,18,.60);
+    border:1px solid var(--line);
+    border-radius:18px;
+    backdrop-filter: blur(10px) saturate(120%);
+    padding:14px;
+  }
+  .player{width:100%;aspect-ratio:16/9;border:0;border-radius:12px}
+  .meta{margin-top:10px;font-size:14px;color:var(--ink-dim);display:grid;gap:6px}
+  .swatch{
+    display:inline-grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin-top:6px
+  }
+  .box{height:18px;border-radius:6px;border:1px solid var(--line)}
+  .box1{background:var(--c1)}
+  .box2{background:var(--c2)}
+  code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:6px}
+
+  .tone{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+  .tone button,.tone select,.tone input[type="range"]{
+    background:#0e1118;color:var(--ink);border:1px solid var(--line);
+    border-radius:12px;padding:10px 12px;font-size:14px
+  }
+  .tone input[type="range"]{appearance:none;height:4px;border-radius:999px;width:180px;padding:0}
+
+  .section-title{font-weight:700;margin:0 0 8px 0}
+  ol{margin:0 0 10px 18px;line-height:1.55}
+  .mantra{font-size:18px;font-weight:700}
+  .rule{height:1px;background:var(--line);margin:10px 0}
+  .links a{color:var(--accent);text-decoration:none}
+  .links{display:flex;gap:12px;flex-wrap:wrap}
+  footer{opacity:.75;font-size:12px}
+
+  .note{
+    width:100%;min-height:96px;border-radius:12px;border:1px solid var(--line);
+    background:#0c0f15;color:var(--ink);padding:10px;font-size:14px;resize:vertical
+  }
+  .small{font-size:12px;opacity:.85}
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <h1>Froot · Day 14 — <span style="opacity:.9">Sabrina Carpenter</span> — Tornado Warnings</h1>
+    <div class="pill">
+      <span class="chip">Honey 128.15 Hz</span>
+      <span class="chip">Magnetic 160 Hz</span>
+      <span class="chip">#amberstorm</span>
+    </div>
+  </header>
+
+  <section class="grid">
+    <!-- LEFT PAGE (digital twin): Color + Song -->
+    <div class="card">
+      <iframe id="yt" class="player"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        title="Tornado Warnings — Sabrina Carpenter"></iframe>
+
+      <div class="meta">
+        <div>🎨 <b>Color field:</b> Honey Amber → Lavender Grey</div>
+        <div class="swatch">
+          <div class="box box1" title="#F7C873"></div><code>#F7C873</code>
+          <div class="box box2" title="#A89FBF"></div><code>#A89FBF</code>
+        </div>
+        <div>🕊️ <b>Mantra:</b> <span class="mantra">Warm air, steady heart.</span></div>
+
+        <div class="tone">
+          <button id="startTone" aria-pressed="false">Start Tone</button>
+          <button id="stopTone">Stop</button>
+          <label>Freq
+            <select id="freq">
+              <option value="128.15">128.15 Hz (Honey)</option>
+              <option value="160">160 Hz (Magnetic)</option>
+            </select>
+          </label>
+          <label>Volume
+            <input id="gain" type="range" min="0" max="1" step="0.01" value="0.25">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PAGE (digital twin): Ritual + Practices -->
+    <div class="card">
+      <h3 class="section-title">Seed Ritual — Calm the Storm</h3>
+      <ol>
+        <li>Sit by a window (or play wind sounds).</li>
+        <li>Inhale for four counts · exhale for six.</li>
+        <li>Speak one true sentence softly.</li>
+        <li>Write: “I am safe even when …”.</li>
+        <li>Morning → warm tea with honey · Night → slow palm circle (30s).</li>
+      </ol>
+
+      <div class="rule"></div>
+
+      <h4 class="section-title" style="margin-top:8px">Morning</h4>
+      <div class="small">Turn on <b>Honey Tone 128.15 Hz</b> for ~2 minutes. Notice how light moves across the room.</div>
+
+      <h4 class="section-title" style="margin-top:10px">Night</h4>
+      <div class="small">Replay “Tornado Warnings” in Froot Mode (low volume). Let your eyes close on a resonant line.</div>
+
+      <div class="rule"></div>
+
+      <h4 class="section-title" style="margin-top:8px">Reflection</h4>
+      <div class="small" style="margin-bottom:6px"><i>When I tell the truth, what part of me changes color?</i></div>
+      <textarea id="note" class="note" placeholder="Three lines max…"></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+        <label>Forecast Color
+          <input id="forecast" placeholder="#F7C873"
+                 style="background:#0c0f15;border:1px solid var(--line);border-radius:10px;padding:8px 10px;color:var(--ink);margin-left:6px">
+        </label>
+        <button id="saveLocal" style="background:#0e1118;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px">Save (local)</button>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="links">
+        <a id="toMirror" href="https://mirrorhoney.plnt.earth/day14" target="_blank" rel="noopener">Open MirrorHoney</a>
+        <a id="toJar" href="https://jar.plnt.earth" target="_blank" rel="noopener">Open Jar</a>
+        <a id="toReflect" href="https://reflect.plnt.earth" target="_blank" rel="noopener">Open Reflect</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>Froot Day Module · Illumina 1 · Sabrina (Honey Anchor)</footer>
+</main>
+
+<script>
+  // -------- Shared day data --------
+  var DAY = {
+    id: "14",
+    title: "Tornado Warnings",
+    artist: "Sabrina Carpenter",
+    youtubeId: "_QhYpF6F5ug",
+    color1: "#F7C873",
+    color2: "#A89FBF",
+    mantra: "Warm air, steady heart."
+  };
+
+  // -------- YouTube embed (loop without extra scripts) --------
+  var yt = document.getElementById('yt');
+  var params = new URLSearchParams({
+    autoplay: 0,
+    modestbranding: 1,
+    rel: 0,
+    color: 'white',
+    playsinline: 1,
+    loop: 1,
+    playlist: DAY.youtubeId
+  });
+  yt.src = "https://www.youtube.com/embed/" + DAY.youtubeId + "?" + params.toString();
+
+  // -------- WebAudio tone (click-to-start) --------
+  var ctx, osc, gn;
+  function ensureCtx(){ if(!ctx){ ctx = new (window.AudioContext||window.webkitAudioContext)(); } }
+  function startTone(){
+    ensureCtx(); if(osc){return;}
+    osc = ctx.createOscillator(); gn = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = parseFloat(document.getElementById('freq').value);
+    gn.gain.value = parseFloat(document.getElementById('gain').value);
+    osc.connect(gn).connect(ctx.destination);
+    osc.start();
+    document.getElementById('startTone').setAttribute('aria-pressed','true');
+  }
+  function stopTone(){
+    if(osc){ osc.stop(); osc.disconnect(); gn.disconnect(); osc=null; gn=null; }
+    document.getElementById('startTone').setAttribute('aria-pressed','false');
+  }
+  document.getElementById('startTone').addEventListener('click', startTone, {passive:true});
+  document.getElementById('stopTone').addEventListener('click', stopTone, {passive:true});
+  document.getElementById('freq').addEventListener('change', function(e){ if(osc){ osc.frequency.setValueAtTime(parseFloat(e.target.value), ctx.currentTime); } }, {passive:true});
+  document.getElementById('gain').addEventListener('input', function(e){ if(gn){ gn.gain.setValueAtTime(parseFloat(e.target.value), ctx.currentTime); } }, {passive:true});
+
+  // -------- Save local reflection + forecast color --------
+  function saveLocal(){
+    var entries = JSON.parse(localStorage.getItem('jar_entries')||'[]');
+    entries.push({d:DAY.id, t:Date.now(), note:document.getElementById('note').value, mantra:DAY.mantra});
+    localStorage.setItem('jar_entries', JSON.stringify(entries));
+    var fc = document.getElementById('forecast').value.trim();
+    if(fc){ localStorage.setItem('froot_forecast_color', fc); }
+    document.getElementById('saveLocal').textContent = "Saved ✓";
+    setTimeout(function(){ document.getElementById('saveLocal').textContent = "Save (local)"; }, 1600);
+  }
+  document.getElementById('saveLocal').addEventListener('click', saveLocal, {passive:true});
+
+  // Prefill forecast with any prior value
+  var prior = localStorage.getItem('froot_forecast_color');
+  if(prior){ document.getElementById('forecast').value = prior; }
+
+  // -------- Safety: stop tone if user navigates away (optional) --------
+  window.addEventListener('pagehide', stopTone, {passive:true});
+</script>
+</body>
+</html>
