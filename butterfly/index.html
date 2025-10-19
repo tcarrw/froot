@@ -83,7 +83,7 @@ body{
       </div>
 
       <div class="player-wrap">
-        <iframe id="yt" class="player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen playsinline src="" title="Marina - Butterfly (YouTube)"></iframe>
+        <iframe id="yt" class="player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen playsinline src="" title="MARINA - BUTTERFLY (Official Video)"></iframe>
       </div>
 
       <div class="controls">
@@ -139,7 +139,7 @@ body{
 
 <script>
 /* ===== Config ===== */
-const DEFAULT_YT_ID = 'Cr-SqRWImmI';
+const DEFAULT_YT_ID = 'aQMKAZpcynA'; // Official MARINA - BUTTERFLY (channel upload)
 const STORAGE = { yt:'bfly_yt', section:'bfly_section', toneHz:'bfly_tone_hz', vol:'bfly_tone_vol', loop:'bfly_loop' };
 const order = ['C','D','E','F','G','A','B'];
 
@@ -154,10 +154,9 @@ const markSection=(code)=>{
   qsa('.block').forEach(b=>b.classList.remove('highlight'));
   const el = qsa('.block').find(b=>b.dataset.section===code);
   if(el) el.classList.add('highlight');
-  // add/remove cycle tag based on how many wraps happened (stored as integer on element dataset)
 };
 
-/* ===== YouTube (no external libs, user-gesture friendly) ===== */
+/* ===== YouTube ===== */
 function getYT(){ return localStorage.getItem(STORAGE.yt) || DEFAULT_YT_ID; }
 function loadYT(mutedAutoplay){
   const id=getYT();
@@ -197,13 +196,10 @@ function getSection(){ return localStorage.getItem(STORAGE.section) || order[0];
 
 /* ===== Self-Check ===== */
 function selfCheck(){
-  // Audio engine check
   try{ ensureAudio(); setStatus(qs('#stAudio'), audioCtx.state==='running' ? 'ok':'warn'); }
   catch(e){ setStatus(qs('#stAudio'),'bad'); }
-  // Quick audible blip (very short & quiet)
   const prevVol = Number(qs('#toneVol').value)||0.35; const testVol = Math.max(0.05, prevVol);
   setVolume(testVol); playTone(440); setTimeout(()=>{ stopTone(); setVolume(prevVol); }, 180);
-  // Video embed presence
   const ok = !!qs('#yt').src; setStatus(qs('#stVideo'), ok ? 'ok':'warn');
 }
 
@@ -215,12 +211,17 @@ function jump(dir){
   if(loopOn){ if(ni<0) ni = order.length-1; if(ni>=order.length) ni=0; }
   else{ ni = Math.min(Math.max(ni,0), order.length-1); }
   setSection(order[ni]);
-  // Visual Cycle tag on wrap
+
+  // Cycle tag on wrap
   const timeline = qs('#timeline');
-  const tag = qs('.cycleTag', timeline) || document.createElement('div');
-  tag.className='cycleTag';
-  if(loopOn && idx===order.length-1 && dir==='next'){ tag.textContent='Cycle 2'; timeline.appendChild(tag); }
-  if(!loopOn || (ni!==0)) { if(tag && tag.parentNode===timeline) timeline.removeChild(tag); }
+  let tag = qs('.cycleTag', timeline);
+  if(loopOn && idx===order.length-1 && dir==='next'){
+    if(!tag){ tag = document.createElement('div'); tag.className='cycleTag'; timeline.appendChild(tag); }
+    const count = Number(tag.dataset.c||'1')+1; tag.dataset.c=String(count);
+    tag.textContent='Cycle '+count;
+  }else if(tag && ni!==0){
+    timeline.removeChild(tag);
+  }
 }
 
 /* ===== Events ===== */
@@ -228,7 +229,7 @@ qs('#start').addEventListener('click', async ()=>{
   ensureAudio();
   if(audioCtx.state==='suspended'){ try{ await audioCtx.resume(); }catch{} }
   setStatus(qs('#stAudio'), audioCtx.state==='running'? 'ok':'warn');
-  loadYT(true); // muted autoplay allowed on iOS after user gesture
+  loadYT(true); // muted autoplay allowed after user gesture
 });
 qs('#tone128').addEventListener('click', ()=>{ playTone(128); localStorage.setItem(STORAGE.toneHz,'128'); });
 qs('#tone160').addEventListener('click', ()=>{ playTone(160); localStorage.setItem(STORAGE.toneHz,'160'); });
@@ -257,10 +258,8 @@ qs('#loopSpectrum').addEventListener('change', e=> localStorage.setItem(STORAGE.
 
 /* ===== Boot ===== */
 (function boot(){
-  // initial embed without autoplay (until Start)
-  loadYT(false);
-  // restore section, volume, tone
-  markSection(getSection());
+  loadYT(false);                 // embed ready; unmuted playback after user tap
+  markSection(getSection());     // restore highlighted section
   const savedVol = Number(localStorage.getItem(STORAGE.vol) || '0.35'); qs('#toneVol').value=savedVol; setVolume(savedVol);
   const loopSaved = localStorage.getItem(STORAGE.loop); if(loopSaved!==null){ qs('#loopSpectrum').checked = (loopSaved==='1'); }
   setStatus(qs('#stAudio'),'warn'); setStatus(qs('#stTone'),'warn'); setStatus(qs('#stVideo'),'ok');
