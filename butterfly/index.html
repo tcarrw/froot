@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Butterfly Spectrum Map — Marina (Opalite Edition)</title>
+<meta name="theme-color" content="#0b0d11">
+<meta name="description" content="Synesthetic Butterfly map for Marina — red→violet ascent with opalite shimmer, tones (128/160 Hz), video, day/night color shift, and self-checks.">
+<style>
+:root{
+  --bg:#0b0d11;
+  --ink:#eef0ff;
+  --muted:#a8acc9;
+  --glass:rgba(255,255,255,.06);
+  --glass-strong:rgba(255,255,255,.12);
+  --rim:rgba(255,196,100,.28);
+  --core:rgba(183,167,255,.28);
+  --accent:#b7a7ff;
+  --ok:#6ddc9d;
+  --warn:#ffb464;
+  --bad:#ff6d8a;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+  --glow:0 0 0 2px rgba(183,167,255,.5), 0 0 30px rgba(183,167,255,.18);
+  --ring:0 0 0 3px rgba(183,167,255,.35);
+}
+
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f4f7ff;
+    --ink:#0b0d11;
+    --muted:#334;
+    --glass:rgba(0,0,0,.06);
+    --glass-strong:rgba(0,0,0,.12);
+    --rim:rgba(255,196,100,.35);
+    --core:rgba(135,160,255,.28);
+    --accent:#5b57ff;
+  }
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(255,196,100,.10), transparent 60%),
+    radial-gradient(1000px 700px at 85% 110%, rgba(150,185,255,.10), transparent 60%),
+    linear-gradient(180deg, #0b0d11, #0b0d11 60%);
+  color:var(--ink);
+}
+
+.container{
+  max-width:1000px;
+  margin:0 auto;
+  padding:24px 16px 120px;
+}
+
+.card{
+  position:relative;
+  background:
+    radial-gradient(120% 120% at 65% 35%, var(--core), transparent 60%),
+    radial-gradient(120% 120% at 35% 65%, var(--rim), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.frost{
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+}
+
+.header{
+  padding:18px 18px 10px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.title{ font-size:18px; font-weight:700; letter-spacing:.3px; }
+.badge{
+  font-size:12px; padding:6px 10px; border-radius:999px;
+  background:rgba(183,167,255,.16); border:1px solid rgba(183,167,255,.35);
+}
+.sub{ color:var(--muted); font-size:13px; }
+
+.player-wrap{ padding:14px; }
+.player{
+  width:100%; aspect-ratio:16/9; border:0; border-radius:14px;
+  filter:drop-shadow(0 10px 24px rgba(0,0,0,.45));
+}
+
+.controls{
+  display:grid; gap:14px; padding:10px 14px 18px;
+  grid-template-columns: 1fr;
+}
+.row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.btn{
+  appearance:none; border:0; outline:0; cursor:pointer;
+  padding:10px 14px; border-radius:14px; font-weight:600; letter-spacing:.2px;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.08));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow: var(--glow);
+  color:var(--ink);
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+}
+.btn:active{ transform:translateY(1px) scale(.995) }
+.btn[data-variant="primary"]{ box-shadow:0 0 0 3px rgba(183,167,255,.22), var(--glow) }
+.btn[data-variant="amber"]{ box-shadow:0 0 0 3px rgba(255,180,100,.22), 0 0 20px rgba(255,180,100,.18) }
+
+.slider{
+  appearance:none; width:180px; height:8px; border-radius:999px;
+  background:linear-gradient(90deg, rgba(255,180,100,.8), rgba(150,185,255,.9));
+  outline:none; border:1px solid rgba(255,255,255,.22);
+}
+.slider::-webkit-slider-thumb{
+  appearance:none; width:20px; height:20px; border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #fff, #dcd5ff 70%);
+  border:1px solid rgba(183,167,255,.8);
+}
+
+.timeline{
+  display:grid; gap:10px; padding:8px 14px 16px;
+  grid-template-columns: repeat(6, 1fr);
+}
+.block{
+  aspect-ratio: 6/5; border-radius:14px; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  color:#05060a; font-weight:700; letter-spacing:.3px; border:1px solid rgba(255,255,255,.18);
+}
+.block small{ position:absolute; bottom:8px; left:10px; right:10px; color:#0b0d11; opacity:.9; font-weight:600; }
+
+.bC{ background:linear-gradient(180deg, #f24,#b11) }
+.bD{ background:linear-gradient(180deg, #ffd166,#ffb700) }
+.bE{ background:linear-gradient(180deg, #ff9966,#ff6d3f) }
+.bF{ background:linear-gradient(180deg, #79a7ff,#3e7bff) }
+.bG{ background:linear-gradient(180deg, #fdfdfd,#d9e1ff) }
+.bA{ background:linear-gradient(180deg, #74dfa5,#35c487) }
+.bB{ background:linear-gradient(180deg, #c9a8ff,#9a6dff) }
+
+.notes{
+  padding:12px 16px 18px; color:var(--muted); font-size:14px; line-height:1.5;
+}
+
+.status{
+  display:grid; gap:10px; padding:10px 14px 16px; grid-template-columns:1fr 1fr 1fr; 
+}
+.pill{
+  border-radius:999px; padding:8px 10px; font-size:12px; font-weight:700; letter-spacing:.2px;
+  display:flex; align-items:center; gap:8px; border:1px solid rgba(255,255,255,.16);
+  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+}
+.dot{ width:8px; height:8px; border-radius:50%; background:var(--muted) }
+.ok .dot{ background:var(--ok) }
+.warn .dot{ background:var(--warn) }
+.bad .dot{ background:var(--bad) }
+
+.footer{
+  position:fixed; bottom:10px; left:0; right:0; z-index:99;
+  display:flex; justify-content:center; pointer-events:none;
+}
+.footer-inner{
+  pointer-events:auto;
+  max-width:1000px; width:calc(100% - 24px);
+  margin:0 auto; padding:10px 12px;
+  border-radius:14px;
+  background:
+    radial-gradient(100% 180% at 15% 0%, rgba(255,196,100,.15), transparent 60%),
+    radial-gradient(100% 180% at 85% 100%, rgba(150,185,255,.15), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 720px){
+  .timeline{ grid-template-columns: repeat(3, 1fr); }
+  .status{ grid-template-columns:1fr; }
+  .controls .row{ width:100% }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="card frost" id="card">
+      <div class="header">
+        <div class="title">🦋 Butterfly Spectrum Map</div>
+        <div class="badge">Marina — Mirror Flight</div>
+        <div class="sub">Red → Violet ascent with opalite shimmer; tones 128/160; day↔night color bias.</div>
+      </div>
+
+      <div class="player-wrap">
+        <iframe id="yt" class="player"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowfullscreen playsinline
+          src="" title="Marina - Butterfly (YouTube)"></iframe>
+      </div>
+
+      <div class="controls">
+        <div class="row">
+          <button class="btn" data-variant="primary" id="startAudio">Start • Enable Tones</button>
+          <button class="btn" id="tone128" data-variant="amber">128 Hz (Bee • Honey)</button>
+          <button class="btn" id="tone160" data-variant="primary">160 Hz (Sun/Mirror)</button>
+          <button class="btn" id="toneStop">Stop Tone</button>
+          <input class="slider" type="range" min="0" max="1" step="0.01" value="0.35" id="toneVol" aria-label="Tone volume">
+          <span class="sub" id="volLabel">Vol 35%</span>
+        </div>
+        <div class="row">
+          <button class="btn" id="loadButterfly">Load Butterfly (Official)</button>
+          <button class="btn" id="selfCheck">Self-Check</button>
+          <button class="btn" id="savePoint">Save Place</button>
+          <button class="btn" id="resetPref">Reset</button>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="block bC" data-section="C"><div>Intro</div><small>Red • Root • “Awakening”</small></div>
+        <div class="block bD" data-section="D"><div>Verse</div><small>Amber • Warmth • “Cocoon”</small></div>
+        <div class="block bE" data-section="E"><div>Pre-Chorus</div><small>Orange • Heat • “Emergence”</small></div>
+        <div class="block bF" data-section="F"><div>Chorus I</div><small>Blue • Air • “Lift”</small></div>
+        <div class="block bA" data-section="A"><div>Bridge</div><small>Green • Truth • “Clarity”</small></div>
+        <div class="block bB" data-section="B"><div>Final</div><small>Violet • Crown • “Flight”</small></div>
+      </div>
+
+      <div class="status" id="status">
+        <div class="pill" id="stAudio"><span class="dot"></span><span>Audio Engine</span></div>
+        <div class="pill" id="stTone"><span class="dot"></span><span>Tone Output</span></div>
+        <div class="pill" id="stVideo"><span class="dot"></span><span>YouTube Embed</span></div>
+      </div>
+
+      <div class="notes" id="notes">
+        <strong>Notes:</strong> Tap <em>Start</em> to unlock audio on iPhone/iPad. Use 128 Hz for honey grounding (Bee) and 160 Hz for mirror flight (Sun/Moon). The opalite UI biases amber by day and blue-violet by night to echo real glass shift. “Save Place” keeps your section + tone in localStorage.
+      </div>
+    </div>
+
+    <div style="height:40px"></div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="row" style="justify-content:space-between; align-items:center">
+        <div class="sub">Opalite Edition — single-file, no external libraries.</div>
+        <div class="row">
+          <button class="btn" id="jumpPrev">◀ Prev</button>
+          <button class="btn" id="jumpNext">Next ▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ====== Config ====== */
+const DEFAULT_YT_ID = 'Cr-SqRWImmI';
+const STORAGE_KEYS = {
+  yt: 'butterfly_yt',
+  section: 'butterfly_section',
+  toneHz: 'butterfly_tone_hz',
+  vol: 'butterfly_tone_vol'
+};
+const sections = ['C','D','E','F','A','B'];
+
+/* ====== State ====== */
+let audioCtx = null;
+let osc = null;
+let gain = null;
+let currentHz = null;
+
+/* ====== Helpers ====== */
+function qs(s, el=document){ return el.querySelector(s); }
+function qsa(s, el=document){ return [...el.querySelectorAll(s)]; }
+function setStatus(el, state){ el.classList.remove('ok','warn','bad'); el.classList.add(state); }
+
+/* Opalite day/night bias */
+(function dayNightBias(){
+  const hours = new Date().getHours();
+  const card = qs('#card');
+  if(hours >= 7 && hours < 19){
+    card.style.setProperty('--rim','rgba(255,196,100,.32)');
+    card.style.setProperty('--core','rgba(150,185,255,.20)');
+  }else{
+    card.style.setProperty('--rim','rgba(255,196,100,.22)');
+    card.style.setProperty('--core','rgba(183,167,255,.36)');
+  }
+})();
+
+/* ====== YouTube Embed ====== */
+function getYT(){
+  return localStorage.getItem(STORAGE_KEYS.yt) || DEFAULT_YT_ID;
+}
+function setYT(id){
+  localStorage.setItem(STORAGE_KEYS.yt, id);
+}
+function loadYT(){
+  const id = getYT();
+  const url = `https://www.youtube.com/embed/${id}?autoplay=0&playsinline=1&rel=0&modestbranding=1`;
+  const iframe = qs('#yt');
+  iframe.src = url;
+  setStatus(qs('#stVideo'), 'ok');
+}
+
+/* ====== Audio Engine / Tones ====== */
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gain = audioCtx.createGain();
+    gain.gain.value = Number(qs('#toneVol').value);
+    gain.connect(audioCtx.destination);
+  }
+  return audioCtx;
+}
+
+function playTone(hz){
+  ensureAudio();
+  stopTone();
+  osc = audioCtx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.value = hz;
+  osc.connect(gain);
+  osc.start();
+  currentHz = hz;
+  setStatus(qs('#stAudio'), audioCtx && audioCtx.state === 'running' ? 'ok' : 'warn');
+  setStatus(qs('#stTone'), 'ok');
+}
+
+function stopTone(){
+  if(osc){
+    try{ osc.stop(); }catch(e){}
+    try{ osc.disconnect(); }catch(e){}
+    osc = null;
+    currentHz = null;
+  }
+  setStatus(qs('#stTone'), 'warn');
+}
+
+function setVolume(v){
+  if(gain){
+    gain.gain.value = v;
+  }
+  qs('#volLabel').textContent = `Vol ${Math.round(v*100)}%`;
+}
+
+/* ====== Section Persistence ====== */
+function setSection(code){
+  localStorage.setItem(STORAGE_KEYS.section, code);
+  highlightSection(code);
+}
+function getSection(){
+  return localStorage.getItem(STORAGE_KEYS.section) || sections[0];
+}
+function highlightSection(code){
+  qsa('.block').forEach(b=>{
+    b.style.outline = b.dataset.section === code ? '3px solid rgba(183,167,255,.45)' : 'none';
+    b.style.boxShadow = b.dataset.section === code ? '0 0 0 4px rgba(183,167,255,.25), 0 10px 24px rgba(0,0,0,.35)' : 'none';
+  });
+}
+
+/* ====== Self-Checks ====== */
+function doSelfCheck(){
+  const stA = qs('#stAudio'), stT = qs('#stTone'), stV = qs('#stVideo');
+  try{
+    ensureAudio();
+    setStatus(stA, (audioCtx && audioCtx.state === 'running') ? 'ok' : 'warn');
+  }catch(e){
+    setStatus(stA, 'bad');
+  }
+  const prevVol = Number(qs('#toneVol').value);
+  const testVol = Math.max(0.05, prevVol);
+  setVolume(testVol);
+  playTone(440);
+  setTimeout(()=>{ stopTone(); setVolume(prevVol); }, 200);
+  const ok = !!qs('#yt').src;
+  setStatus(stV, ok ? 'ok' : 'warn');
+}
+
+/* ====== UI Events ====== */
+qs('#startAudio').addEventListener('click', async ()=>{
+  ensureAudio();
+  if(audioCtx.state === 'suspended'){ await audioCtx.resume(); }
+  setStatus(qs('#stAudio'), (audioCtx.state === 'running') ? 'ok' : 'warn');
+});
+
+qs('#tone128').addEventListener('click', ()=>{
+  playTone(128);
+  localStorage.setItem(STORAGE_KEYS.toneHz, '128');
+});
+qs('#tone160').addEventListener('click', ()=>{
+  playTone(160);
+  localStorage.setItem(STORAGE_KEYS.toneHz, '160');
+});
+qs('#toneStop').addEventListener('click', ()=>{ stopTone(); });
+
+qs('#toneVol').addEventListener('input', (e)=>{
+  const v = Number(e.target.value);
+  setVolume(v);
+  localStorage.setItem(STORAGE_KEYS.vol, String(v));
+});
+
+qs('#loadButterfly').addEventListener('click', ()=>{
+  loadYT();
+});
+
+qs('#selfCheck').addEventListener('click', ()=>{ doSelfCheck(); });
+
+qs('#savePoint').addEventListener('click', ()=>{
+  const tone = currentHz ? String(currentHz) : '';
+  if(tone) localStorage.setItem(STORAGE_KEYS.toneHz, tone);
+  setStatus(qs('#stAudio'), 'ok');
+});
+
+qs('#resetPref').addEventListener('click', ()=>{
+  Object.values(STORAGE_KEYS).forEach(k=>localStorage.removeItem(k));
+  stopTone();
+  loadYT(); setSection(sections[0]);
+  setVolume(0.35); qs('#toneVol').value = 0.35;
+  setStatus(qs('#stAudio'), 'warn'); setStatus(qs('#stTone'), 'warn'); setStatus(qs('#stVideo'), 'warn');
+});
+
+/* Section clicks */
+qsa('.block').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    setSection(b.dataset.section);
+    ensureAudio();
+    stopTone();
+    const hzMap = {C:110, D:132, E:148, F:160, A:176, B:196};
+    const hz = hzMap[b.dataset.section] || 160;
+    playTone(hz);
+    setTimeout(()=>stopTone(), 180);
+  });
+});
+
+/* Prev/Next navigation */
+qs('#jumpPrev').addEventListener('click', ()=>{
+  const cur = getSection();
+  const idx = sections.indexOf(cur);
+  const next = sections[(idx-1+sections.length)%sections.length];
+  setSection(next);
+});
+qs('#jumpNext').addEventListener('click', ()=>{
+  const cur = getSection();
+  const idx = sections.indexOf(cur);
+  const next = sections[(idx+1)%sections.length];
+  setSection(next);
+});
+
+/* ====== Boot ====== */
+(function boot(){
+  loadYT();
+  highlightSection(getSection());
+  const savedVol = Number(localStorage.getItem(STORAGE_KEYS.vol) || '0.35');
+  qs('#toneVol').value = savedVol; setVolume(savedVol);
+  setStatus(qs('#stAudio'), 'warn');
+  setStatus(qs('#stTone'), 'warn');
+  setStatus(qs('#stVideo'), 'ok');
+})();
+</script>
+</body>
+</html>
