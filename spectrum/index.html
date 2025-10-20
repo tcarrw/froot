@@ -1,1 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Froot · 42-Day Spectrum Wheel</title>
+<meta name="theme-color" content="#0b0d11">
+<meta name="description" content="42-day full-spectrum calibration wheel. Click a day to tune hue/brightness/saturation and tone (128–160 Hz). Local save + export JSON.">
+<style>
+:root{
+  --bg:#0b0d11; --ink:#eef0ff; --muted:#a8acc9; --accent:#b7a7ff;
+  --glass:rgba(255,255,255,.06); --glass-strong:rgba(255,255,255,.12);
+  --ok:#6ddc9d; --warn:#ffb464; --bad:#ff6d8a;
+  --radius:18px; --shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:
+    radial-gradient(1000px 700px at 85% -10%, rgba(160,170,255,.12), transparent 60%),
+    radial-gradient(900px 600px at 10% 110%, rgba(255,190,120,.08), transparent 60%),
+    linear-gradient(180deg,#0b0d11,#0b0d11 60%);
+  color:var(--ink);
+}
+.container{max-width:1100px;margin:0 auto;padding:22px 14px 120px}
+.hdr{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.hdr .title{font-weight:800;letter-spacing:.3px}
+.badge{font-size:12px;padding:6px 10px;border-radius:999px;background:rgba(183,167,255,.16);border:1px solid rgba(183,167,255,.35)}
+.sub{color:var(--muted);font-size:13px}
+
+.panel{
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12); border-radius:var(--radius); box-shadow:var(--shadow);
+}
+
+.grid{display:grid;gap:14px;grid-template-columns:1.2fr .9fr}
+@media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+.wheel-wrap{padding:14px}
+.controls{padding:14px;display:grid;gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.btn{
+  appearance:none;border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.08));
+  color:var(--ink); padding:10px 14px; border-radius:14px; font-weight:700; letter-spacing:.2px; cursor:pointer;
+  transition:transform .06s ease, box-shadow .2s ease; box-shadow:0 0 0 3px rgba(183,167,255,.18), 0 0 24px rgba(183,167,255,.14)
+}
+.btn:active{transform:translateY(1px) scale(.995)}
+
+.label{font-size:12px;color:var(--muted);min-width:72px}
+.val{font-size:12px;color:var(--ink);font-weight:700}
+.slider{appearance:none;width:220px;height:8px;border-radius:999px;background:linear-gradient(90deg,#7ea9ff,#b7a7ff);outline:none;border:1px solid rgba(255,255,255,.22)}
+.slider::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff,#dcd5ff 70%); border:1px solid rgba(183,167,255,.8)}
+
+.card{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+.preview{
+  height:56px;border-radius:12px;border:1px solid rgba(255,255,255,.2);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.05), 0 10px 24px rgba(0,0,0,.45);
+}
+.meta{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+@media (max-width:680px){ .meta{grid-template-columns:1fr} }
+
+textarea{
+  width:100%;min-height:80px;border-radius:12px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.04);color:var(--ink);padding:10px;outline:none;resize:vertical
+}
+
+.status{display:grid;gap:10px;grid-template-columns:1fr 1fr 1fr}
+.pill{border-radius:999px;padding:8px 10px;font-size:12px;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.06))}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.ok .dot{background:var(--ok)} .warn .dot{background:var(--warn)} .bad .dot{background:var(--bad)}
+
+.footer{position:fixed;bottom:10px;left:0;right:0;z-index:9;display:flex;justify-content:center;pointer-events:none}
+.footer-inner{pointer-events:auto;max-width:1100px;width:calc(100% - 24px);margin:0 auto;padding:10px 12px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.06));border:1px solid rgba(255,255,255,.18);box-shadow:var(--shadow)}
+
+.small{font-size:12px;color:var(--muted)}
+.kv{display:flex;justify-content:space-between;align-items:center}
+.badgeDay{font-weight:800}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="hdr">
+      <div class="title">🌈 Froot — 42-Day Spectrum Wheel</div>
+      <div class="badge">Day-by-day hue • tone • brightness • saturation</div>
+      <div class="sub">Click a slice. Tune color + tone. Save locally. Export JSON.</div>
+    </div>
+
+    <div class="grid">
+      <div class="panel wheel-wrap">
+        <svg id="wheel" viewBox="0 0 600 600" style="width:100%;height:auto;display:block;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:radial-gradient(600px 600px at 50% 50%, rgba(255,255,255,.04), rgba(255,255,255,.02))"></svg>
+      </div>
+
+      <div class="panel controls">
+        <div class="row kv">
+          <div class="badge">Selected</div>
+          <div class="badgeDay" id="dayLabel">Day 1 / 42</div>
+        </div>
+
+        <div class="card">
+          <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="label">Preview</div>
+            <div class="val" id="hexLabel">#ff0000</div>
+          </div>
+          <div class="preview" id="preview"></div>
+        </div>
+
+        <div class="meta">
+          <div class="card">
+            <div class="row"><div class="label">Hue</div><div class="val" id="valHue">0°</div></div>
+            <input id="hue" class="slider" type="range" min="0" max="360" step="1">
+            <div class="small">Red→Violet loop. Default distributed across 42 steps.</div>
+          </div>
+          <div class="card">
+            <div class="row"><div class="label">Saturation</div><div class="val" id="valSat">0.90</div></div>
+            <input id="sat" class="slider" type="range" min="0" max="1" step="0.01" value="0.9">
+            <div class="small">Purity of color.</div>
+          </div>
+          <div class="card">
+            <div class="row"><div class="label">Brightness</div><div class="val" id="valLight">0.55</div></div>
+            <input id="light" class="slider" type="range" min="0" max="1" step="0.01" value="0.55">
+            <div class="small">Lightness (perceived energy).</div>
+          </div>
+          <div class="card">
+            <div class="row"><div class="label">Tone (Hz)</div><div class="val" id="valTone">128</div></div>
+            <input id="tone" class="slider" type="range" min="128" max="160" step="1" value="128">
+            <div class="row" style="margin-top:8px">
+              <button class="btn" id="startAudio">Start • Enable Audio</button>
+              <button class="btn" id="playTone">Play</button>
+              <button class="btn" id="stopTone">Stop</button>
+            </div>
+            <div class="row" style="margin-top:8px">
+              <div class="label">Volume</div>
+              <input id="vol" class="slider" type="range" min="0" max="1" step="0.01" value="0.35" style="width:160px">
+              <div class="val" id="valVol">35%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div class="label">Notes</div>
+            <div class="small" id="nmLabel">HSL</div>
+          </div>
+          <textarea id="notes" placeholder="Feeling, image, lyric…"></textarea>
+        </div>
+
+        <div class="status">
+          <div class="pill" id="stAudio"><span class="dot"></span><span>Audio Engine</span></div>
+          <div class="pill" id="stTone"><span class="dot"></span><span>Tone Output</span></div>
+          <div class="pill" id="stSave"><span class="dot"></span><span>Saved</span></div>
+        </div>
+
+        <div class="row" style="justify-content:space-between">
+          <div class="row">
+            <button class="btn" id="prev">◀ Prev</button>
+            <button class="btn" id="next">Next ▶</button>
+          </div>
+          <div class="row">
+            <button class="btn" id="exportJson">Export JSON</button>
+            <button class="btn" id="copyJson">Copy</button>
+            <button class="btn" id="resetAll">Reset</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-inner">
+      <div class="row" style="justify-content:space-between;align-items:center;width:100%">
+        <div class="sub">Froot Spectrum • 42-Day Color-Tone Calibration • single-file build</div>
+        <div class="small">Tip: start on Day 1 and advance one slice per day; export at the end of the cycle.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const N=42, R_OUT=290, R_IN=150, CX=300, CY=300;
+const STORAGE_KEY='froot_spectrum_v1';
+let data = []; let current=0;
+
+let audioCtx=null, gain=null, osc=null;
+
+function hslToHex(h,s,l){
+  const a=s*Math.min(l,1-l);
+  const f=n=>{
+    const k=(n+h/30)%12;
+    const c=l - a*Math.max(-1, Math.min(k-3, Math.min(9-k,1)));
+    return Math.round(255*c).toString(16).padStart(2,'0');
+  };
+  return '#'+f(0)+f(8)+f(4);
+}
+
+function setStatus(el,cls){ el.classList.remove('ok','warn','bad'); el.classList.add(cls); }
+
+function initData(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){ try{ data = JSON.parse(saved); }catch{} }
+  if(!Array.isArray(data) || data.length!==N){
+    data = Array.from({length:N},(_,i)=>({
+      day:i+1,
+      hue: Math.round((360*(i)/N))%360,
+      sat: 0.9,
+      light: 0.55,
+      tone: 128 + Math.round(32*(i/(N-1))),
+      notes: ""
+    }));
+  }
+}
+
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  setStatus(document.getElementById('stSave'),'ok');
+  setTimeout(()=>setStatus(document.getElementById('stSave'),'warn'),800);
+}
+
+function segPath(i){
+  const a0 = (2*Math.PI)* (i/N) - Math.PI/2;
+  const a1 = (2*Math.PI)* ((i+1)/N) - Math.PI/2;
+  const x0 = CX + R_OUT*Math.cos(a0), y0 = CY + R_OUT*Math.sin(a0);
+  const x1 = CX + R_OUT*Math.cos(a1), y1 = CY + R_OUT*Math.sin(a1);
+  const x2 = CX + R_IN*Math.cos(a1),  y2 = CY + R_IN*Math.sin(a1);
+  const x3 = CX + R_IN*Math.cos(a0),  y3 = CY + R_IN*Math.sin(a0);
+  const laf = (a1-a0)>Math.PI?1:0;
+  return `M ${x0} ${y0} A ${R_OUT} ${R_OUT} 0 ${laf} 1 ${x1} ${y1} L ${x2} ${y2} A ${R_IN} ${R_IN} 0 ${laf} 0 ${x3} ${y3} Z`;
+}
+
+function renderWheel(){
+  const svg = document.getElementById('wheel');
+  svg.innerHTML='';
+  const ring = document.createElementNS('http://www.w3.org/2000/svg','g');
+  ring.setAttribute('filter','');
+  svg.appendChild(ring);
+
+  for(let i=0;i<N;i++){
+    const d=data[i];
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', segPath(i));
+    const c=hslToHex(d.hue,d.sat,d.light);
+    path.setAttribute('fill', c);
+    path.setAttribute('stroke','rgba(0,0,0,.35)');
+    path.setAttribute('stroke-width','1');
+    path.style.cursor='pointer';
+    path.addEventListener('click', ()=>select(i));
+    if(i===current){ path.setAttribute('filter','url(#sel)'); }
+    ring.appendChild(path);
+  }
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const flt=document.createElementNS('http://www.w3.org/2000/svg','filter');
+  flt.setAttribute('id','sel');
+  const fe=document.createElementNS('http://www.w3.org/2000/svg','feDropShadow');
+  fe.setAttribute('dx','0'); fe.setAttribute('dy','0'); fe.setAttribute('stdDeviation','6'); fe.setAttribute('flood-color','white'); fe.setAttribute('flood-opacity','0.8');
+  flt.appendChild(fe); defs.appendChild(flt); svg.appendChild(defs);
+
+  const hub=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  hub.setAttribute('cx',CX); hub.setAttribute('cy',CY); hub.setAttribute('r',R_IN-18);
+  hub.setAttribute('fill','rgba(255,255,255,.06)'); hub.setAttribute('stroke','rgba(255,255,255,.12)'); hub.setAttribute('stroke-width','1.2');
+  svg.appendChild(hub);
+
+  const label=document.createElementNS('http://www.w3.org/2000/svg','text');
+  label.setAttribute('x',CX); label.setAttribute('y',CY+6); label.setAttribute('text-anchor','middle');
+  label.setAttribute('fill','#eef0ff'); label.setAttribute('font-size','18'); label.setAttribute('font-weight','700');
+  label.textContent = `Day ${data[current].day}`;
+  svg.appendChild(label);
+}
+
+function select(i){
+  current=i;
+  const d=data[i];
+  document.getElementById('dayLabel').textContent=`Day ${d.day} / ${N}`;
+  document.getElementById('hue').value=d.hue;
+  document.getElementById('sat').value=d.sat;
+  document.getElementById('light').value=d.light;
+  document.getElementById('tone').value=d.tone;
+  document.getElementById('valHue').textContent=d.hue+'°';
+  document.getElementById('valSat').textContent=Number(d.sat).toFixed(2);
+  document.getElementById('valLight').textContent=Number(d.light).toFixed(2);
+  document.getElementById('valTone').textContent=d.tone;
+  document.getElementById('notes').value=d.notes||'';
+  const hex=hslToHex(d.hue,d.sat,d.light);
+  document.getElementById('hexLabel').textContent=hex;
+  document.getElementById('preview').style.background=hex;
+  renderWheel();
+  save();
+}
+
+function ensureAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    gain = audioCtx.createGain(); gain.gain.value = Number(document.getElementById('vol').value||0.35);
+    gain.connect(audioCtx.destination);
+  }
+  return audioCtx;
+}
+function playTone(hz){
+  ensureAudio();
+  stopTone();
+  osc = audioCtx.createOscillator();
+  osc.type='sine'; osc.frequency.value=hz; osc.connect(gain); osc.start();
+  setStatus(document.getElementById('stAudio'), (audioCtx.state==='running')?'ok':'warn');
+  setStatus(document.getElementById('stTone'),'ok');
+}
+function stopTone(){
+  if(osc){ try{osc.stop()}catch{}; try{osc.disconnect()}catch{}; osc=null; }
+  setStatus(document.getElementById('stTone'),'warn');
+}
+
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'froot_spectrum_42.json'; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function copyJSON(){
+  const txt = JSON.stringify(data,null,2);
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); }
+}
+
+function bind(){
+  document.getElementById('hue').addEventListener('input', e=>{
+    const v = Number(e.target.value); data[current].hue=v; document.getElementById('valHue').textContent=v+'°';
+    const hex=hslToHex(v,data[current].sat,data[current].light);
+    document.getElementById('hexLabel').textContent=hex; document.getElementById('preview').style.background=hex; renderWheel(); save();
+  });
+  document.getElementById('sat').addEventListener('input', e=>{
+    const v = Number(e.target.value); data[current].sat=v; document.getElementById('valSat').textContent=v.toFixed(2);
+    const hex=hslToHex(data[current].hue,v,data[current].light);
+    document.getElementById('hexLabel').textContent=hex; document.getElementById('preview').style.background=hex; renderWheel(); save();
+  });
+  document.getElementById('light').addEventListener('input', e=>{
+    const v = Number(e.target.value); data[current].light=v; document.getElementById('valLight').textContent=v.toFixed(2);
+    const hex=hslToHex(data[current].hue,data[current].sat,v);
+    document.getElementById('hexLabel').textContent=hex; document.getElementById('preview').style.background=hex; renderWheel(); save();
+  });
+  document.getElementById('tone').addEventListener('input', e=>{
+    const v = Number(e.target.value); data[current].tone=v; document.getElementById('valTone').textContent=v; save();
+  });
+  document.getElementById('notes').addEventListener('input', e=>{
+    data[current].notes = e.target.value; save();
+  });
+
+  document.getElementById('startAudio').addEventListener('click', async ()=>{
+    ensureAudio(); if(audioCtx.state==='suspended'){ try{ await audioCtx.resume(); }catch{} }
+    setStatus(document.getElementById('stAudio'), (audioCtx.state==='running')?'ok':'warn');
+  });
+  document.getElementById('playTone').addEventListener('click', ()=> playTone(Number(document.getElementById('tone').value)) );
+  document.getElementById('stopTone').addEventListener('click', stopTone);
+  document.getElementById('vol').addEventListener('input', e=>{
+    const v=Number(e.target.value); if(gain){ gain.gain.value=v; }
+    document.getElementById('valVol').textContent = Math.round(v*100)+'%';
+  });
+
+  document.getElementById('prev').addEventListener('click', ()=>{
+    current = (current-1+N)%N; select(current);
+  });
+  document.getElementById('next').addEventListener('click', ()=>{
+    current = (current+1)%N; select(current);
+  });
+
+  document.getElementById('exportJson').addEventListener('click', exportJSON);
+  document.getElementById('copyJson').addEventListener('click', copyJSON);
+
+  document.getElementById('resetAll').addEventListener('click', ()=>{
+    if(confirm('Reset all 42 days to default?')){ localStorage.removeItem(STORAGE_KEY); initData(); current=0; select(0); }
+  });
+}
+
+(function boot(){
+  initData();
+  renderWheel();
+  bind();
+  select(0);
+  setStatus(document.getElementById('stAudio'),'warn');
+  setStatus(document.getElementById('stTone'),'warn');
+  setStatus(document.getElementById('stSave'),'warn');
+})();
+</script>
+</body>
+</html>
 
