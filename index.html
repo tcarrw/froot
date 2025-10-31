@@ -1,1029 +1,253 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Froot · Butterfly Mirror</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Froot — Violet · Pearl</title>
+<meta name="description" content="Froot dial for Marina’s palette. Violet ↔ Pearl tint, synced with MirrorHoney." />
+<!-- froot · color lab -->
 <style>
-:root{
-  --bg:#0a0a0f;
-  --ink:#f4f4ff;
-  --muted:#b8b8d9;
-  --accent:#b7a7ff;
-  --rim:#dcd1ff;
-  --glass:rgba(255,255,255,.06);
-  --glass-strong:rgba(255,255,255,.1);
-  --ring:0 0 0 3px rgba(183,167,255,.45);
-  --tint-hue:300;
-  --tint-strength:.35;
-  --radius:18px;
-  --shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
-  --glow:0 0 0 2px rgba(220,209,255,.8), 0 8px 24px rgba(183,167,255,.35);
-  --pad:16px;
-  --pad-lg:18px;
-  --gap:14px;
-  --card-w:1200px;
-  --tap:44px;
-  --queue-h:48vh;
-  --title-h:1.6em;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  background: radial-gradient(1200px 800px at 20% -10%, #111329 0%, #0b0c15 35%, #07070c 65%, #05050a 100%), var(--bg);
-  color:var(--ink);
-  font:400 16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue","Noto Sans",Arial,sans-serif;
-  letter-spacing:.15px;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-#tint{
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(900px 600px at 10% 10%, hsla(var(--tint-hue),80%,60%,var(--tint-strength)) 0%, transparent 70%),
-    radial-gradient(1000px 700px at 90% 20%, hsla(calc(var(--tint-hue) + 60),80%,55%,calc(var(--tint-strength)*.9)) 0%, transparent 70%),
-    radial-gradient(1200px 800px at 40% 90%, hsla(calc(var(--tint-hue) + 120),80%,50%,calc(var(--tint-strength)*.8)) 0%, transparent 70%);
-  filter: saturate(140%);
-}
-.container{position:relative; z-index:1; width:100%; max-width:var(--card-w); margin:0 auto; padding:24px 16px 80px}
-.glass{
-  background:var(--glass);
-  backdrop-filter: blur(18px) saturate(120%) brightness(1.05);
-  -webkit-backdrop-filter: blur(18px) saturate(120%) brightness(1.05);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  border:1px solid rgba(255,255,255,.09);
-  position:relative;
-}
-.glass::before{
-  content:"";
-  position:absolute; left:0; right:0; top:0; height:56px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  border-top-left-radius:inherit; border-top-right-radius:inherit;
-  pointer-events:none; mix-blend-mode:screen; opacity:.25;
-}
-.hero{padding:28px; display:grid; gap:10px}
-.title{font-weight:700; font-size:42px; line-height:1.1; letter-spacing:.2px}
-.subtitle{font-size:18px; color:var(--muted)}
-.note{font-size:13px; color:var(--muted)}
-.badges{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-.badge{
-  padding:6px 10px; border-radius:999px;
-  background:linear-gradient(to bottom right, rgba(183,167,255,.25), rgba(183,167,255,.06));
-  border:1px solid rgba(220,209,255,.35); color:#efeaff; font-size:12px
-}
-.controls,.subcontrols{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-.controls{margin-top:14px}
-.btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-height:var(--tap); padding:10px 16px; border-radius:14px;
-  background:linear-gradient(to top left, rgba(255,255,255,.08), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.12); color:var(--ink); text-decoration:none;
-  user-select:none; cursor:pointer; font-weight:600; letter-spacing:.25px
-}
-.btn:focus-visible{outline:none; box-shadow:var(--ring)}
-.btn.tone{padding:0}
-.segment{display:flex; background:rgba(255,255,255,.04); border-radius:12px; border:1px solid rgba(255,255,255,.12); overflow:hidden}
-.segment button{border:0; background:transparent; color:var(--ink); padding:12px 14px; min-height:var(--tap); cursor:pointer}
-.segment button.active{background:rgba(220,209,255,.22)}
-.sliders{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
-label{font-size:13px; color:var(--muted)}
-input[type="range"]{width:180px}
-.kv{display:flex; gap:10px; align-items:center}
-.hero-reflect,.player-reflect{
-  transform:scaleY(-1);
-  filter: blur(8px) saturate(110%);
-  opacity:.25;
-  margin-top:8px;
-  mask-image:linear-gradient(to bottom, rgba(255,255,255,.5), transparent 70%);
-  -webkit-mask-image:linear-gradient(to bottom, rgba(255,255,255,.5), transparent 70%);
-}
-.player-card{margin-top:16px; padding:16px; display:grid; gap:12px}
-.player-head{display:flex; align-items:center; justify-content:space-between; gap:10px; min-height:40px}
-.player-title{font-weight:600; font-size:18px; min-height:var(--title-h)}
-.player-wrap{position:relative; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03)}
-#player{aspect-ratio:16/9; width:100%}
-.player-body{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
-.btn.primary{background:linear-gradient(135deg, rgba(183,167,255,.4), rgba(183,167,255,.15)); border-color:rgba(220,209,255,.5)}
-.btn.ghost{background:rgba(255,255,255,.02)}
-.active-glow{box-shadow:var(--glow); border-color:rgba(220,209,255,.85)}
-.queue{margin-top:16px; padding:8px}
-.queue-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px}
-.anchors{display:flex; gap:6px; flex-wrap:wrap}
-.chip{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); cursor:pointer; min-height:36px; display:inline-flex; align-items:center; font-weight:600}
-.chip.active{background:rgba(220,209,255,.22); border-color:rgba(220,209,255,.5)}
-.queue-list{max-height:var(--queue-h); overflow:auto; display:grid; gap:8px; padding-right:4px}
-.row{display:grid; grid-template-columns:48px 1fr auto auto; gap:10px; align-items:center; padding:12px; border-radius:14px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12)}
-.row .idx{color:var(--muted); text-align:center}
-.row .ttl{min-height:var(--title-h); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.row .meta{display:flex; gap:8px; align-items:center; color:var(--muted); font-size:12px}
-.row .edit-btn{justify-self:end}
-.row.active{box-shadow:var(--glow); border-color:rgba(220,209,255,.8); background:linear-gradient(180deg, rgba(220,209,255,.2), rgba(255,255,255,.06))}
-.editor{position:fixed; inset:0; z-index:40; display:none; align-items:center; justify-content:center; padding:20px}
-.editor.show{display:flex}
-.sheet{width:min(560px, 96vw); padding:18px; display:grid; gap:12px}
-.sheet .grid{display:grid; gap:10px; grid-template-columns:1fr 1fr}
-.sheet .grid .full{grid-column:1/-1}
-.field{display:grid; gap:6px}
-.select, .input{
-  appearance:none; width:100%; padding:12px 12px; border-radius:12px; background:rgba(255,255,255,.06);
-  color:var(--ink); border:1px solid rgba(255,255,255,.2); min-height:44px
-}
-.sheet .row{grid-template-columns:1fr 1fr; gap:8px}
-.whisper{
-  position:fixed; top:12px; left:50%; transform:translateX(-50%);
-  padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index:50; opacity:0; transition:opacity .4s ease; pointer-events:none; font-weight:600
-}
-.whisper.show{opacity:1}
-.tools{display:flex; gap:8px; flex-wrap:wrap}
-.tools .btn{min-width:44px}
-.modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:60; padding:20px}
-.modal.show{display:flex}
-.modal .panel{width:min(700px, 96vw); padding:16px; display:grid; gap:10px}
-textarea{width:100%; min-height:160px; background:rgba(255,255,255,.06); color:var(--ink); border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:12px; resize:vertical}
-.small{font-size:12px; color:var(--muted)}
-.grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-.checks{margin-top:16px; padding:16px}
-.check-badges{display:flex; flex-wrap:wrap; gap:8px}
-.ok{background:rgba(64,214,142,.22); border-color:rgba(64,214,142,.6)}
-.fail{background:rgba(255,88,88,.18); border-color:rgba(255,88,88,.5)}
-.badge.btnlike{padding:8px 10px}
-.datebox{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
-input[type="date"]{background:rgba(255,255,255,.06); color:var(--ink); border:1px solid rgba(255,255,255,.2); border-radius:10px; padding:10px}
-kbd{padding:2px 6px; border-radius:6px; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08)}
-hr{border:0; border-top:1px solid rgba(255,255,255,.08); margin:6px 0}
-a{color:var(--rim)}
-@media (max-width:720px){
-  .row{grid-template-columns:36px 1fr auto auto}
-  .player-head{flex-direction:column; align-items:flex-start}
-  .grid2{grid-template-columns:1fr}
-}
+  :root{
+    /* Base */
+    --ink:#efeaff; --muted:#c9c0de;
+    --vio:#d08bff; --rose:#ff9bd6; --mint:#73e3c5;
+    --skyV:#1a1433; --skyP:#241b3f;
+
+    /* Dial vars (JS updates these) */
+    --tint: 0; /* 0..100 */
+    --violetA: rgba(208,139,255, calc(0.08 + (var(--tint) * 0.002))); /* 0.08..0.28 */
+    --halo:    rgba(208,139,255, calc(0.22 + (var(--tint) * 0.002)));
+
+    /* Background mix */
+    --bgMix: radial-gradient(1200px 900px at 70% 10%,
+                color-mix(in oklab, var(--skyV) calc(100% - var(--tint)*1%), var(--skyP) calc(var(--tint)*1%)) 0%,
+                #0e0b14 58%, #0a0810 100%);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    background:
+      var(--bgMix),
+      linear-gradient(180deg, color-mix(in oklab, #0f0b19 70%, #1a1433 30%), #0d0b12);
+    font:500 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    transition: background .35s ease;
+  }
+
+  .wrap{max-width:980px; margin:0 auto; padding:22px; display:grid; gap:14px}
+  .hdr{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+  .title{font-weight:900; font-size:26px; letter-spacing:.4px; text-transform:uppercase}
+  .tag{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(240,230,255,.35); color:#f3ecff; background:rgba(208,139,255,.10)}
+
+  .card{
+    background:linear-gradient(180deg, rgba(20,16,38,.92), rgba(15,12,28,.92));
+    border:1px solid rgba(210,200,255,.2);
+    border-radius:16px; padding:16px; box-shadow:0 14px 44px rgba(0,0,0,.55);
+    backdrop-filter:saturate(130%) blur(6px);
+  }
+  h2{margin:0 0 8px 0; font-size:18px; letter-spacing:.2px}
+  .muted{color:var(--muted); font-size:14px}
+
+  /* Dial */
+  .dial{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    border:1px solid rgba(210,200,255,.25); border-radius:12px; padding:10px; background:rgba(255,255,255,.04)
+  }
+  .meter{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(240,230,255,.35); color:#efeaff}
+  input[type=range]{ width:240px }
+
+  .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; text-decoration:none; cursor:pointer;
+    border:1px solid rgba(240,230,255,.35); color:#fff; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+    background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.05));
+  }
+  .btn.violet{ border-color:rgba(208,139,255,.6); background:linear-gradient(180deg, rgba(208,139,255,.16), rgba(208,139,255,.06)) }
+  .btn.mint{ border-color:rgba(115,227,197,.65); background:linear-gradient(180deg, rgba(115,227,197,.16), rgba(115,227,197,.06)) }
+
+  /* Pill buttons (new) */
+  .pillbtn{
+    display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(240,230,255,.35); background:rgba(255,255,255,.06); color:#fff;
+    font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+  }
+  .pillbtn.violet{ border-color:rgba(208,139,255,.6); background:linear-gradient(180deg, rgba(208,139,255,.16), rgba(208,139,255,.06)) }
+  .pillbtn.mint{ border-color:rgba(115,227,197,.65); background:linear-gradient(180deg, rgba(115,227,197,.16), rgba(115,227,197,.06)) }
+
+  /* Preview card */
+  .preview{
+    position:relative; border:1px solid rgba(210,200,255,.25); border-radius:16px; padding:18px; overflow:hidden;
+    background:
+      radial-gradient(800px 300px at 50% 110%, var(--violetA), transparent 60%),
+      linear-gradient(180deg, color-mix(in oklab, #1c1535 70%, #2a1f4f 30%), color-mix(in oklab, #120d22 80%, #1c1535 20%));
+    transition: background .35s ease, box-shadow .35s ease, border-color .35s ease;
+  }
+  .glow{
+    position:absolute; inset:-30% -10% auto -10%; height:60%;
+    background:radial-gradient(closest-side, var(--halo), rgba(208,139,255,.12), transparent);
+    filter:blur(.6px); mix-blend-mode:screen; pointer-events:none; animation:float 16s linear infinite;
+  }
+  @keyframes float{ 0%{ transform:translateX(-8%) rotate(-4deg)} 50%{transform:translateX(8%) rotate(4deg)} 100%{transform:translateX(-8%) rotate(-4deg)} }
+
+  .legend{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+  .chip{
+    font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px;
+    border:1px solid rgba(240,230,255,.35); color:#efeaff; background:rgba(255,255,255,.05)
+  }
+  .pill{padding:6px 10px; border-radius:999px; border:1px solid rgba(240,230,255,.35)}
+  .p-violet{border-color:rgba(208,139,255,.7)}
+  .p-pearl{border-color:rgba(240,230,255,.7)}
+  .p-honey{border-color:#ffcf6e}
+
+  .links{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:10px }
+  .foot{ text-align:center; color:var(--muted); font-size:12px; padding:8px 0 16px }
 </style>
 </head>
 <body>
-<div id="tint"></div>
-<div class="container">
-  <section class="glass hero" id="hero">
-    <div class="title">Froot</div>
-    <div class="subtitle">“A quiet room to listen with me—one path, one feeling at a time.”</div>
-    <div class="note">Official videos. No noise. Take what you need, leave the rest.</div>
-    <div class="badges">
-      <span class="badge" id="badge-day">Day –/42</span>
-      <span class="badge" id="badge-week">Week –</span>
-    </div>
-    <div class="datebox">
-      <label>Cycle Start</label>
-      <input type="date" id="cycleStart">
-      <button class="btn" id="todayBtn">Today</button>
-      <div class="small">Use <kbd>←</kbd> Back <kbd>Space</kbd> Play/Pause <kbd>→</kbd> Ahead <kbd>L</kbd> Loop <kbd>M</kbd> Silence</div>
-    </div>
-    <div class="controls">
-      <button class="btn primary" id="beginBtn" aria-label="Begin">Begin</button>
-      <div class="segment tone" role="group" aria-label="Ritual">
-        <button id="toneOff" class="active" aria-label="Ritual Off">Off</button>
-        <button id="tone128" aria-label="Ritual Ground 128">Ground 128</button>
-        <button id="tone160" aria-label="Ritual Lift 160">Lift 160</button>
-      </div>
-      <div class="sliders">
-        <div class="kv">
-          <label for="tintRange">Color</label>
-          <input type="range" id="tintRange" min="0" max="100" value="35">
-        </div>
-        <div class="kv">
-          <label for="volRange">Volume</label>
-          <input type="range" id="volRange" min="0" max="100" value="35">
-        </div>
-      </div>
-      <div class="tools">
-        <button class="btn" id="shareBtn" aria-label="Share">Share</button>
-        <button class="btn" id="importExportBtn" aria-label="Import Export">Import/Export</button>
-      </div>
-    </div>
-    <div class="hero-reflect subtitle">Froot — “A quiet room to listen with me—one path, one feeling at a time.”</div>
-  </section>
+  <main class="wrap">
+    <header class="hdr">
+      <div class="title">Froot</div>
+      <div class="tag">violet · pearl</div>
+    </header>
 
-  <section class="glass player-card" id="playerCard">
-    <div class="player-head">
-      <div class="player-title" id="currentTitle">Loading…</div>
-      <div class="badges">
-        <span class="badge" id="badge-active">Active</span>
-      </div>
-    </div>
-    <div class="player-wrap active-glow" id="playerFrame">
-      <div id="player"></div>
-    </div>
-    <div class="player-body">
-      <button class="btn" id="prevBtn" aria-label="Back">Back</button>
-      <button class="btn" id="playPauseBtn" aria-label="Play/Pause">Play/Pause</button>
-      <button class="btn" id="nextBtn" aria-label="Ahead">Ahead</button>
-      <button class="btn" id="loopBtn" aria-label="Circle (Loop)">Circle</button>
-      <button class="btn" id="muteBtn" aria-label="Silence (Mute)">Silence</button>
-      <div class="kv">
-        <label for="toneSelect">Ritual</label>
-      </div>
-    </div>
-    <div class="player-reflect subtitle" id="reflectTitle">Loading…</div>
-  </section>
+    <section class="card">
+      <h2>Violet ↔ Pearl Dial</h2>
+      <p class="muted">Adjust the tint. This page auto-loads <code>froot.currentTint</code> (sent from MirrorHoney). You can also pull or push manually.</p>
 
-  <section class="glass queue">
-    <div class="queue-head">
-      <div class="anchors" id="anchorChips">
-        <div class="chip" data-anchor="marina">marina</div>
-        <div class="chip" data-anchor="sabrina">sabrina</div>
-        <div class="chip" data-anchor="sigrid">sigrid</div>
-        <div class="chip" data-anchor="swift">swift</div>
-        <div class="chip" data-anchor="ariana">ariana</div>
-        <div class="chip" data-anchor="doechii">doechii</div>
-      </div>
-      <div class="tools">
-        <button class="btn" id="dayModeBtn">Day Mode</button>
-        <button class="btn" id="resetOrderBtn">Reset</button>
-      </div>
-    </div>
-    <div class="queue-list" id="queueList"></div>
-  </section>
+      <div class="dial">
+        <strong style="letter-spacing:.3px">Froot Dial</strong>
+        <span class="muted">Violet</span>
+        <input id="tint" type="range" min="0" max="100" value="0" />
+        <span class="muted">Pearl</span>
+        <span id="meter" class="meter">0%</span>
+        <button id="reset" class="btn violet" type="button">Reset</button>
 
-  <section class="glass checks" id="checks">
-    <div class="queue-head">
-      <div class="subtitle">Checks</div>
-      <button class="btn" id="selfTestBtn">Self-Test</button>
-    </div>
-    <div class="check-badges" id="checkBadges"></div>
-    <div class="small" id="allGreen"></div>
-  </section>
-</div>
+        <!-- NEW: Follow MirrorHoney on load (pill switch) -->
+        <span class="muted" style="margin-left:6px">Follow on load</span>
+        <span id="followMH" class="pillbtn mint" role="switch" aria-checked="false">
+          <span id="followMHState">OFF</span>
+        </span>
+      </div>
 
-<div class="editor" id="editor">
-  <div class="glass sheet">
-    <div class="subtitle" id="editTitle">Edit</div>
-    <div class="grid">
-      <div class="field">
-        <label>Anchor</label>
-        <select id="editAnchor" class="select">
-          <option value="">(none)</option>
-          <option value="marina">marina</option>
-          <option value="sabrina">sabrina</option>
-          <option value="sigrid">sigrid</option>
-          <option value="swift">swift</option>
-          <option value="ariana">ariana</option>
-          <option value="doechii">doechii</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Day (1–42)</label>
-        <input id="editDay" class="input" type="number" min="1" max="42" inputmode="numeric" pattern="[0-9]*">
-      </div>
-      <div class="field">
-        <label>Default Ritual</label>
-        <select id="editTone" class="select">
-          <option value="off">off</option>
-          <option value="128">128</option>
-          <option value="160">160</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Default Color (0–100)</label>
-        <input id="editTint" class="input" type="number" min="0" max="100" inputmode="numeric" pattern="[0-9]*">
-      </div>
-      <div class="field full">
-        <div class="small">These settings apply when the song starts. Stored as { id → { anchor, day, tone, tint } }.</div>
-      </div>
-    </div>
-    <div class="tools">
-      <button class="btn primary" id="saveEdit">Save</button>
-      <button class="btn" id="cancelEdit">Cancel</button>
-    </div>
-  </div>
-</div>
+      <div class="row" style="margin-top:8px">
+        <!-- NEW: pill-badge “Listen to MirrorHoney” -->
+        <span id="pullMH" class="pillbtn violet" role="button" tabindex="0">Listen to MirrorHoney</span>
 
-<div class="modal" id="impexp">
-  <div class="glass panel">
-    <div class="subtitle">Import / Export</div>
-    <div class="grid2">
-      <div>
-        <div class="small">Export (IDs only)</div>
-        <textarea id="exportBox" readonly></textarea>
-        <div class="tools">
-          <button class="btn" id="copyExport">Copy</button>
-        </div>
+        <span style="flex:1"></span>
+        <button id="sendMH" class="btn violet" type="button">Send to MirrorHoney</button>
+        <button data-p="0"   class="btn" type="button">Violet 0%</button>
+        <button data-p="60"  class="btn" type="button">Peony 60%</button>
+        <button data-p="100" class="btn" type="button">Pearl 100%</button>
       </div>
-      <div>
-        <div class="small">Import (JSON array of IDs)</div>
-        <textarea id="importBox" placeholder='["id1","id2"]'></textarea>
-        <div class="tools">
-          <button class="btn primary" id="applyImport">Apply</button>
-          <button class="btn" id="closeImpExp">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    </section>
 
-<div class="whisper" id="whisper"></div>
+    <section class="card preview">
+      <div class="glow" aria-hidden="true"></div>
+      <h2>Preview</h2>
+      <p class="muted">Live room tint preview. This is what MirrorHoney could look like at this mix.</p>
+      <div class="legend">
+        <span class="chip pill p-violet">violet</span>
+        <span class="chip pill p-pearl">pearl</span>
+        <span class="chip pill p-honey">honey (accent)</span>
+      </div>
+      <div class="links">
+        <a class="btn" href="https://mirrorhoney.plnt.earth" rel="noopener">MirrorHoney</a>
+        <a class="btn" href="https://earth.plnt.earth" rel="noopener">Earth</a>
+        <a class="btn mint" href="https://time.plnt.earth" rel="noopener">Time</a>
+      </div>
+    </section>
+
+    <footer class="foot">Froot sets the tint; MirrorHoney sings the color.</footer>
+  </main>
 
 <script>
 (function(){
-  const YT_IDS_DEFAULT = "WZzcY7ASQno,cIriwVhRPVA,kLbn61Z4LDI,8xg3vE8Ie_E,eB6txyhHFG4,phtcAd8j6Ro,gDr7aTfBffU,w5x93pXSmRM,eVli-tstM5E,zLSUp53y-HQ,ffxKSjUwKdU,8qnOpJfFfpU,ZT_skmohD-c,E7lr7pU9fYA,cF1Na4AIecM,b1kbLwvqugk,fLFvbwrWLQY,29mk5rz3m7Q,F1JTlnHGa90,Cr-SqRWImmI,YcSP1ZUf1eQ,b7QlX3yR2xs,tcYodQoapMg,L94niPkteGg,s6AHxF0s764,aQMKAZpcynA,Gla5AzlHnS4".split(",");
-  const LS_KEYS = {
-    queue:"illumina_queue",
-    index:"illumina_index",
-    tone:"illumina_tone",
-    tint:"illumina_tint",
-    vol:"illumina_volume",
-    loop:"illumina_loop",
-    mute:"illumina_mute",
-    meta:"illumina_meta",
-    cycle:"illumina_cycle_start",
-    begun:"illumina_begun"
-  };
-  const anchors = ["marina","sabrina","sigrid","swift","ariana","doechii"];
-  const whispers = {
-    marina:"Breathe here.",
-    sabrina:"Follow the spark.",
-    sigrid:"Call your brave voice.",
-    ariana:"Let light in.",
-    swift:"Name it, then sing it.",
-    doechii:"Flip the script."
-  };
-  const state = {
-    queue:[],
-    index:0,
-    tone:"off",
-    tint:35,
-    volume:.35,
-    loop:false,
-    mute:false,
-    meta:{},
-    cycleStart:"",
-    begun:false,
-    dayMode:false,
-    pinned:new Set(),
-    ytReady:false,
-    player:null,
-    testRunning:false
-  };
-
-  const el = (id)=>document.getElementById(id);
-  const hero = el("hero");
-  const playerCard = el("playerCard");
-  const currentTitle = el("currentTitle");
-  const reflectTitle = el("reflectTitle");
-  const queueList = el("queueList");
-  const toneOff = el("toneOff");
-  const tone128 = el("tone128");
-  const tone160 = el("tone160");
-  const tintRange = el("tintRange");
-  const volRange = el("volRange");
-  const beginBtn = el("beginBtn");
-  const prevBtn = el("prevBtn");
-  const nextBtn = el("nextBtn");
-  const playPauseBtn = el("playPauseBtn");
-  const loopBtn = el("loopBtn");
-  const muteBtn = el("muteBtn");
-  const dayModeBtn = el("dayModeBtn");
-  const resetOrderBtn = el("resetOrderBtn");
-  const badgeDay = el("badge-day");
-  const badgeWeek = el("badge-week");
-  const todayBtn = el("todayBtn");
-  const cycleStartInput = el("cycleStart");
-  const shareBtn = el("shareBtn");
-  const importExportBtn = el("importExportBtn");
-  const impexpModal = el("impexp");
-  const exportBox = el("exportBox");
-  const importBox = el("importBox");
-  const copyExport = el("copyExport");
-  const applyImport = el("applyImport");
-  const closeImpExp = el("closeImpExp");
-  const editor = el("editor");
-  const editTitle = el("editTitle");
-  const editAnchor = el("editAnchor");
-  const editDay = el("editDay");
-  const editTone = el("editTone");
-  const editTint = el("editTint");
-  const saveEdit = el("saveEdit");
-  const cancelEdit = el("cancelEdit");
-  const anchorChips = el("anchorChips");
-  const badgeActive = el("badge-active");
-  const whisper = el("whisper");
-  const checkBadges = el("checkBadges");
-  const selfTestBtn = el("selfTestBtn");
-  const allGreen = el("allGreen");
-  const playerFrame = el("playerFrame");
-
-  let editId = null;
-
-  const storage = {
-    get(k,def){ try{ const v = localStorage.getItem(k); return v===null?def:JSON.parse(v);}catch(_){ return def } },
-    set(k,v){ localStorage.setItem(k, JSON.stringify(v)) }
-  };
-
-  function loadState(){
-    const q = storage.get(LS_KEYS.queue,null);
-    state.queue = Array.isArray(q)&&q.length ? q : YT_IDS_DEFAULT.slice();
-    state.index = +storage.get(LS_KEYS.index,0) || 0;
-    state.tone = storage.get(LS_KEYS.tone,"off");
-    state.tint = +storage.get(LS_KEYS.tint,35);
-    state.volume = +storage.get(LS_KEYS.vol,.35);
-    state.loop = !!storage.get(LS_KEYS.loop,false);
-    state.mute = !!storage.get(LS_KEYS.mute,false);
-    state.meta = storage.get(LS_KEYS.meta,{});
-    state.cycleStart = storage.get(LS_KEYS.cycle,"");
-    state.begun = !!storage.get(LS_KEYS.begun,false);
-  }
-  function saveState(){
-    storage.set(LS_KEYS.queue, state.queue);
-    storage.set(LS_KEYS.index, state.index);
-    storage.set(LS_KEYS.tone, state.tone);
-    storage.set(LS_KEYS.tint, state.tint);
-    storage.set(LS_KEYS.vol, state.volume);
-    storage.set(LS_KEYS.loop, state.loop);
-    storage.set(LS_KEYS.mute, state.mute);
-    storage.set(LS_KEYS.meta, state.meta);
-    storage.set(LS_KEYS.cycle, state.cycleStart);
-    storage.set(LS_KEYS.begun, state.begun);
+  // helpers
+  function clamp(n, lo, hi){ n = parseInt(n||0,10); return isNaN(n)? 0 : Math.max(lo, Math.min(hi, n)); }
+  function setTint(n){
+    n = clamp(n, 0, 100);
+    document.documentElement.style.setProperty('--tint', n);
+    meter.textContent = n + '%';
+    try{ localStorage.setItem('froot.tint', String(n)); }catch(e){}
+    tint.value = n;
   }
 
-  loadState();
+  var tint  = document.getElementById('tint');
+  var meter = document.getElementById('meter');
 
-  const audio = {
-    ctx: null,
-    gain: null,
-    osc: null,
-    ensure(){
-      if(!this.ctx){
-        try{
-          this.ctx = new (window.AudioContext||window.webkitAudioContext)();
-        }catch(_){}
-      }
-      if(this.ctx && !this.gain){
-        this.gain = this.ctx.createGain();
-        this.gain.gain.value = state.tone==="off"?0:state.volume;
-        this.gain.connect(this.ctx.destination);
-      }
-      if(this.ctx && !this.osc){
-        this.osc = this.ctx.createOscillator();
-        this.osc.type = "sine";
-        this.osc.frequency.setValueAtTime(state.tone==="128"?128:state.tone==="160"?160:0, this.ctx.currentTime);
-        this.osc.connect(this.gain);
-        try{ this.osc.start() }catch(_){}
-      }
-    },
-    setTone(mode){
-      this.ensure();
-      state.tone = mode;
-      if(this.ctx && this.osc && this.gain){
-        if(mode==="off"){
-          this.gain.gain.setTargetAtTime(0, this.ctx.currentTime, .02);
-        }else{
-          const f = mode==="128"?128:160;
-          try{ this.osc.frequency.setTargetAtTime(f, this.ctx.currentTime, .02) }catch(_){}
-          this.gain.gain.setTargetAtTime(state.volume, this.ctx.currentTime, .02);
-        }
-      }
-      reflectToneButtons();
-      saveState();
-    },
-    setVolume(v){
-      this.ensure();
-      state.volume = v;
-      if(this.gain){
-        if(state.tone==="off") this.gain.gain.setTargetAtTime(0, this.ctx.currentTime, .02);
-        else this.gain.gain.setTargetAtTime(v, this.ctx.currentTime, .02);
-      }
-      saveState();
-    },
-    resume(){
-      if(this.ctx && this.ctx.state!=="running"){
-        return this.ctx.resume();
-      }
-      return Promise.resolve();
-    }
-  };
+  // Load order: froot.currentTint (handshake) → froot.tint (saved) → 0
+  (function init(){
+    var n = localStorage.getItem('froot.currentTint');
+    if(n==null){ n = localStorage.getItem('froot.tint'); }
+    setTint(n==null ? 0 : n);
+  })();
 
-  function reflectToneButtons(){
-    [toneOff,tone128,tone160].forEach(b=>b.classList.remove("active"));
-    if(state.tone==="128") tone128.classList.add("active");
-    else if(state.tone==="160") tone160.classList.add("active");
-    else toneOff.classList.add("active");
-  }
+  // Dial input
+  tint.addEventListener('input', function(e){ setTint(e.target.value); }, {passive:true});
 
-  function setTint(val){
-    state.tint = val;
-    const hue = Math.round((val/100)*360);
-    document.documentElement.style.setProperty('--tint-hue', hue);
-    saveState();
-  }
+  // Reset
+  document.getElementById('reset').addEventListener('click', function(){ setTint(0); }, {passive:true});
 
-  function setVolumeFromSlider(v){
-    audio.setVolume(v/100);
-  }
+  // Presets
+  Array.prototype.slice.call(document.querySelectorAll('button[data-p]')).forEach(function(b){
+    b.addEventListener('click', function(){ setTint(this.getAttribute('data-p')); }, {passive:true});
+  });
 
-  function showWhisper(anchor){
-    const msg = whispers[anchor];
-    if(!msg) return;
-    whisper.textContent = msg;
-    whisper.classList.add("show");
-    setTimeout(()=>whisper.classList.remove("show"), 2200);
-  }
-
-  function computeCycleBadges(){
-    if(!state.cycleStart){
-      badgeDay.textContent = "Day –/42";
-      badgeWeek.textContent = "Week –";
-      return;
-    }
-    const start = new Date(state.cycleStart);
-    const now = new Date();
-    const ms = now - new Date(start.getFullYear(), start.getMonth(), start.getDate());
-    const d = Math.floor(ms/86400000) + 1;
-    const day = ((d-1)%42)+1;
-    const week = Math.ceil(day/7);
-    badgeDay.textContent = "Day "+day+"/42";
-    badgeWeek.textContent = "Week "+week;
-    return {day,week};
-  }
-
-  function jumpToToday(){
-    const cw = computeCycleBadges();
-    if(!cw) return;
-    const todayDay = cw.day;
-    let idx = state.queue.findIndex(id => (state.meta[id]&&+state.meta[id].day===todayDay));
-    if(idx<0){
-      const ids = state.queue.filter(id=>state.meta[id]&&state.meta[id].day).sort((a,b)=>Math.abs(+state.meta[a].day - todayDay) - Math.abs(+state.meta[b].day - todayDay));
-      if(ids.length){ idx = state.queue.indexOf(ids[0]); }
-    }
-    if(idx>=0){
-      selectIndex(idx,true);
-      const row = queueList.querySelector(`[data-id="${state.queue[idx]}"]`);
-      if(row) row.scrollIntoView({behavior:"smooth", block:"center"});
-    }
-  }
-
-  function oEmbedTitle(id){
-    return fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${encodeURIComponent(id)}&format=json`)
-      .then(r=>r.json()).then(j=>j.title).catch(()=>null);
-  }
-
-  function ensureTitle(id){
-    const cached = state.meta[id] && state.meta[id].title;
-    if(cached) return Promise.resolve(cached);
-    return oEmbedTitle(id).then(t=>{
-      if(t){
-        state.meta[id] = Object.assign({}, state.meta[id]||{}, {title:t});
-        saveState();
-        return t;
-      }
-      return null;
-    });
-  }
-
-  function renderQueue(){
-    queueList.innerHTML = "";
-    state.queue.forEach((id, i)=>{
-      const r = document.createElement("div");
-      r.className = "row";
-      r.dataset.id = id;
-      const idx = document.createElement("div");
-      idx.className = "idx";
-      idx.textContent = (i+1);
-      const ttl = document.createElement("div");
-      ttl.className = "ttl";
-      ttl.textContent = state.meta[id] && state.meta[id].title ? state.meta[id].title : "Loading…";
-      const meta = document.createElement("div");
-      meta.className = "meta";
-      const a = (state.meta[id]&&state.meta[id].anchor)||"";
-      const d = (state.meta[id]&&state.meta[id].day)||"";
-      meta.textContent = [a?("@" + a):"", d?("Day " + d):""].filter(Boolean).join(" · ");
-      const edit = document.createElement("button");
-      edit.className = "btn edit-btn";
-      edit.textContent = "Edit";
-      edit.setAttribute("aria-label","Edit");
-      r.appendChild(idx); r.appendChild(ttl); r.appendChild(meta); r.appendChild(edit);
-      r.addEventListener("click", (e)=>{
-        if(e.target===edit) return;
-        selectIndex(i,true);
-      });
-      edit.addEventListener("click", ()=>{
-        openEditor(id);
-      });
-      queueList.appendChild(r);
-      ensureTitle(id).then(t=>{
-        if(t && ttl.isConnected){
-          ttl.textContent = t;
-        }
-      });
-    });
-    highlightActive();
-  }
-
-  function highlightActive(){
-    queueList.querySelectorAll(".row").forEach(row=>row.classList.remove("active"));
-    const id=state.queue[state.index];
-    const row = queueList.querySelector(`[data-id="${id}"]`);
-    if(row) row.classList.add("active");
-  }
-
-  function reorderByAnchorPins(){
-    if(!state.pinned.size) return;
-    const ids = state.queue.slice();
-    const idToAnchor = (id)=> (state.meta[id]&&state.meta[id].anchor)||"";
-    ids.sort((a,b)=>{
-      const aa = state.pinned.has(idToAnchor(a))?0:1;
-      const bb = state.pinned.has(idToAnchor(b))?0:1;
-      if(aa!==bb) return aa-bb;
-      return 0;
-    });
-    const curId = state.queue[state.index];
-    state.queue = ids;
-    state.index = state.queue.indexOf(curId);
-    saveState();
-    renderQueue();
-  }
-
-  function dayModeSort(on){
-    state.dayMode = on;
-    const curId = state.queue[state.index];
-    if(on){
-      const ids = state.queue.slice();
-      ids.sort((a,b)=>{
-        const da = state.meta[a]&&state.meta[a].day?+state.meta[a].day:9999;
-        const db = state.meta[b]&&state.meta[b].day?+state.meta[b].day:9999;
-        if(da!==db) return da-db;
-        return 0;
-      });
-      state.queue = ids;
-    }else{
-      state.queue = storage.get(LS_KEYS.queue, state.queue);
-    }
-    state.index = Math.max(0, state.queue.indexOf(curId));
-    saveState(); renderQueue();
-  }
-
-  function resetOrder(){
-    const curId = state.queue[state.index];
-    state.queue = YT_IDS_DEFAULT.filter(id=>state.queue.includes(id)).concat(state.queue.filter(id=>!YT_IDS_DEFAULT.includes(id)));
-    state.index = Math.max(0, state.queue.indexOf(curId));
-    state.dayMode = false;
-    state.pinned.clear();
-    anchorChips.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
-    saveState(); renderQueue();
-  }
-
-  function openEditor(id){
-    editId = id;
-    editTitle.textContent = (state.meta[id]&&state.meta[id].title)||"Edit";
-    editAnchor.value = (state.meta[id]&&state.meta[id].anchor)||"";
-    editDay.value = (state.meta[id]&&state.meta[id].day)||"";
-    editTone.value = (state.meta[id]&&state.meta[id].tone)||"off";
-    editTint.value = (state.meta[id]&&state.meta[id].tint)!=null ? state.meta[id].tint : "";
-    editor.classList.add("show");
-  }
-  function closeEditor(){ editor.classList.remove("show"); editId=null }
-
-  function applyPerSongDefaults(id){
-    const m = state.meta[id]||{};
-    if(m.tone) audio.setTone(m.tone);
-    if(m.tint!=null){ setTint(+m.tint); tintRange.value = +m.tint }
-    if(m.anchor) showWhisper(m.anchor);
-  }
-
-  window.onYouTubeIframeAPIReady = function(){
-    state.ytReady = true;
-    state.player = new YT.Player('player', {
-      width:'100%', height:'100%',
-      videoId: state.queue[state.index],
-      playerVars: {rel:0, modestbranding:1, playsinline:1, controls:0, iv_load_policy:3},
-      events:{
-        'onReady': (e)=>{
-          if(state.mute) e.target.mute(); else e.target.unMute();
-          cueCurrent();
-        },
-        'onStateChange': (e)=>{
-          if(e.data===YT.PlayerState.ENDED){
-            if(state.loop){
-              next(true);
-            }else{
-              next(false);
-            }
-          }
-          if(e.data===YT.PlayerState.CUED || e.data===YT.PlayerState.PLAYING){
-            const vd = e.target.getVideoData();
-            if(vd && vd.title){
-              currentTitle.textContent = vd.title;
-              reflectTitle.textContent = vd.title;
-              const id = state.queue[state.index];
-              state.meta[id] = Object.assign({}, state.meta[id]||{}, {title:vd.title});
-              saveState();
-              updateRowTitle(id, vd.title);
-            }
-          }
-        }
-      }
-    });
-  };
-
-  function updateRowTitle(id, title){
-    const row = queueList.querySelector(`[data-id="${id}"] .ttl`);
-    if(row){ row.textContent = title }
-  }
-
-  function cueCurrent(){
-    const id = state.queue[state.index];
-    ensureTitle(id).then(t=>{
-      if(t){ currentTitle.textContent = t; reflectTitle.textContent = t; }
-    });
-    state.player.cueVideoById(id);
-    highlightActive();
-    applyPerSongDefaults(id);
-    saveState();
-  }
-
-  function selectIndex(i, play){
-    if(i<0||i>=state.queue.length) return;
-    state.index = i;
-    saveState();
-    if(state.player){
-      if(play) state.player.loadVideoById(state.queue[state.index]);
-      else cueCurrent();
-    }
-    highlightActive();
-  }
-
-  function prev(){
-    const i = state.index-1;
-    if(i<0){ selectIndex(state.loop?state.queue.length-1:0, true) }
-    else selectIndex(i,true);
-  }
-  function next(wrap){
-    const i = state.index+1;
-    if(i>=state.queue.length){ selectIndex(wrap?0:state.queue.length-1, true) }
-    else selectIndex(i,true);
-  }
-  function togglePlayPause(){
-    if(!state.player) return;
-    const s = state.player.getPlayerState();
-    if(s===YT.PlayerState.PLAYING) state.player.pauseVideo();
-    else state.player.playVideo();
-  }
-  function toggleLoop(){
-    state.loop = !state.loop;
-    loopBtn.classList.toggle("active", state.loop);
-    saveState();
-  }
-  function toggleMute(){
-    state.mute = !state.mute;
-    if(state.player){ if(state.mute) state.player.mute(); else state.player.unMute() }
-    muteBtn.classList.toggle("active", state.mute);
-    saveState();
-  }
-
-  function begin(){
-    state.begun = true;
-    audio.ensure();
-    audio.resume();
-    if(state.player){
-      state.player.mute();
-      state.player.playVideo();
-      setTimeout(()=>{ state.player.pauseVideo(); if(!state.mute) state.player.unMute(); }, 350);
-    }
-    beginBtn.classList.add("active");
-    saveState();
-  }
-
-  function setCycleStart(v){
-    state.cycleStart = v;
-    saveState();
-    computeCycleBadges();
-  }
-
-  function openImpExp(){
-    exportBox.value = JSON.stringify(state.queue);
-    impexpModal.classList.add("show");
-  }
-  function closeImpExpModal(){ impexpModal.classList.remove("show") }
-
-  function applyImportIds(){
+  // --- Send to MirrorHoney (write froot.currentTint so MH can read) ---
+  document.getElementById('sendMH').addEventListener('click', function(){
     try{
-      const ids = JSON.parse(importBox.value);
-      if(Array.isArray(ids) && ids.every(s=>typeof s==="string"&&s.trim().length)){
-        const curId = state.queue[state.index];
-        state.queue = ids.slice();
-        state.index = Math.max(0, state.queue.indexOf(curId));
-        if(state.index<0) state.index = 0;
-        saveState(); renderQueue(); cueCurrent();
-        closeImpExpModal();
-      }
-    }catch(_){}
-  }
-
-  function setActiveRim(){
-    playerFrame.classList.add("active-glow");
-    setTimeout(()=>playerFrame.classList.remove("active-glow"), 700);
-  }
-
-  function syncUI(){
-    tintRange.value = state.tint;
-    volRange.value = Math.round(state.volume*100);
-    reflectToneButtons();
-    loopBtn.classList.toggle("active", state.loop);
-    muteBtn.classList.toggle("active", state.mute);
-    cycleStartInput.value = state.cycleStart || "";
-    setTint(state.tint);
-    computeCycleBadges();
-  }
-
-  function addKeyboard(){
-    document.addEventListener("keydown", (e)=>{
-      if((e.target && ["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName))) return;
-      if(e.code==="Space"){ e.preventDefault(); togglePlayPause() }
-      if(e.code==="ArrowRight"){ next(true) }
-      if(e.code==="ArrowLeft"){ prev() }
-      if(e.key==="l"||e.key==="L"){ toggleLoop() }
-      if(e.key==="m"||e.key==="M"){ toggleMute() }
-    });
-  }
-
-  function setupChips(){
-    anchorChips.querySelectorAll(".chip").forEach(ch=>{
-      ch.addEventListener("click",()=>{
-        const a = ch.dataset.anchor;
-        if(state.pinned.has(a)){ state.pinned.delete(a); ch.classList.remove("active") }
-        else { state.pinned.add(a); ch.classList.add("active") }
-        reorderByAnchorPins();
-      });
-    });
-  }
-
-  toneOff.addEventListener("click", ()=> audio.setTone("off"));
-  tone128.addEventListener("click", ()=> audio.setTone("128"));
-  tone160.addEventListener("click", ()=> audio.setTone("160"));
-  tintRange.addEventListener("input", (e)=> setTint(+e.target.value));
-  volRange.addEventListener("input", (e)=> setVolumeFromSlider(+e.target.value));
-  beginBtn.addEventListener("click", ()=>{ begin(); setActiveRim() });
-  prevBtn.addEventListener("click", ()=>{ prev(); setActiveRim() });
-  nextBtn.addEventListener("click", ()=>{ next(true); setActiveRim() });
-  playPauseBtn.addEventListener("click", ()=>{ togglePlayPause(); setActiveRim() });
-  loopBtn.addEventListener("click", ()=>{ toggleLoop(); setActiveRim() });
-  muteBtn.addEventListener("click", ()=>{ toggleMute(); setActiveRim() });
-  dayModeBtn.addEventListener("click", ()=>{
-    state.dayMode = !state.dayMode;
-    dayModeBtn.classList.toggle("active", state.dayMode);
-    dayModeSort(state.dayMode);
-  });
-  resetOrderBtn.addEventListener("click", ()=>resetOrder());
-  cycleStartInput.addEventListener("change", (e)=> setCycleStart(e.target.value));
-  todayBtn.addEventListener("click", ()=> jumpToToday());
-  shareBtn.addEventListener("click", async ()=>{
-    try{
-      await navigator.clipboard.writeText(location.href);
-      shareBtn.classList.add("active");
-      setTimeout(()=>shareBtn.classList.remove("active"),600);
-    }catch(_){}
-  });
-  importExportBtn.addEventListener("click", ()=> openImpExp());
-  closeImpExp.addEventListener("click", ()=> closeImpExpModal());
-  copyExport.addEventListener("click", async ()=>{ try{ await navigator.clipboard.writeText(exportBox.value)}catch(_){} });
-  applyImport.addEventListener("click", ()=> applyImportIds());
-  saveEdit.addEventListener("click", ()=>{
-    if(!editId) return;
-    const a = editAnchor.value||"";
-    const d = editDay.value? Math.max(1, Math.min(42, +editDay.value)) : "";
-    const t = editTone.value||"off";
-    const ti = editTint.value!=="" ? Math.max(0, Math.min(100, +editTint.value)) : null;
-    const old = state.meta[editId]||{};
-    const next = Object.assign({}, old, {anchor:a, day:d, tone:t, tint:ti});
-    state.meta[editId] = next;
-    saveState(); renderQueue();
-    closeEditor();
-  });
-  cancelEdit.addEventListener("click", ()=> closeEditor());
-  editor.addEventListener("click", (e)=>{ if(e.target===editor) closeEditor() });
-  impexpModal.addEventListener("click", (e)=>{ if(e.target===impexpModal) closeImpExpModal() });
-
-  function fetchAllTitles(){
-    state.queue.forEach(id=>{
-      ensureTitle(id).then(t=>{
-        if(t) updateRowTitle(id, t);
-      });
-    });
-  }
-
-  function init(){
-    renderQueue();
-    syncUI();
-    setupChips();
-    addKeyboard();
-    fetchAllTitles();
-  }
-
-  init();
-
-  const tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.body.appendChild(tag);
-
-  const CHECKS = [
-    { key:"queue", label:"Queue present", run: async()=> state.queue && state.queue.length>0 },
-    { key:"yt", label:"YouTube API ready & cue", run: async()=>{
-      await waitFor(()=>state.ytReady && state.player);
-      await delay(250);
-      state.player.cueVideoById(state.queue[0]);
-      await delay(350);
-      const vd = state.player.getVideoData();
-      return !!(vd && vd.video_id);
-    }},
-    { key:"playpause", label:"Play→Pause", run: async()=>{
-      state.player.mute();
-      state.player.playVideo();
-      await waitFor(()=>state.player.getPlayerState()===YT.PlayerState.PLAYING,1200);
-      state.player.pauseVideo();
-      await waitFor(()=>state.player.getPlayerState()===YT.PlayerState.PAUSED,1200);
-      return true;
-    }},
-    { key:"nav", label:"Prev/Next", run: async()=>{
-      const was = state.index;
-      next(true);
-      await delay(350);
-      prev();
-      await delay(350);
-      return state.index===was;
-    }},
-    { key:"loop", label:"Loop wrap at end", run: async()=>{
-      const wasLoop = state.loop; state.loop=true;
-      const last = state.queue.length-1;
-      selectIndex(last,false);
-      next(true);
-      await delay(350);
-      const ok = state.index===0;
-      state.loop = wasLoop; saveState();
-      return ok;
-    }},
-    { key:"audio", label:"Audio context live", run: async()=>{
-      begin();
-      await delay(150);
-      return audio.ctx && audio.ctx.state==="running";
-    }},
-    { key:"ritual", label:"Ritual 128↔160", run: async()=>{
-      audio.setTone("128");
-      await delay(120);
-      const f1 = audio.osc && Math.round(audio.osc.frequency.value)===128;
-      audio.setTone("160");
-      await delay(120);
-      const f2 = audio.osc && Math.round(audio.osc.frequency.value)===160;
-      audio.setTone(state.tone);
-      return !!(f1&&f2);
-    }},
-    { key:"ls", label:"localStorage read/write", run: async()=>{
-      const k = "illumina_test_key_"+Math.random();
-      storage.set(k, {x:1});
-      const v = storage.get(k,null);
-      localStorage.removeItem(k);
-      return v && v.x===1;
-    }},
-  ];
-  function delay(ms){ return new Promise(r=>setTimeout(r,ms)) }
-  function waitFor(fn, timeout=3000, step=60){
-    return new Promise((res,rej)=>{
-      const t0 = performance.now();
-      (function loop(){
-        if(fn()) return res(true);
-        if(performance.now()-t0>timeout) return res(false);
-        setTimeout(loop, step);
-      })();
-    });
-  }
-  function setBadge(key, ok){
-    let b = document.querySelector(`[data-check="${key}"]`);
-    if(!b){
-      b = document.createElement("span");
-      b.className = "badge btnlike";
-      b.dataset.check = key;
-      b.textContent = CHECKS.find(c=>c.key===key).label;
-      checkBadges.appendChild(b);
+      localStorage.setItem('froot.currentTint', String(tint.value));
+      this.textContent = 'Sent ✓';
+      var self = this; setTimeout(function(){ self.textContent = 'Send to MirrorHoney'; }, 1200);
+    }catch(e){
+      this.textContent = 'Try again';
+      var self = this; setTimeout(function(){ self.textContent = 'Send to MirrorHoney'; }, 1200);
     }
-    b.classList.toggle("ok", !!ok);
-    b.classList.toggle("fail", !ok);
+  }, {passive:true});
+
+  // ---- Froot ⇄ MirrorHoney tint sync (pill badge + follow switch) ----
+  function getMHTint(){
+    var v = localStorage.getItem('mirrorhoney.tint');
+    var n = parseInt(v==null ? '0' : v, 10);
+    if (isNaN(n)) n = 0;
+    return n;
   }
-  selfTestBtn.addEventListener("click", async ()=>{
-    if(state.testRunning) return;
-    state.testRunning=true; allGreen.textContent="";
-    let passAll = true;
-    for(const c of CHECKS){
-      const ok = await c.run();
-      setBadge(c.key, ok);
-      if(!ok) passAll = false;
+  function applyFromMH(){
+    var n = getMHTint();
+    setTint(n);
+    // flash label on pill
+    var pill = document.getElementById('pullMH');
+    if(pill){
+      var old = pill.textContent; pill.textContent = 'Applied ✓';
+      setTimeout(function(){ pill.textContent = old; }, 1200);
     }
-    allGreen.textContent = passAll ? "All green" : "";
-    state.testRunning=false;
-  });
+  }
 
-  if(state.tone!=="off"){ reflectToneButtons(); audio.ensure(); }
-  if(state.begun) beginBtn.classList.add("active");
+  // One-shot pill action
+  (function(){
+    var pill = document.getElementById('pullMH');
+    if(!pill) return;
+    pill.addEventListener('click', applyFromMH, {passive:true});
+    pill.addEventListener('keydown', function(e){
+      if(e.key===' '||e.key==='Enter'){ e.preventDefault(); applyFromMH(); }
+    });
+  })();
 
+  // Follow on load switch
+  (function(){
+    var sw = document.getElementById('followMH');
+    var state = document.getElementById('followMHState');
+    if(!sw || !state) return;
+    var on = localStorage.getItem('froot.followMH') === 'true';
+    function render(){ sw.setAttribute('aria-checked', on ? 'true':'false'); state.textContent = on ? 'ON':'OFF'; }
+    function toggle(){ on=!on; try{ localStorage.setItem('froot.followMH', on?'true':'false'); }catch(e){} render(); if(on) applyFromMH(); }
+    sw.addEventListener('click', toggle, {passive:true});
+    sw.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); }});
+    render();
+    // if already following, pull immediately on load
+    if(on) applyFromMH();
+  })();
 })();
 </script>
-
 </body>
 </html>
