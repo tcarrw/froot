@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Froot · Motion Orchard</title>
+<title>Froot · Tone Orchard</title>
 <style>
   @keyframes gradientShift {
     0%{background-position:0% 50%;}
@@ -11,9 +11,9 @@
     100%{background-position:0% 50%;}
   }
   @keyframes floaty {
-    0%{transform:translateY(0px);}
+    0%{transform:translateY(0);}
     50%{transform:translateY(-14px);}
-    100%{transform:translateY(0px);}
+    100%{transform:translateY(0);}
   }
   @keyframes shimmerPulse {
     0%{box-shadow:0 0 20px rgba(180,140,255,0.25);}
@@ -21,7 +21,7 @@
     100%{box-shadow:0 0 20px rgba(180,140,255,0.25);}
   }
 
-  body {
+  body{
     margin:0;
     font-family:'Poppins',sans-serif;
     color:#4b2a6b;
@@ -34,7 +34,6 @@
   section{padding:80px 5%;text-align:center;}
   h1,h2,h3{font-weight:500;}
 
-  /* Lightfield */
   .lightfield h1{
     font-size:2.2rem;
     background:linear-gradient(90deg,#d395ff,#ffb9d8);
@@ -43,17 +42,16 @@
     animation:shimmerPulse 6s ease-in-out infinite;
   }
 
-  /* Playzone + orbs */
   .fruit-orb{
     width:90px;height:90px;border-radius:50%;
     display:inline-block;margin:20px;
     animation:floaty 6s ease-in-out infinite;
     animation-delay:var(--delay);
     transition:transform .6s ease;
+    cursor:pointer;
+    box-shadow:0 0 20px rgba(150,120,255,0.2);
   }
   .fruit-orb:hover{transform:scale(1.12);}
-
-  /* Labnotes */
   .labnotes{
     background:rgba(255,255,255,0.6);
     backdrop-filter:blur(12px);
@@ -68,41 +66,35 @@
     transition:transform .6s ease, box-shadow .6s ease;
   }
   .note:hover{transform:translateY(-6px);box-shadow:0 8px 25px rgba(180,140,255,0.25);}
-
-  /* Fruitbowl */
   .fruitbowl{background:linear-gradient(180deg,#fff8fb 0%,#f5f9ff 100%);}
-  .rootlayer{
-    background:#f7f2ff;
-    padding:60px 10%;
-    font-size:1.1rem;
-    border-top:1px solid rgba(120,80,160,0.15);
-  }
+  .rootlayer{background:#f7f2ff;padding:60px 10%;font-size:1.1rem;border-top:1px solid rgba(120,80,160,0.15);}
   footer small{opacity:0.7;}
 </style>
 </head>
 <body>
 
-<!-- 1. Lightfield -->
 <section class="lightfield">
   <h1>Every color began as energy.<br>Every feeling began as light.</h1>
   <p style="margin-top:20px;font-size:1.1rem;">Illumina 1 · Nov 5 – Dec 17 2025 · Phase of Ripening</p>
 </section>
 
-<!-- 2. Play Zone -->
 <section class="playzone">
-  <img src="tumblr_mczi5z5V8I1rkv3hpo1_500.gif" alt="Froot Playful Core" style="width:240px;border-radius:16px;box-shadow:0 0 30px rgba(180,140,255,0.35);animation:shimmerPulse 7s ease-in-out infinite;">
+  <img src="tumblr_mczi5z5V8I1rkv3hpo1_500.gif" alt="Froot Playful Core"
+       style="width:240px;border-radius:16px;box-shadow:0 0 30px rgba(180,140,255,0.35);animation:shimmerPulse 7s ease-in-out infinite;">
   <h2 style="margin-top:24px;">Sweetness isn’t a mask — it’s photosynthesis.</h2>
+
   <div style="margin-top:40px;">
-    <div class="fruit-orb" style="background:#b299ff;--delay:0s;" title="Violet – Knowing"></div>
-    <div class="fruit-orb" style="background:#ffb347;--delay:1s;" title="Orange – Curiosity"></div>
-    <div class="fruit-orb" style="background:#fff176;--delay:2s;" title="Yellow – Clarity"></div>
-    <div class="fruit-orb" style="background:#a5d6a7;--delay:3s;" title="Green – Healing"></div>
-    <div class="fruit-orb" style="background:#f48fb1;--delay:4s;" title="Pink – Compassion"></div>
-    <div class="fruit-orb" style="background:#ef5350;--delay:5s;" title="Red – Desire"></div>
+    <div class="fruit-orb" data-freq="432"  style="background:#b299ff;--delay:0s;" title="Violet – Knowing"></div>
+    <div class="fruit-orb" data-freq="512"  style="background:#ffb347;--delay:1s;" title="Orange – Curiosity"></div>
+    <div class="fruit-orb" data-freq="640"  style="background:#fff176;--delay:2s;" title="Yellow – Clarity"></div>
+    <div class="fruit-orb" data-freq="528"  style="background:#a5d6a7;--delay:3s;" title="Green – Healing"></div>
+    <div class="fruit-orb" data-freq="384"  style="background:#f48fb1;--delay:4s;" title="Pink – Compassion"></div>
+    <div class="fruit-orb" data-freq="480"  style="background:#ef5350;--delay:5s;" title="Red – Desire"></div>
   </div>
+
+  <p style="margin-top:24px;font-size:0.9rem;opacity:0.7;">Tap anywhere once to unlock sound 🌈</p>
 </section>
 
-<!-- 3. Lab Notes -->
 <section class="labnotes">
   <div class="note">
     <h3>🍇 Violet / Knowing</h3>
@@ -121,7 +113,6 @@
   </div>
 </section>
 
-<!-- 4. Fruit Bowl -->
 <section class="fruitbowl">
   <h2>Fruit Bowl · Ripened Works</h2>
   <p>Explore finished tones · songs · poems · color videos.</p>
@@ -130,7 +121,6 @@
   </div>
 </section>
 
-<!-- 5. Root Layer -->
 <section class="rootlayer">
   <p><strong>τ = E / c³</strong></p>
   <p>Time ripens when energy slows into sweetness.</p>
@@ -141,12 +131,55 @@
 </footer>
 
 <script>
-  // gentle hum shimmer effect on hover
-  const orbs=document.querySelectorAll('.fruit-orb');
-  orbs.forEach(orb=>{
-    orb.addEventListener('mouseenter',()=>{orb.style.animationDuration='3s';});
-    orb.addEventListener('mouseleave',()=>{orb.style.animationDuration='6s';});
-  });
+let audioCtx, unlocked = false;
+const orbs = document.querySelectorAll('.fruit-orb');
+const activeTones = new Map();
+
+function unlockAudio() {
+  if (!unlocked) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const buffer = audioCtx.createBuffer(1, 1, 22050);
+    const source = audioCtx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(audioCtx.destination);
+    source.start(0);
+    unlocked = true;
+    document.body.removeEventListener('touchstart', unlockAudio);
+    document.body.removeEventListener('click', unlockAudio);
+  }
+}
+
+document.body.addEventListener('touchstart', unlockAudio, {once:true});
+document.body.addEventListener('click', unlockAudio, {once:true});
+
+function startTone(orb, freq) {
+  if (!audioCtx || activeTones.has(orb)) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0, audioCtx.currentTime);
+  gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.3);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  activeTones.set(orb, {osc, gain});
+}
+
+function stopTone(orb) {
+  const tone = activeTones.get(orb);
+  if (!tone) return;
+  tone.gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+  tone.osc.stop(audioCtx.currentTime + 0.6);
+  activeTones.delete(orb);
+}
+
+orbs.forEach(orb=>{
+  orb.addEventListener('mouseenter',()=>startTone(orb, orb.dataset.freq));
+  orb.addEventListener('mouseleave',()=>stopTone(orb));
+  orb.addEventListener('touchstart',()=>startTone(orb, orb.dataset.freq));
+  orb.addEventListener('touchend',()=>stopTone(orb));
+});
 </script>
 </body>
 </html>
