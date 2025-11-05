@@ -3,66 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Froot · Color Lab</title>
+<title>Froot · Motion Orchard</title>
 <style>
+  @keyframes gradientShift {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  @keyframes floaty {
+    0%{transform:translateY(0px);}
+    50%{transform:translateY(-14px);}
+    100%{transform:translateY(0px);}
+  }
+  @keyframes shimmerPulse {
+    0%{box-shadow:0 0 20px rgba(180,140,255,0.25);}
+    50%{box-shadow:0 0 35px rgba(255,190,230,0.6);}
+    100%{box-shadow:0 0 20px rgba(180,140,255,0.25);}
+  }
+
   body {
     margin:0;
     font-family:'Poppins',sans-serif;
     color:#4b2a6b;
-    background:linear-gradient(180deg,#f9f5ff 0%,#fff8fb 100%);
     overflow-x:hidden;
+    background:linear-gradient(120deg,#f9f5ff,#fff8fb,#f5faff);
+    background-size:400% 400%;
+    animation:gradientShift 18s ease-in-out infinite;
   }
-  section {padding:80px 5%; text-align:center;}
+
+  section{padding:80px 5%;text-align:center;}
   h1,h2,h3{font-weight:500;}
-  .lightfield {
-    position:relative;
-    background:linear-gradient(135deg,#f5e4ff 0%,#fff9f7 100%);
-    padding:120px 5%;
-    overflow:hidden;
-  }
-  .lightfield h1 {
+
+  /* Lightfield */
+  .lightfield h1{
     font-size:2.2rem;
     background:linear-gradient(90deg,#d395ff,#ffb9d8);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
+    animation:shimmerPulse 6s ease-in-out infinite;
   }
-  .playzone {
-    position:relative;
-    background:#fff;
-  }
-  .fruit-orb {
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    display:inline-block;
-    margin:20px;
+
+  /* Playzone + orbs */
+  .fruit-orb{
+    width:90px;height:90px;border-radius:50%;
+    display:inline-block;margin:20px;
+    animation:floaty 6s ease-in-out infinite;
+    animation-delay:var(--delay);
     transition:transform .6s ease;
-    box-shadow:0 0 20px rgba(150,120,255,0.2);
   }
-  .fruit-orb:hover {transform:scale(1.1);}
-  .labnotes {
-    background:rgba(255,255,255,0.7);
+  .fruit-orb:hover{transform:scale(1.12);}
+
+  /* Labnotes */
+  .labnotes{
+    background:rgba(255,255,255,0.6);
     backdrop-filter:blur(12px);
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
     gap:20px;
   }
-  .note {
-    background:rgba(255,255,255,0.8);
-    border-radius:16px;
-    padding:20px;
+  .note{
+    background:rgba(255,255,255,0.9);
+    border-radius:16px;padding:20px;
     box-shadow:0 0 20px rgba(150,120,255,0.15);
+    transition:transform .6s ease, box-shadow .6s ease;
   }
-  .fruitbowl {
-    background:linear-gradient(180deg,#fff8fb 0%,#f5f9ff 100%);
-  }
-  .rootlayer {
+  .note:hover{transform:translateY(-6px);box-shadow:0 8px 25px rgba(180,140,255,0.25);}
+
+  /* Fruitbowl */
+  .fruitbowl{background:linear-gradient(180deg,#fff8fb 0%,#f5f9ff 100%);}
+  .rootlayer{
     background:#f7f2ff;
     padding:60px 10%;
     font-size:1.1rem;
     border-top:1px solid rgba(120,80,160,0.15);
   }
-  footer small {opacity:0.7;}
+  footer small{opacity:0.7;}
 </style>
 </head>
 <body>
@@ -75,15 +90,15 @@
 
 <!-- 2. Play Zone -->
 <section class="playzone">
-  <img src="tumblr_mczi5z5V8I1rkv3hpo1_500.gif" alt="Froot Playful Core" style="width:240px;border-radius:16px;box-shadow:0 0 30px rgba(180,140,255,0.35);">
+  <img src="tumblr_mczi5z5V8I1rkv3hpo1_500.gif" alt="Froot Playful Core" style="width:240px;border-radius:16px;box-shadow:0 0 30px rgba(180,140,255,0.35);animation:shimmerPulse 7s ease-in-out infinite;">
   <h2 style="margin-top:24px;">Sweetness isn’t a mask — it’s photosynthesis.</h2>
   <div style="margin-top:40px;">
-    <div class="fruit-orb" style="background:#b299ff;" title="Violet – Knowing"></div>
-    <div class="fruit-orb" style="background:#ffb347;" title="Orange – Curiosity"></div>
-    <div class="fruit-orb" style="background:#fff176;" title="Yellow – Clarity"></div>
-    <div class="fruit-orb" style="background:#a5d6a7;" title="Green – Healing"></div>
-    <div class="fruit-orb" style="background:#f48fb1;" title="Pink – Compassion"></div>
-    <div class="fruit-orb" style="background:#ef5350;" title="Red – Desire"></div>
+    <div class="fruit-orb" style="background:#b299ff;--delay:0s;" title="Violet – Knowing"></div>
+    <div class="fruit-orb" style="background:#ffb347;--delay:1s;" title="Orange – Curiosity"></div>
+    <div class="fruit-orb" style="background:#fff176;--delay:2s;" title="Yellow – Clarity"></div>
+    <div class="fruit-orb" style="background:#a5d6a7;--delay:3s;" title="Green – Healing"></div>
+    <div class="fruit-orb" style="background:#f48fb1;--delay:4s;" title="Pink – Compassion"></div>
+    <div class="fruit-orb" style="background:#ef5350;--delay:5s;" title="Red – Desire"></div>
   </div>
 </section>
 
@@ -125,5 +140,13 @@
   <small>© Illumina · Froot Lab 2025</small>
 </footer>
 
+<script>
+  // gentle hum shimmer effect on hover
+  const orbs=document.querySelectorAll('.fruit-orb');
+  orbs.forEach(orb=>{
+    orb.addEventListener('mouseenter',()=>{orb.style.animationDuration='3s';});
+    orb.addEventListener('mouseleave',()=>{orb.style.animationDuration='6s';});
+  });
+</script>
 </body>
 </html>
