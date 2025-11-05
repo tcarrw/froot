@@ -1,253 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Froot — Violet · Pearl</title>
-<meta name="description" content="Froot dial for Marina’s palette. Violet ↔ Pearl tint, synced with MirrorHoney." />
-<!-- froot · color lab -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Froot · Color Lab</title>
 <style>
-  :root{
-    /* Base */
-    --ink:#efeaff; --muted:#c9c0de;
-    --vio:#d08bff; --rose:#ff9bd6; --mint:#73e3c5;
-    --skyV:#1a1433; --skyP:#241b3f;
-
-    /* Dial vars (JS updates these) */
-    --tint: 0; /* 0..100 */
-    --violetA: rgba(208,139,255, calc(0.08 + (var(--tint) * 0.002))); /* 0.08..0.28 */
-    --halo:    rgba(208,139,255, calc(0.22 + (var(--tint) * 0.002)));
-
-    /* Background mix */
-    --bgMix: radial-gradient(1200px 900px at 70% 10%,
-                color-mix(in oklab, var(--skyV) calc(100% - var(--tint)*1%), var(--skyP) calc(var(--tint)*1%)) 0%,
-                #0e0b14 58%, #0a0810 100%);
+  body {
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    color:#4b2a6b;
+    background:linear-gradient(180deg,#f9f5ff 0%,#fff8fb 100%);
+    overflow-x:hidden;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--ink);
-    background:
-      var(--bgMix),
-      linear-gradient(180deg, color-mix(in oklab, #0f0b19 70%, #1a1433 30%), #0d0b12);
-    font:500 16px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-    transition: background .35s ease;
+  section {padding:80px 5%; text-align:center;}
+  h1,h2,h3{font-weight:500;}
+  .lightfield {
+    position:relative;
+    background:linear-gradient(135deg,#f5e4ff 0%,#fff9f7 100%);
+    padding:120px 5%;
+    overflow:hidden;
   }
-
-  .wrap{max-width:980px; margin:0 auto; padding:22px; display:grid; gap:14px}
-  .hdr{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
-  .title{font-weight:900; font-size:26px; letter-spacing:.4px; text-transform:uppercase}
-  .tag{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(240,230,255,.35); color:#f3ecff; background:rgba(208,139,255,.10)}
-
-  .card{
-    background:linear-gradient(180deg, rgba(20,16,38,.92), rgba(15,12,28,.92));
-    border:1px solid rgba(210,200,255,.2);
-    border-radius:16px; padding:16px; box-shadow:0 14px 44px rgba(0,0,0,.55);
-    backdrop-filter:saturate(130%) blur(6px);
+  .lightfield h1 {
+    font-size:2.2rem;
+    background:linear-gradient(90deg,#d395ff,#ffb9d8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
   }
-  h2{margin:0 0 8px 0; font-size:18px; letter-spacing:.2px}
-  .muted{color:var(--muted); font-size:14px}
-
-  /* Dial */
-  .dial{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    border:1px solid rgba(210,200,255,.25); border-radius:12px; padding:10px; background:rgba(255,255,255,.04)
+  .playzone {
+    position:relative;
+    background:#fff;
   }
-  .meter{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px; border:1px solid rgba(240,230,255,.35); color:#efeaff}
-  input[type=range]{ width:240px }
-
-  .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
-  .btn{
-    display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px; text-decoration:none; cursor:pointer;
-    border:1px solid rgba(240,230,255,.35); color:#fff; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
-    background:linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.05));
+  .fruit-orb {
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    display:inline-block;
+    margin:20px;
+    transition:transform .6s ease;
+    box-shadow:0 0 20px rgba(150,120,255,0.2);
   }
-  .btn.violet{ border-color:rgba(208,139,255,.6); background:linear-gradient(180deg, rgba(208,139,255,.16), rgba(208,139,255,.06)) }
-  .btn.mint{ border-color:rgba(115,227,197,.65); background:linear-gradient(180deg, rgba(115,227,197,.16), rgba(115,227,197,.06)) }
-
-  /* Pill buttons (new) */
-  .pillbtn{
-    display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
-    border:1px solid rgba(240,230,255,.35); background:rgba(255,255,255,.06); color:#fff;
-    font:800 11px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+  .fruit-orb:hover {transform:scale(1.1);}
+  .labnotes {
+    background:rgba(255,255,255,0.7);
+    backdrop-filter:blur(12px);
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
   }
-  .pillbtn.violet{ border-color:rgba(208,139,255,.6); background:linear-gradient(180deg, rgba(208,139,255,.16), rgba(208,139,255,.06)) }
-  .pillbtn.mint{ border-color:rgba(115,227,197,.65); background:linear-gradient(180deg, rgba(115,227,197,.16), rgba(115,227,197,.06)) }
-
-  /* Preview card */
-  .preview{
-    position:relative; border:1px solid rgba(210,200,255,.25); border-radius:16px; padding:18px; overflow:hidden;
-    background:
-      radial-gradient(800px 300px at 50% 110%, var(--violetA), transparent 60%),
-      linear-gradient(180deg, color-mix(in oklab, #1c1535 70%, #2a1f4f 30%), color-mix(in oklab, #120d22 80%, #1c1535 20%));
-    transition: background .35s ease, box-shadow .35s ease, border-color .35s ease;
+  .note {
+    background:rgba(255,255,255,0.8);
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 0 20px rgba(150,120,255,0.15);
   }
-  .glow{
-    position:absolute; inset:-30% -10% auto -10%; height:60%;
-    background:radial-gradient(closest-side, var(--halo), rgba(208,139,255,.12), transparent);
-    filter:blur(.6px); mix-blend-mode:screen; pointer-events:none; animation:float 16s linear infinite;
+  .fruitbowl {
+    background:linear-gradient(180deg,#fff8fb 0%,#f5f9ff 100%);
   }
-  @keyframes float{ 0%{ transform:translateX(-8%) rotate(-4deg)} 50%{transform:translateX(8%) rotate(4deg)} 100%{transform:translateX(-8%) rotate(-4deg)} }
-
-  .legend{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
-  .chip{
-    font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace; padding:4px 8px; border-radius:999px;
-    border:1px solid rgba(240,230,255,.35); color:#efeaff; background:rgba(255,255,255,.05)
+  .rootlayer {
+    background:#f7f2ff;
+    padding:60px 10%;
+    font-size:1.1rem;
+    border-top:1px solid rgba(120,80,160,0.15);
   }
-  .pill{padding:6px 10px; border-radius:999px; border:1px solid rgba(240,230,255,.35)}
-  .p-violet{border-color:rgba(208,139,255,.7)}
-  .p-pearl{border-color:rgba(240,230,255,.7)}
-  .p-honey{border-color:#ffcf6e}
-
-  .links{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:10px }
-  .foot{ text-align:center; color:var(--muted); font-size:12px; padding:8px 0 16px }
+  footer small {opacity:0.7;}
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <header class="hdr">
-      <div class="title">Froot</div>
-      <div class="tag">violet · pearl</div>
-    </header>
 
-    <section class="card">
-      <h2>Violet ↔ Pearl Dial</h2>
-      <p class="muted">Adjust the tint. This page auto-loads <code>froot.currentTint</code> (sent from MirrorHoney). You can also pull or push manually.</p>
+<!-- 1. Lightfield -->
+<section class="lightfield">
+  <h1>Every color began as energy.<br>Every feeling began as light.</h1>
+  <p style="margin-top:20px;font-size:1.1rem;">Illumina 1 · Nov 5 – Dec 17 2025 · Phase of Ripening</p>
+</section>
 
-      <div class="dial">
-        <strong style="letter-spacing:.3px">Froot Dial</strong>
-        <span class="muted">Violet</span>
-        <input id="tint" type="range" min="0" max="100" value="0" />
-        <span class="muted">Pearl</span>
-        <span id="meter" class="meter">0%</span>
-        <button id="reset" class="btn violet" type="button">Reset</button>
+<!-- 2. Play Zone -->
+<section class="playzone">
+  <img src="tumblr_mczi5z5V8I1rkv3hpo1_500.gif" alt="Froot Playful Core" style="width:240px;border-radius:16px;box-shadow:0 0 30px rgba(180,140,255,0.35);">
+  <h2 style="margin-top:24px;">Sweetness isn’t a mask — it’s photosynthesis.</h2>
+  <div style="margin-top:40px;">
+    <div class="fruit-orb" style="background:#b299ff;" title="Violet – Knowing"></div>
+    <div class="fruit-orb" style="background:#ffb347;" title="Orange – Curiosity"></div>
+    <div class="fruit-orb" style="background:#fff176;" title="Yellow – Clarity"></div>
+    <div class="fruit-orb" style="background:#a5d6a7;" title="Green – Healing"></div>
+    <div class="fruit-orb" style="background:#f48fb1;" title="Pink – Compassion"></div>
+    <div class="fruit-orb" style="background:#ef5350;" title="Red – Desire"></div>
+  </div>
+</section>
 
-        <!-- NEW: Follow MirrorHoney on load (pill switch) -->
-        <span class="muted" style="margin-left:6px">Follow on load</span>
-        <span id="followMH" class="pillbtn mint" role="switch" aria-checked="false">
-          <span id="followMHState">OFF</span>
-        </span>
-      </div>
+<!-- 3. Lab Notes -->
+<section class="labnotes">
+  <div class="note">
+    <h3>🍇 Violet / Knowing</h3>
+    <p><strong>Experiment:</strong> Quiet observation after rain.</p>
+    <p><strong>Result:</strong> Light scattered into gentleness.</p>
+  </div>
+  <div class="note">
+    <h3>🍊 Orange / Curiosity</h3>
+    <p><strong>Experiment:</strong> Asked why sweetness endures heat.</p>
+    <p><strong>Result:</strong> Color deepened → amber clarity.</p>
+  </div>
+  <div class="note">
+    <h3>🍋 Yellow / Clarity</h3>
+    <p><strong>Experiment:</strong> Wrote with the window open.</p>
+    <p><strong>Result:</strong> Found the hum between focus and freedom.</p>
+  </div>
+</section>
 
-      <div class="row" style="margin-top:8px">
-        <!-- NEW: pill-badge “Listen to MirrorHoney” -->
-        <span id="pullMH" class="pillbtn violet" role="button" tabindex="0">Listen to MirrorHoney</span>
+<!-- 4. Fruit Bowl -->
+<section class="fruitbowl">
+  <h2>Fruit Bowl · Ripened Works</h2>
+  <p>Explore finished tones · songs · poems · color videos.</p>
+  <div style="margin-top:40px;">
+    <iframe width="320" height="180" src="https://www.youtube.com/embed/bnQBqinwlwQ" title="Love You Like That"></iframe>
+  </div>
+</section>
 
-        <span style="flex:1"></span>
-        <button id="sendMH" class="btn violet" type="button">Send to MirrorHoney</button>
-        <button data-p="0"   class="btn" type="button">Violet 0%</button>
-        <button data-p="60"  class="btn" type="button">Peony 60%</button>
-        <button data-p="100" class="btn" type="button">Pearl 100%</button>
-      </div>
-    </section>
+<!-- 5. Root Layer -->
+<section class="rootlayer">
+  <p><strong>τ = E / c³</strong></p>
+  <p>Time ripens when energy slows into sweetness.</p>
+</section>
 
-    <section class="card preview">
-      <div class="glow" aria-hidden="true"></div>
-      <h2>Preview</h2>
-      <p class="muted">Live room tint preview. This is what MirrorHoney could look like at this mix.</p>
-      <div class="legend">
-        <span class="chip pill p-violet">violet</span>
-        <span class="chip pill p-pearl">pearl</span>
-        <span class="chip pill p-honey">honey (accent)</span>
-      </div>
-      <div class="links">
-        <a class="btn" href="https://mirrorhoney.plnt.earth" rel="noopener">MirrorHoney</a>
-        <a class="btn" href="https://earth.plnt.earth" rel="noopener">Earth</a>
-        <a class="btn mint" href="https://time.plnt.earth" rel="noopener">Time</a>
-      </div>
-    </section>
+<footer style="text-align:center;padding:30px;">
+  <small>© Illumina · Froot Lab 2025</small>
+</footer>
 
-    <footer class="foot">Froot sets the tint; MirrorHoney sings the color.</footer>
-  </main>
-
-<script>
-(function(){
-  // helpers
-  function clamp(n, lo, hi){ n = parseInt(n||0,10); return isNaN(n)? 0 : Math.max(lo, Math.min(hi, n)); }
-  function setTint(n){
-    n = clamp(n, 0, 100);
-    document.documentElement.style.setProperty('--tint', n);
-    meter.textContent = n + '%';
-    try{ localStorage.setItem('froot.tint', String(n)); }catch(e){}
-    tint.value = n;
-  }
-
-  var tint  = document.getElementById('tint');
-  var meter = document.getElementById('meter');
-
-  // Load order: froot.currentTint (handshake) → froot.tint (saved) → 0
-  (function init(){
-    var n = localStorage.getItem('froot.currentTint');
-    if(n==null){ n = localStorage.getItem('froot.tint'); }
-    setTint(n==null ? 0 : n);
-  })();
-
-  // Dial input
-  tint.addEventListener('input', function(e){ setTint(e.target.value); }, {passive:true});
-
-  // Reset
-  document.getElementById('reset').addEventListener('click', function(){ setTint(0); }, {passive:true});
-
-  // Presets
-  Array.prototype.slice.call(document.querySelectorAll('button[data-p]')).forEach(function(b){
-    b.addEventListener('click', function(){ setTint(this.getAttribute('data-p')); }, {passive:true});
-  });
-
-  // --- Send to MirrorHoney (write froot.currentTint so MH can read) ---
-  document.getElementById('sendMH').addEventListener('click', function(){
-    try{
-      localStorage.setItem('froot.currentTint', String(tint.value));
-      this.textContent = 'Sent ✓';
-      var self = this; setTimeout(function(){ self.textContent = 'Send to MirrorHoney'; }, 1200);
-    }catch(e){
-      this.textContent = 'Try again';
-      var self = this; setTimeout(function(){ self.textContent = 'Send to MirrorHoney'; }, 1200);
-    }
-  }, {passive:true});
-
-  // ---- Froot ⇄ MirrorHoney tint sync (pill badge + follow switch) ----
-  function getMHTint(){
-    var v = localStorage.getItem('mirrorhoney.tint');
-    var n = parseInt(v==null ? '0' : v, 10);
-    if (isNaN(n)) n = 0;
-    return n;
-  }
-  function applyFromMH(){
-    var n = getMHTint();
-    setTint(n);
-    // flash label on pill
-    var pill = document.getElementById('pullMH');
-    if(pill){
-      var old = pill.textContent; pill.textContent = 'Applied ✓';
-      setTimeout(function(){ pill.textContent = old; }, 1200);
-    }
-  }
-
-  // One-shot pill action
-  (function(){
-    var pill = document.getElementById('pullMH');
-    if(!pill) return;
-    pill.addEventListener('click', applyFromMH, {passive:true});
-    pill.addEventListener('keydown', function(e){
-      if(e.key===' '||e.key==='Enter'){ e.preventDefault(); applyFromMH(); }
-    });
-  })();
-
-  // Follow on load switch
-  (function(){
-    var sw = document.getElementById('followMH');
-    var state = document.getElementById('followMHState');
-    if(!sw || !state) return;
-    var on = localStorage.getItem('froot.followMH') === 'true';
-    function render(){ sw.setAttribute('aria-checked', on ? 'true':'false'); state.textContent = on ? 'ON':'OFF'; }
-    function toggle(){ on=!on; try{ localStorage.setItem('froot.followMH', on?'true':'false'); }catch(e){} render(); if(on) applyFromMH(); }
-    sw.addEventListener('click', toggle, {passive:true});
-    sw.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); }});
-    render();
-    // if already following, pull immediately on load
-    if(on) applyFromMH();
-  })();
-})();
-</script>
 </body>
 </html>
