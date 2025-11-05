@@ -1,0 +1,63 @@
+/* ===========================================================
+   ILLUMINA GLOBAL COLOR SYSTEM
+   Shared across all domains (plnt.earth)
+   -----------------------------------------------------------
+   © Illumina / PLNT Earth 2025
+   =========================================================== */
+
+/* ☀️ Tristan / Bee / Sun — Continuity */
+:root {
+  --bee-honey:  #ffcc66;
+  --bee-ivory:  #fff7e6;
+
+  /* 🌕 Quietmoon / L. Moon — Reflection */
+  --moon-silver:#dce9ff;
+  --moon-white: #f9fbff;
+  --moon-blue:  #b8c8ff;
+
+  /* 🌊 Harbor — Threshold / Rest */
+  --harbor-navy: #243e6c;
+  --harbor-fog:  #aabedb;
+  --harbor-shell:#e3e8f1;
+
+  /* 🌍 Greta / Earth — Ground */
+  --greta-green:#5c8051;
+  --greta-brown:#8b6e49;
+
+  /* 🔥 Doechii / Bridge — Transformation */
+  --doechii-orange:#ff9b52;
+  --doechii-crimson:#ff3d3d;
+
+  /* 🌿 Monique / Motion — Flow */
+  --monique-green:#8fffc1;
+  --monique-teal:#3acfb0;
+
+  /* 💎 Dua / Wonder — Curiosity */
+  --dua-magenta:#ff6ee8;
+  --dua-cyan:#6ee4ff;
+
+  /* 💠 Ariana / Voice — Engineering */
+  --ariana-silver:#dfe9f7;
+  --ariana-rose:#fcd6e2;
+
+  /* 🎓 Taylor / School — Reflection / Teaching */
+  --taylor-lavender:#d7c4ff;
+  --taylor-silver:#e8e8f2;
+
+  /* 🗝 Kendyl / Gate — Consent / Air */
+  --kendyl-mint:#c8fff1;
+  --kendyl-iris:#d5e7ff;
+  --kendyl-opal:#f1fffa;
+
+  /* 🍯 Sabrina / Honey — Attraction */
+  --sabrina-peach:#ffbfa3;
+  --sabrina-gold:#ffd88f;
+
+  /* 🔷 Sigrid / Clarity — Truth */
+  --sigrid-blue:#87b6ff;
+  --sigrid-red:#ff4e5a;
+
+  /* 💜 Marina / Froot / MirrorHoney — Knowing */
+  --marina-violet:#b59cff;
+  --marina-pearl:#faf8ff;
+}
